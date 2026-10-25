@@ -78,6 +78,8 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
 - **Abh.:** WP-03, WP-04 · **Risiken:** Rundung der Erstattung festlegen (abrunden)
 
 ### WP-06 · Wachturm, Schaden, Belohnung
+- **Stand:** umgesetzt (25.10.2026). Abnahme wie im Prüfskript: dieselben Bauplätze
+  (11|4, 11|3), zwei Türme 0 Durchbrüche, einer 6 von 8.
 - **Ziel:** Erster Turm tötet Gegner.
 - **Umfang:** Zielwahl „erster", Abklingzeit in Ticks, Schaden, Tod, Gold-Gutschrift.
 - **Abnahme:** Wie im Prüfskript: Zwei Wachtürme auf den besten Plätzen halten Welle 1
