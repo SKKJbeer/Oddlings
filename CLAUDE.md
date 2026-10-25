@@ -61,6 +61,7 @@ und fragt. Das gilt besonders für Netzcode, Monetarisierung und Völker.
 | **Zahlen selbst** | [mvp-mission-01.json](Packages/OddlingsCore/Sources/OddlingsCore/Resources/Balance/mvp-mission-01.json) – die einzige Quelle |
 | Kampagne, Fortschritt | [docs/game-design/05-campaign-and-progression.md](docs/game-design/05-campaign-and-progression.md) |
 | Monetarisierung | [docs/game-design/06-monetization.md](docs/game-design/06-monetization.md) |
+| Oberfläche, HUD, Menüs | [docs/game-design/07-ui-ux.md](docs/game-design/07-ui-ux.md) |
 | Architektur | [docs/technical/architecture.md](docs/technical/architecture.md) |
 | Datenmodelle | [docs/technical/data-models.md](docs/technical/data-models.md) |
 | Tests | [docs/technical/testing-strategy.md](docs/technical/testing-strategy.md) |

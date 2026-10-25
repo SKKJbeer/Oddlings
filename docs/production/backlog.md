@@ -142,17 +142,20 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
   Turm antippen → Info und Verkaufen; abgelehnte Befehle sichtbar.
 - **Abnahme:** Auf dem iPhone ohne Fehltipp bedienbar (Selbsttest + Spieltest).
 - **Tests:** UI-Test: Turm bauen und verkaufen.
+- **Entwurf:** Ablauf und Architektur (`PlacementState`, `HudLayout`) in [07](../game-design/07-ui-ux.md#bauen); offen D-018.
 - **Abh.:** WP-11 · **Risiken:** Fingerverdeckung (P2), Tippziele ≥ 44 pt
 
 ### WP-13 · HUD
 - **Ziel:** Gold, Leben, Welle, Zähler, Pause, 1×/2×, „Nächste Welle".
 - **Abnahme:** Werte stimmen jederzeit mit dem Zustand; kein Bildeinbruch durch das HUD.
 - **Tests:** HUD-Modell setzt nur geänderte Werte.
+- **Entwurf:** HUD-Ecken und `BattleHUDModel` in [07](../game-design/07-ui-ux.md#schlacht-und-hud); D-017.
 - **Abh.:** WP-11 · **Risiken:** T3
 
 ### WP-14 · Ergebnis und Neustart
 - **Ziel:** Runde schließen, neue Runde.
 - **Umfang:** Sieg-/Niederlagen-Bildschirm mit Leben und Dauer; Neustart setzt alles zurück.
+  Entwurf in [07](../game-design/07-ui-ux.md#ergebnis).
 - **Abnahme:** Zehn Neustarts hintereinander ohne Speicherwachstum oder Restzustand.
 - **Tests:** UI-Test: Mission mit Bot zu Ende, Neustart.
 - **Abh.:** WP-12, WP-13 · **Risiken:** gering
