@@ -22,7 +22,7 @@ keine Ladezeit zwischen Mission und Ergebnis.
    Ecken. Anzeigen (Leben, Gold, Welle) stehen oben, häufige Knöpfe (Welle rufen,
    Tempo) unten. Pause liegt oben rechts, damit man sie nicht versehentlich trifft.
 3. **Wählen am Ort.** Gebaut und verkauft wird direkt am Feld, nicht über eine
-   Leiste am Rand (offen als D-031).
+   Leiste am Rand (**[ENTSCHIEDEN]** D-031, Steffen 25.10.2026).
 4. **Zweimal tippen für Gold.** Alles, was Gold kostet oder bringt, braucht eine
    Bestätigung durch zweites Tippen. Das erste Tippen zeigt die Folge
    (Reichweite, Erstattung). Kein Dialogfenster.
@@ -96,6 +96,9 @@ Aufteilung siehe Abschnitt 2. Weitere Regeln:
   (Marktanalyse E3).
 
 ### Bauen
+
+**[ENTSCHIEDEN]** Kreismenü am Feld (D-031).
+
 1. Freies Feld antippen → Feld wird umrandet, drei Turmknöpfe erscheinen im Bogen
    darüber (in den oberen zwei Zeilen darunter), jeweils mit Preisschild.
 2. Turm antippen → Reichweite als gestrichelter Kreis, Vorschau des Turms auf dem
@@ -206,7 +209,6 @@ Eintrag **D-032** (vorgeschlagen).
 
 ## 8 Offen
 
-- **D-031** Turmauswahl: Kreismenü am Feld (Empfehlung) oder feste Leiste.
 - **D-030** reservierte HUD-Ecken je Mission: wartet auf den Spieltest WP-15 (Fehltipps beobachten).
 - Kombi-Bilanz und Niederlagen-Hinweis: Phase 2, nach dem ersten Spieltest.
 - Linkshänder-Spiegelung der unteren Ecken: Kandidat für die Einstellungen,
