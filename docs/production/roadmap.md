@@ -34,10 +34,12 @@ Stand für Steffen in Kurzform: [status.md](status.md). Offene Fragen:
 | M1.1 | Regeln von Mission 1 vollständig und getestet | WP-02 … WP-10 | ✓ 25.10.2026 |
 | M1.2 | Die App zeigt die laufende Simulation | WP-01, WP-11 | ✓ 25.10.2026 (0.4.0) |
 | M1.3 | **Ein Mensch spielt Mission 1 auf dem iPhone** | WP-12, WP-13, WP-14 | ✓ 25.10.2026 (0.5.0, ein PR nach D-018), Bau 19 VALID |
-| M1.4 | Spieltest mit drei Personen, Leistung auf dem Gerät gemessen; Ende-zu-Ende-Tests decken Mission 1 vollständig ab (Bauen, Verkaufen, Pause, Tempo, Sieg, Niederlage, Neustart) | WP-15, Messung WP-01, E2E-Grundlage | E2E ✓ (0.5.1); erste Grafik im Spiel (0.5.2, Bau 21 VALID); **Spieltest offen** |
+| M1.4 | Spieltest mit drei Personen, Leistung auf dem Gerät gemessen; Ende-zu-Ende-Tests decken Mission 1 vollständig ab (Bauen, Verkaufen, Pause, Tempo, Sieg, Niederlage, Neustart) | Neue Oberfläche (P2-4 für Mission 1 vorgezogen), WP-15, Messung WP-01, E2E-Grundlage | E2E ✓ (0.5.1); erste Grafik im Spiel (0.5.2, Bau 21 VALID); **neue Oberfläche läuft, danach Spieltest** |
 
-Kritischer Pfad: WP-15 (Spieltest mit drei Personen) → Phase 2 schneiden. Alles
-andere läuft daneben und darf diesen Pfad nicht aufhalten. Steffens Vorgabe
+Kritischer Pfad: neue Oberfläche für Mission 1 (Kreismenü D-031, Schriften D-032) →
+Bau in TestFlight → WP-15 (Spieltest mit drei Personen) → Phase 2 schneiden. Steffen,
+25.10.2026: die Oberfläche kommt vor dem Spieltest. Alles andere läuft daneben und
+darf diesen Pfad nicht aufhalten. Steffens Vorgabe
 (25.10.2026): erst spielbar in TestFlight, dann Grafik einbauen.
 
 ## Entwurf Phase 2 [VORSCHLAG]
@@ -51,7 +53,7 @@ Phase wie oben: Eine Mission wirkt wie das fertige Spiel.
 | P2-1 | Grafik einbauen: Atlas (Standbilder ✓ in 0.5.2), Laufzyklen, Treffereffekte nach Rückmeldeliste (E1, E3) | M1.3, Atlas aus dem Grafik-Thread | Art-Direction | D-016 |
 | P2-2 | Fortsetzen nach App-Ende, Speicherstand | M1.3 | K6 | D-022 |
 | P2-3 | Ton und Haptik | P2-1 (Rückmeldeliste) | K9 | Weg offen, neuer Thread |
-| P2-4 | Menüs, Pause, Einstellungen, Ergebnis im Stil | M1.3, Oberflächen-Thread | UI-Konzept | – |
+| P2-4 | Menüs, Pause, Einstellungen, Ergebnis im Stil (Teil für Mission 1 vorgezogen vor WP-15) | M1.3, Oberflächen-Thread | [07](../game-design/07-ui-ux.md) | D-031, D-032 |
 | P2-5 | Zwergenbank und Bonus für frühes Rufen | M1.4 (Balance aus dem Spieltest) | K3 | D-026 |
 | P2-6 | Aufwertungen mit Gabelung, Zielwahl | P2-5 (gleiche Wirtschaftsrechnung) | K1 | D-024 |
 | P2-6b | **Balance-Labor, Grundstock:** Lauf-Werkzeug, Zufalls- und Menschenbot, Zielwerte, PR-Stufe in der CI | P2-5, P2-6 | K11 | D-028 |
