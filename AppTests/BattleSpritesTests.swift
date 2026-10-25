@@ -29,8 +29,11 @@ final class BattleSpritesTests: XCTestCase {
             let node = BattleSprites.tower(kind, field: field)
             let sprite = try XCTUnwrap(node.children.first as? SKSpriteNode, "\(kind)")
             let side = BattleStyle.towerSpriteSide * field
-            XCTAssertEqual(sprite.size, CGSize(width: side, height: side), "\(kind)")
-            XCTAssertEqual(sprite.anchorPoint, CGPoint(x: 0.5, y: 0.2), "\(kind)")
+            // SpriteKit speichert Größe und Anker als Float, darum mit Toleranz.
+            XCTAssertEqual(sprite.size.width, side, accuracy: 0.01, "\(kind)")
+            XCTAssertEqual(sprite.size.height, side, accuracy: 0.01, "\(kind)")
+            XCTAssertEqual(sprite.anchorPoint.x, 0.5, accuracy: 0.001, "\(kind)")
+            XCTAssertEqual(sprite.anchorPoint.y, 0.2, accuracy: 0.001, "\(kind)")
         }
     }
 
