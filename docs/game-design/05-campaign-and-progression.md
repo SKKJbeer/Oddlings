@@ -16,7 +16,12 @@ Beispielregionen (Platzhalter): Flüsterwald, Eisengipfel, Sturmklamm.
 **[VORSCHLAG] Erste Kampagne (Phase 3):** eine Region, 6–8 Missionen, eine
 Gabelung mit zwei Wegen, eine Nebenmission, eine Bossmission am Ende.
 
+**[VORSCHLAG D-027]** Ausgearbeitet in [K4](konzepte-phase-2-3.md#k4--kampagne-und-regionen):
+kostenlose Region 1 mit sieben Haupt- und zwei Nebenmissionen.
+
 ## Fortschritt [OFFEN]
+
+Ausgearbeitet in [K5](konzepte-phase-2-3.md#k5--fortschritt-und-freischaltungen) (D-027).
 
 Was dauerhaft freigeschaltet wird, ist offen. Leitplanken **[ENTSCHIEDEN]**:
 Freischaltungen fühlen sich wie Belohnung an, die Balance hängt nie an Käufen.
@@ -32,5 +37,6 @@ Kandidaten, zu entscheiden in Phase 3:
 
 ## Speicherstand
 
-**[VORSCHLAG]** Lokal (JSON-Datei im App-Verzeichnis), versioniert. Cloud-Speicher
-später prüfen. Fortsetzen einer laufenden Mission nach Beenden der App: Phase 2.
+**[GILT D-022]** Lokal, versioniert, atomar, beim Laden geprüft; Einzelheiten in
+[K6](konzepte-phase-2-3.md#k6--speicherstand). Cloud-Speicher in Phase 4.
+Fortsetzen einer laufenden Mission nach Beenden der App: Phase 2.

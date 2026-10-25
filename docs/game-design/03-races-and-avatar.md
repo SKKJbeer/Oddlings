@@ -20,6 +20,10 @@ verloren geht und damit spätere Entscheidungen sie nicht still verändern.
 | Goblins | Fallen, Geländekontrolle, Überraschung | Idee, nach Release |
 | Arkanisten | Elementarmagie, Verstärkung von Synergien | Idee, nach Release |
 
+**[VORSCHLAG D-025]** Ausgearbeitet in
+[K2](konzepte-phase-2-3.md#k2--festungsfähigkeit-und-völker): Das Volk bestimmt die
+Festungsfähigkeit und einen kleinen passiven Zug. Bis zur Entscheidung gilt:
+
 **[OFFEN]** Wie ein Volk wirkt. Drei denkbare Mechaniken, zu entscheiden in Phase 3:
 
 1. Passive Boni (z. B. +10 % Reichweite). Einfach, aber blass.

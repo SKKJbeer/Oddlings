@@ -156,6 +156,8 @@ Seit WP-10 gibt es nur noch diese eine Rechnung; das Python-Skript ist gelöscht
 
 ## Zwergenbank (Phase 2)
 
+Regeln, Zielgruppe (D-010) und Bonus für frühes Rufen: [K3](konzepte-phase-2-3.md#k3--zwergenbank), vorgeschlagen als D-026.
+
 **[ENTSCHIEDEN]** Kein Kampfschaden, kostet beim Bau, erträgt nach Verzögerung,
 konkurriert mit Verteidigung.
 

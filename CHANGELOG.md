@@ -8,8 +8,25 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - **Bau** = Laufnummer von `testflight.yml`, wird beim Archivieren als
   `CURRENT_PROJECT_VERSION` gesetzt. Ein Bau zählt erst, wenn Apple ihn als VALID
   meldet. Gescheiterte Bauten stehen mit Grund dabei, weil ihre Nummer verbraucht ist.
-- Ein Eintrag, der nichts an der App ändert (nur Dokumente), löst keinen Bau aus.
-  Dort steht „kein Bau“.
+- Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
+  nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
+
+## Dokumente, kein Bau – 25.10.2026
+
+**Neu**
+- Projektplanung: Konzepte für Phase 2 und 3 (Aufwertungen mit Gabelung,
+  Festungsfähigkeit, Völker, Zwergenbank, Kampagne mit kostenloser Region 1,
+  Fortschritt, Speicherstand, Gegner und Bosse, Einstieg, Ton) in
+  `docs/game-design/konzepte-phase-2-3.md`.
+- Register aller offenen Fragen (`docs/production/offene-fragen.md`) und
+  Statusübersicht für Steffen (`docs/production/status.md`).
+- Roadmap mit Meilensteinen für Phase 1, Entwurf für Phase 2, Ausblick Phase 3
+  und den Abhängigkeiten zwischen den Threads.
+- Entscheidungen D-020 bis D-023 festgelegt, D-024 bis D-027 Steffen vorgelegt.
+
+**Tests**: neue Prüfung `scripts/links-pruefen.py` im CI-Schritt `regeln`:
+bricht ab, wenn ein Verweis in den Dokumenten auf eine fehlende Datei oder
+einen fehlenden Abschnitt zeigt. Einmal rot gesehen (falscher Anker, falsche Datei).
 
 ## 0.4.0 – 25.10.2026
 
