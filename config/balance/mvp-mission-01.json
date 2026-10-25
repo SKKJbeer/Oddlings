@@ -1,0 +1,58 @@
+{
+  "_status": "VORLÄUFIG – Phase-0-Vorschlag, durch tools/balance-sim/sim.py grob geprüft, nicht spielgetestet",
+  "_einheiten": "Strecken in Feldern (1 Feld = 1 Bauraster-Zelle), Zeiten in Sekunden, Geschwindigkeit in Feldern/Sekunde",
+  "simulation": { "ticksPerSecond": 30 },
+  "mission": {
+    "id": "mission-01",
+    "fortressLives": 20,
+    "startGold": 150,
+    "firstWaveDelay": 20,
+    "timeBetweenWaves": 15,
+    "sellRefundRate": 0.7
+  },
+  "map": {
+    "width": 16,
+    "height": 9,
+    "minDistanceFromPath": 0.9,
+    "path": [[-1, 1.5], [4.5, 1.5], [4.5, 6.5], [9.5, 6.5], [9.5, 2.5], [13.5, 2.5], [13.5, 7.5], [17, 7.5]]
+  },
+  "towers": {
+    "watch":     { "cost": 50, "range": 2.5, "damage": 12, "attackInterval": 0.8, "targeting": "first" },
+    "lightning": { "cost": 80, "range": 2.2, "damage": 18, "attackInterval": 1.2, "targeting": "first",
+                   "chainJumps": 4, "chainRadius": 1.3, "chainFalloff": 0.8 },
+    "spore":     { "cost": 50, "range": 2.2, "damage": 1, "attackInterval": 1.0, "targeting": "aura",
+                   "slowFactor": 0.5, "slowDuration": 1.5 }
+  },
+  "enemies": {
+    "raider":  { "hp": 70,  "speed": 1.0, "reward": 5,  "leakDamage": 1 },
+    "runner":  { "hp": 52,  "speed": 2.2, "reward": 4,  "leakDamage": 1 },
+    "brute":   { "hp": 370, "speed": 0.6, "reward": 20, "leakDamage": 3 }
+  },
+  "waves": [
+    { "hpScale": 1.0,  "groups": [ { "enemy": "raider", "count": 8,  "interval": 1.6 } ] },
+    { "hpScale": 1.0,  "groups": [ { "enemy": "raider", "count": 12, "interval": 1.3 } ] },
+    { "hpScale": 1.0,  "groups": [ { "enemy": "runner", "count": 10, "interval": 1.0 } ] },
+    { "hpScale": 1.1,  "groups": [ { "enemy": "raider", "count": 14, "interval": 1.0 },
+                                   { "enemy": "runner", "count": 6,  "interval": 0.8, "delay": 6 } ] },
+    { "hpScale": 1.15, "groups": [ { "enemy": "raider", "count": 20, "interval": 0.6 } ] },
+    { "hpScale": 1.2,  "groups": [ { "enemy": "runner", "count": 16, "interval": 0.6 } ] },
+    { "hpScale": 1.3,  "groups": [ { "enemy": "brute",  "count": 2,  "interval": 4.0 },
+                                   { "enemy": "raider", "count": 16, "interval": 0.8, "delay": 2 } ] },
+    { "hpScale": 1.4,  "groups": [ { "enemy": "raider", "count": 25, "interval": 0.5 },
+                                   { "enemy": "runner", "count": 12, "interval": 0.5, "delay": 10 } ] },
+    { "hpScale": 1.5,  "groups": [ { "enemy": "brute",  "count": 4,  "interval": 3.0 },
+                                   { "enemy": "runner", "count": 20, "interval": 0.5, "delay": 4 } ] },
+    { "hpScale": 1.6,  "groups": [ { "enemy": "raider", "count": 30, "interval": 0.4 },
+                                   { "enemy": "runner", "count": 20, "interval": 0.4, "delay": 8 },
+                                   { "enemy": "brute",  "count": 3,  "interval": 2.0, "delay": 14 } ] }
+  ],
+  "simStrategies": {
+    "Mix Wach/Sporen/Blitz": ["watch","watch","spore","lightning","watch","lightning","spore","watch","lightning","watch","lightning","watch","spore","lightning","watch","lightning","watch","watch","lightning","watch","lightning","watch","lightning","watch"],
+    "Nur Wachtürme": ["watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch"],
+    "Wach + Blitz, keine Sporen": ["watch","watch","lightning","watch","lightning","watch","lightning","watch","lightning","watch","lightning","watch","lightning","watch","lightning","watch","lightning","watch","lightning","watch","lightning"],
+    "Wach + Sporen, kein Blitz": ["watch","watch","spore","watch","watch","spore","watch","watch","watch","spore","watch","watch","watch","spore","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch"],
+    "Blitz + Sporen, keine Wache": ["lightning","spore","lightning","lightning","spore","lightning","lightning","spore","lightning","lightning","spore","lightning","lightning","lightning","lightning","lightning","lightning","lightning"],
+    "Nur Blitztürme": ["lightning","lightning","lightning","lightning","lightning","lightning","lightning","lightning","lightning","lightning","lightning","lightning","lightning","lightning","lightning","lightning","lightning","lightning","lightning"],
+    "Nur Sporentürme": ["spore","spore","spore","spore","spore","spore","spore","spore","spore","spore","spore","spore","spore","spore","spore","spore","spore","spore","spore","spore","spore","spore","spore","spore"]
+  }
+}

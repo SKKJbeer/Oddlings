@@ -1,0 +1,146 @@
+# Backlog – Phase 1: Spielbarer Kampfprototyp
+
+Priorität = Reihenfolge. Jedes Paket ist für sich prüfbar und ergibt einen eigenen
+Pull Request. Zahlenwerte kommen immer aus der Konfiguration.
+
+Abkürzungen: **Abh.** = Abhängigkeiten.
+
+---
+
+### WP-00 · Phase 0 freigeben
+- **Ziel:** Designstand und MVP-Plan sind abgestimmt.
+- **Umfang:** Dieses Dokumentationspaket; Entscheidungen B1–B4.
+- **Abnahme:** Steffen hat den Pull Request durchgesehen; D-004 bis D-008 sind entschieden
+  (D-004 Querformat und D-005 Raster am 25.10.2026).
+- **Tests:** `python3 tools/balance-sim/sim.py --reserve` läuft.
+- **Abh.:** –  · **Risiken:** –
+
+### WP-01 · Technik-Spike: App-Hülle und Leistungsprobe
+- **Ziel:** Beweisen, dass SwiftUI + SpriteKit auf dem iPhone trägt, bevor darauf gebaut wird.
+- **Umfang:** `project.yml` (XcodeGen), leere SwiftUI-App im Querformat, `SpriteView` mit
+  einer Szene, die 300 Sprites auf einem Pfad bewegt und 30 Kettenblitz-Linien je
+  Sekunde zeichnet; SwiftUI-HUD darüber, das zweimal je Sekunde einen Zähler ändert.
+  CI-Ablauf (macOS) baut die App.
+- **Abnahme:** Auf Steffens iPhone stabil 60 Bilder/s (Xcode-Anzeige), HUD verursacht
+  keine Einbrüche; CI grün. Ergebnis als Notiz in `docs/technical/architecture.md`.
+- **Tests:** CI-Bau. Leistung manuell gemessen und notiert.
+- **Abh.:** WP-00 (Ausrichtung, iOS-Version)
+- **Risiken:** Läuft nicht → Plan B Godot prüfen, bevor weitergebaut wird. Signierung
+  für das Gerät: Bundle-ID und Team festlegen.
+
+### WP-02 · OddlingsCore-Paket und Konfiguration
+- **Ziel:** Simulation hat ein Zuhause und liest Werte aus einer Quelle.
+- **Umfang:** Swift-Paket `OddlingsCore` (nur Foundation); `BalanceConfig` aus
+  [data-models.md](../technical/data-models.md); JSON zieht von `config/balance/` in
+  die Paket-Ressourcen, Prüfskript liest den neuen Ort; Validierung mit klaren Fehlern;
+  Architekturtest (kein SpriteKit-Import). Prüfen, ob eine Linux-Swift-Toolchain für
+  Cloud-Sitzungen per Startskript machbar ist.
+- **Abnahme:** `swift test` grün; ungültige Konfiguration liefert benannten Fehler.
+- **Tests:** Laden der Missionsdatei; je Validierungsregel ein Negativfall; Importtest.
+- **Abh.:** WP-00 (parallel zu WP-01 möglich) · **Risiken:** gering
+
+### WP-03 · Karte, Weg und Bauzonen
+- **Ziel:** Geometrie der Mission.
+- **Umfang:** Weg als Polylinie, `position(at: distance)`, Weglänge; Bauzonen
+  (Rasterzellen, Abstand zum Weg); Zellprüfung frei/belegt/außerhalb.
+- **Abnahme:** Weglänge Mission 1 = 32,0; jede Zelle eindeutig klassifiziert.
+- **Tests:** Position an Anfang, Knick, Ende; Zelle auf dem Weg ist kein Bauplatz.
+- **Abh.:** WP-02 · **Risiken:** Bauzonen gehören in die Konfiguration, nicht in den Code
+
+### WP-04 · Wellen, Gegnerbewegung, Festung
+- **Ziel:** Gegner erscheinen, laufen, brechen durch.
+- **Umfang:** `GameState`, `step`, fester Takt, Aufbauzeit, Spawn-Plan aus Wellen,
+  `hpScale`, Bewegung, `leakDamage`, Niederlage bei 0 Leben, Ereignisse.
+- **Abnahme:** Ohne Türme verliert Mission 1 nach berechenbarer Zeit; Ereignisfolge stimmt.
+- **Tests:** Plünderer braucht 32 s ± 1 Tick; Niederlage exakt beim 20. Durchbruch.
+- **Abh.:** WP-03 · **Risiken:** Determinismus (T1) von Anfang an beachten
+
+### WP-05 · Bauen, Verkaufen, Gold
+- **Ziel:** Ökonomie des Bauens.
+- **Umfang:** Befehle `build`, `sell`; Kosten, Erstattung 70 %, Ablehnungsgründe.
+- **Abnahme:** Kein Weg führt zu negativem Gold oder zwei Türmen in einer Zelle.
+- **Tests:** zu wenig Gold, belegte Zelle, außerhalb Zone, Verkaufen erstattet abgerundet.
+- **Abh.:** WP-03, WP-04 · **Risiken:** Rundung der Erstattung festlegen (abrunden)
+
+### WP-06 · Wachturm, Schaden, Belohnung
+- **Ziel:** Erster Turm tötet Gegner.
+- **Umfang:** Zielwahl „erster", Abklingzeit in Ticks, Schaden, Tod, Gold-Gutschrift.
+- **Abnahme:** Wie im Prüfskript: Zwei Wachtürme auf den besten Plätzen halten Welle 1
+  ohne Durchbruch, einer allein lässt 6 von 8 Plünderern durch.
+- **Tests:** Zielwahl bei zwei Gegnern; Abklingzeit 0,8 s = 24 Ticks; Belohnung genau einmal.
+- **Abh.:** WP-05 · **Risiken:** Reihenfolge im Schritt (data-models.md) einhalten
+
+### WP-07 · Blitzturm
+- **Ziel:** Gruppenschaden.
+- **Umfang:** Kette mit Sprungradius, Abfall, keine Doppeltreffer; `towerFired(targets:)`.
+- **Abnahme:** Kette trifft nur noch nicht getroffene Gegner in Reichweite des letzten Ziels.
+- **Tests:** Fall aus [testing-strategy.md](../technical/testing-strategy.md) (18 / 14,4 / 11,52); Kette bricht ab, wenn niemand im Radius.
+- **Abh.:** WP-06 · **Risiken:** gering
+
+### WP-08 · Sporenturm
+- **Ziel:** Kontrolle.
+- **Umfang:** Puls an alle in Reichweite, Verlangsamung mit Dauer, Erneuerung, kein Stapeln.
+- **Abnahme:** Zwei Sporentürme verlangsamen nicht stärker als einer.
+- **Tests:** Plünderer unter Dauerverlangsamung braucht doppelt so lang durch die Zone; Ablauf nach 1,5 s.
+- **Abh.:** WP-06 · **Risiken:** gering
+
+### WP-09 · Sieg, Wellentakt, „Nächste Welle"
+- **Ziel:** Mission hat ein Ende und einen Fluss.
+- **Umfang:** Sieg-Bedingung, Takt nach letztem Erscheinen, Befehl `callNextWave`.
+- **Abnahme:** Mission endet genau einmal mit genau einem Ergebnis.
+- **Tests:** Sieg erst, wenn der letzte Gegner tot ist; frühes Rufen verschiebt den Plan.
+- **Abh.:** WP-04 · **Risiken:** Gleichzeitiger Tod und Durchbruch im letzten Tick → Reihenfolge entscheidet, Test
+
+### WP-10 · Determinismus und Balancetests in Swift
+- **Ziel:** Reproduzierbarkeit absichern, Prüfskript ablösen.
+- **Umfang:** Replay-Test mit Prüfsumme; 1× = 2×; Speichern/Laden in der Welle;
+  Bot-Bauweisen aus `simStrategies` in Swift; Python-Skript löschen.
+- **Abnahme:** Swift-Bot liefert dieselbe Rangfolge der Bauweisen wie das Prüfskript.
+- **Tests:** siehe Ebenen „Determinismus" und „Balancetests".
+- **Abh.:** WP-06 … WP-09 · **Risiken:** Abweichende Ergebnisse zwischen Python und Swift → ein Befund, nicht übergehen
+
+### WP-11 · Szene zeigt die Simulation
+- **Ziel:** Man sieht, was die Simulation tut.
+- **Umfang:** Karte, Weg, Bauzonen, Türme, Gegner mit Lebensbalken, Blitzlinien,
+  Verlangsamung sichtbar (Einfärbung). Platzhaltergrafik (Formen, Farben).
+- **Abnahme:** Mission läuft sichtbar mit Bot-Befehlen ab; Interpolation flüssig.
+- **Tests:** Knotenzahl = Entitätenzahl über eine ganze Mission.
+- **Abh.:** WP-01, WP-09 · **Risiken:** Logik rutscht in die Szene (T2) → Review-Punkt
+
+### WP-12 · Bedienung: bauen und verkaufen per Antippen
+- **Ziel:** Ein Mensch kann spielen.
+- **Umfang:** Zelle antippen → Baumenü mit Preisen, Reichweitenvorschau, bestätigen;
+  Turm antippen → Info und Verkaufen; abgelehnte Befehle sichtbar.
+- **Abnahme:** Auf dem iPhone ohne Fehltipp bedienbar (Selbsttest + Spieltest).
+- **Tests:** UI-Test: Turm bauen und verkaufen.
+- **Abh.:** WP-11 · **Risiken:** Fingerverdeckung (P2), Tippziele ≥ 44 pt
+
+### WP-13 · HUD
+- **Ziel:** Gold, Leben, Welle, Zähler, Pause, 1×/2×, „Nächste Welle".
+- **Abnahme:** Werte stimmen jederzeit mit dem Zustand; kein Bildeinbruch durch das HUD.
+- **Tests:** HUD-Modell setzt nur geänderte Werte.
+- **Abh.:** WP-11 · **Risiken:** T3
+
+### WP-14 · Ergebnis und Neustart
+- **Ziel:** Runde schließen, neue Runde.
+- **Umfang:** Sieg-/Niederlagen-Bildschirm mit Leben und Dauer; Neustart setzt alles zurück.
+- **Abnahme:** Zehn Neustarts hintereinander ohne Speicherwachstum oder Restzustand.
+- **Tests:** UI-Test: Mission mit Bot zu Ende, Neustart.
+- **Abh.:** WP-12, WP-13 · **Risiken:** gering
+
+### WP-15 · Erster Spieltest
+- **Ziel:** Phase 1 abschließen mit Menschen, nicht mit Code.
+- **Umfang:** Build auf Steffens Gerät bzw. TestFlight; drei Personen spielen Mission 1;
+  Beobachtungsbogen: Wird der Sporenturm gebaut? Wann? Verstehen sie die Kette?
+  Dauer, Ergebnis, Abbrüche, Fehltipps.
+- **Abnahme:** Protokoll in `docs/production/playtests/`; Balancewerte angepasst oder
+  bestätigt; Phase 2 geschnitten.
+- **Abh.:** WP-14 · **Risiken:** Ergebnis „macht keinen Spaß" ist ein gültiges Ergebnis
+
+---
+
+## Danach (Phase 2, noch nicht geschnitten)
+
+Zwergenbank · Grafikstil und Asset-Weg · Ton · Animationen und Treffereffekte ·
+Fortsetzen nach App-Ende · Menüs · Bonus für frühes Rufen prüfen · Upgrades prüfen ·
+Panzerbestie/Rüstung prüfen.
