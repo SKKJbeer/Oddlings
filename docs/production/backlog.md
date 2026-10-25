@@ -112,6 +112,7 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
 - **Abnahme:** Mission endet genau einmal mit genau einem Ergebnis.
 - **Tests:** Sieg erst, wenn der letzte Gegner tot ist; frühes Rufen verschiebt den Plan.
 - **Abh.:** WP-04 · **Risiken:** Gleichzeitiger Tod und Durchbruch im letzten Tick → Reihenfolge entscheidet, Test
+- **Stand:** Umgesetzt. Sieg wird nach den Durchbrüchen geprüft: Bricht der letzte Gegner durch und die Festung hält, ist es ein Sieg; leert er sie, eine Niederlage. `callNextWave` setzt den nächsten Wellenstart auf den laufenden Tick, der Takt zur übernächsten läuft ab deren letztem Erscheinen. Zwei Rufe im selben Tick starten eine Welle; nach der letzten wird abgelehnt (`noWaveLeft`). Tests in `VictoryTests`.
 
 ### WP-10 · Determinismus und Balancetests in Swift
 - **Ziel:** Reproduzierbarkeit absichern, Prüfskript ablösen.

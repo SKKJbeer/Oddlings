@@ -64,6 +64,8 @@ public struct SlowEffect: Codable, Equatable, Sendable {
 public enum Command: Codable, Equatable, Sendable {
     case build(TowerKind, Cell)
     case sell(towerID: Int)
+    /// Startet die nächste Welle sofort, statt auf den Takt zu warten.
+    case callNextWave
 }
 
 public enum Rejection: Equatable, Sendable {
@@ -72,6 +74,7 @@ public enum Rejection: Equatable, Sendable {
     case tooCloseToPath
     case outsideMap
     case unknownTower
+    case noWaveLeft
 }
 
 public enum Event: Equatable, Sendable {
