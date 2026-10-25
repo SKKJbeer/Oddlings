@@ -38,7 +38,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: de.skkjbeer.oddlings
         PRODUCT_NAME: Oddlings
-        MARKETING_VERSION: "0.1.0"
+        MARKETING_VERSION: "0.1.1"
         CURRENT_PROJECT_VERSION: "1"
         # Nur iPhone (D-006). Ein iPad startet die App trotzdem, im Kompatibilitätsmodus.
         TARGETED_DEVICE_FAMILY: "1"
@@ -55,6 +55,13 @@ targets:
         # Connect keinen Bau an.
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         CODE_SIGN_STYLE: Automatic
+      configs:
+        # Das Profil gilt nur für die App. Über die Befehlszeile gesetzt, griffe
+        # es auch beim Ressourcenbündel des Pakets, und das Archivieren bricht ab
+        # („does not support provisioning profiles", Bau 6 bis 11).
+        # testflight.yml setzt ODDLINGS_PROFIL; lokal bleibt es leer.
+        Release:
+          PROVISIONING_PROFILE_SPECIFIER: $(ODDLINGS_PROFIL)
 
 schemes:
   Oddlings:
