@@ -6,8 +6,9 @@
 
 ## Stand
 
-**Phase 0 – Design und Planung.** Es gibt noch keinen Spielcode. Nächster Schritt
-laut [Backlog](docs/production/backlog.md): WP-01 (Technik-Spike).
+**Phase 1 hat begonnen.** Phase 0 ist abgeschlossen (PR #1). In Arbeit: WP-01,
+der Technik-Spike (`App/Spike/`, Wegwerfcode). Noch keine Spiellogik.
+Projekt erzeugen: `xcodegen generate` (Xcode-Projekt ist nicht eingecheckt).
 
 ## Vision in drei Sätzen
 

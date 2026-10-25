@@ -32,9 +32,11 @@ Status: **[VORSCHLAG]**
 
 - Swift Testing (`@Test`) oder XCTest im Paket; beides läuft mit `swift test`.
 - **CI:** GitHub Actions auf macOS: `swift test` für das Paket, `xcodebuild test`
-  für App und Oberfläche. **[OFFEN]** Ist das Repository privat, kosten
-  macOS-Minuten bei GitHub ein Vielfaches; dann Oberflächentests nur bei Pull
-  Requests und manuell.
+  für App und Oberfläche. Das Repository ist öffentlich, macOS-Minuten kosten
+  deshalb nichts (Stand 25.10.2026). Wird es privat, kosten sie ein
+  Vielfaches; dann Oberflächentests nur noch bei Pull Requests.
+- Seit WP-01 läuft `.github/workflows/ci.yml`: Prüfskript unter Linux, App-Bau
+  und Probelauf im Simulator (starten, 20 s laufen lassen, Bild sichern) auf macOS.
 - **Cloud-Sitzungen** haben derzeit kein Swift. Bis eine Linux-Toolchain
   eingerichtet ist (prüfen in WP-02), ist die CI die einzige Instanz, die Swift
   übersetzt. Eine Cloud-Sitzung behauptet nie, Swift-Tests seien grün, ohne
