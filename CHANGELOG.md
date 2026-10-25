@@ -8,10 +8,10 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - **Bau** = Laufnummer von `testflight.yml`, wird beim Archivieren als
   `CURRENT_PROJECT_VERSION` gesetzt. Ein Bau zählt erst, wenn Apple ihn als VALID
   meldet. Gescheiterte Bauten stehen mit Grund dabei, weil ihre Nummer verbraucht ist.
-- Ein Eintrag, der nichts an der App ändert (nur Dokumente), löst keinen Bau aus.
-  Dort steht „kein Bau“.
+- Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
+  nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.5.1 – 25.10.2026
+## Dokumente, kein Bau – 25.10.2026 (Oberfläche)
 
 **Neu**
 - Konzept für Oberfläche und Bedienung: [07-ui-ux.md](docs/game-design/07-ui-ux.md)
@@ -24,7 +24,26 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 **Tests**: keine, nur Dokumente. Die Tests der Bausteine stehen in 07 und kommen
 mit der Umsetzung.
 
-Kein Bau.
+## Dokumente, kein Bau – 25.10.2026
+
+**Neu**
+- Projektplanung: Konzepte für Phase 2 und 3 (Aufwertungen mit Gabelung,
+  Festungsfähigkeit, Völker, Zwergenbank, Kampagne mit kostenloser Region 1,
+  Fortschritt, Speicherstand, Gegner und Bosse, Einstieg, Ton) in
+  `docs/konzepte/phase-2-3.md`.
+- Register aller offenen Fragen (`docs/production/offene-fragen.md`) und
+  Statusübersicht für Steffen (`docs/production/status.md`).
+- Roadmap mit Meilensteinen für Phase 1, Entwurf für Phase 2, Ausblick Phase 3
+  und den Abhängigkeiten zwischen den Threads.
+- Entscheidungen D-020 bis D-023 festgelegt, D-024 bis D-027 Steffen vorgelegt.
+
+**Tests**: neue Prüfung `scripts/links-pruefen.py` im CI-Schritt `regeln`:
+bricht ab, wenn ein Verweis in den Dokumenten auf eine fehlende Datei oder
+einen fehlenden Abschnitt zeigt oder eine Nummer im Entscheidungsprotokoll
+doppelt vergeben ist. Einmal rot gesehen (falscher Anker, falsche Datei,
+doppelte Nummer).
+- Nummern im Entscheidungsprotokoll vergibt die Projektplanung zentral, in Blöcken je Thread.
+- Konzeptdatei liegt nach D-017 unter `docs/konzepte/phase-2-3.md`.
 
 ## 0.5.0 – 25.10.2026
 

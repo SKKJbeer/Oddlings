@@ -10,7 +10,9 @@ Hier stehen Rollen und Regeln.
 - Jeder Turm hat einen erkennbaren Zweck.
 - Türme ergänzen sich; keiner ist in jeder Lage die beste Wahl.
 - Werte sind konfigurierbar, nicht im Code verstreut.
-- Upgrades kommen später (**[VORSCHLAG D-008]**: nicht im MVP).
+- Upgrades kommen später (**[VORSCHLAG D-008]**: nicht im MVP). Konzept für Phase 2:
+  [K1](../konzepte/phase-2-3.md#k1--aufwertungen-mit-einer-gabelung-je-turm) (D-024).
+  Rüstung, Immunität, Bosse, Schattenflieger: [K7](../konzepte/phase-2-3.md#k7--gegner-bosse-rüstung).
 
 ## Türme im MVP
 

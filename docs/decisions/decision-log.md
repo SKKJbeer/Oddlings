@@ -3,7 +3,22 @@
 Eine Zeile je Entscheidung. Wird eine Entscheidung geändert, bekommt sie einen
 neuen Eintrag, der den alten nennt; der alte bleibt stehen.
 
-Status: **entschieden** · **vorgeschlagen** (wartet auf Steffen) · **verworfen**
+Status: **entschieden** · **gilt** (von Claude festgelegt, klein und umkehrbar; Einspruch jederzeit) · **vorgeschlagen** (wartet auf Steffen) · **verworfen**
+
+**Nummern vergibt die Projektplanung zentral** (Thread „Roadmap und offene
+Spielkonzepte führen"). Vergeben bzw. reserviert:
+
+| Nummern | Thread |
+|---|---|
+| D-001 bis D-015 | Phase 0, Simulation |
+| D-016 | AAA-Grafik (Grafikstil) |
+| D-017 bis D-019 | Simulation (WP-12 bis WP-14) |
+| D-020 bis D-029 | Projektplanung |
+| D-030 bis D-039 | Spieloberfläche und Menüs |
+| D-040 bis D-049 | AAA-Grafik |
+| ab D-050 | frei, Block von zehn bei der Projektplanung anfragen |
+
+Eine Nummer doppelt bricht den CI-Schritt `regeln` (`scripts/links-pruefen.py`).
 
 | ID | Datum | Entscheidung | Status | Begründung / Optionen |
 |---|---|---|---|---|
@@ -25,6 +40,14 @@ Status: **entschieden** · **vorgeschlagen** (wartet auf Steffen) · **verworfen
 | D-018 | 25.10.2026 | WP-12, WP-13 und WP-14 in einem PR (0.5.0) | entschieden | Steffen will so schnell wie möglich ein spielbares Spiel auf dem iPhone; einzeln wären es drei Bauten ohne spielbaren Zwischenstand |
 | D-019 | 25.10.2026 | Mission läuft weiter, während das Baumenü offen ist | vorgeschlagen (Frage an Steffen offen) | Druck bleibt erhalten; Pause gibt es als eigenen Knopf. Gegen: Anfänger verlieren Zeit im Menü |
 | D-015 | 25.10.2026 | Geschäftsmodell bevorzugt: **kostenlos anspielen (erste Region), Vollversion einmalig, später bezahlte Regionen**; Kosmetik als Zugabe. Endgültig in Phase 5 mit Daten | entschieden (Steffen, 25.10.2026) | [Marktanalyse](../game-design/market-analysis.md) E12; berührt die Leitplanke in [06](../game-design/06-monetization.md). Fairness-Leitplanken bleiben in jedem Fall |
+| D-020 | 25.10.2026 | D-003 (Architektur des Simulationspakets), D-009 (Wellentakt) und D-011 (Dokumentstruktur) **gelten**: umgesetzt und durch Tests gedeckt (WP-02 bis WP-11). D-009 wird im Spieltest WP-15 mit geprüft | gilt (Claude) | Projektplanung; ändert nichts an Code oder Regeln |
+| D-021 | 25.10.2026 | Ergänzt D-017: Konzepte für Phase 2 und 3, die auf Steffen warten, stehen in [phase-2-3.md](../konzepte/phase-2-3.md); nach der Entscheidung wandern sie ins Fachdokument. Offene Fragen im [Register](../production/offene-fragen.md), Stand für Steffen in [status.md](../production/status.md), nach jedem Meilenstein neu | gilt (Claude) | Eine Stelle je Entscheidung (CLAUDE.md) |
+| D-022 | 25.10.2026 | Speicherstand lokal: JSON mit Schemaversion, atomar geschrieben, vorige Fassung bleibt, beim Laden geprüft, Migration je Version mit Test; laufende Mission nur fortsetzen, wenn die Missionsdatei unverändert ist. Cloud offen bis Phase 4 | gilt (Claude) | [K6](../konzepte/phase-2-3.md#k6--speicherstand); setzt die Sicherheitsregel „Prüfen beim Laden" um |
+| D-023 | 25.10.2026 | Reine Dokument-PRs heben die Version nicht und lösen keinen Bau aus; sie stehen im CHANGELOG als „Dokumente, kein Bau" | gilt (Claude) | Eine Version zählt, was in der App steckt; ein Bau ohne Änderung verbraucht eine Nummer |
+| D-024 | 25.10.2026 | E-1: Aufwertungen in Phase 2 mit zwei Stufen und einer Gabelung je Turm, Zielwahl ab Stufe 2 | vorgeschlagen | [K1](../konzepte/phase-2-3.md#k1--aufwertungen-mit-einer-gabelung-je-turm); Marktanalyse E5, E6 |
+| D-025 | 25.10.2026 | E-2: eine aktive Festungsfähigkeit in Phase 2 (Steinregen); ab Phase 3 bestimmt das Volk die Fähigkeit und einen kleinen passiven Zug, kein volkseigener Turm vor dem Release | vorgeschlagen | [K2](../konzepte/phase-2-3.md#k2--festungsfähigkeit-und-völker); Marktanalyse E7; klärt das [OFFEN] in 03 |
+| D-026 | 25.10.2026 | E-3 (zu D-010): Zwergenbank ist ein Grundturm für alle; Zwerge haben ihren Zug an der Bank | vorgeschlagen | [K3](../konzepte/phase-2-3.md#k3--zwergenbank) |
+| D-027 | 25.10.2026 | E-4: kostenlose Region 1 mit sieben Haupt- und zwei Nebenmissionen, Gabelung, Boss; Völker am Ende von Region 1 frei; Fortschritt ohne Werteboni und ohne zweite Währung | vorgeschlagen | [K4](../konzepte/phase-2-3.md#k4--kampagne-und-regionen), [K5](../konzepte/phase-2-3.md#k5--fortschritt-und-freischaltungen); folgt aus D-015 |
 | D-030 | 25.10.2026 | **Reservierte HUD-Ecken je Mission**: vier Eckbereiche ohne Bauplatz (Mission 1: Zeile 0 Spalten 0–3 und 15, Zeile 8 Spalten 0–1 und 15), gleich auf jedem Gerät | zurückgestellt bis zum Spieltest WP-15 (Steffen, 25.10.2026) | [07](../game-design/07-ui-ux.md#2-raster-und-bildschirm): Auf dem iPhone SE füllt die Karte den Schirm; gerätegleiche Bauplätze halten die Balance gerätegleich. Berührt die Balance (8 Bauplätze weniger). Braucht `map.reservedCells` in der Missionsdatei, Prüfung beim Laden, Ausschluss in `buildableCells`, Balancetests neu |
 | D-031 | 25.10.2026 | **Turmauswahl im Kreismenü am Feld**, Bauen und Verkaufen per zweitem Tippen | vorgeschlagen, liegt Steffen vor | [07](../game-design/07-ui-ux.md#bauen); Optionen: Kreismenü (Empfehlung), feste Leiste am Rand, Kreismenü plus Anzeigeleiste |
 | D-032 | 25.10.2026 | Schriften **Lilita One** und **Nunito** (SIL OFL), als Datei in der App | vorgeschlagen | [07](../game-design/07-ui-ux.md#7-schrift); kostenlos, offline, gleiche Paarung wie Stack & Siege |

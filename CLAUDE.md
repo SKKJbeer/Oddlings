@@ -66,7 +66,10 @@ und fragt. Das gilt besonders für Netzcode, Monetarisierung und Völker.
 | Architektur | [docs/technical/architecture.md](docs/technical/architecture.md) |
 | Datenmodelle | [docs/technical/data-models.md](docs/technical/data-models.md) |
 | Tests | [docs/technical/testing-strategy.md](docs/technical/testing-strategy.md) |
-| Phasen | [docs/production/roadmap.md](docs/production/roadmap.md) |
+| Phasen, Meilensteine, Abhängigkeiten | [docs/production/roadmap.md](docs/production/roadmap.md) |
+| Stand für Steffen (Fertig / Läuft / Als Nächstes) | [docs/production/status.md](docs/production/status.md) |
+| Offene Fragen, wer entscheidet | [docs/production/offene-fragen.md](docs/production/offene-fragen.md) |
+| Konzepte, die auf Entscheidung warten | [docs/konzepte/phase-2-3.md](docs/konzepte/phase-2-3.md) |
 | Arbeitspakete | [docs/production/backlog.md](docs/production/backlog.md) |
 | Entscheidungen | [docs/decisions/decision-log.md](docs/decisions/decision-log.md) |
 
