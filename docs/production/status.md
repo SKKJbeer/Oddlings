@@ -5,7 +5,7 @@ ergänzt). Die Reihenfolge und Abhängigkeiten stehen in der
 [Roadmap](roadmap.md), die Pakete im [Backlog](backlog.md), offene Fragen im
 [Register](offene-fragen.md).
 
-**Stand: 25.10.2026, 16:05** · Phase 1, M1.3 erreicht und auf dem Gerät, M1.4 als Nächstes
+**Stand: 25.10.2026, 16:35** · Phase 1, M1.3 erreicht und auf dem Gerät, M1.4 als Nächstes
 
 ## Fertig
 
@@ -23,6 +23,10 @@ ergänzt). Die Reihenfolge und Abhängigkeiten stehen in der
 - Balance-Labor für automatisierte Balance- und Stresstests eingeplant (K11, D-028):
   Grundstock in Phase 2, Vollausbau in Phase 4.
 - Ende-zu-Ende-Tests als Pflicht für jedes Paket mit Bedienung festgelegt (D-029).
+- **Richtung für Phase 2 und 3 entschieden** (25.10.2026): Aufwertungen mit Gabelung
+  (D-024), Festungsfähigkeit und Völker (D-025), Zwergenbank für alle (D-026),
+  Region 1 mit sieben Haupt- und zwei Nebenmissionen (D-027), Kreismenü zum Bauen (D-031).
+  Die Konzepte stehen jetzt in den Fachdokumenten 02 bis 05.
 
 ## Läuft
 
@@ -31,7 +35,7 @@ ergänzt). Die Reihenfolge und Abhängigkeiten stehen in der
 | Designstand und MVP-Plan (Code) | WP-15 Spieltest vorbereiten | Beobachtungsbogen, Protokoll unter `docs/production/playtests/` |
 | AAA-Grafik | Türme, Gegner, Festung, Karte im Stil A | Atlas per PR, dann Charakterblätter, Zwergenbank, Völker |
 | Spieloberfläche und Menüs | Mockups für HUD, Menü, Pause, Ergebnis | UI-Konzept, Abstimmung mit Code- und Grafik-Thread |
-| Projektplanung | Roadmap, Register, dieses Dokument (Konzepte K1–K10 auf main) | Entscheidungen E-1 bis E-4 einarbeiten, Phase 2 nach WP-15 schneiden |
+| Projektplanung | Roadmap, Register, dieses Dokument | Phase 2 nach WP-15 schneiden |
 
 ## Als Nächstes
 
@@ -44,11 +48,5 @@ ergänzt). Die Reihenfolge und Abhängigkeiten stehen in der
 
 ## Wartet auf Steffen
 
-| | Frage | Empfehlung |
-|---|---|---|
-| E-1 | Aufwertungen in Phase 2? | Ja, zwei Stufen und eine Gabelung je Turm |
-| E-2 | Festungsfähigkeit und Völker | Eine Fähigkeit in Phase 2; Volk bestimmt später Fähigkeit und einen kleinen Zug |
-| E-3 | Zwergenbank für alle oder nur Zwerge (D-010) | Für alle, Zwerge mit Bank-Zug |
-| E-4 | Umfang der kostenlosen Region 1 | Sieben Haupt- und zwei Nebenmissionen mit Gabelung |
-
-Außerdem offen bei Steffen: D-019 (läuft die Mission weiter, während das Baumenü offen ist?) aus dem Code-Thread, und ohne Eile die Messung des Spikes auf dem iPhone (WP-01).
+D-019 (läuft die Mission weiter, während das Baumenü offen ist?) aus dem Code-Thread.
+Ohne Eile: die Messung des Spikes auf dem iPhone (WP-01).
