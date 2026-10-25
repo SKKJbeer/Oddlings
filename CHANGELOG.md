@@ -13,7 +13,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 
 ## Dokumente, kein Bau – 25.10.2026 (Bedienung Phase 2, Kreismenü entschieden)
 
-- Bedienung für Aufwerten und Gabelung, Zielwahl, Zwergenbank, Bonus für frühes Rufen und Steinregen ([07](docs/game-design/07-ui-ux.md#8-phase-2-aufwerten-fähigkeit-bank)), Kampagnenkarte nach K4. Vorschlag D-033.
+- Bedienung für Aufwerten und Gabelung, Zielwahl, Zwergenbank, Bonus für frühes Rufen und Steinregen ([07](docs/game-design/07-ui-ux.md#8-phase-2-aufwerten-fähigkeit-bank)), Kampagnenkarte nach K4. D-033 entschieden: Steinregen unten rechts, Tempo oben neben der Pause.
 - D-031 entschieden: Türme werden im Kreismenü am Feld gewählt, Bauen und Verkaufen per zweitem Tippen ([07](docs/game-design/07-ui-ux.md#bauen)).
 
 ## Dokumente, kein Bau – 25.10.2026 (Oberfläche)

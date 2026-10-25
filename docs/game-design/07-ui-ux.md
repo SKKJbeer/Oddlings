@@ -282,7 +282,7 @@ Spieler sieht den Preis des Wartens, ohne dass ein Text ihn erklärt.
   Die Fähigkeit wird in jeder Welle gebraucht, das Tempo einmal je Mission.
   Deshalb tauschen sie in Phase 2: **Tempo rückt oben rechts neben die Pause**
   (Zeile 0, Spalten 14–15), unten rechts liegt die Fähigkeit. Die Zahl der
-  freizuhaltenden Felder bleibt gleich (siehe D-030). Vorschlag **D-033**.
+  freizuhaltenden Felder bleibt gleich (siehe D-030). **[ENTSCHIEDEN]** D-033 (Steffen, 25.10.2026).
 - **Laden:** Der Rand füllt sich im Uhrzeigersinn golden. Bereit: voller
   Goldrand und zwei kurze Pulse, dann Ruhe (kein Dauerblinken; bei „Bewegung
   reduzieren" gar nicht).
