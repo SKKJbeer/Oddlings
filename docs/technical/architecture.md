@@ -97,7 +97,6 @@ Oddlings/
 │   ├── Sources/OddlingsCore/
 │   │   └── Resources/Balance/   Balancewerte, die einzige Quelle (seit WP-02)
 │   └── Tests/OddlingsCoreTests/
-├── tools/balance-sim/           Prüfskript Phase 0, wird durch Swift-Tests abgelöst
 └── docs/
 ```
 

@@ -121,6 +121,7 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
 - **Abnahme:** Swift-Bot liefert dieselbe Rangfolge der Bauweisen wie das Prüfskript.
 - **Tests:** siehe Ebenen „Determinismus" und „Balancetests".
 - **Abh.:** WP-06 … WP-09 · **Risiken:** Abweichende Ergebnisse zwischen Python und Swift → ein Befund, nicht übergehen
+- **Stand:** Umgesetzt. `GameState.checksum` (FNV-1a über die Bitmuster, nicht über JSON), `DeterminismTests`, Bot und `BalanceTests` in den Tests (Gewichte des Bots sind Prüfwerkzeug, keine Spielwerte). Rangfolge gleich wie im Skript, Abstände kleiner: Befund in [04](../game-design/04-economy-and-balance.md#ergebnis-der-prüfung). Python-Skript und CI-Schritt gelöscht.
 
 ### WP-11 · Szene zeigt die Simulation
 - **Ziel:** Man sieht, was die Simulation tut.

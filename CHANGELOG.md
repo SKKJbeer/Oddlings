@@ -11,6 +11,28 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), löst keinen Bau aus.
   Dort steht „kein Bau“.
 
+## 0.3.0 – 25.10.2026
+
+**Neu**
+- WP-10: Prüfsumme über den ganzen Spielzustand. Gleicher Startwert und gleiche
+  Befehle ergeben dieselbe Prüfsumme, auch nach Speichern und Laden mitten in der
+  Welle und bei doppelter Geschwindigkeit.
+- Balance wird jetzt im Swift-Paket geprüft (`BalanceTests`), mit denselben
+  Bot-Bauweisen wie vorher in Python. Die Bauweisen stehen in
+  `mvp-mission-01.json` unter `simStrategies`.
+
+**Entfernt**
+- Python-Prüfskript `tools/balance-sim` und der CI-Schritt `balance`. Zwei
+  Umsetzungen derselben Regeln wären auseinandergelaufen.
+
+**Befund**: Rangfolge der Bauweisen wie in Phase 0, die Abstände sind kleiner,
+weil Türme nicht mehr auf schon tote Ziele schießen (Einzelheiten in
+`docs/game-design/04-economy-and-balance.md`).
+
+**Tests**: `DeterminismTests`, `BalanceTests`.
+
+Bau: wird nach dem Zusammenführen nachgetragen.
+
 ## 0.2.0 – 25.10.2026
 
 **Neu**
@@ -33,7 +55,7 @@ Bau: wird nach dem Zusammenführen nachgetragen.
 **Neu**
 - Dieses Änderungsprotokoll, rückwirkend ab Phase 0.
 
-Bau: **13 VALID** (Probebau vom Arbeitszweig vor dem Zusammenführen).
+Bau: **13 VALID** (Probebau vom Arbeitszweig vor dem Zusammenführen), **14 VALID** (von main).
 
 ## 0.1.0 – 25.10.2026
 

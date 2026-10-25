@@ -30,7 +30,7 @@ targets:
       - package: OddlingsCore
     sources:
       - path: App
-      # Dieselbe Datei, die das Prüfskript liest: Der Spike zeichnet die echte
+      # Dieselbe Datei, die die Simulation liest: Der Spike zeichnet die echte
       # Karte von Mission 1, nicht eine ausgedachte.
       - path: Packages/OddlingsCore/Sources/OddlingsCore/Resources/Balance/mvp-mission-01.json
         buildPhase: resources
@@ -38,7 +38,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: de.skkjbeer.oddlings
         PRODUCT_NAME: Oddlings
-        MARKETING_VERSION: "0.2.0"
+        MARKETING_VERSION: "0.3.0"
         CURRENT_PROJECT_VERSION: "1"
         # Nur iPhone (D-006). Ein iPad startet die App trotzdem, im Kompatibilitätsmodus.
         TARGETED_DEVICE_FAMILY: "1"

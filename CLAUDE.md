@@ -106,8 +106,8 @@ Arbeit per PR, nicht direkt auf `main`.
 ## Testen
 
 - Simulation: `swift test --package-path Packages/OddlingsCore` (ab WP-02).
-- Balance (bis WP-10): `python3 tools/balance-sim/sim.py --reserve`.
-- Jede Balanceänderung: Prüfskript bzw. Balancetests laufen lassen und Ergebnis in
+- Balance: `BalanceTests` im Paket (Bot-Bauweisen aus `simStrategies`, Reserve je Bauweise).
+- Jede Balanceänderung: Balancetests laufen lassen und Ergebnis in
   [04](docs/game-design/04-economy-and-balance.md) nachtragen.
 - Jeder neue Test wird einmal rot gesehen.
 - **Cloud-Sitzungen:** Swift für Linux kommt über `scripts/swift-linux.sh`, das der

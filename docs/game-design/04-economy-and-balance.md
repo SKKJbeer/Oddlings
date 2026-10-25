@@ -77,8 +77,10 @@ Gold gesamt in der Mission: 1 291. Das reicht für rund 20 Türme.
 
 ## Wie die Werte geprüft wurden
 
-[`tools/balance-sim/sim.py`](../../tools/balance-sim/sim.py) liest dieselbe
-JSON-Datei, simuliert die Mission mit 30 Schritten je Sekunde und lässt sieben
+Die Balancetests im Simulationspaket
+([`BalanceTests`](../../Packages/OddlingsCore/Tests/OddlingsCoreTests/BalanceTests.swift),
+Bot in [`BalanceBot`](../../Packages/OddlingsCore/Tests/OddlingsCoreTests/BalanceBot.swift))
+spielen Mission 1 mit der echten Simulation und lassen sieben
 Bauweisen gegeneinander antreten. Ein einfacher Bot baut, sobald das Gold reicht,
 den nächsten Turm seiner Liste auf den Platz mit der größten Wegabdeckung;
 Sporen setzt er dorthin, wo die meisten anderen Türme schießen, Blitze in die
@@ -89,20 +91,36 @@ dem die Bauweise noch gewinnt. 1,35 heißt: Die Gegner dürften 35 % mehr Leben
 haben, und es reichte noch.
 
 ```
-python3 tools/balance-sim/sim.py --reserve
+swift test --package-path Packages/OddlingsCore --filter BalanceTests
 ```
+
+Die Tests prüfen Beziehungen (Blitz + Sporen mehr als 0,3 vor Blitz allein,
+Mischung mehr als 0,1 vor nur Wachtürmen, nur Wachtürme über 1,0), keine genauen
+Zahlen. Die Bauweisen stehen unter `simStrategies` in der Missionsdatei.
 
 ### Ergebnis der Prüfung
 
-| Bauweise | Ergebnis | Reserve |
-|---|---|---|
-| Blitz + Sporen, keine Wachtürme | Sieg | **1,42** |
-| Mischung aus allen dreien | Sieg | 1,35 |
-| Wachturm + Blitz | Sieg | 1,20 |
-| Wachturm + Sporen | Sieg | 1,14 |
-| Nur Wachtürme | Sieg | 1,10 |
-| Nur Blitztürme | Niederlage in Welle 6 | 0,86 |
-| Nur Sporentürme | Niederlage in Welle 4 | 0 |
+Bis WP-10 rechnete ein Python-Skript (Phase 0) mit eigener, vereinfachter
+Nachbildung der Regeln. Seit WP-10 rechnet die echte Simulation (25.10.2026):
+
+| Bauweise | Ergebnis (Swift) | Reserve Swift | Reserve Phase 0 |
+|---|---|---|---|
+| Blitz + Sporen, keine Wachtürme | Sieg | **1,36** | 1,42 |
+| Mischung aus allen dreien | Sieg | 1,35 | 1,35 |
+| Wachturm + Blitz | Sieg | 1,20 | 1,20 |
+| Wachturm + Sporen | Sieg | 1,19 | 1,14 |
+| Nur Wachtürme | Sieg | 1,18 | 1,10 |
+| Nur Blitztürme | Niederlage in Welle 6 | 0,86 | 0,86 |
+| Nur Sporentürme | Niederlage in Welle 3 | 0,51 | 0 |
+
+Die Rangfolge ist dieselbe (Abnahme WP-10). **Befund:** Die Abstände sind
+kleiner geworden. Nur Wachtürme steigt von 1,10 auf 1,18, weil die Simulation
+keine Schüsse an schon tödlich Getroffene verschwendet ([02](02-combat-and-towers.md));
+das Skript tat das, und Einzelzieltürme litten am meisten darunter. Wachturm +
+Sporen liegt nur noch 0,01 vor reinen Wachtürmen, Blitz + Sporen nur noch 0,01
+vor der Mischung. Die Kernsynergie (Blitz mit Sporen gegen Blitz allein) trägt
+weiter deutlich. Für Mission 1 ist das vertretbar; ob Sporen neben Wachtürmen
+spürbar helfen, ist eine Frage an den Spieltest und an die Werte in Phase 2.
 
 Was das sagt:
 
@@ -134,8 +152,7 @@ für Spieler schwer zu sehen ist (Risiko P1 in der
 - Keine Ziellogik-Varianten; Zielwahl ist immer „erster".
 - Eine Karte, ein Weg.
 
-Sobald der Swift-Kern rechnet (Backlog WP-10), ersetzen Balancetests in Swift
-dieses Skript, damit es nicht zwei Wahrheiten gibt.
+Seit WP-10 gibt es nur noch diese eine Rechnung; das Python-Skript ist gelöscht.
 
 ## Zwergenbank (Phase 2)
 

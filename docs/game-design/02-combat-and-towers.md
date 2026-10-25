@@ -23,8 +23,8 @@ Hier stehen Rollen und Regeln.
   bei Gleichstand der ältere.
 - **[VORSCHLAG]** Kein Schuss auf schon tödlich Getroffene: Feuern zwei Türme im
   selben Tick, nimmt der zweite den nächsten Gegner, statt seinen Schuss an einen
-  Toten zu verschwenden. Fühlt sich klüger an und ist üblich; das Prüfskript
-  verschwendet ihn noch (seit WP-06 so in der Simulation).
+  Toten zu verschwenden. Fühlt sich klüger an und ist üblich (seit WP-06 so in der
+  Simulation; Folgen für die Balance in [04](04-economy-and-balance.md#ergebnis-der-prüfung)).
 - **[VORSCHLAG]** Treffer ohne Flugzeit (sofort). Ein sichtbares Geschoss ist nur
   Darstellung. Begründung: Geschosse mit Flugzeit erzeugen Fehlschüsse auf
   schnelle Ziele, das ist eine zusätzliche Regel, die der MVP nicht braucht.

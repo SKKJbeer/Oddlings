@@ -9,8 +9,8 @@ SwiftUI und SpriteKit.
 - Analyse des Designstands: [docs/production/phase-0-analyse.md](docs/production/phase-0-analyse.md)
 - Arbeitspakete: [docs/production/backlog.md](docs/production/backlog.md)
 
-Balancewerte der ersten Mission prüfen:
+Simulation und Balancewerte der ersten Mission prüfen:
 
 ```
-python3 tools/balance-sim/sim.py --reserve
+swift test --package-path Packages/OddlingsCore
 ```
