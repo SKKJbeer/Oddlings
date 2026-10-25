@@ -49,6 +49,7 @@ public struct Simulation: Sendable {
         collectKills(&state, &events)
         move(&state)
         leak(&state, &events)
+        checkVictory(&state, &events)
         state.tick += 1
         return events
     }
@@ -82,6 +83,14 @@ public struct Simulation: Sendable {
             state.gold += refund
             state.towers.remove(at: index)
             events.append(.towerSold(id: towerID, refund: refund))
+
+        case .callNextWave:
+            guard state.nextWaveTick != nil else {
+                return events.append(.commandRejected(command, reason: .noWaveLeft))
+            }
+            // Der Plan verschiebt sich mit: Der Takt zur übernächsten Welle läuft
+            // ab dem letzten Erscheinen dieser, wie bei einem regulären Start.
+            state.nextWaveTick = state.tick
         }
     }
 
@@ -257,6 +266,16 @@ public struct Simulation: Sendable {
             }
             state.enemies[index].distance += enemy.speed * factor * perTick
         }
+    }
+
+    /// Sieg (01-core-gameplay.md): alle Wellen erschienen, niemand lebt mehr.
+    /// Läuft nach den Durchbrüchen, damit ein Durchbruch im letzten Tick zuerst
+    /// zählt; hat er die Festung geleert, ist die Mission schon verloren.
+    private func checkVictory(_ state: inout GameState, _ events: inout [Event]) {
+        guard state.outcome == nil, state.nextWaveTick == nil,
+              state.pendingSpawns.isEmpty, state.enemies.isEmpty else { return }
+        state.outcome = .won
+        events.append(.missionEnded(won: true))
     }
 
     private func leak(_ state: inout GameState, _ events: inout [Event]) {

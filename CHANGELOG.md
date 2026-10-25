@@ -11,6 +11,18 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), löst keinen Bau aus.
   Dort steht „kein Bau“.
 
+## 0.2.0 – 25.10.2026
+
+**Neu**
+- WP-09: Sieg, sobald alle Wellen erschienen und keine Gegner mehr da sind.
+  Ein letzter Durchbruch zählt vorher, eine verlorene Festung gewinnt nicht mehr.
+- Befehl „Nächste Welle“ (`callNextWave`): startet die nächste Welle sofort und
+  schiebt den restlichen Takt mit. Ohne verbleibende Welle wird er abgewiesen.
+
+**Tests**: `VictoryTests` (Sieg, Reihenfolge Durchbruch vor Sieg, Welle rufen).
+
+Bau: wird nach dem Zusammenführen nachgetragen.
+
 ## 0.1.1 – 25.10.2026
 
 **Behoben**
@@ -21,7 +33,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 **Neu**
 - Dieses Änderungsprotokoll, rückwirkend ab Phase 0.
 
-Bau: wird nach dem Zusammenführen nachgetragen.
+Bau: **13 VALID** (Probebau vom Arbeitszweig vor dem Zusammenführen).
 
 ## 0.1.0 – 25.10.2026
 
