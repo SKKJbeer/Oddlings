@@ -11,7 +11,7 @@ Spielkonzepte führen"). Vergeben bzw. reserviert:
 | Nummern | Thread |
 |---|---|
 | D-001 bis D-015 | Phase 0, Simulation |
-| D-016 | AAA-Grafik (Grafikstil) |
+| D-016 (nur diese) | AAA-Grafik (Grafikstil) |
 | D-017 bis D-019 | Simulation (WP-12 bis WP-14) |
 | D-020 bis D-029 | Projektplanung |
 | D-030 bis D-039 | Spieloberfläche und Menüs |
@@ -41,6 +41,7 @@ Eine Nummer doppelt bricht den CI-Schritt `regeln` (`scripts/links-pruefen.py`).
 | D-019 | 25.10.2026 | Mission läuft weiter, während das Baumenü offen ist | entschieden (Steffen, 25.10.2026) | Druck bleibt erhalten; Pause gibt es als eigenen Knopf. Gegen: Anfänger verlieren Zeit im Menü |
 | D-034 | 25.10.2026 | Mission hält an, wenn die App in den Hintergrund geht | vorgeschlagen | Niemand verpasst eine Welle durch einen Anruf; Vorbilder aus der Marktanalyse tun es ebenso |
 | D-015 | 25.10.2026 | Geschäftsmodell bevorzugt: **kostenlos anspielen (erste Region), Vollversion einmalig, später bezahlte Regionen**; Kosmetik als Zugabe. Endgültig in Phase 5 mit Daten | entschieden (Steffen, 25.10.2026) | [Marktanalyse](../game-design/market-analysis.md) E12; berührt die Leitplanke in [06](../game-design/06-monetization.md). Fairness-Leitplanken bleiben in jedem Fall |
+| D-016 | 25.10.2026 | **Grafikstil „Stylized 3D"**: gemalte Oberflächen auf plastischen Formen, dunkle Konturen, satte Farben, 3/4-Aufsicht | entschieden (Steffen, 25.10.2026) | Aus drei Stilmustern gewählt ([art/stilmuster](../../art/stilmuster/ENTSTEHUNG.md)), Begründung und Konzept in [art-direction](../art/art-direction.md). Gegen Märchenbuch (schlechtere Trennung Figur/Boden) und Miniatur (Unschärfe) |
 | D-020 | 25.10.2026 | D-003 (Architektur des Simulationspakets), D-009 (Wellentakt) und D-011 (Dokumentstruktur) **gelten**: umgesetzt und durch Tests gedeckt (WP-02 bis WP-11). D-009 wird im Spieltest WP-15 mit geprüft | gilt (Claude) | Projektplanung; ändert nichts an Code oder Regeln |
 | D-021 | 25.10.2026 | Ergänzt D-017: Konzepte für Phase 2 und 3, die auf Steffen warten, stehen in [phase-2-3.md](../konzepte/phase-2-3.md); nach der Entscheidung wandern sie ins Fachdokument. Offene Fragen im [Register](../production/offene-fragen.md), Stand für Steffen in [status.md](../production/status.md), nach jedem Meilenstein neu | gilt (Claude) | Eine Stelle je Entscheidung (CLAUDE.md) |
 | D-022 | 25.10.2026 | Speicherstand lokal: JSON mit Schemaversion, atomar geschrieben, vorige Fassung bleibt, beim Laden geprüft, Migration je Version mit Test; laufende Mission nur fortsetzen, wenn die Missionsdatei unverändert ist. Cloud offen bis Phase 4 | gilt (Claude) | [K6](../konzepte/phase-2-3.md#k6--speicherstand); setzt die Sicherheitsregel „Prüfen beim Laden" um |

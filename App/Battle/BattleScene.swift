@@ -122,6 +122,8 @@ final class BattleScene: SKScene {
         layout = BoardLayout(size: size, map: map)
 
         ground.removeAllChildren()
+        let painted = BattleSprites.ground(missionID: model.sim.config.mission.id, layout: layout)
+        if let painted { ground.addChild(painted) }
         let inset = BattleStyle.buildZoneInset * field
         for cell in map.buildableCells {
             let tile = SKSpriteNode(color: BattleStyle.buildZone,
@@ -129,30 +131,44 @@ final class BattleScene: SKScene {
             tile.position = toScene(cell.center)
             ground.addChild(tile)
         }
-        let line = CGMutablePath()
-        for (index, point) in map.path.points.enumerated() {
-            if index == 0 { line.move(to: toScene(point)) } else { line.addLine(to: toScene(point)) }
+        if painted == nil {
+            let line = CGMutablePath()
+            for (index, point) in map.path.points.enumerated() {
+                if index == 0 { line.move(to: toScene(point)) } else { line.addLine(to: toScene(point)) }
+            }
+            let pathNode = SKShapeNode(path: line)
+            pathNode.strokeColor = BattleStyle.path
+            pathNode.lineWidth = BattleStyle.pathWidth * field
+            pathNode.lineCap = .round
+            pathNode.lineJoin = .round
+            ground.addChild(pathNode)
         }
-        let pathNode = SKShapeNode(path: line)
-        pathNode.strokeColor = BattleStyle.path
-        pathNode.lineWidth = BattleStyle.pathWidth * field
-        pathNode.lineCap = .round
-        pathNode.lineJoin = .round
-        ground.addChild(pathNode)
 
         // Die Festung sitzt, wo der Weg die Karte verlässt.
         let end = map.path.points[map.path.points.count - 1]
         let gate = Point(x: min(end.x, Double(map.width)), y: end.y)
         fortress.path = CGPath(roundedRect: CGRect(x: -field * 0.6, y: -field * 0.9, width: field * 1.2, height: field * 1.8),
                                cornerWidth: field * 0.2, cornerHeight: field * 0.2, transform: nil)
-        fortress.fillColor = BattleStyle.fortress
-        fortress.strokeColor = .black
+        fortress.removeAllChildren()
+        if let picture = BattleSprites.fortress(field: field) {
+            // Das Bild ersetzt die Form; die Form bleibt als unsichtbarer Träger
+            // für das Aufblitzen bei einem Durchbruch.
+            fortress.fillColor = .clear
+            fortress.strokeColor = .clear
+            // Das Tor sitzt auf der Kartenkante; das Bild rückt so weit herein,
+            // dass die Festung ganz zu sehen ist.
+            picture.position = CGPoint(x: -BattleStyle.fortressSpriteSide * field * 0.3, y: -field * 0.9)
+            fortress.addChild(picture)
+        } else {
+            fortress.fillColor = BattleStyle.fortress
+            fortress.strokeColor = .black
+        }
         fortress.position = toScene(gate)
         fortressHit.path = fortress.path
         fortressHit.fillColor = BattleStyle.leak
         fortressHit.strokeColor = .clear
         fortressHit.alpha = 0
-        if fortressHit.parent == nil { fortress.addChild(fortressHit) }
+        fortress.addChild(fortressHit)
         fortress.removeFromParent()
         ground.addChild(fortress)
 

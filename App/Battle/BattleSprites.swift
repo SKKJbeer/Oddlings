@@ -9,6 +9,11 @@ import UIKit
 enum BattleSprites {
     static func towerName(_ kind: TowerKind) -> String { "tower_\(kind.rawValue)" }
     static func enemyName(_ kind: EnemyKind) -> String { "enemy_\(kind.rawValue)" }
+    static let fortressName = "fortress"
+    /// `mission-01` → `map_mission01_ground`.
+    static func groundName(missionID: String) -> String {
+        "map_\(missionID.replacingOccurrences(of: "-", with: ""))_ground"
+    }
 
     static func texture(named name: String) -> SKTexture? {
         UIImage(named: name) == nil ? nil : SKTexture(imageNamed: name)
@@ -20,9 +25,10 @@ enum BattleSprites {
         node.name = towerName(kind)
         let height = BattleStyle.towerHeight * field
         if let texture = texture(named: towerName(kind)) {
+            let side = BattleStyle.towerSpriteSide * field
             let sprite = SKSpriteNode(texture: texture)
             sprite.anchorPoint = CGPoint(x: 0.5, y: 0.2)
-            sprite.size = CGSize(width: height, height: height)
+            sprite.size = CGSize(width: side, height: side)
             node.addChild(sprite)
         } else {
             let width = BattleStyle.towerFootprint * field
@@ -34,6 +40,31 @@ enum BattleSprites {
             node.addChild(body)
         }
         return node
+    }
+
+    /// Festung, Fuß auf dem Ursprung; nil, solange kein Bild im Katalog liegt.
+    static func fortress(field: CGFloat) -> SKSpriteNode? {
+        guard let texture = texture(named: fortressName) else { return nil }
+        let side = BattleStyle.fortressSpriteSide * field
+        let sprite = SKSpriteNode(texture: texture)
+        sprite.name = fortressName
+        sprite.anchorPoint = CGPoint(x: 0.5, y: BattleStyle.fortressAnchorY)
+        sprite.size = CGSize(width: side, height: side)
+        return sprite
+    }
+
+    /// Gemalter Boden über die ganze Karte, Weg eingemalt. Liegt er im Katalog,
+    /// entfällt die gezeichnete Weglinie; die Bauzonen bleiben als Overlay.
+    static func ground(missionID: String, layout: BoardLayout) -> SKSpriteNode? {
+        let name = groundName(missionID: missionID)
+        guard let texture = texture(named: name) else { return nil }
+        let sprite = SKSpriteNode(texture: texture)
+        sprite.name = name
+        sprite.anchorPoint = .zero
+        sprite.size = CGSize(width: layout.field * CGFloat(layout.columns), height: layout.field * CGFloat(layout.rows))
+        // Linke untere Ecke der Karte in Szenenkoordinaten.
+        sprite.position = layout.scenePoint(Point(x: 0, y: Double(layout.rows)))
+        return sprite
     }
 
     static func enemyBody(_ kind: EnemyKind, field: CGFloat) -> SKNode {
