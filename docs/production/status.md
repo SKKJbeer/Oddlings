@@ -22,6 +22,7 @@ ergänzt). Die Reihenfolge und Abhängigkeiten stehen in der
   ([Konzepte](../konzepte/phase-2-3.md)).
 - Balance-Labor für automatisierte Balance- und Stresstests eingeplant (K11, D-028):
   Grundstock in Phase 2, Vollausbau in Phase 4.
+- Ende-zu-Ende-Tests als Pflicht für jedes Paket mit Bedienung festgelegt (D-029).
 
 ## Läuft
 

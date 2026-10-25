@@ -20,6 +20,13 @@ Stand für Steffen in Kurzform: [status.md](status.md). Offene Fragen:
 [offene-fragen.md](offene-fragen.md). Konzepte für Phase 2 und 3:
 [konzepte/phase-2-3.md](../konzepte/phase-2-3.md).
 
+## Gilt für jedes Paket ab jetzt
+
+- **Ende-zu-Ende-Test** für jeden neuen Ablauf mit Bedienung, in der CI grün vor
+  dem Zusammenführen (D-029, [Teststrategie](../technical/testing-strategy.md#ende-zu-ende-tests-d-029)).
+- **Balance-Bericht** für jede Wertänderung, sobald das Balance-Labor steht (D-028).
+- Konzept vor der Umsetzung (D-017), Tests, Eintrag im CHANGELOG.
+
 ## Meilensteine Phase 1
 
 | | Meilenstein | Pakete | Stand |
@@ -27,7 +34,7 @@ Stand für Steffen in Kurzform: [status.md](status.md). Offene Fragen:
 | M1.1 | Regeln von Mission 1 vollständig und getestet | WP-02 … WP-10 | ✓ 25.10.2026 |
 | M1.2 | Die App zeigt die laufende Simulation | WP-01, WP-11 | ✓ 25.10.2026 (0.4.0) |
 | M1.3 | **Ein Mensch spielt Mission 1 auf dem iPhone** | WP-12, WP-13, WP-14 | ✓ 25.10.2026 (0.5.0, ein PR nach D-018), Bau 19 VALID |
-| M1.4 | Spieltest mit drei Personen, Leistung auf dem Gerät gemessen | WP-15, Messung WP-01 | **als Nächstes** |
+| M1.4 | Spieltest mit drei Personen, Leistung auf dem Gerät gemessen; Ende-zu-Ende-Tests decken Mission 1 vollständig ab (Bauen, Verkaufen, Pause, Tempo, Sieg, Niederlage, Neustart) | WP-15, Messung WP-01, E2E-Grundlage | **als Nächstes** |
 
 Kritischer Pfad: WP-15 (Spieltest mit drei Personen) → Phase 2 schneiden. Alles
 andere läuft daneben und darf diesen Pfad nicht aufhalten. Steffens Vorgabe

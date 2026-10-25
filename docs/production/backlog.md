@@ -185,3 +185,7 @@ Reihenfolge und Abhängigkeiten als Entwurf in der
 [konzepte/phase-2-3.md](../konzepte/phase-2-3.md). Geschnitten wird
 nach WP-15; vorher werden hier keine Phase-2-Pakete angelegt. Das Balance-Labor
 (K11, D-028) ist als P2-6b und Meilenstein M4.1 eingeplant.
+
+**Für jedes Paket mit Bedienung gilt ab WP-15 zusätzlich:** Ende-zu-Ende-Test des
+neuen Ablaufs in `AppUITests/`, grün in der CI (D-029,
+[Teststrategie](../technical/testing-strategy.md#ende-zu-ende-tests-d-029)).
