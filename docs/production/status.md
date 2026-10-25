@@ -5,7 +5,7 @@ ergänzt). Die Reihenfolge und Abhängigkeiten stehen in der
 [Roadmap](roadmap.md), die Pakete im [Backlog](backlog.md), offene Fragen im
 [Register](offene-fragen.md).
 
-**Stand: 25.10.2026, 16:00** · Phase 1, M1.3 erreicht, M1.4 als Nächstes
+**Stand: 25.10.2026, 16:05** · Phase 1, M1.3 erreicht und auf dem Gerät, M1.4 als Nächstes
 
 ## Fertig
 
@@ -14,8 +14,8 @@ ergänzt). Die Reihenfolge und Abhängigkeiten stehen in der
 - Simulation von Mission 1 vollständig und getestet (WP-02 bis WP-10):
   drei Türme, Wellen, Sieg, Niederlage, Determinismus, Balancetests.
 - Die App zeigt die laufende Mission mit Mitspieler (WP-11, Version 0.4.0).
-- **Mission 1 ist per Hand spielbar** (WP-12 bis WP-14, Version 0.5.0): bauen und
-  verkaufen per Tippen, Kopfleiste, Ergebnis, Neustart.
+- **Mission 1 ist per Hand spielbar und in TestFlight** (WP-12 bis WP-14, Version
+  0.5.0, **Bau 19 VALID**): bauen und verkaufen per Tippen, Kopfleiste, Ergebnis, Neustart.
 - TestFlight-Weg steht (D-014); Grafikstil gewählt (D-016, Stylized 3D).
 - Konzepte für Phase 2 und 3 ausgearbeitet: Aufwertungen, Festungsfähigkeit,
   Völker, Zwergenbank, Kampagne, Fortschritt, Speicherstand
@@ -25,14 +25,15 @@ ergänzt). Die Reihenfolge und Abhängigkeiten stehen in der
 
 | Thread | Woran | Nächster Schritt |
 |---|---|---|
-| Designstand und MVP-Plan (Code) | Bau 0.5.0 nach TestFlight | WP-15 Spieltest vorbereiten |
+| Designstand und MVP-Plan (Code) | WP-15 Spieltest vorbereiten | Beobachtungsbogen, Protokoll unter `docs/production/playtests/` |
 | AAA-Grafik | Türme, Gegner, Festung, Karte im Stil A | Atlas per PR, dann Charakterblätter, Zwergenbank, Völker |
 | Spieloberfläche und Menüs | Mockups für HUD, Menü, Pause, Ergebnis | UI-Konzept, Abstimmung mit Code- und Grafik-Thread |
-| Projektplanung | Konzepte, Roadmap, dieses Dokument | Entscheidungen E-1 bis E-4 einarbeiten |
+| Projektplanung | Roadmap, Register, dieses Dokument (Konzepte K1–K10 auf main) | Entscheidungen E-1 bis E-4 einarbeiten, Phase 2 nach WP-15 schneiden |
 
 ## Als Nächstes
 
-1. **Bau 0.5.0 VALID in TestFlight**, dann auf deinem iPhone spielen.
+1. **Spiel Mission 1 auf deinem iPhone** (TestFlight, Bau 19). Was dir auffällt,
+   gehört schon in den Spieltest.
 2. **Erster Spieltest** mit drei Personen (WP-15), dazu die Leistungsmessung auf
    dem iPhone aus WP-01. Danach wird Phase 2 endgültig geschnitten.
 3. Grafik einbauen, sobald der Atlas da ist (Steffens Reihenfolge: erst
