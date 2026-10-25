@@ -19,4 +19,5 @@ Status: **entschieden** · **vorgeschlagen** (wartet auf Steffen) · **verworfen
 | D-010 | 25.10.2026 | Zwergenbank: für alle oder nur für Zwerge? | offen, vor Phase 2 | Übergabe nennt sie Zwergen-Kennzeichen und zugleich Einzelspieler-Wirtschaftsturm |
 | D-011 | 25.10.2026 | Dokumentstruktur weicht leicht ab: Weltkarte + Fortschritt in einer Datei (05), Völker + Avatar in einer (03), Monetarisierung ist 06 | vorgeschlagen | Keine leeren Dateien, keine doppelten Quellen |
 | D-012 | 25.10.2026 | Phase-0-Arbeit kommt per Pull Request ins Repo | entschieden | Steffen, 25.10.2026 |
+| D-014 | 25.10.2026 | Auf das Gerät über TestFlight: `.github/workflows/testflight.yml` bei jeder App-Änderung auf main und per Knopfdruck, interne Gruppe „Team" | entschieden (Steffen, 25.10.2026) | Signatur je Lauf per API (aus CardBeacon übernommen), Zugänge aus Zählora übertragen |
 | D-013 | 25.10.2026 | Bundle-ID `de.skkjbeer.oddlings` | entschieden (Steffen, 25.10.2026) | Muster von Stack & Siege (`de.skkjbeer.stackandsiege`) |

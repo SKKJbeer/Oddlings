@@ -21,8 +21,11 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
   einer Szene, die 300 Sprites auf einem Pfad bewegt und 30 Kettenblitz-Linien je
   Sekunde zeichnet; SwiftUI-HUD darüber, das zweimal je Sekunde einen Zähler ändert.
   CI-Ablauf (macOS) baut die App.
-- **Abnahme:** Auf Steffens iPhone stabil 60 Bilder/s (Xcode-Anzeige), HUD verursacht
+- **Abnahme:** Auf Steffens iPhone stabil 60 Bilder/s (Anzeige in der App), HUD verursacht
   keine Einbrüche; CI grün. Ergebnis als Notiz in `docs/technical/architecture.md`.
+- **Weg aufs Gerät (D-014):** TestFlight. Einmalig von Steffen: App-Eintrag in App Store
+  Connect (Bundle-ID `de.skkjbeer.oddlings`) und Apple-Zugänge aus Zählora übertragen
+  (PulseMeter → Actions → „Apple-Zugänge weitergeben", Ziel Oddlings).
 - **Tests:** CI-Bau. Leistung manuell gemessen und notiert.
 - **Abh.:** WP-00 (Ausrichtung, iOS-Version)
 - **Risiken:** Läuft nicht → Plan B Godot prüfen, bevor weitergebaut wird. Signierung

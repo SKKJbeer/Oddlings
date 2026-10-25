@@ -9,6 +9,8 @@
 **Phase 1 hat begonnen.** Phase 0 ist abgeschlossen (PR #1). In Arbeit: WP-01,
 der Technik-Spike (`App/Spike/`, Wegwerfcode). Noch keine Spiellogik.
 Projekt erzeugen: `xcodegen generate` (Xcode-Projekt ist nicht eingecheckt).
+Aufs Gerät: `.github/workflows/testflight.yml` (bei App-Änderungen auf main automatisch),
+Hilfsskript `scripts/apple.py`. Ein Bau ist erst verfügbar, wenn Apple ihn als VALID meldet.
 
 ## Vision in drei Sätzen
 
