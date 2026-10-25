@@ -40,6 +40,8 @@ final class FxDirectorTests: XCTestCase {
     func testWholeMissionPlaysEveryEffect() {
         let scene = scene(autoplay: true)
         runMission(scene)
+        // Die Münzen des letzten Treffers kommen erst beim Platzen.
+        run(scene, seconds: 1)
         let stats = scene.fx.stats
         XCTAssertEqual(scene.model.state.outcome, .won)
         XCTAssertGreaterThan(stats.arrows, 0, stats.summary)
@@ -118,7 +120,8 @@ final class FxDirectorTests: XCTestCase {
             if target != nil { break }
         }
         let enemy = try XCTUnwrap(target, "Wachturm hat geschossen")
-        let arrival = try XCTUnwrap(scene.fx.arrival(for: enemy.enemyID))
+        let arrival = try XCTUnwrap(scene.fx.arrival(for: enemy.enemyID),
+                                    "Pfeil unterwegs: \(scene.fx.stats.summary) Zeit \(scene.fx.time) Ereignisse \(scene.lastEvents)")
         XCTAssertGreaterThan(arrival, scene.fx.time, "Pfeil fliegt noch")
         XCTAssertEqual(enemy.flash?.alpha ?? -1, 0, accuracy: 0.001, "noch kein Aufblitzen")
         var flashed = false

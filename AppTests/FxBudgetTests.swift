@@ -26,9 +26,8 @@ final class FxBudgetTests: XCTestCase {
                 scene.enumerateChildNodes(withName: "//*") { node, _ in nodes += 1 }
                 // Sterbende Gegner und verkaufte Türme liegen kurz in der
                 // Effektebene; ihr Ersatzkörper ohne Bild ist Figur, kein Effekt.
-                scene.effectLayer.enumerateChildNodes(withName: "//*") { node, _ in
-                    if node is SKShapeNode && !Self.isPiece(node) { shapes += 1 }
-                }
+                // Nicht über „//*": Das sucht ab der Szene und fände die Festung.
+                shapes = Self.effectShapes(in: scene.effectLayer)
                 peakNodes = max(peakNodes, nodes)
                 XCTAssertEqual(shapes, 0, "SKShapeNode in der Effektebene (Bild \(frames))")
             }
@@ -43,12 +42,12 @@ final class FxBudgetTests: XCTestCase {
         XCTAssertLessThan(averageMS, FxStyle.frameBudgetMS)
     }
 
-    private static func isPiece(_ node: SKNode) -> Bool {
-        var current = node.parent
-        while let parent = current {
-            if parent is EnemyNode || parent is TowerNode { return true }
-            current = parent.parent
+    /// Formen unterhalb der Effektebene, ohne die Figuren darin: Sterbende
+    /// Gegner liegen kurz dort, ihr Ersatzkörper ohne Bild ist kein Effekt.
+    private static func effectShapes(in node: SKNode) -> Int {
+        node.children.reduce(0) { count, child in
+            if child is EnemyNode || child is TowerNode { return count }
+            return count + (child is SKShapeNode ? 1 : 0) + effectShapes(in: child)
         }
-        return false
     }
 }
