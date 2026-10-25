@@ -95,7 +95,7 @@ jobs:
             -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/Oddlings.xcarchive" \
             DEVELOPMENT_TEAM="$APPLE_TEAM_ID" CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
             CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="Apple Distribution" \
-            PROVISIONING_PROFILE_SPECIFIER="$PROFIL" 2>&1 | tail -40
+            ODDLINGS_PROFIL="$PROFIL" 2>&1 | tail -40
           cat > "$RUNNER_TEMP/export.plist" <<PLIST
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
