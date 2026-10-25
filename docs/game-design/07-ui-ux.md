@@ -50,7 +50,7 @@ Folgerungen:
   dann vollständig im sicheren Bereich.
 - **Auf dem iPhone SE gibt es keinen Rand.** Das HUD muss deshalb auf der Karte
   liegen. Damit es keine Bauplätze verdeckt, reserviert jede Mission vier
-  Eckbereiche (**D-030**, vorgeschlagen):
+  Eckbereiche (**D-030**, vorgeschlagen; Steffen hat am 25.10.2026 entschieden, erst den Spieltest WP-15 abzuwarten: Treten mit der heutigen Kopfleiste Fehltipps auf, kommt der Vorschlag wieder auf den Tisch):
 
 | Ecke | Felder (Mission 1) | Inhalt | Warum dort |
 |---|---|---|---|
@@ -207,7 +207,7 @@ Eintrag **D-032** (vorgeschlagen).
 ## 8 Offen
 
 - **D-031** Turmauswahl: Kreismenü am Feld (Empfehlung) oder feste Leiste.
-- **D-030** reservierte HUD-Ecken je Mission (betrifft die Missionsdatei).
+- **D-030** reservierte HUD-Ecken je Mission: wartet auf den Spieltest WP-15 (Fehltipps beobachten).
 - Kombi-Bilanz und Niederlagen-Hinweis: Phase 2, nach dem ersten Spieltest.
 - Linkshänder-Spiegelung der unteren Ecken: Kandidat für die Einstellungen,
   erst wenn der Spieltest danach fragt.

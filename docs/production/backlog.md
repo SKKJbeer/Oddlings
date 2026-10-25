@@ -171,7 +171,7 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
 - **Ziel:** Phase 1 abschließen mit Menschen, nicht mit Code.
 - **Umfang:** Build auf Steffens Gerät bzw. TestFlight; drei Personen spielen Mission 1;
   Beobachtungsbogen: Wird der Sporenturm gebaut? Wann? Verstehen sie die Kette?
-  Dauer, Ergebnis, Abbrüche, Fehltipps.
+  Dauer, Ergebnis, Abbrüche, Fehltipps (entscheidet D-030, HUD-Ecken).
 - **Abnahme:** Protokoll in `docs/production/playtests/`; Balancewerte angepasst oder
   bestätigt; Phase 2 geschnitten.
 - **Abh.:** WP-14 · **Risiken:** Ergebnis „macht keinen Spaß" ist ein gültiges Ergebnis
