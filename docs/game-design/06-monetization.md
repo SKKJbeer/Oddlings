@@ -4,15 +4,18 @@
 
 ## Leitplanken [ENTSCHIEDEN]
 
-- Free-to-play, fair.
-- Primär Kosmetik: Turm-Skins, Effekte, Festungsvarianten, Avatar-Kosmetik,
-  Embleme, Banner, Titel; später ggf. Erweiterungen.
+- Kostenlos anspielbar, fair.
+- **Bevorzugtes Modell (D-015, 25.10.2026):** erste Region kostenlos, Vollversion
+  per Einmalkauf, später bezahlte Erweiterungsregionen. Kosmetik (Turm-Skins,
+  Effekte, Festungsvarianten, Avatar-Kosmetik, Embleme, Banner, Titel) kommt als
+  Zugabe, nicht als Grundlage. Endgültig entschieden wird in Phase 5 mit Daten.
+- Keine Helden oder Türme gegen Geld ([Marktanalyse](market-analysis.md) E13).
 - Ausgeschlossen: Pay-to-win, kaufbares Gold, Energie- und Wartesperren,
   Lootboxen zum Start, aufdringliche Werbung im ersten Release.
 - Reihenfolge: Spaß nachweisen → Vertical Slice → echte Spieler → Wiederkehr
   messen → dann erst Monetarisierung.
 
-## Kritischer Hinweis [VORSCHLAG zur Prüfung in Phase 5]
+## Kritischer Hinweis (Grundlage von D-015)
 
 Rein kosmetische Einnahmen tragen erfahrungsgemäß erst bei großer Spielerzahl.
 Ein kleines, gutes Einzelspieler-TD erreicht diese Zahl oft nicht. Deshalb in

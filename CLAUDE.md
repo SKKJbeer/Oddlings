@@ -22,6 +22,13 @@ Schadenswert. Leicht zu verstehen, taktisch tief, kurz spielbar, offline, fair.
 
 Säulen und Zielbild: [00-vision-and-pillars.md](docs/game-design/00-vision-and-pillars.md).
 
+Anspruch (Steffen, 25.10.2026): ein professionelles Tower Defense mit AAA-Anmutung,
+an den Marktführern orientiert, ohne sie zu kopieren. Spaß zuerst, später viele
+Spieler und Einnahmen. Die [Marktanalyse](docs/game-design/market-analysis.md)
+fließt in jede Design- und Darstellungsarbeit ein: vor einem Designvorschlag dort
+nachsehen (Abschnitt 7, Empfehlungen E1–E15), und die Liste „AAA-Anmutung"
+(Abschnitt 3) ist der Maßstab für Darstellung, Ton und Bedienung.
+
 ## MVP-Grenze (Phase 1)
 
 **Drin:** eine Karte, ein fester Weg, Bauzonen, Wachturm, Blitzturm, Sporenturm,
@@ -44,6 +51,7 @@ und fragt. Das gilt besonders für Netzcode, Monetarisierung und Völker.
 |---|---|
 | Analyse, Risiken, blockierende Fragen | [docs/production/phase-0-analyse.md](docs/production/phase-0-analyse.md) |
 | Vision, Säulen | [docs/game-design/00-vision-and-pillars.md](docs/game-design/00-vision-and-pillars.md) |
+| Markt, Vorbilder, Empfehlungen | [docs/game-design/market-analysis.md](docs/game-design/market-analysis.md) |
 | Spielablauf, Platzierung, Bedienung | [docs/game-design/01-core-gameplay.md](docs/game-design/01-core-gameplay.md) |
 | Türme, Gegner, Regeln | [docs/game-design/02-combat-and-towers.md](docs/game-design/02-combat-and-towers.md) |
 | Völker, Avatar | [docs/game-design/03-races-and-avatar.md](docs/game-design/03-races-and-avatar.md) |
