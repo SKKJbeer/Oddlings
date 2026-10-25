@@ -68,6 +68,9 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
 - **Abh.:** WP-03 · **Risiken:** Determinismus (T1) von Anfang an beachten
 
 ### WP-05 · Bauen, Verkaufen, Gold
+- **Stand:** umgesetzt (25.10.2026). Befehle `build`/`sell`, Ablehnung mit Grund
+  (zu wenig Gold, belegt, zu nah am Weg, außerhalb, unbekannter Turm). Erstattung
+  abgerundet; 90 × 0,7 ergibt in Double 62,999…, deshalb ein Test genau dafür.
 - **Ziel:** Ökonomie des Bauens.
 - **Umfang:** Befehle `build`, `sell`; Kosten, Erstattung 70 %, Ablehnungsgründe.
 - **Abnahme:** Kein Weg führt zu negativem Gold oder zwei Türmen in einer Zelle.

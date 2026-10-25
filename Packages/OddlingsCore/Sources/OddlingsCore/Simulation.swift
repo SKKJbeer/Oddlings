@@ -20,6 +20,7 @@ public struct Simulation: Sendable {
             waveIndex: -1,
             nextWaveTick: config.waves.isEmpty ? nil : ticks(config.mission.firstWaveDelay),
             pendingSpawns: [],
+            towers: [],
             enemies: [],
             nextEntityID: 1,
             outcome: nil,
@@ -34,18 +35,59 @@ public struct Simulation: Sendable {
     }
 
     /// Ein Tick. Die Reihenfolge ist festgeschrieben, weil sie Ergebnisse
-    /// ändert (data-models.md): Wellen/Spawns → Bewegung → Durchbrüche → Ende.
-    /// Befehle, Türme und Gold folgen mit WP-05 und WP-06 an ihren Platz davor.
+    /// ändert (data-models.md): Befehle → Wellen/Spawns → Bewegung →
+    /// Durchbrüche → Ende. Türme und Gold folgen mit WP-06 an ihren Platz vor
+    /// der Bewegung. Befehle laufen in der übergebenen Reihenfolge.
     @discardableResult
-    public func step(_ state: inout GameState) -> [Event] {
+    public func step(_ state: inout GameState, commands: [Command] = []) -> [Event] {
         guard !state.isOver else { return [] }
         var events: [Event] = []
+        for command in commands { apply(command, to: &state, &events) }
         startWaveIfDue(&state, &events)
         spawnDue(&state, &events)
         move(&state)
         leak(&state, &events)
         state.tick += 1
         return events
+    }
+
+    private func apply(_ command: Command, to state: inout GameState, _ events: inout [Event]) {
+        switch command {
+        case .build(let kind, let cell):
+            guard let tower = config.towers[kind] else {
+                return events.append(.commandRejected(command, reason: .unknownTower))
+            }
+            switch map.placement(of: cell, occupied: state.towers.map(\.cell)) {
+            case .outsideMap: return events.append(.commandRejected(command, reason: .outsideMap))
+            case .tooCloseToPath: return events.append(.commandRejected(command, reason: .tooCloseToPath))
+            case .occupied: return events.append(.commandRejected(command, reason: .cellOccupied))
+            case .free: break
+            }
+            guard state.gold >= tower.cost else {
+                return events.append(.commandRejected(command, reason: .notEnoughGold))
+            }
+            state.gold -= tower.cost
+            let id = state.nextEntityID
+            state.nextEntityID += 1
+            state.towers.append(Tower(id: id, kind: kind, cell: cell, cooldownTicks: 0, spent: tower.cost))
+            events.append(.towerBuilt(id: id))
+
+        case .sell(let towerID):
+            guard let index = state.towers.firstIndex(where: { $0.id == towerID }) else {
+                return events.append(.commandRejected(command, reason: .unknownTower))
+            }
+            let refund = refund(for: state.towers[index].spent)
+            state.gold += refund
+            state.towers.remove(at: index)
+            events.append(.towerSold(id: towerID, refund: refund))
+        }
+    }
+
+    /// Abgerundet (Backlog WP-05). 90 × 0,7 ist in Double 62,999…; ohne den
+    /// Schubs um wenige ulp käme 62 heraus statt 63.
+    func refund(for spent: Int) -> Int {
+        let exact = Double(spent) * config.mission.sellRefundRate
+        return Int((exact + exact.ulp * 4).rounded(.down))
     }
 
     private func startWaveIfDue(_ state: inout GameState, _ events: inout [Event]) {

@@ -13,6 +13,7 @@ public struct GameState: Codable, Equatable, Sendable {
     /// Tick, an dem die nächste Welle beginnt; `nil`, wenn alle begonnen haben.
     public var nextWaveTick: Int?
     public var pendingSpawns: [PendingSpawn]
+    public var towers: [Tower]
     public var enemies: [Enemy]
     public var nextEntityID: Int
     public var outcome: Outcome?
@@ -31,6 +32,16 @@ public struct PendingSpawn: Codable, Equatable, Sendable {
     public var hpScale: Double
 }
 
+public struct Tower: Codable, Equatable, Sendable {
+    public var id: Int
+    public var kind: TowerKind
+    public var cell: Cell
+    /// Ticks bis zum nächsten Angriff (ab WP-06).
+    public var cooldownTicks: Int
+    /// Bezahltes Gold; Grundlage der Erstattung beim Verkaufen.
+    public var spent: Int
+}
+
 public struct Enemy: Codable, Equatable, Sendable {
     public var id: Int
     public var kind: EnemyKind
@@ -40,7 +51,25 @@ public struct Enemy: Codable, Equatable, Sendable {
     public var distance: Double
 }
 
+/// Eingaben von außen (Architekturregel 2). Die Darstellung schickt Befehle,
+/// sie ändert den Zustand nie selbst.
+public enum Command: Codable, Equatable, Sendable {
+    case build(TowerKind, Cell)
+    case sell(towerID: Int)
+}
+
+public enum Rejection: Equatable, Sendable {
+    case notEnoughGold
+    case cellOccupied
+    case tooCloseToPath
+    case outsideMap
+    case unknownTower
+}
+
 public enum Event: Equatable, Sendable {
+    case towerBuilt(id: Int)
+    case towerSold(id: Int, refund: Int)
+    case commandRejected(Command, reason: Rejection)
     case waveStarted(index: Int)
     case enemySpawned(id: Int)
     case enemyLeaked(id: Int, damage: Int)
