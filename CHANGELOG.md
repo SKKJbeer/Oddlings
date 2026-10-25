@@ -11,6 +11,27 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), löst keinen Bau aus.
   Dort steht „kein Bau“.
 
+## 0.4.0 – 25.10.2026
+
+**Neu**
+- WP-11: Die App zeigt die echte Simulation. Startbildschirm mit „Mission 1
+  ansehen“: Ein Mitspieler baut nach der Demo-Bauweise aus der Konfiguration,
+  Türme schießen, Blitze springen, Sporen verlangsamen, Gegner laufen den Weg
+  entlang, die Festung nimmt Treffer. Neustart und Zurück.
+- Fester Takt mit Zwischenbildern: Die Szene rechnet in festen Schritten und
+  zeichnet zwischen zwei Zuständen weich, auch bei 2×.
+- Platzhaltergrafik nach dem Asset-Vertrag der Grafik: Sobald die gemalten
+  Bilder unter ihren Namen im Katalog liegen, ersetzen sie die Platzhalter ohne
+  Codeänderung.
+- Probelauf im Simulator startet direkt die Mission (`--demo`) und legt ein
+  Bildschirmfoto ab.
+
+**Tests**: `AutoplayerTests` (Paket), `BattleSceneTests` (App: Knoten passen
+über eine ganze Mission zum Zustand, Neustart räumt auf, 2× macht doppelt so
+viele Schritte). Neuer CI-Schritt „App testen“.
+
+Bau: wird nach dem Zusammenführen nachgetragen.
+
 ## 0.3.1 – 25.10.2026
 
 **Neu**
@@ -48,7 +69,7 @@ weil Türme nicht mehr auf schon tote Ziele schießen (Einzelheiten in
 
 **Tests**: `DeterminismTests`, `BalanceTests`.
 
-Bau: wird nach dem Zusammenführen nachgetragen.
+Bau: **16 VALID**.
 
 ## 0.2.0 – 25.10.2026
 

@@ -1,0 +1,62 @@
+import OddlingsCore
+import SpriteKit
+
+/// Alle Darstellungswerte der Platzhaltergrafik an einer Stelle. Spielwerte
+/// stehen nie hier, sondern in der Missionsdatei (Architekturregel 7); diese
+/// Zahlen bestimmen nur Aussehen und Dauer von Effekten und fallen weg, sobald
+/// die Assets aus dem Art-Direction-Thread da sind (docs/art/asset-vertrag.md).
+@MainActor
+enum BattleStyle {
+    static let background = SKColor(red: 0.20, green: 0.34, blue: 0.22, alpha: 1)
+    static let path = SKColor(red: 0.62, green: 0.50, blue: 0.33, alpha: 1)
+    static let pathWidth: CGFloat = 0.8
+    static let buildZone = SKColor(white: 1, alpha: 0.07)
+    static let buildZoneInset: CGFloat = 0.06
+
+    static func towerColor(_ kind: TowerKind) -> SKColor {
+        switch kind {
+        case .watch: SKColor(red: 0.85, green: 0.78, blue: 0.62, alpha: 1)
+        case .lightning: SKColor(red: 0.45, green: 0.65, blue: 1.00, alpha: 1)
+        case .spore: SKColor(red: 0.62, green: 0.85, blue: 0.35, alpha: 1)
+        }
+    }
+
+    static func enemyColor(_ kind: EnemyKind) -> SKColor {
+        switch kind {
+        case .raider: SKColor(red: 0.85, green: 0.30, blue: 0.25, alpha: 1)
+        case .runner: SKColor(red: 0.95, green: 0.65, blue: 0.20, alpha: 1)
+        case .brute: SKColor(red: 0.55, green: 0.25, blue: 0.55, alpha: 1)
+        }
+    }
+
+    /// Größen in Feldern, wie im Asset-Vertrag.
+    static let towerFootprint: CGFloat = 0.8
+    static let towerHeight: CGFloat = 1.1
+    static func enemyHeight(_ kind: EnemyKind) -> CGFloat { kind == .brute ? 1.0 : 0.7 }
+    static let shadow = SKColor(white: 0, alpha: 0.3)
+
+    static let healthBack = SKColor(white: 0, alpha: 0.6)
+    static let healthFill = SKColor(red: 0.35, green: 0.90, blue: 0.40, alpha: 1)
+    static let healthWidth: CGFloat = 0.7
+    static let healthHeight: CGFloat = 0.08
+    static let slowTint = SKColor(red: 0.62, green: 0.85, blue: 0.35, alpha: 1)
+
+    static let bolt = SKColor(red: 0.80, green: 0.88, blue: 1.00, alpha: 1)
+    static let arrow = SKColor(red: 1.00, green: 0.95, blue: 0.80, alpha: 1)
+    static let sporeCloud = SKColor(red: 0.62, green: 0.85, blue: 0.35, alpha: 0.35)
+    static let gold = SKColor(red: 1.00, green: 0.84, blue: 0.25, alpha: 1)
+    static let leak = SKColor(red: 1.00, green: 0.25, blue: 0.20, alpha: 1)
+    static let fortress = SKColor(red: 0.55, green: 0.55, blue: 0.62, alpha: 1)
+
+    static let shotLife: TimeInterval = 0.10
+    static let boltLife: TimeInterval = 0.18
+    static let pulseLife: TimeInterval = 0.35
+    static let hitFlash: TimeInterval = 0.06
+    static let deathLife: TimeInterval = 0.30
+    static let floatLife: TimeInterval = 0.70
+    static let bannerLife: TimeInterval = 1.6
+    static let font = "AvenirNext-Heavy"
+
+    /// Längste Bildzeit, die nachgeholt wird.
+    static let maxCatchUp: TimeInterval = 0.25
+}

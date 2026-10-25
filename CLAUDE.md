@@ -10,8 +10,8 @@
 (`App/Spike/`, Wegwerfcode), ist in TestFlight; die Messung auf dem iPhone steht aus.
 Simulationspaket `Packages/OddlingsCore`: Regeln von Mission 1 vollständig
 (WP-02 bis WP-10: Konfiguration, Weg, Wellen, Bauen/Verkaufen, alle drei Türme,
-Sieg, Determinismus, Balancetests). Als Nächstes WP-11 (Spielszene zeigt die
-Simulation). Version und Bauten: [CHANGELOG.md](CHANGELOG.md).
+Sieg, Determinismus, Balancetests). Die App zeigt die Simulation
+(WP-11, mit Mitspieler). Als Nächstes WP-12 (Bauen und Verkaufen per Tippen). Version und Bauten: [CHANGELOG.md](CHANGELOG.md).
 Projekt erzeugen: `xcodegen generate` (Xcode-Projekt ist nicht eingecheckt).
 Aufs Gerät: `.github/workflows/testflight.yml` (bei App-Änderungen auf main automatisch),
 Hilfsskript `scripts/apple.py`. Ein Bau ist erst verfügbar, wenn Apple ihn als VALID meldet.

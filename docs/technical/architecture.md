@@ -89,10 +89,11 @@ Oddlings/
 ├── CLAUDE.md, README.md
 ├── project.yml                  XcodeGen-Beschreibung (das .xcodeproj wird erzeugt, nicht eingecheckt)
 ├── App/                         SwiftUI-App und SpriteKit-Szene
-│   ├── OddlingsApp.swift
-│   ├── Battle/                  Szene, Knoten-Spiegel, Eingabe, Effekte
-│   ├── HUD/
-│   └── Resources/               Assets, Platzhaltergrafik
+│   ├── OddlingsApp.swift, StartView.swift   vorläufiger Einstieg (Mission, Leistungsprobe)
+│   ├── Battle/                  Takt (BattleModel), Szene, Sprites nach Asset-Vertrag, Platzhalterstil
+│   ├── Spike/                   Leistungsprobe WP-01, Wegwerfcode
+│   └── Assets.xcassets/         Symbol; Battle.spriteatlas folgt aus dem Art-Direction-Thread
+├── AppTests/                    Darstellungstests (XCTest, nur macOS-CI)
 ├── Packages/OddlingsCore/       Simulation, nur Foundation
 │   ├── Sources/OddlingsCore/
 │   │   └── Resources/Balance/   Balancewerte, die einzige Quelle (seit WP-02)

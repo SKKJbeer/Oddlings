@@ -134,6 +134,16 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
   Art-Direction-Thread; WP-11 baut mit Platzhaltern so, dass Assets ohne
   Regeländerung tauschbar sind.
 - **Tests:** Knotenzahl = Entitätenzahl über eine ganze Mission.
+- **Stand:** Umgesetzt mit Platzhaltern. `BattleModel` rechnet feste Schritte aus der
+  Bildzeit (2× = doppelt so viele) und hält den Vorzustand für die Interpolation;
+  `BattleScene` gleicht Nodes mit dem Zustand ab und hängt Effekte an Ereignisse
+  (Schuss, Blitzkette, Sporenpuls, Treffer, Tod mit „+Gold", Durchbruch, Welle,
+  Ende). Bilder heißen wie im Asset-Vertrag (`tower_watch`, `enemy_raider`, …);
+  liegt eines im Katalog, wird es benutzt, sonst die Platzhalterform. Mitspieler
+  `Autoplayer` im Kern (Vorführbauweise `demoStrategy` aus der Missionsdatei,
+  exakte Wegabdeckung statt Abtastung). Tests: `AppTests/BattleSceneTests`
+  (Knotenzahl über Mission 1, Neustart, 2×) in der macOS-CI; die CI startet die App
+  mit `--demo` und fotografiert die laufende Mission.
 - **Abh.:** WP-01, WP-09 · **Risiken:** Logik rutscht in die Szene (T2) → Review-Punkt
 
 ### WP-12 · Bedienung: bauen und verkaufen per Antippen
