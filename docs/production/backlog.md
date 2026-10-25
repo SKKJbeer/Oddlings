@@ -16,6 +16,8 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
 - **Abh.:** –  · **Risiken:** –
 
 ### WP-01 · Technik-Spike: App-Hülle und Leistungsprobe
+- **Stand:** in TestFlight (Bau 4, VALID, 25.10.2026), Messung auf dem iPhone offen.
+  Gebaut wird mit Xcode 26, Apple nimmt ältere SDKs nicht mehr an.
 - **Ziel:** Beweisen, dass SwiftUI + SpriteKit auf dem iPhone trägt, bevor darauf gebaut wird.
 - **Umfang:** `project.yml` (XcodeGen), leere SwiftUI-App im Querformat, `SpriteView` mit
   einer Szene, die 300 Sprites auf einem Pfad bewegt und 30 Kettenblitz-Linien je
@@ -32,6 +34,8 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
   für das Gerät: Bundle-ID und Team festlegen.
 
 ### WP-02 · OddlingsCore-Paket und Konfiguration
+- **Stand:** umgesetzt (25.10.2026). Linux-Toolchain für Cloud-Sitzungen: machbar,
+  `scripts/swift-linux.sh`.
 - **Ziel:** Simulation hat ein Zuhause und liest Werte aus einer Quelle.
 - **Umfang:** Swift-Paket `OddlingsCore` (nur Foundation); `BalanceConfig` aus
   [data-models.md](../technical/data-models.md); JSON zieht von `config/balance/` in

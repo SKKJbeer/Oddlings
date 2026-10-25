@@ -36,7 +36,13 @@ struct SpawnGroup: Codable { var enemy: EnemyKind; var count: Int; var interval:
 `[TowerKind: …]` in der **Konfiguration** ist unbedenklich, weil nur nachgeschlagen
 und nie darüber iteriert wird. Die Validierung (WP-02) prüft u. a.: alle Kosten > 0,
 Reichweiten > 0, `slowFactor` in (0, 1], jede Welle hat mindestens eine Gruppe, jeder
-referenzierte Gegner existiert, Weg hat ≥ 2 Punkte.
+referenzierte Gegner existiert, Weg hat ≥ 2 Punkte. Umgesetzt in
+`ConfigValidation.swift`: `BalanceConfig.load(from:)` liest und prüft in einem
+Schritt und meldet **alle** Verstöße mit Ort (`towers.watch.cost muss größer als 0
+sein`). Jeder Turmtyp muss Werte haben; ein Gegner ohne Werte ist nur ein Fehler,
+wenn eine Welle ihn ruft (die Panzerbestie ist optional). Ein Turmtyp, den es im
+MVP nicht gibt (`bank`), lässt das Lesen scheitern. Punkte stehen im JSON als
+`[x, y]`.
 
 **Später zur Wahl:** Optionale Felder genügen für drei Türme. Kommen viele Rollen
 dazu, wird `TowerConfig` zu einer Liste von Wirkungen (`effects: [Effect]`). Erst

@@ -4,14 +4,15 @@
 Kein Spielcode: Diese Datei prüft nur, ob die vorläufigen Werte aus
 docs/game-design/04-economy-and-balance.md grundsätzlich tragen.
 Sie liest dieselbe JSON-Datei, die später das Spiel liest
-(config/balance/mvp-mission-01.json), damit es nur EINE Quelle gibt.
+(Packages/OddlingsCore/Sources/OddlingsCore/Resources/Balance/mvp-mission-01.json), damit es nur EINE Quelle gibt.
 
 Aufruf: python3 tools/balance-sim/sim.py [--verbose] [--reserve]
 """
 import json, math, sys, os, random
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-CFG = json.load(open(os.path.join(HERE, "..", "..", "config", "balance", "mvp-mission-01.json")))
+CFG = json.load(open(os.path.join(HERE, "..", "..", "Packages", "OddlingsCore", "Sources",
+                            "OddlingsCore", "Resources", "Balance", "mvp-mission-01.json")))
 DT = 1.0 / CFG["simulation"]["ticksPerSecond"]
 
 PATH = [tuple(p) for p in CFG["map"]["path"]]

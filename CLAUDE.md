@@ -6,8 +6,9 @@
 
 ## Stand
 
-**Phase 1 hat begonnen.** Phase 0 ist abgeschlossen (PR #1). In Arbeit: WP-01,
-der Technik-Spike (`App/Spike/`, Wegwerfcode). Noch keine Spiellogik.
+**Phase 1 läuft.** Phase 0 ist abgeschlossen (PR #1). WP-01, der Technik-Spike
+(`App/Spike/`, Wegwerfcode), ist in TestFlight; die Messung auf dem iPhone steht aus.
+WP-02: Simulationspaket `Packages/OddlingsCore` mit `BalanceConfig` und Validierung.
 Projekt erzeugen: `xcodegen generate` (Xcode-Projekt ist nicht eingecheckt).
 Aufs Gerät: `.github/workflows/testflight.yml` (bei App-Änderungen auf main automatisch),
 Hilfsskript `scripts/apple.py`. Ein Bau ist erst verfügbar, wenn Apple ihn als VALID meldet.
@@ -46,7 +47,7 @@ und fragt. Das gilt besonders für Netzcode, Monetarisierung und Völker.
 | Türme, Gegner, Regeln | [docs/game-design/02-combat-and-towers.md](docs/game-design/02-combat-and-towers.md) |
 | Völker, Avatar | [docs/game-design/03-races-and-avatar.md](docs/game-design/03-races-and-avatar.md) |
 | Zahlen und ihre Begründung | [docs/game-design/04-economy-and-balance.md](docs/game-design/04-economy-and-balance.md) |
-| **Zahlen selbst** | [config/balance/mvp-mission-01.json](config/balance/mvp-mission-01.json) – die einzige Quelle |
+| **Zahlen selbst** | [mvp-mission-01.json](Packages/OddlingsCore/Sources/OddlingsCore/Resources/Balance/mvp-mission-01.json) – die einzige Quelle |
 | Kampagne, Fortschritt | [docs/game-design/05-campaign-and-progression.md](docs/game-design/05-campaign-and-progression.md) |
 | Monetarisierung | [docs/game-design/06-monetization.md](docs/game-design/06-monetization.md) |
 | Architektur | [docs/technical/architecture.md](docs/technical/architecture.md) |
@@ -100,8 +101,11 @@ Arbeit per PR, nicht direkt auf `main`.
 - Jede Balanceänderung: Prüfskript bzw. Balancetests laufen lassen und Ergebnis in
   [04](docs/game-design/04-economy-and-balance.md) nachtragen.
 - Jeder neue Test wird einmal rot gesehen.
-- **Cloud-Sitzungen haben derzeit kein Swift.** Dort nie behaupten, Swift-Tests
-  seien grün; maßgeblich ist dann der CI-Lauf auf macOS.
+- **Cloud-Sitzungen:** Swift für Linux kommt über `scripts/swift-linux.sh`, das der
+  Startup-Haken in `.claude/settings.json` im Hintergrund lädt (Log
+  `/tmp/swift-linux.log`, ca. 1 Minute). Damit läuft `swift test` für OddlingsCore.
+  Die App (SwiftUI, SpriteKit) baut nur die macOS-CI; über sie nie behaupten, sie
+  sei grün, ohne den CI-Lauf.
 
 ## Verwandte Projekte von Steffen
 

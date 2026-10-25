@@ -3,7 +3,7 @@
 Status aller Zahlen: **[VORSCHLAG]**, grob durchgerechnet, **nicht spielgetestet**.
 
 **Eine Quelle:** Alle Werte stehen in
-[`config/balance/mvp-mission-01.json`](../../config/balance/mvp-mission-01.json).
+[`mvp-mission-01.json`](../../Packages/OddlingsCore/Sources/OddlingsCore/Resources/Balance/mvp-mission-01.json).
 Diese Tabelle hier ist eine Lesehilfe; weicht sie ab, gilt die Datei.
 
 ## Einheiten
