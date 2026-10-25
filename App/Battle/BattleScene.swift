@@ -8,6 +8,8 @@ import SpriteKit
 @MainActor
 final class BattleScene: SKScene {
     let model: BattleModel
+    /// Bedienung; nil beim reinen Zuschauen und in Tests ohne Eingaben.
+    var controller: BattleController?
     private(set) var towerNodes: [Int: SKNode] = [:]
     private(set) var enemyNodes: [Int: EnemyNode] = [:]
 
@@ -17,16 +19,20 @@ final class BattleScene: SKScene {
     private let effectLayer = SKNode()
     private let fortress = SKShapeNode()
     private let fortressHit = SKShapeNode()
-    private var field: CGFloat = 1
-    private var origin: CGPoint = .zero
+    private let selectionLayer = SKNode()
+    private var shownSelection: BattleController.Selection = .none
+    private(set) var layout: BoardLayout
+    private var field: CGFloat { layout.field }
     private var lastTime: TimeInterval?
 
     init(model: BattleModel) {
         self.model = model
-        super.init(size: CGSize(width: 844, height: 390))
+        let size = CGSize(width: 844, height: 390)
+        layout = BoardLayout(size: size, map: model.sim.map)
+        super.init(size: size)
         scaleMode = .resizeFill
         backgroundColor = BattleStyle.background
-        for (layer, z) in [(ground, 0), (towerLayer, 10), (enemyLayer, 20), (effectLayer, 30)] {
+        for (layer, z) in [(ground, 0), (selectionLayer, 5), (towerLayer, 10), (enemyLayer, 20), (effectLayer, 30)] {
             layer.zPosition = CGFloat(z)
             addChild(layer)
         }
@@ -51,6 +57,8 @@ final class BattleScene: SKScene {
         // Effekte vor dem Abgleich, solange getötete Gegner noch eine Node haben.
         for event in events { play(event) }
         sync()
+        controller?.afterFrame()
+        showSelection()
     }
 
     func restart() {
@@ -60,23 +68,58 @@ final class BattleScene: SKScene {
         towerNodes = [:]
         enemyNodes = [:]
         effectLayer.removeAllChildren()
+        controller?.restart()
         sync()
+        showSelection()
+    }
+
+    // MARK: Eingabe
+
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
+        controller?.tap(layout.cell(atScene: touch.location(in: self)))
+        showSelection()
+    }
+
+    /// Markierung der gewählten Zelle und Reichweite. Nur neu gebaut, wenn sich
+    /// die Auswahl ändert, nicht in jedem Bild.
+    private func showSelection() {
+        let selection = controller?.selection ?? .none
+        guard selection != shownSelection else { return }
+        shownSelection = selection
+        selectionLayer.removeAllChildren()
+        let cell: Cell?
+        switch selection {
+        case .none: cell = nil
+        case .cell(let c, _): cell = c
+        case .tower: cell = controller?.selectedTower?.cell
+        }
+        guard let cell else { return }
+        let mark = SKShapeNode(rectOf: CGSize(width: field, height: field), cornerRadius: field * 0.12)
+        mark.strokeColor = BattleStyle.selection
+        mark.lineWidth = max(2, field * 0.05)
+        mark.fillColor = BattleStyle.selection.withAlphaComponent(0.15)
+        mark.position = toScene(cell.center)
+        selectionLayer.addChild(mark)
+        if let preview = controller?.previewRange {
+            let ring = SKShapeNode(circleOfRadius: CGFloat(preview.range) * field)
+            ring.strokeColor = BattleStyle.selection
+            ring.lineWidth = max(1.5, field * 0.03)
+            ring.fillColor = BattleStyle.rangeFill
+            ring.position = toScene(preview.center)
+            selectionLayer.addChild(ring)
+        }
     }
 
     // MARK: Karte
 
     /// Felder → Punkte. Die Karte zählt y von oben, SpriteKit von unten.
-    private func toScene(_ point: Point) -> CGPoint {
-        CGPoint(x: origin.x + CGFloat(point.x) * field,
-                y: origin.y + (CGFloat(model.sim.map.height) - CGFloat(point.y)) * field)
-    }
+    private func toScene(_ point: Point) -> CGPoint { layout.scenePoint(point) }
 
     private func layoutMap() {
         guard size.width > 0, size.height > 0 else { return }
         let map = model.sim.map
-        let width = CGFloat(map.width), height = CGFloat(map.height)
-        field = min(size.width / width, size.height / height)
-        origin = CGPoint(x: (size.width - field * width) / 2, y: (size.height - field * height) / 2)
+        layout = BoardLayout(size: size, map: map)
 
         ground.removeAllChildren()
         let inset = BattleStyle.buildZoneInset * field
@@ -118,7 +161,9 @@ final class BattleScene: SKScene {
         for node in enemyNodes.values { node.removeFromParent() }
         towerNodes = [:]
         enemyNodes = [:]
+        shownSelection = .none
         sync()
+        showSelection()
     }
 
     // MARK: Zustand
@@ -196,12 +241,27 @@ final class BattleScene: SKScene {
             fortressHit.run(.fadeOut(withDuration: BattleStyle.hitFlash * 4))
         case .waveStarted(let index):
             banner("Welle \(index + 1) von \(model.sim.config.waves.count)")
-        case .missionEnded(let won):
-            banner(won ? "Sieg" : "Niederlage", stays: true)
-        case .towerBuilt, .towerSold, .commandRejected, .enemySpawned, .enemySlowed:
+        case .missionEnded:
+            // Das Ergebnis zeigt die Ergebnistafel der Oberfläche (BattleHUD).
+            effectLayer.childNode(withName: "banner")?.removeFromParent()
+        case .commandRejected(let command, let reason):
+            float(BattleTexts.rejection(reason), at: position(of: command), color: BattleStyle.leak)
+        case .towerSold(let id, let refund):
+            guard let position = towerNodes[id]?.position else { return }
+            float("+\(refund)", at: position, color: BattleStyle.gold)
+        case .towerBuilt, .enemySpawned, .enemySlowed:
             // Bauen zeigt sich über den Zustand (Aufbau-Animation in `sync`),
-            // Verlangsamung als Markierung am Gegner, Ablehnung kommt mit WP-12.
+            // Verlangsamung als Markierung am Gegner.
             break
+        }
+    }
+
+    /// Wo eine Ablehnung erscheint: an der Zelle bzw. am Turm, um den es ging.
+    private func position(of command: Command) -> CGPoint {
+        switch command {
+        case .build(_, let cell): return toScene(cell.center)
+        case .sell(let id): return towerNodes[id]?.position ?? CGPoint(x: size.width / 2, y: size.height / 2)
+        case .callNextWave: return CGPoint(x: size.width / 2, y: size.height / 2)
         }
     }
 
@@ -264,7 +324,7 @@ final class BattleScene: SKScene {
         fade(label, after: BattleStyle.floatLife)
     }
 
-    private func banner(_ text: String, stays: Bool = false) {
+    private func banner(_ text: String) {
         effectLayer.childNode(withName: "banner")?.removeFromParent()
         let label = SKLabelNode(text: text)
         label.name = "banner"
@@ -272,10 +332,6 @@ final class BattleScene: SKScene {
         label.fontSize = field * 0.9
         label.fontColor = .white
         label.position = CGPoint(x: size.width / 2, y: size.height * 0.75)
-        if stays {
-            effectLayer.addChild(label)
-        } else {
-            fade(label, after: BattleStyle.bannerLife)
-        }
+        fade(label, after: BattleStyle.bannerLife)
     }
 }

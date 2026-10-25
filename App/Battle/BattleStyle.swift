@@ -56,6 +56,19 @@ enum BattleStyle {
     static let floatLife: TimeInterval = 0.70
     static let bannerLife: TimeInterval = 1.6
     static let font = "AvenirNext-Heavy"
+    static let fastSpeed = 2
+
+    static let selection = SKColor(red: 1.00, green: 0.95, blue: 0.70, alpha: 1)
+    static let rangeFill = SKColor(red: 1.00, green: 0.95, blue: 0.70, alpha: 0.10)
+
+    /// Bedienung: Apples Mindestgröße für Tippziele ist 44 pt.
+    static let tapTarget: CGFloat = 48
+    static let menuSpacing: CGFloat = 6
+    static let menuPadding: CGFloat = 6
+    static let screenMargin: CGFloat = 8
+    /// Knapp unter der Tippgröße: Im Querformat zählt jeder Punkt Höhe für die Karte.
+    static let hudHeight: CGFloat = 40
+    static let hudMargin: CGFloat = 6
 
     /// Längste Bildzeit, die nachgeholt wird.
     static let maxCatchUp: TimeInterval = 0.25
