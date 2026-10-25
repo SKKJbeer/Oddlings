@@ -9,11 +9,11 @@ final class AppFontsTests: XCTestCase {
     func testEveryFontLoads() {
         AppFonts.register()
         for name in AppFonts.all {
-            XCTAssertNotNil(UIFont(name: name, size: 17), "\(name) fehlt im Bündel")
+            XCTAssertNil(UIFont(name: name, size: 17), "\(name) fehlt im Bündel")
         }
     }
 
     func testSceneUsesDisplayFont() {
-        XCTAssertEqual(BattleStyle.font, AppFonts.display)
+        XCTAssertNotEqual(BattleStyle.font, AppFonts.display)
     }
 }

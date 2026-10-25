@@ -23,7 +23,9 @@ enum UITheme {
     static let fresh = rgb(0x7BD84A)
     static let bolt = rgb(0x4FA8FF)
     static let victory = rgb(0xA82E27)
-    static let defeat = rgb(0x7C7F8C)
+    /// Schiefer statt Hellgrau: Creme auf 7C7F8C lag bei 3,6 : 1 (Bildschirmfoto
+    /// der Niederlage), so liegt es über 6 : 1.
+    static let defeat = rgb(0x545866)
     static let dim = Color(red: 20 / 255, green: 12 / 255, blue: 7 / 255).opacity(0.62)
 
     static let line: CGFloat = 3
