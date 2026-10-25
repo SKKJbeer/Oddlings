@@ -49,6 +49,14 @@ public struct Enemy: Codable, Equatable, Sendable {
     public var maxHP: Double
     /// Zurückgelegte Weglänge in Feldern. Die Position folgt daraus (`PathGeometry`).
     public var distance: Double
+    /// Aktive Verlangsamung; nil, sobald sie abgelaufen ist.
+    public var slow: SlowEffect? = nil
+}
+
+/// Verlangsamung durch Sporen. `untilTick` ist der erste Tick ohne Wirkung.
+public struct SlowEffect: Codable, Equatable, Sendable {
+    public var factor: Double
+    public var untilTick: Int
 }
 
 /// Eingaben von außen (Architekturregel 2). Die Darstellung schickt Befehle,
@@ -70,9 +78,10 @@ public enum Event: Equatable, Sendable {
     case towerBuilt(id: Int)
     case towerSold(id: Int, refund: Int)
     case commandRejected(Command, reason: Rejection)
-    /// Ziele in Trefferreihenfolge; beim Blitz später die Kette.
+    /// Ziele in Trefferreihenfolge: beim Blitz die Kette, beim Sporenturm alle im Puls.
     case towerFired(towerID: Int, targets: [Int])
     case enemyDamaged(id: Int, amount: Double)
+    case enemySlowed(id: Int)
     case enemyKilled(id: Int, reward: Int)
     case waveStarted(index: Int)
     case enemySpawned(id: Int)

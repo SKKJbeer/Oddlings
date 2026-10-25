@@ -156,8 +156,16 @@ public struct Simulation: Sendable {
                     events.append(.enemyDamaged(id: state.enemies[hit.index].id, amount: hit.damage))
                 }
             case .spore:
-                // Puls (WP-08) folgt; bis dahin feuert er nicht.
-                continue
+                let hits = enemiesInRange(state.enemies, around: tower.cell.center, range: stats.range)
+                // Ohne Gegner kein Puls, damit der Turm bereit bleibt wie die anderen.
+                guard !hits.isEmpty else { continue }
+                events.append(.towerFired(towerID: tower.id, targets: hits.map { state.enemies[$0].id }))
+                for hit in hits {
+                    state.enemies[hit].hp -= stats.damage
+                    applySlow(to: &state.enemies[hit], stats: stats, tick: state.tick)
+                    events.append(.enemyDamaged(id: state.enemies[hit].id, amount: stats.damage))
+                    events.append(.enemySlowed(id: state.enemies[hit].id))
+                }
             }
             state.towers[index].cooldownTicks = ticks(stats.attackInterval)
         }
@@ -205,6 +213,26 @@ public struct Simulation: Sendable {
         return hits
     }
 
+    /// Alle lebenden Gegner in Reichweite, in Zustandsreihenfolge (nach ID).
+    func enemiesInRange(_ enemies: [Enemy], around center: Point, range: Double) -> [Int] {
+        enemies.indices.filter { index in
+            enemies[index].hp > 0 && map.path.position(at: enemies[index].distance).distance(to: center) <= range
+        }
+    }
+
+    /// Kein Stapeln (02-combat-and-towers.md): Es gilt die stärkste aktive
+    /// Verlangsamung, und ein Puls verkürzt eine laufende nie. Sonst stünden
+    /// Gegner unter fünf Sporentürmen still.
+    func applySlow(to enemy: inout Enemy, stats: TowerConfig, tick: Int) {
+        guard let factor = stats.slowFactor, let duration = stats.slowDuration else { return }
+        let until = tick + ticks(duration)
+        if let active = enemy.slow, active.untilTick > tick {
+            enemy.slow = SlowEffect(factor: min(active.factor, factor), untilTick: max(active.untilTick, until))
+        } else {
+            enemy.slow = SlowEffect(factor: factor, untilTick: until)
+        }
+    }
+
     private func collectKills(_ state: inout GameState, _ events: inout [Event]) {
         var alive: [Enemy] = []
         for enemy in state.enemies {
@@ -223,7 +251,11 @@ public struct Simulation: Sendable {
         let perTick = 1 / Double(config.simulation.ticksPerSecond)
         for index in state.enemies.indices {
             guard let enemy = config.enemies[state.enemies[index].kind] else { continue }
-            state.enemies[index].distance += enemy.speed * perTick
+            var factor = 1.0
+            if let slow = state.enemies[index].slow {
+                if slow.untilTick > state.tick { factor = slow.factor } else { state.enemies[index].slow = nil }
+            }
+            state.enemies[index].distance += enemy.speed * factor * perTick
         }
     }
 
