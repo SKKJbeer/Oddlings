@@ -4,16 +4,10 @@ import Foundation
 /// Bauweisen aus `simStrategies` der Missionsdatei. Die Simulation kennt das
 /// Feld nicht: Es ist Prüfwerkzeug, keine Spielregel.
 enum Strategies {
-    static let missionFile = URL(fileURLWithPath: #filePath)
-        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
-        .appendingPathComponent("Sources/OddlingsCore/Resources/Balance/mvp-mission-01.json")
-
-    private struct File: Decodable { var simStrategies: [String: [TowerKind]] }
-
     /// Nach Namen sortiert, weil ein Dictionary keine Reihenfolge hat.
     static func missionOne() throws -> [(name: String, order: [TowerKind])] {
-        let file = try JSONDecoder().decode(File.self, from: Data(contentsOf: missionFile))
-        return file.simStrategies.keys.sorted().map { ($0, file.simStrategies[$0]!) }
+        let strategies = try BalanceConfig.missionOne().simStrategies ?? [:]
+        return strategies.keys.sorted().map { ($0, strategies[$0]!) }
     }
 }
 

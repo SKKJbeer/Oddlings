@@ -11,20 +11,63 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), löst keinen Bau aus.
   Dort steht „kein Bau“.
 
-## 0.3.2 – 25.10.2026
+## 0.5.1 – 25.10.2026
 
 **Neu**
 - Konzept für Oberfläche und Bedienung: [07-ui-ux.md](docs/game-design/07-ui-ux.md)
   mit Raster je iPhone, HUD-Ecken, Bauen und Verkaufen am Feld, Pause, Sieg,
   Niederlage, Hauptmenü, Richtung der Kampagnenkarte und der Architektur
-  (`HudLayout`, `PlacementState`, `BattleHUDModel`).
+  (neu `HudLayout` neben `BoardLayout`, `UITheme`, `FeedbackPlayer`; Auswahl und Kopien bleiben im `BattleController`).
 - Klickbare Entwürfe aller Schirme: [Oddlings – Spieloberfläche](https://claude.ai/artifact/PKpZrLVV42wje1isSfvB8z).
-- Vorschläge D-017 (HUD-Ecken), D-018 (Kreismenü, liegt Steffen vor), D-019 (Schriften).
+- Vorschläge D-030 (HUD-Ecken), D-031 (Kreismenü), D-032 (Schriften).
 
 **Tests**: keine, nur Dokumente. Die Tests der Bausteine stehen in 07 und kommen
-mit WP-12 bis WP-14.
+mit der Umsetzung.
 
 Kein Bau.
+
+## 0.5.0 – 25.10.2026
+
+**Neu**
+- Mission 1 ist spielbar (WP-12 bis WP-14). Der Startbildschirm hat ein großes
+  „Spielen“.
+- Bauen: Bauzelle antippen, Turm wählen (zeigt die Reichweite), noch einmal
+  tippen baut. Nicht leistbare Türme sind ausgegraut.
+- Verkaufen: Turm antippen, „Verkaufen +Erstattung“.
+- Abgelehnte Befehle erscheinen als roter Text an der Stelle.
+- Kopfleiste: Gold, Leben, Welle n/m, „Nächste Welle“ mit Countdown, 1×/2×,
+  Pause, Zurück.
+- Ergebnistafel bei Sieg oder Niederlage mit „Nochmal“ und „Zurück“.
+- Konzept vor Umsetzung: `docs/konzepte/wp-12-14-spielbare-mission.md`, Regel in
+  `CLAUDE.md` und im Skill `arbeitspaket-ausliefern` (D-017).
+
+**Tests**: `BattleControllerTests` (11 Fälle: Auswahl, Vorschau, Bauen,
+Verkaufen, Gold, Zuschauen, Welle rufen, Countdown, Pause, 2×, Niederlage,
+Neustart). Neues Oberflächentest-Ziel `OddlingsUITests`: bauen und verkaufen
+mit echtem Tippen, Kopfleiste und Pause.
+
+Bau: wird nach dem Zusammenführen nachgetragen.
+
+## 0.4.0 – 25.10.2026
+
+**Neu**
+- WP-11: Die App zeigt die echte Simulation. Startbildschirm mit „Mission 1
+  ansehen“: Ein Mitspieler baut nach der Demo-Bauweise aus der Konfiguration,
+  Türme schießen, Blitze springen, Sporen verlangsamen, Gegner laufen den Weg
+  entlang, die Festung nimmt Treffer. Neustart und Zurück.
+- Fester Takt mit Zwischenbildern: Die Szene rechnet in festen Schritten und
+  zeichnet zwischen zwei Zuständen weich, auch bei 2×.
+- Platzhaltergrafik nach dem Asset-Vertrag der Grafik: Sobald die gemalten
+  Bilder unter ihren Namen im Katalog liegen, ersetzen sie die Platzhalter ohne
+  Codeänderung.
+- Probelauf im Simulator startet direkt die Mission (`--demo`) und legt ein
+  Bildschirmfoto ab.
+
+**Tests**: `AutoplayerTests` (Paket), `BattleSceneTests` (App: Knoten passen
+über eine ganze Mission zum Zustand, Neustart räumt auf, 2× macht doppelt so
+viele Schritte). Neuer CI-Schritt „App testen“.
+
+Bau: **18 VALID**.
 
 ## 0.3.1 – 25.10.2026
 
@@ -41,7 +84,7 @@ Kein Bau.
 **Tests**: Jede Prüfung in `regeln-pruefen.sh` einmal mit einem eingebauten
 Verstoß rot gesehen.
 
-Bau: wird nach dem Zusammenführen nachgetragen.
+Bau: **17 VALID**.
 
 ## 0.3.0 – 25.10.2026
 
@@ -63,7 +106,7 @@ weil Türme nicht mehr auf schon tote Ziele schießen (Einzelheiten in
 
 **Tests**: `DeterminismTests`, `BalanceTests`.
 
-Bau: wird nach dem Zusammenführen nachgetragen.
+Bau: **16 VALID**.
 
 ## 0.2.0 – 25.10.2026
 

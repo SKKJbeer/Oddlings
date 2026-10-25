@@ -22,7 +22,7 @@ keine Ladezeit zwischen Mission und Ergebnis.
    Ecken. Anzeigen (Leben, Gold, Welle) stehen oben, häufige Knöpfe (Welle rufen,
    Tempo) unten. Pause liegt oben rechts, damit man sie nicht versehentlich trifft.
 3. **Wählen am Ort.** Gebaut und verkauft wird direkt am Feld, nicht über eine
-   Leiste am Rand (offen als D-018).
+   Leiste am Rand (offen als D-031).
 4. **Zweimal tippen für Gold.** Alles, was Gold kostet oder bringt, braucht eine
    Bestätigung durch zweites Tippen. Das erste Tippen zeigt die Folge
    (Reichweite, Erstattung). Kein Dialogfenster.
@@ -50,7 +50,7 @@ Folgerungen:
   dann vollständig im sicheren Bereich.
 - **Auf dem iPhone SE gibt es keinen Rand.** Das HUD muss deshalb auf der Karte
   liegen. Damit es keine Bauplätze verdeckt, reserviert jede Mission vier
-  Eckbereiche (**D-017**, vorgeschlagen):
+  Eckbereiche (**D-030**, vorgeschlagen):
 
 | Ecke | Felder (Mission 1) | Inhalt | Warum dort |
 |---|---|---|---|
@@ -141,36 +141,39 @@ sind Platzhalter. Umfang und Regeln stehen in [05](05-campaign-and-progression.m
 
 ## 4 Architektur
 
-Grundlage sind die Schichten aus [architecture.md](../technical/architecture.md):
-SwiftUI für Menüs und HUD, SpriteKit für das Schlachtfeld, Spielregeln nur in
-`OddlingsCore`. Die Oberfläche **erzeugt nur Befehle** und **liest nur Zustand
-und Ereignisse** (Architekturregeln 2 und 3).
+Grundlage sind die Schichten aus [architecture.md](../technical/architecture.md)
+und das, was mit 0.5.0 gebaut ist ([Konzept WP-12 bis WP-14](../konzepte/wp-12-14-spielbare-mission.md)).
+Die Oberfläche **erzeugt nur Befehle** und **liest nur Zustand und Ereignisse**
+(Architekturregeln 2 und 3). Dieser Entwurf baut auf den vorhandenen Bausteinen
+auf und legt keinen zweiten daneben.
+
+**Stand 0.5.0:** Kopfleiste über der Karte (Zellen etwa 38 statt 43 pt, als
+HYPOTHESE markiert), Baumenü an der Zelle mit zwei Tipps, Ergebnistafel. Dieser
+Entwurf führt das weiter zu HUD-Ecken auf voller Kartenhöhe, Kreismenü und den
+gestalteten Tafeln.
 
 ```
 BattleView (SwiftUI, ZStack)
 ├── SpriteView(BattleScene)        Karte, Türme, Gegner, Effekte, Reichweitenkreis
-├── HUDLayer                       vier Ecken, liest BattleHUDModel
-├── PlacementLayer                 Kreismenü und Infotafel, liest PlacementState
-├── ToastLayer                     kurze Hinweise aus abgelehnten Befehlen
-└── OverlayLayer                   Pause, Ergebnis
+├── HUD in vier Ecken              ersetzt BattleTopBar, liest BattleController
+├── Kreismenü und Infotafel        ersetzt BattleMenu, liest BattleController.selection
+├── Hinweise                       abgelehnte Befehle (heute Text an der Stelle)
+└── Pause, Ergebnis                ersetzt BattleOverlay
 ```
 
-| Baustein | Art | Aufgabe | Test |
+| Baustein | Stand | Aufgabe | Test |
 |---|---|---|---|
-| `HudLayout` | reine Funktion: Bildschirmgröße + sichere Ränder → Feldgröße, Kartenursprung, Rechtecke der Ecken, Lage des Kreismenüs zu einer Zelle | Eine Stelle für alle Maße. Kein Rechnen in Views | Für SE, 13 mini, 15, 16 Pro Max: Tippziele ≥ 44 pt, Knöpfe im sicheren Bereich, Kreismenü vollständig sichtbar und ohne Überlappung mit den Ecken |
-| `PlacementState` | Zustandsautomat (`idle`, `cell`, `preview(kind)`, `tower`, `sellArmed`) mit `reduce(action) -> (state, [Command])` | Bedienlogik aus Abschnitt 3, ohne SwiftUI testbar | Jeder Übergang; Bauen nur nach zwei Tippen; nie ein Befehl bei zu wenig Gold |
-| `BattleHUDModel` | `@Observable`, nach jedem Bild aus dem `GameState` gespeist | Leben, Gold, Welle, Countdown, Tempo; setzt nur geänderte Werte (WP-13) | Werte stimmen nach jedem Schritt; keine Zuweisung ohne Änderung |
-| `UITheme` | Konstanten | Farben, Schriften, Radien, Kontur an einer Stelle | Farben gleich `art-direction.md` |
-| `AppRouter` | `@Observable`, `enum Route { menu, battle(MissionID), campaign }` | Navigation; Ergebnis und Pause sind Überlagerungen der Schlacht, keine eigene Route | Übergänge; zehn Neustarts ohne Restzustand (WP-14) |
-| `FeedbackPlayer` | hört auf UI- und Simulationsereignisse | Haptik und Ton laut Tabelle 5 | Jedes Ereignis der Tabelle hat einen Eintrag |
+| `BoardLayout` | vorhanden | Karte einpassen, Zelle ↔ Bildschirmpunkt; eine Rechnung für Szene, Menü und Oberflächentest | vorhanden |
+| `HudLayout` | **neu**, reine Funktion neben `BoardLayout` | Bildschirmgröße + sichere Ränder + `BoardLayout` → Rechtecke der vier Ecken, Lage des Kreismenüs zu einer Zelle (Umklappen an Rändern und Ecken) | Für SE, 13 mini, 15, 16 Pro Max: Tippziele ≥ 44 pt, Knöpfe im sicheren Bereich, Kreismenü vollständig sichtbar, keine Überlappung mit Ecken |
+| `BattleController` | vorhanden | Auswahl (Zelle, Vorschau, Turm), beobachtete Kopien von Gold, Leben, Welle, Countdown, Ergebnis, Pause, Tempo; setzt nur bei Änderung | vorhanden; neu: zweites Tippen beim Verkaufen |
+| `UITheme` | **neu** | Farben, Schriften, Radien, Kontur an einer Stelle; Farben laut `art-direction.md`. Löst die UI-Farben in `BattleStyle` ab, Szenenfarben bleiben dort | Farben gleich der Art-Direction |
+| `FeedbackPlayer` | **neu** | Haptik und Ton laut Tabelle 5, hängt an Ereignissen und an Controller-Handlungen | Jede Zeile der Tabelle hat einen Eintrag |
+| Hauptmenü, Kampagnenkarte | Hauptmenü vorhanden (Startbildschirm), Karte Phase 3 | Navigation; Ergebnis und Pause bleiben Überlagerungen der Schlacht | Oberflächentest Menü → Schlacht → Ergebnis → Nochmal |
 
 Abgelehnte Befehle (zu wenig Gold, Feld belegt) meldet die Simulation als
-Ereignis; die Oberfläche zeigt sie nur an. Sie prüft Gold nicht selbst, außer zum
-Dimmen der Knöpfe, und das nur lesend.
+Ereignis; die Oberfläche zeigt sie nur an und prüft Gold nur lesend zum Dimmen.
 
-Positionen von Zellen in Bildschirmkoordinaten liefert `HudLayout`, nicht die
-Szene. So liegen Kreismenü und Szene auf demselben Raster, ohne dass SwiftUI die
-Szene fragt.
+Die Mission läuft weiter, während das Kreismenü offen ist (D-019).
 
 ## 5 Rückmeldung je Bedienhandlung
 
@@ -199,12 +202,12 @@ Szene fragt.
 Lilita One für Titel, Zahlen und Knöpfe, Nunito für Fließtext. Beide unter der
 SIL Open Font License, frei auch für kommerzielle Apps, liegen als Datei in der
 App (kein Nachladen, offline). Dieselbe Paarung trägt Stack & Siege.
-Eintrag **D-019** (vorgeschlagen).
+Eintrag **D-032** (vorgeschlagen).
 
 ## 8 Offen
 
-- **D-018** Turmauswahl: Kreismenü am Feld (Empfehlung) oder feste Leiste.
-- **D-017** reservierte HUD-Ecken je Mission (betrifft die Missionsdatei).
+- **D-031** Turmauswahl: Kreismenü am Feld (Empfehlung) oder feste Leiste.
+- **D-030** reservierte HUD-Ecken je Mission (betrifft die Missionsdatei).
 - Kombi-Bilanz und Niederlagen-Hinweis: Phase 2, nach dem ersten Spieltest.
 - Linkshänder-Spiegelung der unteren Ecken: Kandidat für die Einstellungen,
   erst wenn der Spieltest danach fragt.

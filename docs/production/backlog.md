@@ -134,28 +134,35 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
   Art-Direction-Thread; WP-11 baut mit Platzhaltern so, dass Assets ohne
   Regeländerung tauschbar sind.
 - **Tests:** Knotenzahl = Entitätenzahl über eine ganze Mission.
+- **Stand:** Umgesetzt mit Platzhaltern. `BattleModel` rechnet feste Schritte aus der
+  Bildzeit (2× = doppelt so viele) und hält den Vorzustand für die Interpolation;
+  `BattleScene` gleicht Nodes mit dem Zustand ab und hängt Effekte an Ereignisse
+  (Schuss, Blitzkette, Sporenpuls, Treffer, Tod mit „+Gold", Durchbruch, Welle,
+  Ende). Bilder heißen wie im Asset-Vertrag (`tower_watch`, `enemy_raider`, …);
+  liegt eines im Katalog, wird es benutzt, sonst die Platzhalterform. Mitspieler
+  `Autoplayer` im Kern (Vorführbauweise `demoStrategy` aus der Missionsdatei,
+  exakte Wegabdeckung statt Abtastung). Tests: `AppTests/BattleSceneTests`
+  (Knotenzahl über Mission 1, Neustart, 2×) in der macOS-CI; die CI startet die App
+  mit `--demo` und fotografiert die laufende Mission.
 - **Abh.:** WP-01, WP-09 · **Risiken:** Logik rutscht in die Szene (T2) → Review-Punkt
 
-### WP-12 · Bedienung: bauen und verkaufen per Antippen
+### WP-12 · Bedienung: bauen und verkaufen per Antippen ✓ 0.5.0
 - **Ziel:** Ein Mensch kann spielen.
 - **Umfang:** Zelle antippen → Baumenü mit Preisen, Reichweitenvorschau, bestätigen;
   Turm antippen → Info und Verkaufen; abgelehnte Befehle sichtbar.
 - **Abnahme:** Auf dem iPhone ohne Fehltipp bedienbar (Selbsttest + Spieltest).
 - **Tests:** UI-Test: Turm bauen und verkaufen.
-- **Entwurf:** Ablauf und Architektur (`PlacementState`, `HudLayout`) in [07](../game-design/07-ui-ux.md#bauen); offen D-018.
 - **Abh.:** WP-11 · **Risiken:** Fingerverdeckung (P2), Tippziele ≥ 44 pt
 
-### WP-13 · HUD
+### WP-13 · HUD ✓ 0.5.0
 - **Ziel:** Gold, Leben, Welle, Zähler, Pause, 1×/2×, „Nächste Welle".
 - **Abnahme:** Werte stimmen jederzeit mit dem Zustand; kein Bildeinbruch durch das HUD.
 - **Tests:** HUD-Modell setzt nur geänderte Werte.
-- **Entwurf:** HUD-Ecken und `BattleHUDModel` in [07](../game-design/07-ui-ux.md#schlacht-und-hud); D-017.
 - **Abh.:** WP-11 · **Risiken:** T3
 
-### WP-14 · Ergebnis und Neustart
+### WP-14 · Ergebnis und Neustart ✓ 0.5.0
 - **Ziel:** Runde schließen, neue Runde.
 - **Umfang:** Sieg-/Niederlagen-Bildschirm mit Leben und Dauer; Neustart setzt alles zurück.
-  Entwurf in [07](../game-design/07-ui-ux.md#ergebnis).
 - **Abnahme:** Zehn Neustarts hintereinander ohne Speicherwachstum oder Restzustand.
 - **Tests:** UI-Test: Mission mit Bot zu Ende, Neustart.
 - **Abh.:** WP-12, WP-13 · **Risiken:** gering
@@ -174,6 +181,6 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
 ## Danach (Phase 2, noch nicht geschnitten)
 
 Zwergenbank · Grafikstil und Asset-Weg · Ton · Animationen und Treffereffekte ·
-Fortsetzen nach App-Ende · Menüs · Bonus für frühes Rufen prüfen · Upgrades prüfen ·
+Fortsetzen nach App-Ende · Menüs und HUD nach [07](../game-design/07-ui-ux.md) (D-030 bis D-032) · Bonus für frühes Rufen prüfen · Upgrades prüfen ·
 Panzerbestie/Rüstung prüfen. Kandidaten aus der Marktanalyse (E2, E5–E8, E11)
 stehen in der [Roadmap](roadmap.md#kandidaten-aus-der-marktanalyse-vorschlag).

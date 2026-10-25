@@ -46,6 +46,7 @@
                                    { "enemy": "runner", "count": 20, "interval": 0.4, "delay": 8 },
                                    { "enemy": "brute",  "count": 3,  "interval": 2.0, "delay": 14 } ] }
   ],
+  "demoStrategy": "Mix Wach/Sporen/Blitz",
   "simStrategies": {
     "Mix Wach/Sporen/Blitz": ["watch","watch","spore","lightning","watch","lightning","spore","watch","lightning","watch","lightning","watch","spore","lightning","watch","lightning","watch","watch","lightning","watch","lightning","watch","lightning","watch"],
     "Nur Wachtürme": ["watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch","watch"],

@@ -15,7 +15,13 @@ Korrektur. Grundlage sind die Absprachen in `CLAUDE.md`, Abschnitte
    Es gibt nur einen Push-Zweig: PRs laufen nacheinander, nie zwei offen.
 2. Abnahmekriterien des WP im Backlog lesen, dazu die Dokumente, auf die es
    verweist. Vor Designarbeit: `docs/game-design/market-analysis.md`, Abschnitt 7.
-3. Berührt das WP Spielgefühl, Architektur, Aufwand oder Geld und ist die Frage
+3. **Konzept schreiben, bevor Code entsteht** (Steffen, 25.10.2026):
+   `docs/konzepte/<wp>-<name>.md` mit Ziel, Umfang und Abgrenzung, Architektur
+   (Datenfluss, welche Schicht was darf, Bezug auf die Architekturregeln),
+   Bedienentscheidungen mit Kennzeichnung, Sicherheit, Testplan je Ebene.
+   Vorlage: `docs/konzepte/wp-12-14-spielbare-mission.md`. Nur kleine
+   Korrekturen kommen ohne Konzept aus.
+4. Berührt das WP Spielgefühl, Architektur, Aufwand oder Geld und ist die Frage
    nicht entschieden: Steffen fragen (Optionen mit Empfehlung), auf der
    Empfehlung weiterarbeiten, Antwort ins Entscheidungsprotokoll.
 

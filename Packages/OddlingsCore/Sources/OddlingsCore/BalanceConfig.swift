@@ -11,10 +11,16 @@ public struct BalanceConfig: Codable, Equatable, Sendable {
     public var towers: [TowerKind: TowerConfig]
     public var enemies: [EnemyKind: EnemyConfig]
     public var waves: [WaveConfig]
+    /// Bauweisen für Balancetests und Vorführung, keine Spielregel: Die
+    /// Simulation liest sie nie. Nach Namen nachschlagen, nie darüber iterieren.
+    public var simStrategies: [String: [TowerKind]]?
+    /// Name der Bauweise, mit der der Mitspieler die Mission vorführt.
+    public var demoStrategy: String?
 
     public init(
         simulation: SimulationConfig, mission: MissionConfig, map: MapConfig,
-        towers: [TowerKind: TowerConfig], enemies: [EnemyKind: EnemyConfig], waves: [WaveConfig]
+        towers: [TowerKind: TowerConfig], enemies: [EnemyKind: EnemyConfig], waves: [WaveConfig],
+        simStrategies: [String: [TowerKind]]? = nil, demoStrategy: String? = nil
     ) {
         self.simulation = simulation
         self.mission = mission
@@ -22,6 +28,8 @@ public struct BalanceConfig: Codable, Equatable, Sendable {
         self.towers = towers
         self.enemies = enemies
         self.waves = waves
+        self.simStrategies = simStrategies
+        self.demoStrategy = demoStrategy
     }
 }
 
