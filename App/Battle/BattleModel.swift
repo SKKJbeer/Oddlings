@@ -15,6 +15,10 @@ final class BattleModel {
     /// Angehalten läuft keine Zeit auf; nach dem Fortsetzen geht es genau dort
     /// weiter, ohne nachzuholen.
     var paused = false
+    /// Nur für die End-zu-End-Tests: lässt eine ganze Mission in Sekunden
+    /// laufen, damit Sieg und Niederlage im Simulator prüfbar sind. Es sind
+    /// weiter dieselben festen Schritte (Regel 5), nur mehr je Bild.
+    var timeScale = 1.0
     var autoplay: Bool
     private var player: Autoplayer
     private let seed: UInt64
@@ -44,7 +48,7 @@ final class BattleModel {
         // Nach einer Pause (App im Hintergrund, Haltepunkt) nicht minutenlang
         // nachholen: Das wäre ein Sprung, den niemand sehen will.
         guard !paused else { return [] }
-        accumulator += min(frameTime, BattleStyle.maxCatchUp) * Double(speed)
+        accumulator += min(frameTime, BattleStyle.maxCatchUp) * Double(speed) * timeScale
         var events: [Event] = []
         while accumulator >= tickDuration && !state.isOver {
             accumulator -= tickDuration
