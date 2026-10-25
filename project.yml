@@ -16,15 +16,23 @@ settings:
     SWIFT_STRICT_CONCURRENCY: complete
     ENABLE_USER_SCRIPT_SANDBOXING: YES
 
+packages:
+  OddlingsCore:
+    path: Packages/OddlingsCore
+
 targets:
   Oddlings:
     type: application
     platform: iOS
+    dependencies:
+      # Noch ungenutzt (der Spike liest die Karte selbst); eingebunden, damit
+      # die CI das Paket ab jetzt auch für iOS übersetzt.
+      - package: OddlingsCore
     sources:
       - path: App
       # Dieselbe Datei, die das Prüfskript liest: Der Spike zeichnet die echte
       # Karte von Mission 1, nicht eine ausgedachte.
-      - path: config/balance/mvp-mission-01.json
+      - path: Packages/OddlingsCore/Sources/OddlingsCore/Resources/Balance/mvp-mission-01.json
         buildPhase: resources
     settings:
       base:

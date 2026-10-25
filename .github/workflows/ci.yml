@@ -18,6 +18,17 @@ jobs:
       - name: Balance-Prüfskript
         run: python3 tools/balance-sim/sim.py --reserve
 
+  # Die Simulation braucht nur Foundation. Unter Linux geprüft, damit ein
+  # versehentlicher Apple-Import sofort rot wird, nicht erst im Mac-Lauf.
+  core-linux:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    container: swift:6.2-noble
+    steps:
+      - uses: actions/checkout@v4
+      - name: Simulation testen
+        run: swift test --package-path Packages/OddlingsCore
+
   iphone:
     runs-on: macos-15
     timeout-minutes: 40
@@ -31,6 +42,9 @@ jobs:
         run: |
           scripts/xcode-waehlen.sh
           swift --version
+
+      - name: Simulation testen
+        run: swift test --package-path Packages/OddlingsCore
 
       - name: XcodeGen
         run: brew install xcodegen

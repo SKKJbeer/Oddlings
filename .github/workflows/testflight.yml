@@ -16,7 +16,7 @@ name: TestFlight
 on:
   push:
     branches: [main]
-    paths: ['App/**', 'Packages/**', 'project.yml', 'config/**', '.github/workflows/testflight.yml', 'scripts/apple.py', 'scripts/xcode-waehlen.sh']
+    paths: ['App/**', 'Packages/**', 'project.yml', '.github/workflows/testflight.yml', 'scripts/apple.py', 'scripts/xcode-waehlen.sh']
   workflow_dispatch:
 
 permissions:

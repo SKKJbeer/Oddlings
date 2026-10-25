@@ -1,7 +1,7 @@
 # 02 – Kampf, Türme und Gegner
 
 Zahlenwerte stehen **nicht** hier, sondern ausschließlich in
-[`config/balance/mvp-mission-01.json`](../../config/balance/mvp-mission-01.json).
+[`mvp-mission-01.json`](../../Packages/OddlingsCore/Sources/OddlingsCore/Resources/Balance/mvp-mission-01.json).
 Begründung und Rechnung dazu: [04-economy-and-balance.md](04-economy-and-balance.md).
 Hier stehen Rollen und Regeln.
 

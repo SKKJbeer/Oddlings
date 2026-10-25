@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "nohup \"$CLAUDE_PROJECT_DIR\"/scripts/swift-linux.sh > /tmp/swift-linux.log 2>&1 &"
+          }
+        ]
+      }
+    ]
+  }
+}

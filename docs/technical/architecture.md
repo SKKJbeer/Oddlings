@@ -95,9 +95,8 @@ Oddlings/
 │   └── Resources/               Assets, Platzhaltergrafik
 ├── Packages/OddlingsCore/       Simulation, nur Foundation
 │   ├── Sources/OddlingsCore/
-│   │   └── Resources/Balance/   ← hierhin zieht config/balance/ mit WP-02
+│   │   └── Resources/Balance/   Balancewerte, die einzige Quelle (seit WP-02)
 │   └── Tests/OddlingsCoreTests/
-├── config/balance/              bis WP-02: Balancewerte (eine Quelle)
 ├── tools/balance-sim/           Prüfskript Phase 0, wird durch Swift-Tests abgelöst
 └── docs/
 ```

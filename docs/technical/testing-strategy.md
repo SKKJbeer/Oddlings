@@ -37,9 +37,11 @@ Status: **[VORSCHLAG]**
   Vielfaches; dann Oberflächentests nur noch bei Pull Requests.
 - Seit WP-01 läuft `.github/workflows/ci.yml`: Prüfskript unter Linux, App-Bau
   und Probelauf im Simulator (starten, 20 s laufen lassen, Bild sichern) auf macOS.
-- **Cloud-Sitzungen** haben derzeit kein Swift. Bis eine Linux-Toolchain
-  eingerichtet ist (prüfen in WP-02), ist die CI die einzige Instanz, die Swift
-  übersetzt. Eine Cloud-Sitzung behauptet nie, Swift-Tests seien grün, ohne
-  CI-Lauf.
+- Seit WP-02 testet die CI OddlingsCore zweimal: unter Linux (Container
+  `swift:6.2-noble`, fängt Apple-Importe sofort) und auf macOS vor dem App-Bau.
+- **Cloud-Sitzungen** bekommen Swift für Linux über `scripts/swift-linux.sh`
+  (Startup-Haken, gemessen am 25.10.2026: läuft, 46 Tests in unter einer
+  Sekunde). Das deckt nur das Paket ab; App und Oberfläche baut allein die
+  macOS-CI.
 - Das Python-Prüfskript (`tools/balance-sim/`) ist Phase-0-Werkzeug und wird
   gelöscht, sobald die Balancetests in Swift es abdecken (WP-10).
