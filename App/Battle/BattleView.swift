@@ -44,6 +44,9 @@ struct BattleView: View {
                 ZStack {
                     SpriteView(scene: scene, preferredFramesPerSecond: 60, options: [.ignoresSiblingOrder])
                     BattleMenu(controller: controller)
+                    #if DEBUG
+                    FxStatsOverlay(scene: scene)
+                    #endif
                 }
                 .ignoresSafeArea(edges: [.horizontal, .bottom])
                 .accessibilityElement(children: .contain)

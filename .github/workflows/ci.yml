@@ -121,16 +121,38 @@ jobs:
           xcrun simctl boot "$UDID" || true
           xcrun simctl bootstatus "$UDID" -b
           xcrun simctl install "$UDID" "$APP"
-          xcrun simctl launch "$UDID" de.skkjbeer.oddlings --demo
-          sleep 20
+          # Leistungsprobe (FX 01): Vorführung im dreifachen Tempo, damit viel
+          # gleichzeitig passiert; die App misst 20 s und schreibt das Ergebnis.
+          xcrun simctl launch "$UDID" de.skkjbeer.oddlings --demo --fx-messung --e2e-zeitraffer 3
           mkdir -p build/probe
-          xcrun simctl io "$UDID" screenshot build/probe/mission.png
+          # Bilder während der Messung: Gegner, Schüsse und Effekte zum Ansehen.
+          for i in 1 2 3; do
+            sleep 9
+            xcrun simctl io "$UDID" screenshot "build/probe/mission-$i.png"
+          done
+          sleep 4
           if ! xcrun simctl spawn "$UDID" launchctl list | grep -q de.skkjbeer.oddlings; then
-            echo "::error::Die App läuft nach 20 Sekunden nicht mehr."
+            echo "::error::Die App läuft nach 30 Sekunden nicht mehr."
             ls ~/Library/Logs/DiagnosticReports/ 2>/dev/null | grep -i oddlings || true
             exit 1
           fi
-          echo "::notice::App läuft nach 20 Sekunden noch."
+          echo "::notice::App läuft nach 30 Sekunden noch."
+          DATA=$(xcrun simctl get_app_container "$UDID" de.skkjbeer.oddlings data)
+          MESSUNG="$DATA/Documents/fx-messung.json"
+          test -f "$MESSUNG" || { echo "::error::Keine Leistungsmessung (fx-messung.json) geschrieben"; exit 1; }
+          cp "$MESSUNG" build/probe/
+          python3 - "$MESSUNG" <<'PY'
+          import json, sys
+          m = json.load(open(sys.argv[1]))
+          # Untergrenze wie FxStyle.probeMinimumFPS. Der Simulator rechnet anders
+          # als ein iPhone; die eigentliche Abnahme ist das Gerät (WP-01).
+          grenze = 30
+          text = f"Bildrate im Simulator: {m['averageFPS']:.1f} fps im Mittel, längstes Bild {m['worstFrameMS']:.1f} ms, {int(m['frames'])} Bilder"
+          if m["averageFPS"] < grenze:
+              print(f"::error::{text} (Grenze {grenze})")
+              sys.exit(1)
+          print(f"::notice::{text}")
+          PY
 
       - name: Bild weiterreichen
         if: always()

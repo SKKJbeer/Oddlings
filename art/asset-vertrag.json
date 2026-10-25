@@ -1,5 +1,5 @@
 {
-  "_zweck": "Maschinenlesbarer Teil von docs/art/asset-vertrag.md. Figuren sind Quadrate mit Seite seiteZellen, Fuss auf Hoehe anker (= anchorPoint.y in der Szene). tools/art-check/check_assets.py prueft den Atlas dagegen.",
+  "_zweck": "Maschinenlesbarer Teil von docs/art/asset-vertrag.md. Figuren sind Quadrate mit Seite seiteZellen, Fuss auf Hoehe anker (= anchorPoint.y in der Szene). tools/art-check/check_assets.py prueft den Atlas dagegen. Effekte (fx_*) haben keine feste Groesse: die Szene setzt sie nach Seitenverhaeltnis; weiss oder grau gemalt, eingefaerbt in der Szene.",
   "atlas": "App/Assets.xcassets/Battle.spriteatlas",
   "punkteJeZelle": 43,
   "maxBytesJeDatei": 1500000,
@@ -47,6 +47,38 @@
       "alpha": false,
       "ordner": "App/Assets.xcassets/Maps",
       "format": "jpg"
+    },
+    "fx_glow": {
+      "alpha": true,
+      "effekt": true
+    },
+    "fx_spark": {
+      "alpha": true,
+      "effekt": true
+    },
+    "fx_ring": {
+      "alpha": true,
+      "effekt": true
+    },
+    "fx_puff": {
+      "alpha": true,
+      "effekt": true
+    },
+    "fx_coin": {
+      "alpha": true,
+      "effekt": true
+    },
+    "fx_arrow": {
+      "alpha": true,
+      "effekt": true
+    },
+    "fx_bolt": {
+      "alpha": true,
+      "effekt": true
+    },
+    "fx_confetti": {
+      "alpha": true,
+      "effekt": true
     }
   }
 }

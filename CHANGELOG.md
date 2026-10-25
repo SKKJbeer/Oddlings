@@ -11,6 +11,32 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.5.3 – 25.10.2026 (Bewegung und Effekte)
+
+**Neu**
+- Gegner laufen: Hüpfen im Schritttakt je Gegnerart, Stauchen beim Aufsetzen,
+  Wiegen, Vorneigung, Blick in Laufrichtung, Schatten wird in der Luft kleiner.
+  Verlangsamte Gegner trippeln langsamer und sind grün getönt.
+- Treffer blitzen hell auf, mit Rückstoß; der Lebensbalken hat ein nachlaufendes
+  Schadensstück. Tod: Stauchen, Zerplatzen in Rauch und Splittern, drei Münzen
+  springen heraus, `+Gold` springt auf.
+- Wachturm schießt Pfeile im Bogen (Treffer erst bei Ankunft), Blitzturm einen
+  gezackten Kettenblitz Glied für Glied mit leuchtendem Kristall, Sporenturm
+  pumpt einen Sporenring aus. Blitz auf verlangsamtes Ziel: Sporenfunke (E2).
+- Bau: Turm fällt auf seinen Platz und federt nach, Staubring. Verkauf: Turm
+  versinkt in Staub, Münzen. Durchbruch: Festung bebt, Bild wackelt.
+  Wellenbanner springt ein, Sieg mit Konfetti. Türme atmen leicht in Ruhe.
+- „Bewegung reduzieren" in iOS schaltet Wackeln und Atmen ab.
+- Konzept: [fx-01-bewegung-und-effekte](docs/konzepte/fx-01-bewegung-und-effekte.md),
+  Entscheidungen D-050 (Effekt-Uhr), D-051 (Gliedmaßen, vorgeschlagen).
+
+**Tests**
+- `AppTests/FxMathTests`, `FxDirectorTests`, `FxBudgetTests` (ganze Mission bei
+  2×: Obergrenze, keine `SKShapeNode`, Rechenzeit je Bild).
+- `AppUITests/EffectsE2ETests`: alle Effektarten laufen in der echten App.
+- CI-Probelauf misst die Bildrate im Simulator und wird unter 30 Bildern je
+  Sekunde rot.
+
 ## 0.5.2 – 25.10.2026 (Grafik), Bau 21 (VALID)
 
 **Neu**

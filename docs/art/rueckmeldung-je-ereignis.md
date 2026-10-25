@@ -1,6 +1,7 @@
 # Rückmeldung je Ereignis
 
-Status: **[VORSCHLAG]** · Umsetzung der Empfehlungen E1–E3 aus der
+Status: **[VORSCHLAG]**, Bildspalte umgesetzt in FX 01
+([Konzept](../konzepte/fx-01-bewegung-und-effekte.md); Haptik: UI 01; Ton: K9) · Umsetzung der Empfehlungen E1–E3 aus der
 [Marktanalyse](../game-design/market-analysis.md). Abnahmekriterium für die
 Darstellung: Jede Zeile hat Bild, Ton und, wo genannt, Haptik. Nichts passiert
 stumm. Die Ereignisse sind die der Simulation (Architekturregel 3); keine Zeile

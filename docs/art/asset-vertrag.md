@@ -27,7 +27,7 @@ Sie folgen den IDs der Simulation.
 | `fortress` | Festung am Wegende |
 | `map_mission01_ground` | Boden der ganzen Karte, Weg eingemalt |
 | `buildzone_tile` | Markierung einer bebaubaren Zelle, Overlay |
-| `fx_bolt`, `fx_spore_cloud`, `fx_hit`, `fx_spark_combo` | Effekte |
+| `fx_glow`, `fx_spark`, `fx_ring`, `fx_puff`, `fx_coin`, `fx_arrow`, `fx_bolt`, `fx_confetti` | Effekte, siehe „Effekte“ unten |
 | `icon_slowed` | Zustandssymbol über dem Gegner (E3) |
 
 ## Kamera, Licht, Maße
@@ -52,15 +52,34 @@ Sie folgen den IDs der Simulation.
   genau dieser Geometrie gezeichnet und dann übermalt wird; deshalb deckt sich
   der gemalte Weg mit dem gerechneten.
 
+## Effekte
+
+Seit FX 01 ([Konzept](../konzepte/fx-01-bewegung-und-effekte.md)) zeichnet die
+Szene jede Effekttextur selbst, solange kein Bild im Atlas liegt. Liegt eines
+unter dem Namen, nimmt sie das Bild. Alle außer `fx_coin` und `fx_arrow` sind
+**weiß bzw. grau** gemalt; die Szene färbt sie ein (Blitzblau, Sporengrün,
+Staub, Gegnerfarbe), damit ein Bild für alle Farben reicht.
+
+| Name | Inhalt | Form |
+|---|---|---|
+| `fx_glow` | weicher Lichtpunkt, auch Schatten unter Gegnern | Quadrat, Mitte hell |
+| `fx_spark` | Funke, in Flugrichtung gestreckt | etwa 4,5 : 1, Spitze rechts |
+| `fx_ring` | Druckwelle, Sporenring, Staubring | Quadrat, Ring außen, innen weich |
+| `fx_puff` | Rauch- und Staubwölkchen, Licht von oben | Quadrat |
+| `fx_coin` | Goldmünze ohne Währungszeichen, farbig | Quadrat |
+| `fx_arrow` | Pfeil nach rechts, Holz, Eisen, rote Federn, farbig | etwa 4,4 : 1 |
+| `fx_bolt` | Querschnitt eines Strahls, wird in die Länge gezogen | hoch, Mitte hell |
+| `fx_confetti` | Splitter und Konfetti | etwa 3 : 2 |
+
 ## Bewegung
 
 Gegner haben **keine gemalten Laufzyklen**. Ein Bildgenerator kann dieselbe Figur
 nicht Bild für Bild gleich malen; ein Zyklus aus solchen Bildern flackert.
 Bewegung entsteht in der Szene: Hüpfen und Squash-and-Stretch im Lauftakt,
 leichtes Kippen, Schatten-Ellipse darunter. Dafür hat jeder Gegner eine
-Körper-Node über einer Schatten-Node. Wenn das im Spieltest (WP-15) nicht
-genügt, ist der nächste Schritt eine Zerlegung in Teile (Kopf, Körper, Beine)
-mit Skelettanimation, nicht ein gemalter Zyklus.
+Körper-Node über einer Schatten-Node. Umgesetzt in FX 01 (Gangart je Gegner in
+`FxStyle.gait`). Der nächste Schritt für echte Gliedmaßen ist eine Zerlegung in
+Teile mit Gelenken, nicht ein gemalter Zyklus; der Weg liegt Steffen als D-051 vor.
 
 ## Oberfläche (HUD und Menüs)
 

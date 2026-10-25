@@ -2,39 +2,63 @@ import OddlingsCore
 import SpriteKit
 
 /// Zeigt, was die Simulation tut (WP-11). Die Szene liest Zustand und
-/// Ereignisse und ändert nichts davon (Architekturregel 2). Alle Effekte hängen
-/// an Ereignissen (Architekturregel 3); was dauerhaft sichtbar ist (Türme,
-/// Gegner, Lebensbalken, Verlangsamung), folgt dem Zustand.
+/// Ereignisse und ändert nichts davon (Architekturregel 2). Effekte hängen an
+/// Ereignissen und laufen über den `FxDirector` (Architekturregel 3, D-050);
+/// was dauerhaft sichtbar ist (Türme, Gegner samt Laufhaltung, Lebensbalken,
+/// Verlangsamung), folgt dem Zustand.
 @MainActor
 final class BattleScene: SKScene {
     let model: BattleModel
     /// Bedienung; nil beim reinen Zuschauen und in Tests ohne Eingaben.
     var controller: BattleController?
-    private(set) var towerNodes: [Int: SKNode] = [:]
+    private(set) var towerNodes: [Int: TowerNode] = [:]
     private(set) var enemyNodes: [Int: EnemyNode] = [:]
+    let fx: FxDirector
 
+    /// Alles, was beim Bildschirmwackeln mitwackelt. Die Szene selbst bleibt
+    /// stehen, damit Tippen und Lagerechnung unberührt sind.
+    private let world: SKNode
     private let ground = SKNode()
     private let towerLayer = SKNode()
     private let enemyLayer = SKNode()
-    private let effectLayer = SKNode()
+    let effectLayer: SKNode
     private let fortress = SKShapeNode()
     private let fortressHit = SKShapeNode()
+    private var fortressRest = CGPoint.zero
     private let selectionLayer = SKNode()
     private var shownSelection: BattleController.Selection = .none
+    /// Was im nächsten Abgleich mit Auftritt erscheint. Nach einer neuen
+    /// Bildschirmgröße entstehen die Nodes neu, dann ohne Auftritt.
+    private var pendingSpawns: Set<Int> = []
+    private var pendingBuilds: Set<Int> = []
     private(set) var layout: BoardLayout
     private var field: CGFloat { layout.field }
     private var lastTime: TimeInterval?
+    /// Ereignisse des letzten Bildes, für Tests.
+    private(set) var lastEvents: [Event] = []
+    #if DEBUG
+    private var probe: FxProbe?
+    #endif
 
     init(model: BattleModel) {
         self.model = model
         let size = CGSize(width: 844, height: 390)
-        layout = BoardLayout(size: size, map: model.sim.map)
+        let layout = BoardLayout(size: size, map: model.sim.map)
+        self.layout = layout
+        let world = SKNode(), effects = SKNode()
+        self.world = world
+        effectLayer = effects
+        fx = FxDirector(layer: effects, world: world, field: layout.field)
         super.init(size: size)
         scaleMode = .resizeFill
         backgroundColor = BattleStyle.background
+        #if DEBUG
+        probe = FxProbe.fromArguments()
+        #endif
+        addChild(world)
         for (layer, z) in [(ground, 0), (selectionLayer, 5), (towerLayer, 10), (enemyLayer, 20), (effectLayer, 30)] {
             layer.zPosition = CGFloat(z)
-            addChild(layer)
+            world.addChild(layer)
         }
         layoutMap()
     }
@@ -48,29 +72,42 @@ final class BattleScene: SKScene {
         let frameTime = lastTime.map { currentTime - $0 } ?? 0
         lastTime = currentTime
         frame(after: frameTime)
+        #if DEBUG
+        probe?.add(frameTime)
+        #endif
     }
 
     /// Ein Bild: fällige Schritte rechnen, Effekte auslösen, Zustand zeigen.
     /// Eigene Methode, damit Tests ohne Bildschirm Bilder erzeugen können.
     func frame(after frameTime: TimeInterval) {
         let events = model.advance(by: frameTime)
+        lastEvents = events
+        // Angehalten steht auch jeder Effekt; bei 2× laufen Effekte in Echtzeit.
+        let fxTime = model.paused ? 0 : min(frameTime, BattleStyle.maxCatchUp)
         // Effekte vor dem Abgleich, solange getötete Gegner noch eine Node haben.
         for event in events { play(event) }
-        sync()
+        sync(dt: fxTime)
+        fx.advance(by: fxTime)
         controller?.afterFrame()
         showSelection()
     }
 
     func restart() {
         model.restart()
-        for node in towerNodes.values { node.removeFromParent() }
-        for node in enemyNodes.values { node.removeFromParent() }
+        fx.reset()
+        clearPieces()
+        controller?.restart()
+        sync(dt: 0)
+        showSelection()
+    }
+
+    private func clearPieces() {
+        towerLayer.removeAllChildren()
+        enemyLayer.removeAllChildren()
         towerNodes = [:]
         enemyNodes = [:]
-        effectLayer.removeAllChildren()
-        controller?.restart()
-        sync()
-        showSelection()
+        pendingSpawns = []
+        pendingBuilds = []
     }
 
     // MARK: Eingabe
@@ -164,6 +201,7 @@ final class BattleScene: SKScene {
             fortress.strokeColor = .black
         }
         fortress.position = toScene(gate)
+        fortressRest = fortress.position
         fortressHit.path = fortress.path
         fortressHit.fillColor = BattleStyle.leak
         fortressHit.strokeColor = .clear
@@ -173,33 +211,37 @@ final class BattleScene: SKScene {
         ground.addChild(fortress)
 
         // Größen hängen am Feld: bei neuer Größe alles neu aufbauen.
-        for node in towerNodes.values { node.removeFromParent() }
-        for node in enemyNodes.values { node.removeFromParent() }
-        towerNodes = [:]
-        enemyNodes = [:]
+        fx.reset()
+        fx.field = field
+        clearPieces()
         shownSelection = .none
-        sync()
+        sync(dt: 0)
         showSelection()
     }
 
     // MARK: Zustand
 
     /// Gleicht Nodes mit dem Zustand ab. Danach gibt es für jeden Turm und
-    /// jeden Gegner genau eine Node (Test in BattleSceneTests).
-    func sync() {
+    /// jeden Gegner genau eine Node (Test in BattleSceneTests); sterbende und
+    /// versinkende gehören dem Director.
+    func sync(dt: Double) {
         let state = model.state
         var liveTowers: [Int: Bool] = [:]
         for tower in state.towers {
             liveTowers[tower.id] = true
-            guard towerNodes[tower.id] == nil else { continue }
-            let node = BattleSprites.tower(tower.kind, field: field)
-            node.position = toScene(tower.cell.center)
-            // Weiter unten heißt weiter vorn; bleibt innerhalb der eigenen Ebene.
-            node.zPosition = 1 - node.position.y / max(size.height, 1)
-            towerLayer.addChild(node)
-            towerNodes[tower.id] = node
-            node.setScale(0.6)
-            node.run(.scale(to: 1, duration: BattleStyle.hitFlash * 2))
+            let node: TowerNode
+            if let existing = towerNodes[tower.id] {
+                node = existing
+            } else {
+                node = TowerNode(tower: tower, field: field)
+                node.position = toScene(tower.cell.center)
+                // Weiter unten heißt weiter vorn; bleibt innerhalb der eigenen Ebene.
+                node.zPosition = 1 - node.position.y / max(size.height, 1)
+                towerLayer.addChild(node)
+                towerNodes[tower.id] = node
+                if pendingBuilds.remove(tower.id) != nil { fx.build(node) }
+            }
+            node.idle(time: fx.time, still: fx.reduceMotion)
         }
         for (id, node) in towerNodes where liveTowers[id] == nil {
             node.removeFromParent()
@@ -209,22 +251,33 @@ final class BattleScene: SKScene {
         var before: [Int: Double] = [:]
         for enemy in model.previous.enemies { before[enemy.id] = enemy.distance }
         let t = model.interpolation
+        let path = model.sim.map.path
         var liveEnemies: [Int: Bool] = [:]
         for enemy in state.enemies {
             liveEnemies[enemy.id] = true
             let node: EnemyNode
+            var appeared = false
             if let existing = enemyNodes[enemy.id] {
                 node = existing
             } else {
                 node = EnemyNode(enemy: enemy, field: field)
                 enemyLayer.addChild(node)
                 enemyNodes[enemy.id] = node
+                appeared = pendingSpawns.remove(enemy.id) != nil
             }
             let from = before[enemy.id] ?? enemy.distance
             let distance = from + (enemy.distance - from) * t
-            node.position = toScene(model.sim.map.path.position(at: distance))
+            let here = path.position(at: distance)
+            node.position = toScene(here)
             node.zPosition = 1 - node.position.y / max(size.height, 1)
-            node.show(enemy)
+            // Blick in Laufrichtung, aus einem Stück Weg voraus: An senkrechten
+            // Stücken bleibt die letzte Richtung, statt zu flackern.
+            let ahead = path.position(at: distance + FxStyle.facingLookahead)
+            if abs(ahead.x - here.x) > FxStyle.facingThreshold { node.facing = ahead.x > here.x ? 1 : -1 }
+            node.apply(FxMath.pose(distance: distance, phase: FxMath.phase(forID: enemy.id),
+                                   gait: FxStyle.gait(enemy.kind)), field: field)
+            node.show(enemy, dt: dt)
+            if appeared { fx.spawn(node) }
         }
         for (id, node) in enemyNodes where liveEnemies[id] == nil {
             node.removeFromParent()
@@ -237,37 +290,38 @@ final class BattleScene: SKScene {
     private func play(_ event: Event) {
         switch event {
         case .towerFired(let towerID, let targets):
-            guard let tower = model.state.towers.first(where: { $0.id == towerID }),
-                  let origin = towerNodes[towerID]?.position else { return }
-            let points = targets.compactMap { enemyNodes[$0]?.position }
+            guard let tower = towerNodes[towerID] else { return }
+            let hit = targets.compactMap { enemyNodes[$0] }
             switch tower.kind {
-            case .watch: shot(from: origin, to: points)
-            case .lightning: bolt(from: origin, through: points)
-            case .spore: pulse(at: origin, range: model.sim.config.towers[.spore]?.range ?? 0)
+            case .watch: fx.arrow(from: tower, at: hit)
+            case .lightning: fx.bolt(from: tower, through: hit)
+            case .spore: fx.spores(from: tower, range: model.sim.config.towers[.spore]?.range ?? 0)
             }
         case .enemyDamaged(let id, _):
-            enemyNodes[id]?.flash()
+            if let node = enemyNodes[id] { fx.hit(node) }
         case .enemyKilled(let id, let reward):
-            guard let position = enemyNodes[id]?.position else { return }
-            pop(at: position)
-            float("+\(reward)", at: position, color: BattleStyle.gold)
-        case .enemyLeaked:
-            fortressHit.removeAllActions()
-            fortressHit.alpha = 1
-            fortressHit.run(.fadeOut(withDuration: BattleStyle.hitFlash * 4))
-        case .waveStarted(let index):
-            banner("Welle \(index + 1) von \(model.sim.config.waves.count)")
-        case .missionEnded:
-            // Das Ergebnis zeigt die Ergebnistafel der Oberfläche (BattleHUD).
-            effectLayer.childNode(withName: "banner")?.removeFromParent()
-        case .commandRejected(let command, let reason):
-            float(BattleTexts.rejection(reason), at: position(of: command), color: BattleStyle.leak)
+            // Ab hier gehört die Node dem Director, bis sie zerplatzt ist.
+            if let node = enemyNodes.removeValue(forKey: id) { fx.death(node, reward: reward) }
+        case .enemyLeaked(let id, _):
+            if let node = enemyNodes.removeValue(forKey: id) {
+                fx.leak(node, into: fortressRest, fortress: fortress, rest: fortressRest, flash: fortressHit)
+            }
+        case .enemySpawned(let id):
+            pendingSpawns.insert(id)
+        case .towerBuilt(let id):
+            pendingBuilds.insert(id)
         case .towerSold(let id, let refund):
-            guard let position = towerNodes[id]?.position else { return }
-            float("+\(refund)", at: position, color: BattleStyle.gold)
-        case .towerBuilt, .enemySpawned, .enemySlowed:
-            // Bauen zeigt sich über den Zustand (Aufbau-Animation in `sync`),
-            // Verlangsamung als Markierung am Gegner.
+            if let node = towerNodes.removeValue(forKey: id) { fx.sell(node, refund: refund) }
+        case .waveStarted(let index):
+            fx.banner("Welle \(index + 1) von \(model.sim.config.waves.count)", size: size)
+        case .missionEnded(let won):
+            // Das Ergebnis zeigt die Ergebnistafel der Oberfläche (BattleHUD).
+            fx.clearBanner()
+            if won { fx.victory(size: size) }
+        case .commandRejected(let command, let reason):
+            fx.rejected(at: position(of: command), text: BattleTexts.rejection(reason))
+        case .enemySlowed:
+            // Verlangsamung zeigt sich über den Zustand (Farbton am Gegner).
             break
         }
     }
@@ -279,75 +333,5 @@ final class BattleScene: SKScene {
         case .sell(let id): return towerNodes[id]?.position ?? CGPoint(x: size.width / 2, y: size.height / 2)
         case .callNextWave: return CGPoint(x: size.width / 2, y: size.height / 2)
         }
-    }
-
-    private func fade(_ node: SKNode, after life: TimeInterval) {
-        effectLayer.addChild(node)
-        node.run(.sequence([.fadeOut(withDuration: life), .removeFromParent()]))
-    }
-
-    private func shot(from origin: CGPoint, to points: [CGPoint]) {
-        for target in points {
-            let line = CGMutablePath()
-            line.move(to: CGPoint(x: origin.x, y: origin.y + field * 0.6))
-            line.addLine(to: CGPoint(x: target.x, y: target.y + field * 0.3))
-            let node = SKShapeNode(path: line)
-            node.strokeColor = BattleStyle.arrow
-            node.lineWidth = max(1.5, field * 0.04)
-            fade(node, after: BattleStyle.shotLife)
-        }
-    }
-
-    private func bolt(from origin: CGPoint, through points: [CGPoint]) {
-        guard !points.isEmpty else { return }
-        let line = CGMutablePath()
-        line.move(to: CGPoint(x: origin.x, y: origin.y + field * 0.8))
-        for point in points { line.addLine(to: CGPoint(x: point.x, y: point.y + field * 0.35)) }
-        let node = SKShapeNode(path: line)
-        node.strokeColor = BattleStyle.bolt
-        node.lineWidth = max(2, field * 0.06)
-        node.glowWidth = field * 0.08
-        fade(node, after: BattleStyle.boltLife)
-    }
-
-    private func pulse(at origin: CGPoint, range: Double) {
-        let radius = CGFloat(range) * field
-        let node = SKShapeNode(circleOfRadius: radius)
-        node.fillColor = BattleStyle.sporeCloud
-        node.strokeColor = .clear
-        node.position = origin
-        node.setScale(0.3)
-        node.run(.scale(to: 1, duration: BattleStyle.pulseLife))
-        fade(node, after: BattleStyle.pulseLife)
-    }
-
-    private func pop(at position: CGPoint) {
-        let node = SKShapeNode(circleOfRadius: field * 0.3)
-        node.strokeColor = .white
-        node.lineWidth = 2
-        node.position = CGPoint(x: position.x, y: position.y + field * 0.3)
-        node.run(.scale(to: 1.8, duration: BattleStyle.deathLife))
-        fade(node, after: BattleStyle.deathLife)
-    }
-
-    private func float(_ text: String, at position: CGPoint, color: SKColor) {
-        let label = SKLabelNode(text: text)
-        label.fontName = BattleStyle.font
-        label.fontSize = field * 0.4
-        label.fontColor = color
-        label.position = CGPoint(x: position.x, y: position.y + field * 0.8)
-        label.run(.moveBy(x: 0, y: field * 0.8, duration: BattleStyle.floatLife))
-        fade(label, after: BattleStyle.floatLife)
-    }
-
-    private func banner(_ text: String) {
-        effectLayer.childNode(withName: "banner")?.removeFromParent()
-        let label = SKLabelNode(text: text)
-        label.name = "banner"
-        label.fontName = BattleStyle.font
-        label.fontSize = field * 0.9
-        label.fontColor = .white
-        label.position = CGPoint(x: size.width / 2, y: size.height * 0.75)
-        fade(label, after: BattleStyle.bannerLife)
     }
 }
