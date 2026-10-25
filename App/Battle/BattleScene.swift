@@ -84,6 +84,9 @@ final class BattleScene: SKScene {
         lastEvents = events
         // Angehalten steht auch jeder Effekt; bei 2× laufen Effekte in Echtzeit.
         let fxTime = model.paused ? 0 : min(frameTime, BattleStyle.maxCatchUp)
+        // Wer in diesem Takt erscheint, kann im selben Takt schon getroffen
+        // werden: Seine Node muss stehen, bevor der Pfeil sie sucht.
+        addNewEnemies()
         // Effekte vor dem Abgleich, solange getötete Gegner noch eine Node haben.
         for event in events { play(event) }
         sync(dt: fxTime)
@@ -255,16 +258,8 @@ final class BattleScene: SKScene {
         var liveEnemies: [Int: Bool] = [:]
         for enemy in state.enemies {
             liveEnemies[enemy.id] = true
-            let node: EnemyNode
-            var appeared = false
-            if let existing = enemyNodes[enemy.id] {
-                node = existing
-            } else {
-                node = EnemyNode(enemy: enemy, field: field)
-                enemyLayer.addChild(node)
-                enemyNodes[enemy.id] = node
-                appeared = pendingSpawns.remove(enemy.id) != nil
-            }
+            let node = enemyNodes[enemy.id] ?? makeEnemyNode(enemy)
+            let appeared = pendingSpawns.remove(enemy.id) != nil
             let from = before[enemy.id] ?? enemy.distance
             let distance = from + (enemy.distance - from) * t
             let here = path.position(at: distance)
@@ -283,6 +278,20 @@ final class BattleScene: SKScene {
             node.removeFromParent()
             enemyNodes[id] = nil
         }
+    }
+
+    private func addNewEnemies() {
+        for enemy in model.state.enemies where enemyNodes[enemy.id] == nil {
+            let node = makeEnemyNode(enemy)
+            node.position = toScene(model.sim.map.path.position(at: enemy.distance))
+        }
+    }
+
+    private func makeEnemyNode(_ enemy: Enemy) -> EnemyNode {
+        let node = EnemyNode(enemy: enemy, field: field)
+        enemyLayer.addChild(node)
+        enemyNodes[enemy.id] = node
+        return node
     }
 
     // MARK: Ereignisse

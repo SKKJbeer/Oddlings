@@ -376,8 +376,10 @@ final class FxDirector {
             let zigzag = FxMath.boltPoints(from: points[index], to: points[index + 1], segments: FxStyle.boltSegments,
                                            jitter: FxStyle.boltJitter, using: &random)
             for (a, b) in zip(zigzag, zigzag.dropFirst()) {
-                beam(from: a, to: b, width: FxStyle.boltGlowWidth, color: FxStyle.boltGlow, delay: delay)
-                beam(from: a, to: b, width: FxStyle.boltCoreWidth, color: FxStyle.boltCore, delay: delay)
+                // Der Schein ist Zier: Unter Last bleibt der helle Kern, und Pfeile und
+                // Münzen behalten ihren Platz.
+                beam(from: a, to: b, width: FxStyle.boltGlowWidth, color: FxStyle.boltGlow, delay: delay, essential: false)
+                beam(from: a, to: b, width: FxStyle.boltCoreWidth, color: FxStyle.boltCore, delay: delay, essential: true)
             }
             let target = targets[index]
             let hitPoint = point(points[index + 1])
@@ -515,8 +517,8 @@ final class FxDirector {
     }
 
     /// Ein gerades Stück Strahl von `a` nach `b` (Glühen oder Kern des Blitzes).
-    private func beam(from a: Vec, to b: Vec, width: CGFloat, color: SKColor, delay: Double) {
-        guard let segment = sprite(.bolt, essential: true) else { return }
+    private func beam(from a: Vec, to b: Vec, width: CGFloat, color: SKColor, delay: Double, essential: Bool) {
+        guard let segment = sprite(.bolt, essential: essential) else { return }
         tinted(segment, color, additive: true)
         segment.anchorPoint = CGPoint(x: 0, y: 0.5)
         segment.position = point(a)

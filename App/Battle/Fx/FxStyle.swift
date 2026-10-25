@@ -133,7 +133,7 @@ enum FxStyle {
     /// Höchstzahl flüchtiger Sprites. Ab `optionalShare` davon entfallen
     /// Zierteilchen, damit Pfeil, Blitz und Münzen immer kommen.
     static let maxSprites = 360
-    static let optionalShare = 0.8
+    static let optionalShare = 0.7
     /// Rechenzeit je Bild, die `FxBudgetTests` im Mittel erlaubt (Simulator,
     /// Debug-Bau). 16,7 ms ist ein ganzes Bild bei 60 Hz; die Hälfte bleibt
     /// fürs Zeichnen.
