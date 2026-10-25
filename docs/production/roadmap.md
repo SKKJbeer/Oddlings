@@ -55,7 +55,7 @@ aufgehoben (D-060). Der Rest von Phase 2 und 3 bleibt, wie er ist.
 | R-3 | **Festungsfähigkeit Steinregen** (P2-7 vorgezogen) | neue Oberfläche (Knopf, D-033) | Befehl `useAbility`, Abklingzeit | [Fähigkeitsknopf](../game-design/07-ui-ux.md#festungsfähigkeit-steinregen) | Symbol | Steinregen-Effekt |
 | R-4 | **Völkerwahl** Zwerge und Elfen nach [03](../game-design/03-races-and-avatar.md#wie-ein-volk-wirkt-phase-3): wählbar vor jeder Mission, Volk bestimmt die Fähigkeit (Bollwerk, Mondmal) und einen kleinen Zug | R-1, R-3 | Volk im Speicherstand und in der Missionsdatei, zwei Fähigkeiten | Wahl im Avatar oder vor der Mission | Wappen, Porträts | Effekte beider Fähigkeiten |
 
-**[VORSCHLAG]** Solange nur M1 spielbar ist, sind beide Völker von Anfang an
+**[ENTSCHIEDEN D-061]** Solange nur M1 spielbar ist, sind beide Völker von Anfang an
 wählbar. Die Freischaltung am Ende von Region 1 (D-027) greift, sobald M7 steht.
 Der Zug der Zwerge an der Bank wirkt erst mit P2-5; bis dahin zeigt die Wahl ihn
 als „kommt mit der Zwergenbank“.
