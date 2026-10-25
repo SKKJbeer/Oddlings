@@ -1,5 +1,5 @@
 {
-  "_status": "VORLÄUFIG – Phase-0-Vorschlag, durch tools/balance-sim/sim.py grob geprüft, nicht spielgetestet",
+  "_status": "VORLÄUFIG – Phase-0-Vorschlag, durch die Balancetests grob geprüft, nicht spielgetestet",
   "_einheiten": "Strecken in Feldern (1 Feld = 1 Bauraster-Zelle), Zeiten in Sekunden, Geschwindigkeit in Feldern/Sekunde",
   "simulation": { "ticksPerSecond": 30 },
   "mission": {

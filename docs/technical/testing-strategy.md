@@ -35,7 +35,7 @@ Status: **[VORSCHLAG]**
   für App und Oberfläche. Das Repository ist öffentlich, macOS-Minuten kosten
   deshalb nichts (Stand 25.10.2026). Wird es privat, kosten sie ein
   Vielfaches; dann Oberflächentests nur noch bei Pull Requests.
-- Seit WP-01 läuft `.github/workflows/ci.yml`: Prüfskript unter Linux, App-Bau
+- Seit WP-01 läuft `.github/workflows/ci.yml`: App-Bau
   und Probelauf im Simulator (starten, 20 s laufen lassen, Bild sichern) auf macOS.
 - Seit WP-02 testet die CI OddlingsCore zweimal: unter Linux (Container
   `swift:6.2-noble`, fängt Apple-Importe sofort) und auf macOS vor dem App-Bau.
@@ -43,5 +43,7 @@ Status: **[VORSCHLAG]**
   (Startup-Haken, gemessen am 25.10.2026: läuft, 46 Tests in unter einer
   Sekunde). Das deckt nur das Paket ab; App und Oberfläche baut allein die
   macOS-CI.
-- Das Python-Prüfskript (`tools/balance-sim/`) ist Phase-0-Werkzeug und wird
-  gelöscht, sobald die Balancetests in Swift es abdecken (WP-10).
+- Seit WP-10 decken die Swift-Tests Determinismus (`DeterminismTests`: Replay
+  mit Prüfsumme, 1× = 2×, Speichern/Laden mitten in der Welle, feste Prüfsumme
+  einer kleinen Mission, die Linux und macOS gleich liefern müssen) und Balance
+  (`BalanceTests`) ab. Das Python-Prüfskript der Phase 0 ist gelöscht.

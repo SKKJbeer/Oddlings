@@ -10,14 +10,6 @@ permissions:
   contents: read
 
 jobs:
-  balance:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v4
-      - name: Balance-Prüfskript
-        run: python3 tools/balance-sim/sim.py --reserve
-
   # Die Simulation braucht nur Foundation. Unter Linux geprüft, damit ein
   # versehentlicher Apple-Import sofort rot wird, nicht erst im Mac-Lauf.
   core-linux:

@@ -84,8 +84,8 @@ struct MapZoneTests {
 
     @Test("Gleiche Bauplätze wie das Prüfskript")
     func matchesBalanceSim() {
-        // tools/balance-sim/sim.py zählt 114 Kandidaten (25.10.2026). Weicht das ab,
-        // rechnen Prüfskript und Simulation auf verschiedenen Karten.
+        // Das Phase-0-Prüfskript zählte 114 Kandidaten (25.10.2026); seine
+        // Balancewerte gelten nur für diese Karte.
         #expect(map.buildableCells.count == 114)
     }
 
