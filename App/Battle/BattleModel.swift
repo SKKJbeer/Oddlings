@@ -12,11 +12,18 @@ final class BattleModel {
     /// Gegner bei 60 oder 120 Bildern/s gleiten statt im 30er-Takt zu springen.
     private(set) var previous: GameState
     var speed = 1
+    /// Angehalten läuft keine Zeit auf; nach dem Fortsetzen geht es genau dort
+    /// weiter, ohne nachzuholen.
+    var paused = false
     var autoplay: Bool
     private var player: Autoplayer
     private let seed: UInt64
     private let tickDuration: TimeInterval
     private var accumulator: TimeInterval = 0
+    /// Befehle aus der Bedienung, ausgeführt im nächsten Schritt. So kommt
+    /// jede Eingabe an einer Taktgrenze an, egal wann der Finger tippt, und
+    /// ein Spiel lässt sich aus den Befehlen genau wiederholen.
+    private var pending: [Command] = []
 
     init(config: BalanceConfig, seed: UInt64, autoplay: Bool) {
         sim = Simulation(config: config)
@@ -36,6 +43,7 @@ final class BattleModel {
     func advance(by frameTime: TimeInterval) -> [Event] {
         // Nach einer Pause (App im Hintergrund, Haltepunkt) nicht minutenlang
         // nachholen: Das wäre ein Sprung, den niemand sehen will.
+        guard !paused else { return [] }
         accumulator += min(frameTime, BattleStyle.maxCatchUp) * Double(speed)
         var events: [Event] = []
         while accumulator >= tickDuration && !state.isOver {
@@ -45,10 +53,15 @@ final class BattleModel {
         return events
     }
 
+    func enqueue(_ command: Command) {
+        pending.append(command)
+    }
+
     /// Genau ein Schritt, für Tests und für `advance`.
     func step(commands extra: [Command] = []) -> [Event] {
         previous = state
-        var commands = extra
+        var commands = pending + extra
+        pending = []
         if autoplay { commands += player.commands(for: state, in: sim) }
         return sim.step(&state, commands: commands)
     }
@@ -58,5 +71,7 @@ final class BattleModel {
         state = sim.newGame(seed: seed)
         previous = state
         accumulator = 0
+        pending = []
+        paused = false
     }
 }

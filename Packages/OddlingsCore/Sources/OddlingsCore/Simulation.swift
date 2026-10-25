@@ -96,7 +96,7 @@ public struct Simulation: Sendable {
 
     /// Abgerundet (Backlog WP-05). 90 × 0,7 ist in Double 62,999…; ohne den
     /// Schubs um wenige ulp käme 62 heraus statt 63.
-    func refund(for spent: Int) -> Int {
+    public func refund(for spent: Int) -> Int {
         let exact = Double(spent) * config.mission.sellRefundRate
         return Int((exact + exact.ulp * 4).rounded(.down))
     }

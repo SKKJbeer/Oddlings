@@ -11,7 +11,8 @@
 Simulationspaket `Packages/OddlingsCore`: Regeln von Mission 1 vollständig
 (WP-02 bis WP-10: Konfiguration, Weg, Wellen, Bauen/Verkaufen, alle drei Türme,
 Sieg, Determinismus, Balancetests). Die App zeigt die Simulation
-(WP-11, mit Mitspieler). Als Nächstes WP-12 (Bauen und Verkaufen per Tippen). Version und Bauten: [CHANGELOG.md](CHANGELOG.md).
+(WP-11, mit Mitspieler) und ist spielbar (WP-12 bis WP-14: bauen und verkaufen per
+Tippen, Kopfleiste, Ergebnis und Neustart). Als Nächstes WP-15 (erster Spieltest). Version und Bauten: [CHANGELOG.md](CHANGELOG.md).
 Projekt erzeugen: `xcodegen generate` (Xcode-Projekt ist nicht eingecheckt).
 Aufs Gerät: `.github/workflows/testflight.yml` (bei App-Änderungen auf main automatisch),
 Hilfsskript `scripts/apple.py`. Ein Bau ist erst verfügbar, wenn Apple ihn als VALID meldet.
@@ -97,13 +98,18 @@ Wichtige Spielregeln werden nie erfunden, ohne sie als Vorschlag zu markieren.
 ## Arbeitsweise
 
 Bei jeder größeren Aufgabe: relevante Dokumente lesen → Repo-Zustand prüfen
-(`git status`, `git log`) → kurzer Plan → offene Entscheidungen und Risiken nennen
-→ in kleinen Schritten umsetzen → testen → Dokumente und Backlog nachziehen →
+(`git status`, `git log`) → **Konzept und Architektur entwerfen und festhalten**
+→ offene Entscheidungen und Risiken nennen → in kleinen Schritten umsetzen → testen → Dokumente und Backlog nachziehen →
 berichten (was geändert, welche Tests liefen, was offen ist).
 
 Kleine, eindeutige Änderungen direkt. Bei Auswirkungen auf Spielgefühl,
 Architektur, Aufwand oder Monetarisierung: anhalten, Optionen mit Empfehlung
 vorlegen.
+
+**Erst Konzept, dann Umsetzung** (Steffen, 25.10.2026). Vor dem ersten Code
+eines Arbeitspakets liegt `docs/konzepte/<wp>-<name>.md` mit Ziel, Umfang,
+Architektur (Datenfluss, wer was darf), Bedienentscheidungen, Sicherheit und
+Testplan. Kleine Korrekturen brauchen keins. Das Konzept geht im selben PR mit.
 
 Ein Arbeitspaket = ein Pull Request. Nach Steffens Wahl vom 25.10.2026 kommt
 Arbeit per PR, nicht direkt auf `main`.

@@ -36,7 +36,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: de.skkjbeer.oddlings
         PRODUCT_NAME: Oddlings
-        MARKETING_VERSION: "0.4.0"
+        MARKETING_VERSION: "0.5.0"
         CURRENT_PROJECT_VERSION: "1"
         # Nur iPhone (D-006). Ein iPad startet die App trotzdem, im Kompatibilitätsmodus.
         TARGETED_DEVICE_FAMILY: "1"
@@ -75,15 +75,35 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: de.skkjbeer.oddlings.tests
         CODE_SIGN_STYLE: Automatic
 
+  # Oberflächentest (WP-12): bauen und verkaufen mit echtem Tippen. Er
+  # bindet OddlingsCore ein, um eine Bauzelle aus derselben Karte zu nehmen,
+  # statt Koordinaten im Test festzuschreiben.
+  OddlingsUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: AppUITests
+    dependencies:
+      - target: Oddlings
+      - package: OddlingsCore
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: de.skkjbeer.oddlings.uitests
+        CODE_SIGN_STYLE: Automatic
+        TEST_TARGET_NAME: Oddlings
+
 schemes:
   Oddlings:
     build:
       targets:
         Oddlings: all
         OddlingsTests: [test]
+        OddlingsUITests: [test]
     test:
       targets:
         - OddlingsTests
+        - OddlingsUITests
     run:
       config: Debug
     archive:
