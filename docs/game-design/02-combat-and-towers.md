@@ -19,7 +19,12 @@ Hier stehen Rollen und Regeln.
 - Schießt auf **ein** Ziel in Reichweite.
 - Referenzturm für Kosten und Schaden: das beste Schaden-pro-Gold gegen
   einzelne Ziele.
-- **[VORSCHLAG]** Zielwahl „erster": der Gegner, der am weitesten auf dem Weg ist.
+- **[VORSCHLAG]** Zielwahl „erster": der Gegner, der am weitesten auf dem Weg ist,
+  bei Gleichstand der ältere.
+- **[VORSCHLAG]** Kein Schuss auf schon tödlich Getroffene: Feuern zwei Türme im
+  selben Tick, nimmt der zweite den nächsten Gegner, statt seinen Schuss an einen
+  Toten zu verschwenden. Fühlt sich klüger an und ist üblich; das Prüfskript
+  verschwendet ihn noch (seit WP-06 so in der Simulation).
 - **[VORSCHLAG]** Treffer ohne Flugzeit (sofort). Ein sichtbares Geschoss ist nur
   Darstellung. Begründung: Geschosse mit Flugzeit erzeugen Fehlschüsse auf
   schnelle Ziele, das ist eine zusätzliche Regel, die der MVP nicht braucht.

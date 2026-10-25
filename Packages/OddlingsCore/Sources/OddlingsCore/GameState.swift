@@ -36,7 +36,7 @@ public struct Tower: Codable, Equatable, Sendable {
     public var id: Int
     public var kind: TowerKind
     public var cell: Cell
-    /// Ticks bis zum nächsten Angriff (ab WP-06).
+    /// Ticks bis zum nächsten Angriff; 0 heißt bereit.
     public var cooldownTicks: Int
     /// Bezahltes Gold; Grundlage der Erstattung beim Verkaufen.
     public var spent: Int
@@ -70,6 +70,10 @@ public enum Event: Equatable, Sendable {
     case towerBuilt(id: Int)
     case towerSold(id: Int, refund: Int)
     case commandRejected(Command, reason: Rejection)
+    /// Ziele in Trefferreihenfolge; beim Blitz später die Kette.
+    case towerFired(towerID: Int, targets: [Int])
+    case enemyDamaged(id: Int, amount: Double)
+    case enemyKilled(id: Int, reward: Int)
     case waveStarted(index: Int)
     case enemySpawned(id: Int)
     case enemyLeaked(id: Int, damage: Int)

@@ -35,9 +35,9 @@ public struct Simulation: Sendable {
     }
 
     /// Ein Tick. Die Reihenfolge ist festgeschrieben, weil sie Ergebnisse
-    /// ändert (data-models.md): Befehle → Wellen/Spawns → Bewegung →
-    /// Durchbrüche → Ende. Türme und Gold folgen mit WP-06 an ihren Platz vor
-    /// der Bewegung. Befehle laufen in der übergebenen Reihenfolge.
+    /// ändert (data-models.md): Befehle → Wellen/Spawns → Türme feuern (nach ID)
+    /// → Tote auswerten und Gold gutschreiben → Bewegung → Durchbrüche → Ende.
+    /// Befehle laufen in der übergebenen Reihenfolge.
     @discardableResult
     public func step(_ state: inout GameState, commands: [Command] = []) -> [Event] {
         guard !state.isOver else { return [] }
@@ -45,6 +45,8 @@ public struct Simulation: Sendable {
         for command in commands { apply(command, to: &state, &events) }
         startWaveIfDue(&state, &events)
         spawnDue(&state, &events)
+        fireTowers(&state, &events)
+        collectKills(&state, &events)
         move(&state)
         leak(&state, &events)
         state.tick += 1
@@ -129,6 +131,54 @@ public struct Simulation: Sendable {
             spawned += 1
         }
         state.pendingSpawns.removeFirst(spawned)
+    }
+
+    private func fireTowers(_ state: inout GameState, _ events: inout [Event]) {
+        for index in state.towers.indices {
+            if state.towers[index].cooldownTicks > 0 { state.towers[index].cooldownTicks -= 1 }
+            guard state.towers[index].cooldownTicks == 0 else { continue }
+            let tower = state.towers[index]
+            guard let stats = config.towers[tower.kind] else { continue }
+            switch tower.kind {
+            case .watch:
+                guard let target = firstTarget(in: state.enemies, around: tower.cell.center, range: stats.range)
+                else { continue }
+                state.enemies[target].hp -= stats.damage
+                events.append(.towerFired(towerID: tower.id, targets: [state.enemies[target].id]))
+                events.append(.enemyDamaged(id: state.enemies[target].id, amount: stats.damage))
+            case .lightning, .spore:
+                // Kette (WP-07) und Puls (WP-08) folgen; bis dahin feuern sie nicht.
+                continue
+            }
+            state.towers[index].cooldownTicks = ticks(stats.attackInterval)
+        }
+    }
+
+    /// Zielwahl „erster": am weitesten auf dem Weg, bei Gleichstand der ältere.
+    /// Schon tödlich getroffene Gegner zählen nicht, damit kein zweiter Turm im
+    /// selben Tick seinen Schuss an einen Toten verschwendet.
+    func firstTarget(in enemies: [Enemy], around center: Point, range: Double) -> Int? {
+        var best: Int?
+        for (index, enemy) in enemies.enumerated() where enemy.hp > 0 {
+            guard map.path.position(at: enemy.distance).distance(to: center) <= range else { continue }
+            if let current = best, enemies[current].distance >= enemy.distance { continue }
+            best = index
+        }
+        return best
+    }
+
+    private func collectKills(_ state: inout GameState, _ events: inout [Event]) {
+        var alive: [Enemy] = []
+        for enemy in state.enemies {
+            guard enemy.hp <= 0 else {
+                alive.append(enemy)
+                continue
+            }
+            let reward = config.enemies[enemy.kind]?.reward ?? 0
+            state.gold += reward
+            events.append(.enemyKilled(id: enemy.id, reward: reward))
+        }
+        state.enemies = alive
     }
 
     private func move(_ state: inout GameState) {
