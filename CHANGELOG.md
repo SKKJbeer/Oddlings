@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.5.2 – 25.10.2026 (Grafik), Bau folgt
+## 0.5.2 – 25.10.2026 (Grafik), Bau 21 (VALID)
 
 **Neu**
 - Gemalte Grafik im Stil „Stylized 3D" (D-016, aus drei Stilmustern gewählt):
