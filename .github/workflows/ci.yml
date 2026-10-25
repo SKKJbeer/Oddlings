@@ -79,16 +79,21 @@ jobs:
             -derivedDataPath build/DerivedData \
             CODE_SIGNING_ALLOWED=NO 2>&1 | tail -n 80
 
-      # Darstellungstests (WP-11): Knotenzahl folgt dem Zustand über eine ganze
-      # Mission, Neustart räumt auf, 2× sind doppelt so viele Schritte.
+      # App-Tests (AppTests) und Oberflächentests (AppUITests). Das Protokoll
+      # wird nicht nur gekürzt gezeigt: Jeder Testfall steht mit Ergebnis im
+      # Lauf, sonst sieht man nicht, ob ein Ziel überhaupt gelaufen ist.
       - name: App testen
         run: |
           set -o pipefail
+          status=0
           xcodebuild test \
             -project Oddlings.xcodeproj -scheme Oddlings \
             -destination "id=$UDID" \
             -derivedDataPath build/DerivedData \
-            CODE_SIGNING_ALLOWED=NO 2>&1 | tail -n 80
+            CODE_SIGNING_ALLOWED=NO > build/app-test.log 2>&1 || status=$?
+          grep -E "Test Case .*(passed|failed)|: error:|Executed [0-9]+ test" build/app-test.log || true
+          tail -n 30 build/app-test.log
+          exit $status
 
       # Übersetzen beweist nicht, dass die App läuft. Starten, laufen lassen,
       # nachsehen, ob der Prozess noch lebt, und ein Bild sichern.
