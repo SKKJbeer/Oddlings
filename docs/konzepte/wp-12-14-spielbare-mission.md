@@ -54,8 +54,8 @@ Simulation ─▶ Events ─▶ BattleScene (Effekte)   GameState ─▶ BattleC
   verdeckt eine Bauzelle. Preis: Die Zellen werden im Querformat etwa 38 statt
   43 pt groß ([D-004](../decisions/decision-log.md)). Fällt das im Spieltest
   (WP-15) als Fehltippen auf, wandern Anzeigen an die freien Seitenränder.
-- **[VORSCHLAG]** Die Mission läuft weiter, während das Baumenü offen ist (Frage
-  an Steffen gestellt, Empfehlung „weiterlaufen“).
+- **[ENTSCHIEDEN – D-019, 25.10.2026]** Die Mission läuft weiter, während das
+  Baumenü offen ist. Wer Ruhe braucht, hat den Pausenknopf.
 - Ablehnungen bleiben sichtbar, auch wenn das Menü leistbare Türme schon
   ausgraut, weil eine Zelle zwischen Tipp und Schritt belegt werden kann.
 

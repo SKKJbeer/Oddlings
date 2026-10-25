@@ -45,6 +45,26 @@ doppelte Nummer).
 - Nummern im Entscheidungsprotokoll vergibt die Projektplanung zentral, in Blöcken je Thread.
 - Konzeptdatei liegt nach D-017 unter `docs/konzepte/phase-2-3.md`.
 
+## 0.5.1 – 25.10.2026
+
+**Neu**
+- End-zu-End-Tests (D-029): Die CI spielt die App bei jedem PR wie ein Spieler
+  durch, mit 13 Fällen in vier Dateien unter `AppUITests/`. Sie decken Menü
+  und Zurück ab, Bauen und Verkaufen samt Gold, Vorschau, Ausgrauen,
+  Kopfleiste, Welle rufen, Pause, 2×, Niederlage mit Nochmal, Sieg der
+  Vorführung und den Wechsel in den Hintergrund. Konzept:
+  `docs/konzepte/e2e-tests.md`.
+- Die Mission hält an, wenn die App in den Hintergrund geht (D-034, Vorschlag).
+- Die CI listet jeden App-Testfall mit Ergebnis. Bisher kürzte sie das
+  Protokoll, und man sah nicht, ob ein Testziel gelaufen war.
+- Zeitraffer `--e2e-zeitraffer N`, nur im Debug-Bau, damit ganze Missionen im
+  Simulator in Sekunden durchlaufen.
+
+**Tests**: Die neuen Fälle aus 0.5.0 sind jeweils einmal rot gesehen worden,
+mit einem Probelauf mit umgedrehten Prüfungen.
+
+Bau: wird nach dem Zusammenführen nachgetragen.
+
 ## 0.5.0 – 25.10.2026
 
 **Neu**
@@ -65,7 +85,7 @@ Verkaufen, Gold, Zuschauen, Welle rufen, Countdown, Pause, 2×, Niederlage,
 Neustart). Neues Oberflächentest-Ziel `OddlingsUITests`: bauen und verkaufen
 mit echtem Tippen, Kopfleiste und Pause.
 
-Bau: wird nach dem Zusammenführen nachgetragen.
+Bau: **19 VALID**.
 
 ## 0.4.0 – 25.10.2026
 

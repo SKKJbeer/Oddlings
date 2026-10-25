@@ -36,7 +36,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: de.skkjbeer.oddlings
         PRODUCT_NAME: Oddlings
-        MARKETING_VERSION: "0.5.0"
+        MARKETING_VERSION: "0.5.1"
         CURRENT_PROJECT_VERSION: "1"
         # Nur iPhone (D-006). Ein iPad startet die App trotzdem, im Kompatibilitätsmodus.
         TARGETED_DEVICE_FAMILY: "1"
@@ -75,8 +75,8 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: de.skkjbeer.oddlings.tests
         CODE_SIGN_STYLE: Automatic
 
-  # Oberflächentest (WP-12): bauen und verkaufen mit echtem Tippen. Er
-  # bindet OddlingsCore ein, um eine Bauzelle aus derselben Karte zu nehmen,
+  # End-zu-End-Tests (docs/konzepte/e2e-tests.md): die App wie ein Spieler. Sie
+  # binden OddlingsCore ein, um Zellen und Zahlen aus der Missionsdatei zu nehmen,
   # statt Koordinaten im Test festzuschreiben.
   OddlingsUITests:
     type: bundle.ui-testing

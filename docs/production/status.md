@@ -22,7 +22,8 @@ ergänzt). Die Reihenfolge und Abhängigkeiten stehen in der
   ([Konzepte](../konzepte/phase-2-3.md)).
 - Balance-Labor für automatisierte Balance- und Stresstests eingeplant (K11, D-028):
   Grundstock in Phase 2, Vollausbau in Phase 4.
-- Ende-zu-Ende-Tests als Pflicht für jedes Paket mit Bedienung festgelegt (D-029).
+- Ende-zu-Ende-Tests (D-029): die CI spielt die App bei jedem PR wie ein Spieler durch
+  (Version 0.5.1, 13 Fälle). Ab jetzt Pflicht für jedes Paket mit Bedienung.
 - **Richtung für Phase 2 und 3 entschieden** (25.10.2026): Aufwertungen mit Gabelung
   (D-024), Festungsfähigkeit und Völker (D-025), Zwergenbank für alle (D-026),
   Region 1 mit sieben Haupt- und zwei Nebenmissionen (D-027), Kreismenü zum Bauen (D-031).

@@ -58,6 +58,7 @@ struct BattleOverlay: View {
                     .padding()
                     .background(.black.opacity(0.6), in: RoundedRectangle(cornerRadius: 12))
                     .allowsHitTesting(false)
+                    .accessibilityIdentifier("hud.paused")
             }
             if let outcome = controller.outcome {
                 ResultCard(outcome: outcome, lives: controller.lives,

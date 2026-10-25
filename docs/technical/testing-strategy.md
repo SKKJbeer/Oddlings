@@ -13,7 +13,7 @@ Status: **[VORSCHLAG]**, Ende-zu-Ende-Tests **[ENTSCHIEDEN D-029]**
 | Architekturtest | `OddlingsCore` importiert kein SpriteKit/SwiftUI/UIKit | Paket | bei jeder Änderung |
 | Darstellung | Szene startet, Knotenzahl folgt dem Zustand | XCTest in der App | im CI auf macOS |
 | Oberfläche | Mission starten, Turm bauen, Mission zu Ende spielen (2× Tempo, Bot-Befehle) | XCUITest | im CI, vor TestFlight |
-| **Ende-zu-Ende** | Die ganze App wie ein Spieler: jeder Bildschirm, jeder Weg dazwischen, siehe unten | XCUITest (`AppUITests/`) | in der CI bei jedem PR, Pflicht vor TestFlight |
+| **Ende-zu-Ende** | Die ganze App wie ein Spieler: Menü, bauen, verkaufen, Welle, Pause, 2×, Sieg, Niederlage, Nochmal, Hintergrund; siehe unten und [e2e-tests.md](../konzepte/e2e-tests.md) | XCUITest (`AppUITests/`) | in der CI bei jedem PR, Pflicht vor TestFlight |
 | Spieltest | Menschen, echtes iPhone, Beobachtungsprotokoll | manuell | Ende jeder Phase |
 
 ## Regeln
@@ -53,6 +53,9 @@ Status: **[VORSCHLAG]**, Ende-zu-Ende-Tests **[ENTSCHIEDEN D-029]**
 
 Steffen, 25.10.2026: Allgemeine Ende-zu-Ende-Tests sollen mit allen möglichen
 Tests prüfen, dass die App genau so funktioniert wie gedacht. **[ENTSCHIEDEN]**
+
+Umgesetzt ab Version 0.5.1 (13 Fälle unter `AppUITests/`); Aufbau, Startargumente und
+Abdeckung im Einzelnen: [e2e-tests.md](../konzepte/e2e-tests.md).
 
 **Was sie prüfen.** Nicht einzelne Regeln (das tun die Paket-Tests), sondern dass
 ein Mensch mit Fingern durch die fertige App kommt:

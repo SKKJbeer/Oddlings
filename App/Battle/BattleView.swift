@@ -11,6 +11,7 @@ struct BattleView: View {
 
     @State private var scene: BattleScene
     @State private var controller: BattleController
+    @Environment(\.scenePhase) private var scenePhase
     var onClose: () -> Void
 
     init(mode: Mode, onClose: @escaping () -> Void) {
@@ -24,6 +25,9 @@ struct BattleView: View {
             fatalError("Mission 1 lädt nicht: \(error)")
         }
         let model = BattleModel(config: config, seed: 1, autoplay: mode == .watch)
+        #if DEBUG
+        model.timeScale = Self.testTimeScale ?? 1
+        #endif
         let controller = BattleController(model: model, interactive: mode == .play)
         let scene = BattleScene(model: model)
         scene.controller = controller
@@ -49,5 +53,18 @@ struct BattleView: View {
         }
         .statusBarHidden()
         .persistentSystemOverlays(.hidden)
+        .onChange(of: scenePhase) { _, phase in
+            if phase != .active { controller.pauseForBackground() }
+        }
     }
+
+    #if DEBUG
+    /// `--e2e-zeitraffer N` aus den End-zu-End-Tests. Nur im Debug-Bau, damit
+    /// kein ausgelieferter Bau einen Schalter für das Spieltempo hat.
+    private static var testTimeScale: Double? {
+        let arguments = ProcessInfo.processInfo.arguments
+        guard let index = arguments.firstIndex(of: "--e2e-zeitraffer"), index + 1 < arguments.count else { return nil }
+        return Double(arguments[index + 1]).flatMap { $0 > 0 ? $0 : nil }
+    }
+    #endif
 }

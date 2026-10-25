@@ -123,6 +123,13 @@ final class BattleController {
         model.paused = paused
     }
 
+    /// Hält an, wenn die App in den Hintergrund geht. Wer zurückkommt, soll
+    /// keine Welle verpasst haben.
+    func pauseForBackground() {
+        guard outcome == nil, !paused else { return }
+        togglePause()
+    }
+
     /// Wechselt zwischen 1× und 2×. Die Stufe ist Bedienung, kein Spielwert:
     /// Die Simulation rechnet bei 2× dieselben Schritte, nur dichter.
     func toggleSpeed() {
