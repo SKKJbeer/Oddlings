@@ -79,19 +79,31 @@ jobs:
             -derivedDataPath build/DerivedData \
             CODE_SIGNING_ALLOWED=NO 2>&1 | tail -n 80
 
+      # Darstellungstests (WP-11): Knotenzahl folgt dem Zustand über eine ganze
+      # Mission, Neustart räumt auf, 2× sind doppelt so viele Schritte.
+      - name: App testen
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project Oddlings.xcodeproj -scheme Oddlings \
+            -destination "id=$UDID" \
+            -derivedDataPath build/DerivedData \
+            CODE_SIGNING_ALLOWED=NO 2>&1 | tail -n 80
+
       # Übersetzen beweist nicht, dass die App läuft. Starten, laufen lassen,
       # nachsehen, ob der Prozess noch lebt, und ein Bild sichern.
       - name: Probelauf im Simulator
         run: |
           APP=$(find build/DerivedData/Build/Products -name "Oddlings.app" -maxdepth 3 | head -1)
           test -n "$APP" || { echo "::error::Oddlings.app nicht gefunden"; exit 1; }
-          xcrun simctl boot "$UDID"
+          # Nach den Tests läuft der Simulator schon.
+          xcrun simctl boot "$UDID" || true
           xcrun simctl bootstatus "$UDID" -b
           xcrun simctl install "$UDID" "$APP"
-          xcrun simctl launch "$UDID" de.skkjbeer.oddlings
+          xcrun simctl launch "$UDID" de.skkjbeer.oddlings --demo
           sleep 20
           mkdir -p build/probe
-          xcrun simctl io "$UDID" screenshot build/probe/spike.png
+          xcrun simctl io "$UDID" screenshot build/probe/mission.png
           if ! xcrun simctl spawn "$UDID" launchctl list | grep -q de.skkjbeer.oddlings; then
             echo "::error::Die App läuft nach 20 Sekunden nicht mehr."
             ls ~/Library/Logs/DiagnosticReports/ 2>/dev/null | grep -i oddlings || true

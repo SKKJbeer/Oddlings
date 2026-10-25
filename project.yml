@@ -25,8 +25,6 @@ targets:
     type: application
     platform: iOS
     dependencies:
-      # Noch ungenutzt (der Spike liest die Karte selbst); eingebunden, damit
-      # die CI das Paket ab jetzt auch für iOS übersetzt.
       - package: OddlingsCore
     sources:
       - path: App
@@ -38,7 +36,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: de.skkjbeer.oddlings
         PRODUCT_NAME: Oddlings
-        MARKETING_VERSION: "0.3.1"
+        MARKETING_VERSION: "0.4.0"
         CURRENT_PROJECT_VERSION: "1"
         # Nur iPhone (D-006). Ein iPad startet die App trotzdem, im Kompatibilitätsmodus.
         TARGETED_DEVICE_FAMILY: "1"
@@ -63,11 +61,29 @@ targets:
         Release:
           PROVISIONING_PROFILE_SPECIFIER: $(ODDLINGS_PROFIL)
 
+  OddlingsTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: AppTests
+    dependencies:
+      - target: Oddlings
+      - package: OddlingsCore
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: de.skkjbeer.oddlings.tests
+        CODE_SIGN_STYLE: Automatic
+
 schemes:
   Oddlings:
     build:
       targets:
         Oddlings: all
+        OddlingsTests: [test]
+    test:
+      targets:
+        - OddlingsTests
     run:
       config: Debug
     archive:

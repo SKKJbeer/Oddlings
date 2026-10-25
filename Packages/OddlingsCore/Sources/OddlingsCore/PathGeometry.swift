@@ -40,6 +40,27 @@ public struct PathGeometry: Equatable, Sendable {
         return Point(x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t)
     }
 
+    /// Weglänge innerhalb eines Kreises, exakt je Abschnitt aus dem Schnitt von
+    /// Strecke und Kreis. Exakt statt abgetastet, damit keine Schrittweite als
+    /// versteckte Zahl im Code steht.
+    public func coverage(around center: Point, radius: Double) -> Double {
+        var total = 0.0
+        for index in points.indices.dropLast() {
+            let a = points[index], b = points[index + 1]
+            let dx = b.x - a.x, dy = b.y - a.y
+            let fx = a.x - center.x, fy = a.y - center.y
+            let dd = dx * dx + dy * dy
+            guard dd > 0 else { continue }
+            let half = fx * dx + fy * dy
+            let disc = half * half - dd * (fx * fx + fy * fy - radius * radius)
+            guard disc > 0 else { continue }
+            let root = disc.squareRoot()
+            let t1 = max(0, (-half - root) / dd), t2 = min(1, (-half + root) / dd)
+            if t2 > t1 { total += (t2 - t1) * dd.squareRoot() }
+        }
+        return total
+    }
+
     /// Kürzester Abstand eines Punkts zum Weg.
     public func distance(from point: Point) -> Double {
         var best = Double.infinity
