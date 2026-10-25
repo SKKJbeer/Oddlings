@@ -11,6 +11,12 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## Dokumente, kein Bau – 25.10.2026 (Grafik: Konzept Phase 2 und Spielrahmen)
+
+- Konzept [Grafik 02](docs/konzepte/grafik-02-phase-2.md): Bilder für Aufwertungen,
+  Spezialisierungen, Zwergenbank, Steinregen, Hauptmenü, Regionskarte und
+  Volksbanner, mit Namen, Maßen und Qualitätsprüfung vor der Abgabe.
+
 ## 0.5.2 – 25.10.2026 (Grafik), Bau 21 (VALID)
 
 **Neu**
