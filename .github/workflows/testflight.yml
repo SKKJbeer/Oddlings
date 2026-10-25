@@ -16,7 +16,7 @@ name: TestFlight
 on:
   push:
     branches: [main]
-    paths: ['App/**', 'Packages/**', 'project.yml', 'config/**', '.github/workflows/testflight.yml', 'scripts/apple.py']
+    paths: ['App/**', 'Packages/**', 'project.yml', 'config/**', '.github/workflows/testflight.yml', 'scripts/apple.py', 'scripts/xcode-waehlen.sh']
   workflow_dispatch:
 
 permissions:
@@ -58,7 +58,7 @@ jobs:
         run: |
           brew install xcodegen
           python3 -m pip install --quiet --break-system-packages pyjwt cryptography
-          xcodebuild -version
+          scripts/xcode-waehlen.sh
 
       - name: Bundle-ID und App-Eintrag
         run: python3 scripts/apple.py vorbereiten
