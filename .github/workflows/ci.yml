@@ -10,6 +10,16 @@ permissions:
   contents: read
 
 jobs:
+  # Regeln, die kein Compiler sieht: Importe und Determinismus der Simulation,
+  # offline, keine Schlüssel im Repo, Actions fest gebunden. Sekunden, kein Swift.
+  regeln:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Architektur- und Sicherheitsregeln
+        run: scripts/regeln-pruefen.sh
+
   # Die Simulation braucht nur Foundation. Unter Linux geprüft, damit ein
   # versehentlicher Apple-Import sofort rot wird, nicht erst im Mac-Lauf.
   core-linux:

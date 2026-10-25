@@ -8,8 +8,10 @@
 
 **Phase 1 läuft.** Phase 0 ist abgeschlossen (PR #1). WP-01, der Technik-Spike
 (`App/Spike/`, Wegwerfcode), ist in TestFlight; die Messung auf dem iPhone steht aus.
-Simulationspaket `Packages/OddlingsCore`: Konfiguration mit Validierung (WP-02),
-Weg und Bauzonen (WP-03). Als Nächstes WP-04 (Wellen, Bewegung, Festung).
+Simulationspaket `Packages/OddlingsCore`: Regeln von Mission 1 vollständig
+(WP-02 bis WP-10: Konfiguration, Weg, Wellen, Bauen/Verkaufen, alle drei Türme,
+Sieg, Determinismus, Balancetests). Als Nächstes WP-11 (Spielszene zeigt die
+Simulation). Version und Bauten: [CHANGELOG.md](CHANGELOG.md).
 Projekt erzeugen: `xcodegen generate` (Xcode-Projekt ist nicht eingecheckt).
 Aufs Gerät: `.github/workflows/testflight.yml` (bei App-Änderungen auf main automatisch),
 Hilfsskript `scripts/apple.py`. Ein Bau ist erst verfügbar, wenn Apple ihn als VALID meldet.
@@ -103,6 +105,20 @@ vorlegen.
 Ein Arbeitspaket = ein Pull Request. Nach Steffens Wahl vom 25.10.2026 kommt
 Arbeit per PR, nicht direkt auf `main`.
 
+Ablauf von der Umsetzung bis zum Bau in TestFlight:
+[`.claude/skills/arbeitspaket-ausliefern`](.claude/skills/arbeitspaket-ausliefern/SKILL.md).
+
+**Absprachen mit Steffen (25.10.2026):**
+- Claude arbeitet das Backlog selbstständig ab, führt PRs bei grüner CI selbst
+  zusammen und richtet Zugänge selbst ein. Steffen wird gefragt bei Design-,
+  Feature- und Architekturentscheidungen, mit Optionen und Empfehlung, und lieber
+  einmal zu viel als zu wenig, wenn etwas unklar ist.
+- Jede Absprache und Entscheidung wird festgehalten: Entscheidungen im
+  [Entscheidungsprotokoll](docs/decisions/decision-log.md), Arbeitsregeln hier,
+  wiederkehrende Abläufe als Skill unter `.claude/skills/`.
+- Jede Auslieferung bekommt eine Version und einen Eintrag in
+  [CHANGELOG.md](CHANGELOG.md), mit Baunummer, sobald Apple den Bau als VALID meldet.
+
 ## Testen
 
 - Simulation: `swift test --package-path Packages/OddlingsCore` (ab WP-02).
@@ -115,6 +131,25 @@ Arbeit per PR, nicht direkt auf `main`.
   `/tmp/swift-linux.log`, ca. 1 Minute). Damit läuft `swift test` für OddlingsCore.
   Die App (SwiftUI, SpriteKit) baut nur die macOS-CI; über sie nie behaupten, sie
   sei grün, ohne den CI-Lauf.
+
+## Qualität und Sicherheit (Steffen, 25.10.2026, gilt für jede Auslieferung)
+
+- **Jede Auslieferung bringt Tests mit.** Ein PR, der Verhalten ändert, enthält
+  die Tests dafür; Regeln in der Simulation, Darstellung in den App-Tests
+  (`AppTests/`). Kein PR ohne neue oder angepasste Tests, außer reinen Dokumenten.
+- **Die CI prüft alles, was geprüft werden kann**: Regeln (`scripts/regeln-pruefen.sh`),
+  Simulation unter Linux, App-Bau, App-Tests und Probelauf im Simulator. Zusammengeführt
+  wird nur bei grünem Lauf. Was neu dazukommt und prüfbar ist, bekommt einen Schritt
+  dort, statt nur beschrieben zu werden.
+- **Saubere Architektur**: die Architekturregeln oben, ein Modul je Aufgabe, keine
+  zweite Umsetzung derselben Sache. Wer eine Regel brechen will, schreibt einen
+  Eintrag ins Entscheidungsprotokoll.
+- **Sicherheit**: Schlüssel und Zertifikate nur in GitHub-Secrets, nie im Repo und
+  nie im Protokoll. Abläufe mit knappen Rechten (`permissions` auf oberster Ebene),
+  fremde Actions nur an einem festen Commit. Keine Fremdbibliotheken ohne Eintrag im
+  Entscheidungsprotokoll. Alles, was von außen kommt (Konfiguration, Spielstand),
+  wird beim Laden geprüft, bevor es die Simulation erreicht. Kein Netzcode im MVP.
+  `scripts/regeln-pruefen.sh` hält die prüfbaren Teile davon fest.
 
 ## Verwandte Projekte von Steffen
 

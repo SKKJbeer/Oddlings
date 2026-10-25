@@ -11,6 +11,23 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), löst keinen Bau aus.
   Dort steht „kein Bau“.
 
+## 0.3.1 – 25.10.2026
+
+**Neu**
+- CI-Schritt `regeln` (`scripts/regeln-pruefen.sh`): bricht ab, wenn die
+  Simulation mehr als Foundation importiert oder Uhrzeit, Zufall oder Umgebung
+  benutzt, bei Netzcode, bei eingecheckten Schlüsseln oder Zertifikaten, bei
+  Abläufen ohne festgelegte Rechte und bei fremden Actions ohne festen Commit.
+- `CLAUDE.md`: Abschnitt „Qualität und Sicherheit“ und die Absprachen mit Steffen
+  (selbstständig arbeiten, Entscheidungen festhalten, Änderungsprotokoll führen).
+- Skill `.claude/skills/arbeitspaket-ausliefern`: der Weg von der Änderung bis zum
+  VALID-Bau in TestFlight.
+
+**Tests**: Jede Prüfung in `regeln-pruefen.sh` einmal mit einem eingebauten
+Verstoß rot gesehen.
+
+Bau: wird nach dem Zusammenführen nachgetragen.
+
 ## 0.3.0 – 25.10.2026
 
 **Neu**
@@ -43,7 +60,7 @@ Bau: wird nach dem Zusammenführen nachgetragen.
 
 **Tests**: `VictoryTests` (Sieg, Reihenfolge Durchbruch vor Sieg, Welle rufen).
 
-Bau: wird nach dem Zusammenführen nachgetragen.
+Bau: **15 VALID**.
 
 ## 0.1.1 – 25.10.2026
 
