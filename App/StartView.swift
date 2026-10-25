@@ -32,7 +32,9 @@ struct StartView: View {
                 .accessibilityIdentifier("menu.play")
                 HStack(spacing: 12) {
                     Button("Vorführung ansehen") { screen = .watch }
+                        .accessibilityIdentifier("menu.watch")
                     Button("Leistungsprobe") { screen = .spike }
+                        .accessibilityIdentifier("menu.spike")
                 }
                 .buttonStyle(.bordered)
                 .tint(.white)

@@ -12,7 +12,7 @@ Status: **[VORSCHLAG]**
 | Balancetests | Bot-Bauweisen aus der Konfiguration: „Mischung gewinnt", „nur Sporen verliert", Reserve-Grenzen | Paket | bei jeder Änderung an Werten |
 | Architekturtest | `OddlingsCore` importiert kein SpriteKit/SwiftUI/UIKit | Paket | bei jeder Änderung |
 | Darstellung | Szene startet, Knotenzahl folgt dem Zustand | XCTest in der App | im CI auf macOS |
-| Oberfläche | Mission starten, Turm bauen, Mission zu Ende spielen (2× Tempo, Bot-Befehle) | XCUITest | im CI, vor TestFlight |
+| End-zu-End | Die App wie ein Spieler: Menü, bauen, verkaufen, Welle, Pause, 2×, Sieg, Niederlage, Nochmal, Hintergrund. Konzept: [e2e-tests.md](../konzepte/e2e-tests.md) | XCUITest `AppUITests/` | im CI bei jedem PR |
 | Spieltest | Menschen, echtes iPhone, Beobachtungsprotokoll | manuell | Ende jeder Phase |
 
 ## Regeln

@@ -27,6 +27,10 @@ Korrektur. Grundlage sind die Absprachen in `CLAUDE.md`, Abschnitte
 
 ## 2. Umsetzen
 
+- **Jedes Feature, das man auf dem Bildschirm sieht, bekommt seinen
+  End-zu-End-Fall in `AppUITests/`** (Steffen, 25.10.2026, D-029), über
+  `E2EApp`, Zahlen aus der Missionsdatei. Konzept: `docs/konzepte/e2e-tests.md`.
+
 - Regeln in `Packages/OddlingsCore`, Darstellung in `App/`. Zahlen nur in
   `mvp-mission-01.json`.
 - **Tests gehören dazu.** Jede neue Regel und jedes neue Verhalten bekommt einen
