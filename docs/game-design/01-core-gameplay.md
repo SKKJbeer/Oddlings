@@ -57,10 +57,12 @@ besser, ein 16×9-Raster ergibt auf einem iPhone im Querformat Zellen von etwa
 43 pt, knapp über Apples Mindestgröße von 44 pt für Tippziele. Im Hochformat
 wären es bei gleicher Feldzahl nur etwa 24 pt.
 
-## Bedienung [VORSCHLAG]
+## Bedienung [VORSCHLAG, umgesetzt in 0.5.0]
+
+Umsetzung und Architektur: [Konzept WP-12 bis WP-14](../konzepte/wp-12-14-spielbare-mission.md).
 
 - Freie Zelle antippen → Baumenü an der Zelle mit Preis je Turm; nicht leistbare
-  Türme ausgegraut. Vor dem Bestätigen erscheint die Reichweite.
+  Türme ausgegraut. Erster Tipp auf einen Turm zeigt die Reichweite, zweiter baut.
 - Turm antippen → Reichweite, Werte, „Verkaufen (Erstattung)".
 - Kein Ziehen und Ablegen im MVP: Beim Ziehen verdeckt der Finger genau die
   Stelle, um die es geht.

@@ -146,7 +146,7 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
   mit `--demo` und fotografiert die laufende Mission.
 - **Abh.:** WP-01, WP-09 · **Risiken:** Logik rutscht in die Szene (T2) → Review-Punkt
 
-### WP-12 · Bedienung: bauen und verkaufen per Antippen
+### WP-12 · Bedienung: bauen und verkaufen per Antippen ✓ 0.5.0
 - **Ziel:** Ein Mensch kann spielen.
 - **Umfang:** Zelle antippen → Baumenü mit Preisen, Reichweitenvorschau, bestätigen;
   Turm antippen → Info und Verkaufen; abgelehnte Befehle sichtbar.
@@ -154,13 +154,13 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
 - **Tests:** UI-Test: Turm bauen und verkaufen.
 - **Abh.:** WP-11 · **Risiken:** Fingerverdeckung (P2), Tippziele ≥ 44 pt
 
-### WP-13 · HUD
+### WP-13 · HUD ✓ 0.5.0
 - **Ziel:** Gold, Leben, Welle, Zähler, Pause, 1×/2×, „Nächste Welle".
 - **Abnahme:** Werte stimmen jederzeit mit dem Zustand; kein Bildeinbruch durch das HUD.
 - **Tests:** HUD-Modell setzt nur geänderte Werte.
 - **Abh.:** WP-11 · **Risiken:** T3
 
-### WP-14 · Ergebnis und Neustart
+### WP-14 · Ergebnis und Neustart ✓ 0.5.0
 - **Ziel:** Runde schließen, neue Runde.
 - **Umfang:** Sieg-/Niederlagen-Bildschirm mit Leben und Dauer; Neustart setzt alles zurück.
 - **Abnahme:** Zehn Neustarts hintereinander ohne Speicherwachstum oder Restzustand.

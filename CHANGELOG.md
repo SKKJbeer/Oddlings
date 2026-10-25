@@ -11,6 +11,28 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), löst keinen Bau aus.
   Dort steht „kein Bau“.
 
+## 0.5.0 – 25.10.2026
+
+**Neu**
+- Mission 1 ist spielbar (WP-12 bis WP-14). Der Startbildschirm hat ein großes
+  „Spielen“.
+- Bauen: Bauzelle antippen, Turm wählen (zeigt die Reichweite), noch einmal
+  tippen baut. Nicht leistbare Türme sind ausgegraut.
+- Verkaufen: Turm antippen, „Verkaufen +Erstattung“.
+- Abgelehnte Befehle erscheinen als roter Text an der Stelle.
+- Kopfleiste: Gold, Leben, Welle n/m, „Nächste Welle“ mit Countdown, 1×/2×,
+  Pause, Zurück.
+- Ergebnistafel bei Sieg oder Niederlage mit „Nochmal“ und „Zurück“.
+- Konzept vor Umsetzung: `docs/konzepte/wp-12-14-spielbare-mission.md`, Regel in
+  `CLAUDE.md` und im Skill `arbeitspaket-ausliefern` (D-017).
+
+**Tests**: `BattleControllerTests` (11 Fälle: Auswahl, Vorschau, Bauen,
+Verkaufen, Gold, Zuschauen, Welle rufen, Countdown, Pause, 2×, Niederlage,
+Neustart). Neues Oberflächentest-Ziel `OddlingsUITests`: bauen und verkaufen
+mit echtem Tippen, Kopfleiste und Pause.
+
+Bau: wird nach dem Zusammenführen nachgetragen.
+
 ## 0.4.0 – 25.10.2026
 
 **Neu**
@@ -30,7 +52,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 über eine ganze Mission zum Zustand, Neustart räumt auf, 2× macht doppelt so
 viele Schritte). Neuer CI-Schritt „App testen“.
 
-Bau: wird nach dem Zusammenführen nachgetragen.
+Bau: **18 VALID**.
 
 ## 0.3.1 – 25.10.2026
 
@@ -47,7 +69,7 @@ Bau: wird nach dem Zusammenführen nachgetragen.
 **Tests**: Jede Prüfung in `regeln-pruefen.sh` einmal mit einem eingebauten
 Verstoß rot gesehen.
 
-Bau: wird nach dem Zusammenführen nachgetragen.
+Bau: **17 VALID**.
 
 ## 0.3.0 – 25.10.2026
 
