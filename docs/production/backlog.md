@@ -104,6 +104,7 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
 - **Abnahme:** Zwei Sporentürme verlangsamen nicht stärker als einer.
 - **Tests:** Plünderer unter Dauerverlangsamung braucht doppelt so lang durch die Zone; Ablauf nach 1,5 s.
 - **Abh.:** WP-06 · **Risiken:** gering
+- **Stand:** Umgesetzt (`Simulation.applySlow`, `Enemy.slow`, Ereignis `enemySlowed`). Ohne Gegner in Reichweite pulst der Turm nicht und bleibt bereit. Ein Puls übernimmt den stärkeren Faktor und die längere Restdauer, verkürzt also nie eine laufende Verlangsamung ([VORSCHLAG]). Tests in `SporeTests`.
 
 ### WP-09 · Sieg, Wellentakt, „Nächste Welle"
 - **Ziel:** Mission hat ein Ende und einen Fluss.

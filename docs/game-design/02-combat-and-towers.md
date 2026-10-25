@@ -46,6 +46,8 @@ Hier stehen Rollen und Regeln.
 - **[VORSCHLAG]** Verlangsamungen **stapeln nicht**; es gilt die stärkste aktive.
   Begründung: Stapeln macht „fünf Sporentürme an eine Stelle" zur Pflichtlösung
   und Gegner stehen still.
+- **[VORSCHLAG]** Trifft ein Puls eine laufende Verlangsamung, gelten der
+  stärkere Faktor und die längere Restdauer. Ein Puls verkürzt nie, was schon wirkt.
 - Der Eigenschaden ist absichtlich gering. Sein Wert entsteht dadurch, dass
   andere Türme länger schießen und der Blitz dichtere Gruppen findet.
 - **Immunitäten** gegen Verlangsamung: **[OFFEN]**, nicht im MVP. Kandidat später:
