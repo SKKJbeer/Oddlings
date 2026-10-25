@@ -11,6 +11,19 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## Dokumente, kein Bau – 25.10.2026 (Oberfläche)
+
+**Neu**
+- Konzept für Oberfläche und Bedienung: [07-ui-ux.md](docs/game-design/07-ui-ux.md)
+  mit Raster je iPhone, HUD-Ecken, Bauen und Verkaufen am Feld, Pause, Sieg,
+  Niederlage, Hauptmenü, Richtung der Kampagnenkarte und der Architektur
+  (neu `HudLayout` neben `BoardLayout`, `UITheme`, `FeedbackPlayer`; Auswahl und Kopien bleiben im `BattleController`).
+- Klickbare Entwürfe aller Schirme: [Oddlings – Spieloberfläche](https://claude.ai/artifact/PKpZrLVV42wje1isSfvB8z).
+- Vorschläge D-030 (HUD-Ecken), D-031 (Kreismenü), D-032 (Schriften).
+
+**Tests**: keine, nur Dokumente. Die Tests der Bausteine stehen in 07 und kommen
+mit der Umsetzung.
+
 ## Dokumente, kein Bau – 25.10.2026
 
 **Neu**

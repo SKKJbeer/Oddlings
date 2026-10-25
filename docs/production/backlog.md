@@ -171,7 +171,7 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
 - **Ziel:** Phase 1 abschließen mit Menschen, nicht mit Code.
 - **Umfang:** Build auf Steffens Gerät bzw. TestFlight; drei Personen spielen Mission 1;
   Beobachtungsbogen: Wird der Sporenturm gebaut? Wann? Verstehen sie die Kette?
-  Dauer, Ergebnis, Abbrüche, Fehltipps.
+  Dauer, Ergebnis, Abbrüche, Fehltipps (entscheidet D-030, HUD-Ecken).
 - **Abnahme:** Protokoll in `docs/production/playtests/`; Balancewerte angepasst oder
   bestätigt; Phase 2 geschnitten.
 - **Abh.:** WP-14 · **Risiken:** Ergebnis „macht keinen Spaß" ist ein gültiges Ergebnis
@@ -185,6 +185,8 @@ Reihenfolge und Abhängigkeiten als Entwurf in der
 [konzepte/phase-2-3.md](../konzepte/phase-2-3.md). Geschnitten wird
 nach WP-15; vorher werden hier keine Phase-2-Pakete angelegt. Das Balance-Labor
 (K11, D-028) ist als P2-6b und Meilenstein M4.1 eingeplant.
+Oberfläche und Menüs: Entwurf und Architektur in [07](../game-design/07-ui-ux.md)
+(D-030 bis D-032).
 
 **Für jedes Paket mit Bedienung gilt ab WP-15 zusätzlich:** Ende-zu-Ende-Test des
 neuen Ablaufs in `AppUITests/`, grün in der CI (D-029,
