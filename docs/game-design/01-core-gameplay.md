@@ -40,14 +40,14 @@ durch größere Schritte, damit das Ergebnis bei 2× dasselbe bleibt
 - Bauen nur auf erlaubten Flächen.
 - Reichweiten, Effekte und Bewegungen müssen gut lesbar sein.
 
-**[VORSCHLAG – D-005, wartet auf Freigabe]** Bauflächen sind **Zonen aus
+**[ENTSCHIEDEN – D-005, 25.10.2026]** Bauflächen sind **Zonen aus
 Rasterzellen**. Ein Turm belegt genau eine Zelle. Innerhalb der Zone ist jede
 freie Zelle wählbar.
 
 | Option | Vorteil | Nachteil |
 |---|---|---|
 | A: Wirklich frei (Punkt beliebig) | Maximal flexibel | Überlappungsregeln, Fingerverdeckung, schwer lesbar, schwer testbar |
-| **B: Raster in Bauzonen (Empfehlung)** | Fühlt sich frei an, eindeutige Treffer per Antippen, einfache Regeln, Datenmodell trivial | Etwas weniger Feinplatzierung |
+| **B: Raster in Bauzonen (gewählt)** | Fühlt sich frei an, eindeutige Treffer per Antippen, einfache Regeln, Datenmodell trivial | Etwas weniger Feinplatzierung |
 | C: Feste Bauplätze (wie viele Mobile-TD) | Einfachste Bedienung | Weniger Entscheidungen, widerspricht der Übergabe |
 
 Ein Feld ist die Grundeinheit für alle Strecken (Reichweite, Geschwindigkeit).

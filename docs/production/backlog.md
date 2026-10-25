@@ -10,7 +10,8 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
 ### WP-00 · Phase 0 freigeben
 - **Ziel:** Designstand und MVP-Plan sind abgestimmt.
 - **Umfang:** Dieses Dokumentationspaket; Entscheidungen B1–B4.
-- **Abnahme:** Steffen hat den Pull Request durchgesehen; D-004 bis D-008 sind entschieden.
+- **Abnahme:** Steffen hat den Pull Request durchgesehen; D-004 bis D-008 sind entschieden
+  (D-004 Querformat und D-005 Raster am 25.10.2026).
 - **Tests:** `python3 tools/balance-sim/sim.py --reserve` läuft.
 - **Abh.:** –  · **Risiken:** –
 
