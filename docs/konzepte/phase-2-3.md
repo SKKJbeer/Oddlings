@@ -8,14 +8,14 @@ Hier stehen die ausgearbeiteten Antworten auf die offenen Fragen der Übergabe
 die für die nächsten Phasen gebraucht werden. Welche Frage wo steht und wer sie
 entscheidet: [Register offener Fragen](../production/offene-fragen.md).
 
-**Regel für diese Datei (D-021):** Ein Konzept steht hier, bis Steffen es
+**Regel für diese Datei (D-021, ergänzt D-017):** Ein Konzept steht hier, bis Steffen es
 entschieden hat. Dann wandert die entschiedene Fassung in ihr Fachdokument
 (02 bis 06), hier bleibt ein Verweis. So steht jede Entscheidung an genau einer
 Stelle. Zahlen hier sind Zielgrößen für die erste Rechnung; die Werte selbst
 kommen wie immer in die Missionsdatei und werden mit den `BalanceTests` geprüft.
 
-Jedes Konzept wird gegen die fünf [Säulen](00-vision-and-pillars.md) und die
-[Marktanalyse](market-analysis.md) (Abschnitt 7) geprüft.
+Jedes Konzept wird gegen die fünf [Säulen](../game-design/00-vision-and-pillars.md) und die
+[Marktanalyse](../game-design/market-analysis.md) (Abschnitt 7) geprüft.
 
 ---
 
@@ -47,7 +47,7 @@ anderen Mischung anders gespielt.
 |---|---|---|
 | Wachturm | **Falkenhorst:** große Reichweite, schwerer Schuss, langsamer. Gegen Panzerbestien und Bosse | **Salve:** trifft zwei Ziele je Schuss. Gegen Flitzerschwärme |
 | Blitzturm | **Gewitterkrone:** zwei Sprünge mehr; Sprünge auf verlangsamte Gegner verlieren keinen Schaden. Verstärkt die Kernsynergie | **Funkensäule:** erster Treffer deutlich stärker, weniger Sprünge. Blitz auch gegen zähe Einzelziele |
-| Sporenturm | **Moorherz:** größerer Radius, stärkere Verlangsamung. Reine Kontrolle | **Fäulnis:** verlangsamte Gegner nehmen von allen Türmen mehr Schaden. Macht Sporen neben Wachtürmen wertvoll (Befund aus WP-10, siehe [04](04-economy-and-balance.md#ergebnis-der-prüfung)) |
+| Sporenturm | **Moorherz:** größerer Radius, stärkere Verlangsamung. Reine Kontrolle | **Fäulnis:** verlangsamte Gegner nehmen von allen Türmen mehr Schaden. Macht Sporen neben Wachtürmen wertvoll (Befund aus WP-10, siehe [04](../game-design/04-economy-and-balance.md#ergebnis-der-prüfung)) |
 
 Neue Regeln, die das braucht: ein Zustand „verwundbar" (Schadensfaktor mit
 Dauer, wie die Verlangsamung, stapelt nicht), Mehrfachziel beim Wachturm,
@@ -84,7 +84,7 @@ Säule 1 und 3. → Entscheidung Steffen (E-1).
 
 ## K2 · Festungsfähigkeit und Völker
 
-Übergabe Nr. 9 · Marktanalyse E7 · offen in [03](03-races-and-avatar.md)
+Übergabe Nr. 9 · Marktanalyse E7 · offen in [03](../game-design/03-races-and-avatar.md)
 
 ### K2a · Eine aktive Festungsfähigkeit (Phase 2)
 
@@ -107,7 +107,7 @@ darf dadurch um höchstens etwa 0,1 steigen; sonst ersetzt die Fähigkeit Türme
 
 ### K2b · Wie ein Volk wirkt (Phase 3)
 
-[03](03-races-and-avatar.md) nennt drei Möglichkeiten: passive Boni, eigener
+[03](../game-design/03-races-and-avatar.md) nennt drei Möglichkeiten: passive Boni, eigener
 Turm, aktive Volksfähigkeit. **Vorschlag: Ein Volk bestimmt die
 Festungsfähigkeit und hat einen kleinen passiven Zug.** Kein eigener Turm vor
 dem Release.
@@ -142,7 +142,7 @@ Erweiterungsregion denkbar. Goblins und Arkanisten ebenso.
 
 ## K3 · Zwergenbank
 
-Übergabe Nr. 8 · D-010 · Startwerte in [04](04-economy-and-balance.md#zwergenbank-phase-2)
+Übergabe Nr. 8 · D-010 · Startwerte in [04](../game-design/04-economy-and-balance.md#zwergenbank-phase-2)
 
 ### Für wen (D-010)
 
@@ -185,7 +185,7 @@ eingesparter Sekunde. Klein genug, dass Abwarten nie ein Fehler ist.
 
 ## K4 · Kampagne und Regionen
 
-Übergabe Nr. 10 · D-015 · Richtung in [05](05-campaign-and-progression.md)
+Übergabe Nr. 10 · D-015 · Richtung in [05](../game-design/05-campaign-and-progression.md)
 
 D-015 legt das Geschäftsmodell nahe: erste Region kostenlos, Vollversion
 einmalig. Daraus folgt eine harte Anforderung an Region 1: **Sie muss allein
@@ -248,7 +248,7 @@ nicht, was Oddlings ausmacht. → Entscheidung Steffen (E-4).
 
 ## K5 · Fortschritt und Freischaltungen
 
-Übergabe Nr. 10 · Kandidaten in [05](05-campaign-and-progression.md#fortschritt-offen)
+Übergabe Nr. 10 · Kandidaten in [05](../game-design/05-campaign-and-progression.md#fortschritt-offen)
 
 Was dauerhaft freigeschaltet wird:
 
@@ -300,7 +300,7 @@ Architekturregeln; Einspruch jederzeit möglich)
 
 ## K7 · Gegner, Bosse, Rüstung
 
-Übergabe Nr. 4, Abschnitt 7 · offen in [02](02-combat-and-towers.md)
+Übergabe Nr. 4, Abschnitt 7 · offen in [02](../game-design/02-combat-and-towers.md)
 
 - **Panzerbestie:** steht in der Missionsdatei ab Welle 7 bereit und ist in
   Region 1 ab M4 fest dabei.

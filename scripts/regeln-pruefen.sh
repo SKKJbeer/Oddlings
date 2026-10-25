@@ -53,7 +53,7 @@ done
 
 # Dokumente verweisen aufeinander statt sich zu wiederholen. Ein toter Verweis
 # macht eine Entscheidung unauffindbar.
-python3 scripts/links-pruefen.py || melde "Tote Verweise in den Dokumenten (siehe oben)"
+python3 scripts/links-pruefen.py || melde "Tote Verweise oder doppelte Entscheidungsnummern (siehe oben)"
 
 if [ "$fehler" -eq 0 ]; then
   echo "✓ Architektur- und Sicherheitsregeln eingehalten"

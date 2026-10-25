@@ -68,7 +68,7 @@ und fragt. Das gilt besonders für Netzcode, Monetarisierung und Völker.
 | Phasen, Meilensteine, Abhängigkeiten | [docs/production/roadmap.md](docs/production/roadmap.md) |
 | Stand für Steffen (Fertig / Läuft / Als Nächstes) | [docs/production/status.md](docs/production/status.md) |
 | Offene Fragen, wer entscheidet | [docs/production/offene-fragen.md](docs/production/offene-fragen.md) |
-| Konzepte, die auf Entscheidung warten | [docs/game-design/konzepte-phase-2-3.md](docs/game-design/konzepte-phase-2-3.md) |
+| Konzepte, die auf Entscheidung warten | [docs/konzepte/phase-2-3.md](docs/konzepte/phase-2-3.md) |
 | Arbeitspakete | [docs/production/backlog.md](docs/production/backlog.md) |
 | Entscheidungen | [docs/decisions/decision-log.md](docs/decisions/decision-log.md) |
 

@@ -18,7 +18,7 @@ die Threads wissen, was nach ihnen kommt; er ist kein Auftrag.
 
 Stand für Steffen in Kurzform: [status.md](status.md). Offene Fragen:
 [offene-fragen.md](offene-fragen.md). Konzepte für Phase 2 und 3:
-[konzepte-phase-2-3.md](../game-design/konzepte-phase-2-3.md).
+[konzepte/phase-2-3.md](../konzepte/phase-2-3.md).
 
 ## Meilensteine Phase 1
 
@@ -26,10 +26,10 @@ Stand für Steffen in Kurzform: [status.md](status.md). Offene Fragen:
 |---|---|---|---|
 | M1.1 | Regeln von Mission 1 vollständig und getestet | WP-02 … WP-10 | ✓ 25.10.2026 |
 | M1.2 | Die App zeigt die laufende Simulation | WP-01, WP-11 | ✓ 25.10.2026 (0.4.0) |
-| M1.3 | **Ein Mensch spielt Mission 1 auf dem iPhone** | WP-12, WP-13, WP-14 | läuft |
-| M1.4 | Spieltest mit drei Personen, Leistung auf dem Gerät gemessen | WP-15, Messung WP-01 | danach |
+| M1.3 | **Ein Mensch spielt Mission 1 auf dem iPhone** | WP-12, WP-13, WP-14 | ✓ 25.10.2026 (0.5.0, ein PR nach D-018); Bau in TestFlight wird nachgetragen |
+| M1.4 | Spieltest mit drei Personen, Leistung auf dem Gerät gemessen | WP-15, Messung WP-01 | **als Nächstes** |
 
-Kritischer Pfad: WP-12 → WP-13 → WP-14 → Bau in TestFlight → WP-15. Alles
+Kritischer Pfad: Bau 0.5.0 VALID in TestFlight → WP-15. Alles
 andere läuft daneben und darf diesen Pfad nicht aufhalten. Steffens Vorgabe
 (25.10.2026): erst spielbar in TestFlight, dann Grafik einbauen.
 
@@ -56,7 +56,7 @@ Missionsdatei schon bereit.
 
 ## Ausblick Phase 3 [VORSCHLAG]
 
-Region 1 „Flüsterwald" nach [K4](../game-design/konzepte-phase-2-3.md#k4--kampagne-und-regionen):
+Region 1 „Flüsterwald" nach [K4](../konzepte/phase-2-3.md#k4--kampagne-und-regionen):
 Kampagnenkarte, sieben Haupt- und zwei Nebenmissionen mit Gabelung, Boss,
 Sterne und Eisern-Modus, Völker Zwerge und Elfen (K2b), Fortschritt (K5),
 Kartenwerkzeug. Hängt an **E-2** und **E-4**. Name und Marke werden hier

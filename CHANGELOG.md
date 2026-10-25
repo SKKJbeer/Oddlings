@@ -17,7 +17,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Projektplanung: Konzepte für Phase 2 und 3 (Aufwertungen mit Gabelung,
   Festungsfähigkeit, Völker, Zwergenbank, Kampagne mit kostenloser Region 1,
   Fortschritt, Speicherstand, Gegner und Bosse, Einstieg, Ton) in
-  `docs/game-design/konzepte-phase-2-3.md`.
+  `docs/konzepte/phase-2-3.md`.
 - Register aller offenen Fragen (`docs/production/offene-fragen.md`) und
   Statusübersicht für Steffen (`docs/production/status.md`).
 - Roadmap mit Meilensteinen für Phase 1, Entwurf für Phase 2, Ausblick Phase 3
@@ -26,7 +26,11 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 
 **Tests**: neue Prüfung `scripts/links-pruefen.py` im CI-Schritt `regeln`:
 bricht ab, wenn ein Verweis in den Dokumenten auf eine fehlende Datei oder
-einen fehlenden Abschnitt zeigt. Einmal rot gesehen (falscher Anker, falsche Datei).
+einen fehlenden Abschnitt zeigt oder eine Nummer im Entscheidungsprotokoll
+doppelt vergeben ist. Einmal rot gesehen (falscher Anker, falsche Datei,
+doppelte Nummer).
+- Nummern im Entscheidungsprotokoll vergibt die Projektplanung zentral, in Blöcken je Thread.
+- Konzeptdatei liegt nach D-017 unter `docs/konzepte/phase-2-3.md`.
 
 ## 0.5.0 – 25.10.2026
 
