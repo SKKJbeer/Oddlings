@@ -65,10 +65,14 @@ doppelte Nummer).
 - Zeitraffer `--e2e-zeitraffer N`, nur im Debug-Bau, damit ganze Missionen im
   Simulator in Sekunden durchlaufen.
 
-**Tests**: Die neuen Fälle aus 0.5.0 sind jeweils einmal rot gesehen worden,
-mit einem Probelauf mit umgedrehten Prüfungen.
+**Tests**: Die App-Tests aus 0.5.0 und alle 13 neuen End-zu-End-Fälle sind
+jeweils einmal rot gesehen worden, mit Probeläufen mit umgedrehten Prüfungen
+(CI-Läufe 40205226937, 40208318048, 40208954005).
 
-Bau: wird nach dem Zusammenführen nachgetragen.
+**Nachgereicht (nur Dokumente, kein Bau)**: Beobachtungsbogen für den
+Spieltest WP-15 in `docs/production/playtests/beobachtungsbogen.md`.
+
+Bau: **20 VALID**.
 
 ## 0.5.0 – 25.10.2026
 
