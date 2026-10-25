@@ -24,7 +24,7 @@ final class HudLayoutTests: XCTestCase {
         Device(name: "iPhone 16 Pro Max", screen: CGSize(width: 956, height: 440), side: 62, bottom: 21),
     ]
 
-    private lazy var map: MissionMap = try! BalanceConfig.missionOne().map
+    private lazy var map: MissionMap = Simulation(config: try! BalanceConfig.missionOne()).map
 
     private func layout(_ device: Device) -> HudLayout {
         let bar = BattleStyle.hudHeight + 2 * BattleStyle.hudMargin
