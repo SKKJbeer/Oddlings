@@ -8,7 +8,8 @@
 
 **Phase 1 läuft.** Phase 0 ist abgeschlossen (PR #1). WP-01, der Technik-Spike
 (`App/Spike/`, Wegwerfcode), ist in TestFlight; die Messung auf dem iPhone steht aus.
-WP-02: Simulationspaket `Packages/OddlingsCore` mit `BalanceConfig` und Validierung.
+Simulationspaket `Packages/OddlingsCore`: Konfiguration mit Validierung (WP-02),
+Weg und Bauzonen (WP-03). Als Nächstes WP-04 (Wellen, Bewegung, Festung).
 Projekt erzeugen: `xcodegen generate` (Xcode-Projekt ist nicht eingecheckt).
 Aufs Gerät: `.github/workflows/testflight.yml` (bei App-Änderungen auf main automatisch),
 Hilfsskript `scripts/apple.py`. Ein Bau ist erst verfügbar, wenn Apple ihn als VALID meldet.

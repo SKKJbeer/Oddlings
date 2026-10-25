@@ -47,6 +47,9 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
 - **Abh.:** WP-00 (parallel zu WP-01 möglich) · **Risiken:** gering
 
 ### WP-03 · Karte, Weg und Bauzonen
+- **Stand:** umgesetzt (25.10.2026): `PathGeometry`, `MissionMap`, `Cell`, `Placement`.
+  Bauzonen werden aus Weg und `minDistanceFromPath` berechnet, nicht einzeln gelistet;
+  114 Bauplätze, genau wie im Prüfskript.
 - **Ziel:** Geometrie der Mission.
 - **Umfang:** Weg als Polylinie, `position(at: distance)`, Weglänge; Bauzonen
   (Rasterzellen, Abstand zum Weg); Zellprüfung frei/belegt/außerhalb.
