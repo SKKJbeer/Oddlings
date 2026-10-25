@@ -7,17 +7,21 @@ final class MissionE2ETests: XCTestCase {
 
     @MainActor
     func testLossWithoutTowersThenRetryResetsEverything() throws {
-        let e2e = try E2EApp(["--play", "--e2e-zeitraffer", E2EApp.fastForward])
+        let e2e = try E2EApp(["--play", "--e2e-zeitraffer", E2EApp.readableFastForward])
         e2e.waitForBoard()
-        XCTAssertTrue(e2e.result.waitForExistence(timeout: 180), "Mission endet")
+        XCTAssertTrue(e2e.result.waitForExistence(timeout: 240), "Mission endet")
         XCTAssertEqual(e2e.result.label, "Niederlage")
+        XCTAssertEqual(e2e.lives, 0)
         XCTAssertFalse(e2e.nextWave.exists, "nach dem Ende keine Welle mehr")
         XCTAssertFalse(e2e.pause.isEnabled, "nach dem Ende keine Pause")
 
         e2e.app.buttons["result.again"].tap()
         XCTAssertTrue(e2e.result.waitForNonExistence(timeout: 5), "Tafel verschwindet")
-        e2e.waitFor(e2e.gold, toBe: e2e.config.mission.startGold, "Gold zurückgesetzt")
-        e2e.waitFor(e2e.lives, toBe: e2e.config.mission.fortressLives, "Leben zurückgesetzt")
+        // Sofort ablesen, nicht warten: Der Neustart setzt alles im selben Bild
+        // zurück, und kurz darauf läuft die Mission wieder.
+        XCTAssertEqual(e2e.lives, e2e.config.mission.fortressLives, "Leben zurückgesetzt")
+        XCTAssertEqual(e2e.waveLabel, "Welle 0/\(e2e.config.waves.count)", "Welle zurückgesetzt")
+        XCTAssertEqual(e2e.gold, e2e.config.mission.startGold, "Gold zurückgesetzt")
     }
 
     @MainActor

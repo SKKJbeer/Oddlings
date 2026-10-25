@@ -17,6 +17,10 @@ struct E2EApp {
 
     /// Zeitraffer für ganze Missionen. Gleiche feste Schritte, nur mehr je Bild.
     static let fastForward = "40"
+    /// Langsamerer Zeitraffer, wenn der Test nach einem Neustart noch ablesen
+    /// muss: Bei 40× ist die erste Welle schon da, bevor die Abfrage antwortet,
+    /// und die Leben fallen wieder (im ersten Lauf so gesehen).
+    static let readableFastForward = "10"
 
     init(_ arguments: [String] = []) throws {
         config = try BalanceConfig.missionOne()
