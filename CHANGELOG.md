@@ -11,6 +11,11 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## Dokumente, kein Bau – 25.10.2026 (Bedienung Phase 2, Kreismenü entschieden)
+
+- Bedienung für Aufwerten und Gabelung, Zielwahl, Zwergenbank, Bonus für frühes Rufen und Steinregen ([07](docs/game-design/07-ui-ux.md#8-phase-2-aufwerten-fähigkeit-bank)), Kampagnenkarte nach K4. D-033 entschieden: Steinregen unten rechts, Tempo oben neben der Pause.
+- D-031 entschieden: Türme werden im Kreismenü am Feld gewählt, Bauen und Verkaufen per zweitem Tippen ([07](docs/game-design/07-ui-ux.md#bauen)).
+
 ## Dokumente, kein Bau – 25.10.2026 (Oberfläche)
 
 **Neu**

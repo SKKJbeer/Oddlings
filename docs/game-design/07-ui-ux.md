@@ -22,7 +22,7 @@ keine Ladezeit zwischen Mission und Ergebnis.
    Ecken. Anzeigen (Leben, Gold, Welle) stehen oben, häufige Knöpfe (Welle rufen,
    Tempo) unten. Pause liegt oben rechts, damit man sie nicht versehentlich trifft.
 3. **Wählen am Ort.** Gebaut und verkauft wird direkt am Feld, nicht über eine
-   Leiste am Rand (offen als D-031).
+   Leiste am Rand (**[ENTSCHIEDEN]** D-031, Steffen 25.10.2026).
 4. **Zweimal tippen für Gold.** Alles, was Gold kostet oder bringt, braucht eine
    Bestätigung durch zweites Tippen. Das erste Tippen zeigt die Folge
    (Reichweite, Erstattung). Kein Dialogfenster.
@@ -96,6 +96,9 @@ Aufteilung siehe Abschnitt 2. Weitere Regeln:
   (Marktanalyse E3).
 
 ### Bauen
+
+**[ENTSCHIEDEN]** Kreismenü am Feld (D-031).
+
 1. Freies Feld antippen → Feld wird umrandet, drei Turmknöpfe erscheinen im Bogen
    darüber (in den oberen zwei Zeilen darunter), jeweils mit Preisschild.
 2. Turm antippen → Reichweite als gestrichelter Kreis, Vorschau des Turms auf dem
@@ -133,8 +136,10 @@ Erscheint als Tafel über der stehenden Karte, ohne Ladezeit.
 - Sterne kommen erst mit der Kampagne (Phase 3).
 
 ### Kampagnenkarte (Phase 3, Richtung)
-Gemalte Region, Knoten mit Pfaden, eine Gabelung, eine Nebenmission (Raute),
-Bossknoten. Sterne unter erledigten Knoten. Rechts die Missionstafel: Art, Name,
+Gemalte Region 1 nach K4 (D-027): sieben Hauptmissionen mit Gabelung nach
+Mission 4 (Sumpfpfad oder Ruinen, beide führen zum Boss), zwei Nebenmissionen
+als Rauten, die sich ab 6 und ab 15 Sternen öffnen (gedimmt bis dahin), Bossknoten.
+Sternsumme der Region oben neben dem Namen. Sterne unter erledigten Knoten. Rechts die Missionstafel: Art, Name,
 Sterne, kurzer Satz, „Neu: Panzerbestie" (eine Neuheit je Mission, wie in 02
 und Marktanalyse 2 „Lehren ohne Text"), Starten unten rechts. Namen im Entwurf
 sind Platzhalter. Umfang und Regeln stehen in [05](05-campaign-and-progression.md).
@@ -204,9 +209,134 @@ SIL Open Font License, frei auch für kommerzielle Apps, liegen als Datei in der
 App (kein Nachladen, offline). Dieselbe Paarung trägt Stack & Siege.
 Eintrag **D-032** (vorgeschlagen).
 
-## 8 Offen
+## 8 Phase 2: Aufwerten, Fähigkeit, Bank
 
-- **D-031** Turmauswahl: Kreismenü am Feld (Empfehlung) oder feste Leiste.
+Bedienung zu den Konzepten [K1 bis K3](../konzepte/phase-2-3.md) (D-024 bis
+D-026). Klickbar im Entwurf, Tafel 8. Preise und Werte im Entwurf sind
+Platzhalter; die Zahlen stehen in der Missionsdatei. Alles hier folgt den
+Grundsätzen aus Abschnitt 1, besonders „Wählen am Ort" (D-031) und „Zweimal
+tippen für Gold".
+
+### Turm antippen, je nach Stufe
+
+Das Kreismenü am Turm wächst mit dem Turm. Oben liegt, was Gold kostet, unten
+Verkaufen, an der Seite die Zielwahl. Liegt der Turm in den oberen zwei Zeilen,
+klappt das Menü um (Kaufen unten, Verkaufen oben).
+
+| Stufe | Knöpfe am Turm | Infotafel |
+|---|---|---|
+| 1 | **Aufwerten** (Preis), Verkaufen | Rolle, Zusammenspiel. Nach dem ersten Tippen auf Aufwerten: „Stufe 2: gleiche Rolle, spürbar stärker. Schaltet die Zielwahl frei." |
+| 2 | **A** und **B** nebeneinander (je Bild und Preis), Zielwahl, Verkaufen | „Wähle eine Spezialisierung." Nach dem ersten Tippen auf A oder B: Name, ein Satz, wogegen sie hilft, und in Orange **„Endgültig für diesen Turm: B fällt weg."** |
+| 3 | Zielwahl, Verkaufen | Name und Satz der gewählten Spezialisierung |
+
+- **Vorschau beim ersten Tippen.** Ändert eine Spezialisierung die Reichweite
+  (Falkenhorst, Moorherz), zeigt der gestrichelte Kreis schon die neue. So sieht
+  man vor dem Kauf, was er abdeckt.
+- **Gabelung im Bild, nicht in einer Liste.** A und B stehen links und rechts
+  über dem Turm, gleich groß, mit eigenem Bild und Buchstaben. Kein Fenster mit
+  zwei Karten (wie in K1 zuerst skizziert): Ein Fenster würde die Karte
+  verdecken, und die Mission läuft weiter (D-019).
+- **Endgültig heißt sichtbar endgültig.** Die Warnzeile steht nur bei der
+  Spezialisierung, weil nur sie nicht rückgängig zu machen ist (außer durch
+  Verkaufen). Aufwerten auf Stufe 2 braucht keine Warnung.
+- **Stufe am Turm erkennen**, ohne ihn anzutippen: kleines Schild oben rechts,
+  „II" auf Stufe 2, auf Stufe 3 der Anfangsbuchstabe der Spezialisierung in der
+  Turmfarbe. Bis die Grafik (sechs neue Turmbilder, K1) da ist, trägt das Schild
+  die Information allein.
+- **Verkaufen** zeigt die Erstattung aus allem, was im Turm steckt (K1).
+
+### Zielwahl
+
+Ein Knopf, der bei jedem Tippen weiterschaltet: **Erster → Letzter → Stärkster**.
+Das Schild unter dem Knopf nennt die aktuelle Wahl, ein kurzer Hinweis bestätigt
+den Wechsel. Kostet kein Gold, also kein zweites Tippen. Erst ab Stufe 2 (E5),
+vorher erscheint der Knopf nicht. Die Wahl bleibt beim Spezialisieren erhalten.
+Ein Ablaufmenü mit drei Einträgen wäre genauer, braucht aber zwei Tippen für die
+häufigste Handlung.
+
+### Zwergenbank
+
+- **Bauen:** vierter Knopf im Kreismenü des freien Felds. Der Bogen bekommt vier
+  Plätze (54 pt Knöpfe, Abstand reicht auf dem SE). Erstes Tippen zeigt die
+  Infotafel mit Ertrag und Deckel und in Orange: „Die 100 Gold fehlen dir in
+  den nächsten Wellen." Das ist die eigentliche Entscheidung (K3), sie soll
+  beim Kauf in Worten dastehen.
+- **Höchstzahl erreicht:** Knopf gedimmt, Schild „2/2" statt Preis.
+- **Auf der Karte:** ein Füllbalken unter der Bank zeigt, wie viel vom Deckel
+  ausgezahlt ist. Jede Auszahlung (`bankPaid`) lässt „+10" aufsteigen, die
+  Münzen fliegen zum Goldzähler, der Zähler zählt hoch (E1).
+- **Leer:** Bank wird grau, Schild „leer", kein Balken. Antippen zeigt nur
+  „Verkaufen" und den Satz „Leer. Verkaufen gibt den Platz frei."
+- Keine Aufwertung, keine Zielwahl (K3).
+
+### Bonus für frühes Rufen
+
+Der Knopf „Welle rufen" trägt neben der Wellennummer ein kleines Goldschild mit
+dem Bonus, den Rufen **jetzt** brächte. Es sinkt mit dem Countdown. Beim Rufen
+zählt das Gold hoch und der Hinweis nennt den Betrag. Mehr braucht es nicht: Der
+Spieler sieht den Preis des Wartens, ohne dass ein Text ihn erklärt.
+
+### Festungsfähigkeit (Steinregen)
+
+- **Platz: unten rechts**, runder Knopf 54 pt, im Bereich des rechten Daumens.
+  Die Fähigkeit wird in jeder Welle gebraucht, das Tempo einmal je Mission.
+  Deshalb tauschen sie in Phase 2: **Tempo rückt oben rechts neben die Pause**
+  (Zeile 0, Spalten 14–15), unten rechts liegt die Fähigkeit. Die Zahl der
+  freizuhaltenden Felder bleibt gleich (siehe D-030). **[ENTSCHIEDEN]** D-033 (Steffen, 25.10.2026).
+- **Laden:** Der Rand füllt sich im Uhrzeigersinn golden. Bereit: voller
+  Goldrand und zwei kurze Pulse, dann Ruhe (kein Dauerblinken; bei „Bewegung
+  reduzieren" gar nicht).
+- **Zielen:** Knopf antippen → Karte dunkelt ab, nur der Weg bleibt hell, oben
+  steht „Stelle am Weg antippen". Unter dem Finger folgt ein Kreis mit der
+  Wirkfläche und rastet am Weg ein. **Loslassen wirft.** Abseits des Wegs
+  passiert nichts, der Hinweis sagt „Nur auf dem Weg". Erneutes Tippen auf den
+  Knopf bricht ab. Ein zweites Bestätigen gibt es nicht: Die Fähigkeit kostet
+  kein Gold, und Zielen muss schnell gehen.
+- **Wirkung:** Erst ein Schatten (die sichtbare Verzögerung aus K2a), dann der
+  Einschlag mit Staub, Stoß schwer. Gegner im Kreis zeigen das kurze Anhalten.
+- Das Spiel läuft beim Zielen weiter, wie beim Kreismenü (D-019). Öffnen der
+  Fähigkeit schließt ein offenes Kreismenü und umgekehrt.
+- **Völker (Phase 3, K2b):** derselbe Knopf, anderes Bild. Mondmal zielt gleich
+  (Kreis). Bollwerk setzt eine Mauer quer zum Weg an der Stelle, an der man
+  loslässt; die Vorschau zeigt die Mauer statt des Kreises.
+
+### Rückmeldung, Ergänzung zu Abschnitt 5
+
+| Handlung | Bild | Ton | Haptik |
+|---|---|---|---|
+| Aufwerten | Turm wächst ein Stück, Schild „II" springt auf | Aufbau, höher | Stoß mittel |
+| Spezialisieren | Turm wechselt das Bild mit Lichtblitz in Turmfarbe | eigener Klang je Spezialisierung | Stoß schwer |
+| Zielwahl | Schild wechselt, kurzer Hinweis | Klicken | Auswahl |
+| Bank zahlt aus | „+10" steigt auf, Münzen zum Zähler | leises Klimpern, gedrosselt | keine |
+| Fähigkeit bereit | zwei Pulse am Knopf | heller Ton | keine |
+| Steinregen | Schatten, Einschlag, Staub | Grollen, Einschlag | Stoß schwer |
+
+Haptik nur für eigene Handlungen (K9); eine Bank, die von selbst zahlt, vibriert
+nicht.
+
+### Was die App dafür braucht
+
+Kein Simulationscode in diesem Abschnitt; die Regeln baut der Haupt-Thread.
+Die Oberfläche braucht dafür:
+
+- Befehle `upgrade(tower)`, `specialize(tower, A|B)`, `setTargeting(tower, mode)`,
+  `useAbility(point)` (K1, K2a). Darstellung ändert nie Zustand direkt.
+- Lesbar im Zustand: Stufe, Spezialisierung, Zielwahl je Turm; Ertrag und
+  Deckel je Bank; Abklingzeit der Fähigkeit; Bonus für frühes Rufen.
+- Ereignisse: `towerUpgraded`, `towerSpecialized`, `bankPaid`, `bankEmptied`,
+  `abilityReady`, `abilityUsed`, `abilityImpact`.
+- `BattleController.selection` bekommt die Zustände `tower(stage)`,
+  `armed(action)` und `aiming`. `HudLayout` legt den Bogen mit vier Plätzen und
+  die Lage der Knöpfe A, B und Zielwahl fest; die Tests aus Abschnitt 4 gelten
+  für die neuen Knöpfe mit.
+- Grafik: sechs Spezialisierungsbilder, Stufe-2-Anbau je Turm, Bank mit voll und
+  leer, Symbole für Zielwahl, Fähigkeit und die sechs Spezialisierungen
+  (Abhängigkeit zum Thread „AAA-Grafik").
+
+Vor dem ersten Code kommt dazu ein Konzept in `docs/konzepte/` mit Testplan.
+
+## 9 Offen
+
 - **D-030** reservierte HUD-Ecken je Mission: wartet auf den Spieltest WP-15 (Fehltipps beobachten).
 - Kombi-Bilanz und Niederlagen-Hinweis: Phase 2, nach dem ersten Spieltest.
 - Linkshänder-Spiegelung der unteren Ecken: Kandidat für die Einstellungen,
