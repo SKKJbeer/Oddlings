@@ -10,7 +10,7 @@ Status: **entschieden** · **vorgeschlagen** (wartet auf Steffen) · **verworfen
 | D-001 | 25.10.2026 | Übergabe v0.1 ist der Designstand; ihre Festlegungen gelten als entschieden | entschieden | Übergabe |
 | D-002 | 25.10.2026 | Stack Swift + SwiftUI + SpriteKit, vorbehaltlich Spike WP-01 | entschieden (Übergabe), Spike offen | [architecture.md](../technical/architecture.md) §1; Plan B Godot |
 | D-003 | 25.10.2026 | Simulation als eigenes Swift-Paket `OddlingsCore` ohne UI-Importe; Befehle rein, Ereignisse raus, Zustand als Wert, fester Takt 30/s | vorgeschlagen | Testbarkeit, Determinismus, spätere Mehrspieler-Fähigkeit ohne Netzcode |
-| D-004 | 25.10.2026 | **Querformat** | vorgeschlagen | Zellen ~43 pt statt ~24 pt im Hochformat; Wege lesbarer. Gegen: Einhandbedienung |
+| D-004 | 25.10.2026 | **Querformat** | entschieden (Steffen, 25.10.2026) | Zellen ~43 pt statt ~24 pt im Hochformat; Wege lesbarer. Gegen: Einhandbedienung |
 | D-005 | 25.10.2026 | **Platzierung im Raster innerhalb von Bauzonen**, ein Turm je Zelle | vorgeschlagen | Optionen A frei / B Raster / C feste Plätze, siehe [01](../game-design/01-core-gameplay.md). Präzisiert „frei platzierbar" aus der Übergabe |
 | D-006 | 25.10.2026 | **iOS 17**, iPhone | vorgeschlagen | `@Observable`, alle iPhones ab XS/XR |
 | D-007 | 25.10.2026 | Werte für Mission 1 laut `config/balance/mvp-mission-01.json` | vorgeschlagen | [04](../game-design/04-economy-and-balance.md), grob geprüft, nicht spielgetestet |

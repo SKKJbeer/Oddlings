@@ -53,7 +53,7 @@ Nur vier Fragen blockieren den nächsten Schritt (Phase 1). Alles andere kann wa
 
 | # | Frage | Warum blockierend | Vorschlag |
 |---|---|---|---|
-| B1 | Querformat oder Hochformat? | Bestimmt Kartenzuschnitt, HUD, Bedienung, alle Testmaße | Querformat ([D-004](../decisions/decision-log.md)) |
+| B1 | Querformat oder Hochformat? | Bestimmt Kartenzuschnitt, HUD, Bedienung, alle Testmaße | **Entschieden:** Querformat ([D-004](../decisions/decision-log.md)) |
 | B2 | „Frei platzierbar" wörtlich oder im Raster? | Bestimmt Kollisionsregeln, Eingabe, Datenmodell | Raster innerhalb von Bauzonen ([D-005](../decisions/decision-log.md)) |
 | B3 | Minimale iOS-Version | Bestimmt verfügbare SwiftUI-APIs | iOS 17 ([D-006](../decisions/decision-log.md)) |
 | B4 | Upgrades und Verkaufen im MVP? | Bestimmt Umfang von Phase 1 | Verkaufen ja, Upgrades nein ([D-008](../decisions/decision-log.md)) |

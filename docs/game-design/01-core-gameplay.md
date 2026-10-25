@@ -52,7 +52,7 @@ freie Zelle wählbar.
 
 Ein Feld ist die Grundeinheit für alle Strecken (Reichweite, Geschwindigkeit).
 
-**[VORSCHLAG – D-004]** Querformat. Begründung: Wege lesen sich in der Breite
+**[ENTSCHIEDEN – D-004, 25.10.2026]** Querformat. Begründung: Wege lesen sich in der Breite
 besser, ein 16×9-Raster ergibt auf einem iPhone im Querformat Zellen von etwa
 43 pt, knapp über Apples Mindestgröße von 44 pt für Tippziele. Im Hochformat
 wären es bei gleicher Feldzahl nur etwa 24 pt.
