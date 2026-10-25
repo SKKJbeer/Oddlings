@@ -73,6 +73,17 @@ struct Enemy: Codable, Equatable {
 }
 ```
 
+**Umgesetzt seit WP-04** mit einer Abweichung: Statt `phase` stehen drei Felder im
+Zustand, `waveIndex`, `nextWaveTick: Int?` (nil, wenn alle Wellen begonnen haben)
+und `outcome: Outcome?` (`won`/`lost`). Das sind dieselben Informationen ohne
+Aufzählungsfall je Kombination. `step` ist eine Methode von `Simulation`, die
+Konfiguration und daraus berechnete Karte hält, damit die Bauzonen nicht in jedem
+Tick neu entstehen; der Zustand liegt weiterhin nur in `GameState`. Sekunden aus
+der Konfiguration werden gerundet in Ticks umgerechnet (`ticks(_:)`). Gegenüber dem
+Prüfskript fällt die Niederlage ohne Türme 4 Ticks früher (2731 statt 2735), weil
+Python mit aufsummierter Zeit statt mit ganzen Ticks rechnet; für WP-10 zählt die
+Rangfolge der Bauweisen, nicht der einzelne Tick.
+
 Gegnerposition wird aus `distance` und dem Weg berechnet, nicht gespeichert.
 Das hält den Zustand klein und schließt Abweichungen zwischen Position und
 Fortschritt aus.

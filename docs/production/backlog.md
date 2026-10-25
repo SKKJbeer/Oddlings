@@ -58,6 +58,8 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
 - **Abh.:** WP-02 · **Risiken:** Bauzonen gehören in die Konfiguration, nicht in den Code
 
 ### WP-04 · Wellen, Gegnerbewegung, Festung
+- **Stand:** umgesetzt (25.10.2026). Ohne Türme verliert Mission 1 bei Tick 2731
+  (91 s): Die Flitzer aus Welle 3 überholen die letzten Plünderer aus Welle 2.
 - **Ziel:** Gegner erscheinen, laufen, brechen durch.
 - **Umfang:** `GameState`, `step`, fester Takt, Aufbauzeit, Spawn-Plan aus Wellen,
   `hpScale`, Bewegung, `leakDamage`, Niederlage bei 0 Leben, Ereignisse.
