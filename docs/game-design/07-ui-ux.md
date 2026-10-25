@@ -207,7 +207,7 @@ Die Mission läuft weiter, während das Kreismenü offen ist (D-019).
 Lilita One für Titel, Zahlen und Knöpfe, Nunito für Fließtext. Beide unter der
 SIL Open Font License, frei auch für kommerzielle Apps, liegen als Datei in der
 App (kein Nachladen, offline). Dieselbe Paarung trägt Stack & Siege.
-Eintrag **D-032** (vorgeschlagen).
+**[ENTSCHIEDEN]** D-032 (Steffen, 25.10.2026). Dateien und Herkunft: `App/UI/Fonts/ENTSTEHUNG.md`.
 
 ## 8 Phase 2: Aufwerten, Fähigkeit, Bank
 

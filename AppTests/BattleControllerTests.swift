@@ -25,9 +25,15 @@ final class BattleControllerTests: XCTestCase {
         fatalError("Karte ohne Weg")
     }
 
+    /// Mitgeschriebene Haptik statt echter Vibration.
+    private var felt: [Haptic] = []
+
+    private func recordHaptics() {
+        controller.haptics = { [unowned self] in felt.append($0) }
+    }
+
     private func stepAndRefresh() {
-        _ = model.step()
-        controller.afterFrame()
+        controller.afterFrame(events: model.step())
     }
 
     private func build(_ kind: TowerKind, at cell: Cell) {
@@ -73,11 +79,134 @@ final class BattleControllerTests: XCTestCase {
         XCTAssertEqual(controller.selection, .tower(id: tower.id))
         let refund = controller.refund(for: tower)
         let before = controller.gold
+
+        controller.sell()
+        XCTAssertEqual(controller.selection, .tower(id: tower.id, sellArmed: true), "erstes Tippen fragt nur")
+        stepAndRefresh()
+        XCTAssertEqual(model.state.towers.count, 1, "erstes Tippen verkauft nicht")
+        XCTAssertEqual(controller.gold, before)
+
         controller.sell()
         stepAndRefresh()
         XCTAssertTrue(model.state.towers.isEmpty)
         XCTAssertEqual(controller.gold, before + refund)
         XCTAssertEqual(controller.selection, .none)
+    }
+
+    func testTapElsewhereCancelsArmedSell() throws {
+        build(.watch, at: freeCell)
+        controller.tap(freeCell)
+        controller.sell()
+        XCTAssertTrue(controller.sellArmed)
+        controller.tap(pathCell)
+        XCTAssertEqual(controller.selection, .none)
+        controller.tap(freeCell)
+        XCTAssertFalse(controller.sellArmed, "neu gewählt beginnt ohne Bestätigung")
+        stepAndRefresh()
+        XCTAssertEqual(model.state.towers.count, 1, "abgebrochen heißt nicht verkauft")
+    }
+
+    func testUnaffordableChoiceWarnsAndSendsNothing() throws {
+        recordHaptics()
+        let priciest = try XCTUnwrap(TowerKind.allCases.max { controller.cost(of: $0) < controller.cost(of: $1) })
+        let cheapest = try XCTUnwrap(TowerKind.allCases.min { controller.cost(of: $0) < controller.cost(of: $1) })
+        var cells = model.sim.map.buildableCells.makeIterator()
+        while controller.canAfford(priciest), let cell = cells.next() { build(cheapest, at: cell) }
+        let free = try XCTUnwrap(cells.next())
+        let towers = model.state.towers.count
+        XCTAssertGreaterThan(controller.missingGold(for: priciest), 0)
+
+        controller.tap(free)
+        felt = []
+        controller.choose(priciest)
+        controller.choose(priciest)
+        XCTAssertEqual(controller.selection, .cell(free, choice: nil), "nicht leistbar zeigt keine Vorschau")
+        XCTAssertEqual(controller.goldWarnings, 2)
+        XCTAssertEqual(felt, [.warning, .warning])
+        stepAndRefresh()
+        XCTAssertEqual(model.state.towers.count, towers, "kein Befehl an die Simulation")
+    }
+
+    func testCountersFollowEvents() {
+        controller.afterFrame(events: [.towerBuilt(id: 7), .enemyKilled(id: 1, reward: 3),
+                                       .enemyKilled(id: 2, reward: 3), .enemyLeaked(id: 3, damage: 1),
+                                       .enemyDamaged(id: 4, amount: 1)])
+        XCTAssertEqual(controller.towersBuilt, 1)
+        XCTAssertEqual(controller.enemiesDefeated, 2)
+        XCTAssertEqual(controller.leaks, 1)
+        controller.restart()
+        XCTAssertEqual(controller.towersBuilt, 0, "Neustart setzt die Zähler zurück")
+        XCTAssertEqual(controller.enemiesDefeated, 0)
+    }
+
+    func testBuildIsCountedFromTheSimulation() {
+        build(.watch, at: freeCell)
+        XCTAssertEqual(controller.towersBuilt, 1)
+    }
+
+    func testDurationComesFromTicks() {
+        let perSecond = config.simulation.ticksPerSecond
+        for _ in 0..<(perSecond * 3 + perSecond / 2) { stepAndRefresh() }
+        XCTAssertEqual(controller.elapsedSeconds, 3)
+    }
+
+    func testGiveUpShowsLossWithoutTouchingTheSimulation() {
+        controller.togglePause()
+        controller.giveUp()
+        XCTAssertEqual(controller.shownOutcome, .lost)
+        XCTAssertNil(controller.outcome, "die Simulation hat kein Ergebnis gerechnet")
+        XCTAssertNil(model.state.outcome)
+        XCTAssertFalse(controller.paused, "die Pausentafel weicht der Ergebnistafel")
+        XCTAssertFalse(controller.canCallNextWave)
+        let tick = model.state.tick
+        _ = model.advance(by: 1)
+        XCTAssertEqual(model.state.tick, tick, "die Mission bleibt stehen")
+        controller.tap(freeCell)
+        XCTAssertEqual(controller.selection, .none, "nach dem Aufgeben keine Eingaben")
+        controller.togglePause()
+        XCTAssertFalse(controller.paused, "nach dem Ende keine Pause")
+
+        let scene = BattleScene(model: model)
+        scene.controller = controller
+        scene.restart()
+        XCTAssertNil(controller.shownOutcome)
+        _ = model.advance(by: 0.5)
+        XCTAssertGreaterThan(model.state.tick, 0, "Neustart läuft wieder")
+    }
+
+    func testOwnActionsAreFelt() {
+        recordHaptics()
+        controller.tap(freeCell)
+        controller.choose(.watch)
+        controller.choose(.watch)
+        stepAndRefresh()
+        controller.callNextWave()
+        XCTAssertEqual(felt, [.selection, .selection, .medium, .heavy])
+    }
+
+    func testWatchingIsNotFelt() {
+        let demo = BattleModel(config: config, seed: 1, autoplay: true)
+        let watching = BattleController(model: demo, interactive: false)
+        var count = 0
+        watching.haptics = { _ in count += 1 }
+        var built = 0
+        for _ in 0..<(config.simulation.ticksPerSecond * 30) {
+            let events = demo.step()
+            built += events.filter { if case .towerBuilt = $0 { true } else { false } }.count
+            watching.afterFrame(events: events)
+        }
+        XCTAssertGreaterThan(built, 0, "der Mitspieler hat gebaut")
+        XCTAssertEqual(count, 0)
+        XCTAssertEqual(watching.towersBuilt, built)
+    }
+
+    func testCountdownRingStartsFull() throws {
+        let total = controller.countdownTotal
+        XCTAssertEqual(Optional(total), controller.secondsToNextWave)
+        for _ in 0..<(config.simulation.ticksPerSecond * 2) { stepAndRefresh() }
+        let left = try XCTUnwrap(controller.secondsToNextWave)
+        XCTAssertLessThan(left, total)
+        XCTAssertEqual(controller.countdownTotal, total, "der Ring läuft ab, die Länge bleibt")
     }
 
     func testUnaffordableKindIsMarked() {

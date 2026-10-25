@@ -18,31 +18,7 @@ struct StartView: View {
     var body: some View {
         switch screen {
         case .menu:
-            VStack(spacing: 20) {
-                Text("Oddlings")
-                    .font(.system(size: 56, weight: .heavy, design: .rounded))
-                Text("Mission 1")
-                    .font(.title3)
-                    .opacity(0.8)
-                Button { screen = .play } label: {
-                    Text("Spielen").font(.title2.bold()).frame(minWidth: 220, minHeight: 52)
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(.orange)
-                .accessibilityIdentifier("menu.play")
-                HStack(spacing: 12) {
-                    Button("Vorführung ansehen") { screen = .watch }
-                        .accessibilityIdentifier("menu.watch")
-                    Button("Leistungsprobe") { screen = .spike }
-                        .accessibilityIdentifier("menu.spike")
-                }
-                .buttonStyle(.bordered)
-                .tint(.white)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color(red: 0.12, green: 0.20, blue: 0.14))
-            .foregroundStyle(.white)
-            .statusBarHidden()
+            MainMenuView(onPlay: { screen = .play }, onWatch: { screen = .watch }, onSpike: { screen = .spike })
         case .play:
             BattleView(mode: .play) { screen = .menu }
         case .watch:

@@ -11,6 +11,7 @@ struct BattleView: View {
 
     @State private var scene: BattleScene
     @State private var controller: BattleController
+    @State private var safeArea = EdgeInsets()
     @Environment(\.scenePhase) private var scenePhase
     var onClose: () -> Void
 
@@ -43,19 +44,28 @@ struct BattleView: View {
                     .padding([.horizontal, .top], BattleStyle.hudMargin)
                 ZStack {
                     SpriteView(scene: scene, preferredFramesPerSecond: 60, options: [.ignoresSiblingOrder])
-                    BattleMenu(controller: controller)
+                    RingMenu(controller: controller, insets: boardInsets)
+                    // Tafeln liegen auf der Karte, nicht über der Leiste: Pause
+                    // und Tempo bleiben dort bedienbar.
+                    BattleOverlay(controller: controller, onRestart: { scene.restart() }, onClose: onClose)
                 }
                 .ignoresSafeArea(edges: [.horizontal, .bottom])
                 .accessibilityElement(children: .contain)
                 .accessibilityIdentifier("battle.board")
             }
-            BattleOverlay(controller: controller, onRestart: { scene.restart() }, onClose: onClose)
         }
+        .onGeometryChange(for: EdgeInsets.self) { $0.safeAreaInsets } action: { safeArea = $0 }
         .statusBarHidden()
         .persistentSystemOverlays(.hidden)
         .onChange(of: scenePhase) { _, phase in
             if phase != .active { controller.pauseForBackground() }
         }
+    }
+
+    /// Die Karte reicht seitlich und unten unter Kamera und Home-Leiste; das
+    /// Kreismenü darf dort nicht liegen. Oben grenzt sie an die Kopfleiste.
+    private var boardInsets: HudLayout.Insets {
+        HudLayout.Insets(top: 0, left: safeArea.leading, bottom: safeArea.bottom, right: safeArea.trailing)
     }
 
     #if DEBUG

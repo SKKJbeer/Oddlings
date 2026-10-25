@@ -60,7 +60,8 @@ enum BattleStyle {
     static let deathLife: TimeInterval = 0.30
     static let floatLife: TimeInterval = 0.70
     static let bannerLife: TimeInterval = 1.6
-    static let font = "AvenirNext-Heavy"
+    /// Lilita One (D-032), angemeldet in `AppFonts`.
+    static let font = AppFonts.display
     static let fastSpeed = 2
 
     static let selection = SKColor(red: 1.00, green: 0.95, blue: 0.70, alpha: 1)
