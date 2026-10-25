@@ -42,6 +42,28 @@ Bau in TestFlight → WP-15 (Spieltest mit drei Personen) → Phase 2 schneiden.
 darf diesen Pfad nicht aufhalten. Steffens Vorgabe
 (25.10.2026): erst spielbar in TestFlight, dann Grafik einbauen.
 
+## Vorgezogen: Spielrahmen (D-060)
+
+Steffen, 25.10.2026: Hauptmenü, Weltkarte und Völker wie im Konzept sollen jetzt
+kommen, nicht erst in Phase 3. Damit ist die MVP-Grenze für diese drei Stücke
+aufgehoben (D-060). Der Rest von Phase 2 und 3 bleibt, wie er ist.
+
+| # | Paket | Abh. | Code | Oberfläche | Grafik | Animation |
+|---|---|---|---|---|---|---|
+| R-1 | **Hauptmenü, Einstellungen, Speicherstand** | neue Oberfläche für Mission 1 | Schirmfolge, Speicherstand nach D-022 | [Hauptmenü](../game-design/07-ui-ux.md#hauptmenü) im Stil | Menühintergrund, Arbeitstitel-Schriftzug | Übergänge zwischen Schirmen |
+| R-2 | **Kampagnenkarte Region 1** „Flüsterwald“ nach [05](../game-design/05-campaign-and-progression.md#region-1-und-die-vollversion): Knotenkarte M1 bis M7, N1, N2; M1 spielbar, die übrigen sichtbar und gesperrt; Sterne aus M1 | R-1 (Speicherstand) | Kartendaten, Fortschritt, Sterne | [Kampagnenkarte](../game-design/07-ui-ux.md#kampagnenkarte-phase-3-richtung) | gemalte Karte der Region | Weg zum nächsten Knoten, Freischalten |
+| R-3 | **Festungsfähigkeit Steinregen** (P2-7 vorgezogen) | neue Oberfläche (Knopf, D-033) | Befehl `useAbility`, Abklingzeit | [Fähigkeitsknopf](../game-design/07-ui-ux.md#festungsfähigkeit-steinregen) | Symbol | Steinregen-Effekt |
+| R-4 | **Völkerwahl** Zwerge und Elfen nach [03](../game-design/03-races-and-avatar.md#wie-ein-volk-wirkt-phase-3): wählbar vor jeder Mission, Volk bestimmt die Fähigkeit (Bollwerk, Mondmal) und einen kleinen Zug | R-1, R-3 | Volk im Speicherstand und in der Missionsdatei, zwei Fähigkeiten | Wahl im Avatar oder vor der Mission | Wappen, Porträts | Effekte beider Fähigkeiten |
+
+**[VORSCHLAG]** Solange nur M1 spielbar ist, sind beide Völker von Anfang an
+wählbar. Die Freischaltung am Ende von Region 1 (D-027) greift, sobald M7 steht.
+Der Zug der Zwerge an der Bank wirkt erst mit P2-5; bis dahin zeigt die Wahl ihn
+als „kommt mit der Zwergenbank“.
+
+**Reihenfolge.** R-1 und R-3 können parallel laufen, R-2 braucht R-1, R-4 braucht
+beide. Der Spieltest WP-15 wartet nicht darauf: Er prüft Mission 1 mit der neuen
+Oberfläche, wie entschieden. Jedes Paket bringt seine Ende-zu-Ende-Abläufe mit (D-029).
+
 ## Entwurf Phase 2 [VORSCHLAG]
 
 Reihenfolge nach Abhängigkeit und Risiko: zuerst, was das Spielgefühl am
@@ -51,13 +73,13 @@ Phase wie oben: Eine Mission wirkt wie das fertige Spiel.
 | # | Paket | Abh. | Konzept | Entscheidung |
 |---|---|---|---|---|
 | P2-1 | Grafik einbauen: Atlas (Standbilder ✓ in 0.5.2), Laufzyklen, Treffereffekte nach Rückmeldeliste (E1, E3) | M1.3, Atlas aus dem Grafik-Thread | Art-Direction | D-016 |
-| P2-2 | Fortsetzen nach App-Ende, Speicherstand | M1.3 | K6 | D-022 |
+| P2-2 | Fortsetzen einer laufenden Mission nach App-Ende (Speicherstand selbst kommt mit R-1) | R-1 | K6 | D-022 |
 | P2-3 | Ton und Haptik | P2-1 (Rückmeldeliste) | K9 | Weg offen, neuer Thread |
 | P2-4 | Menüs, Pause, Einstellungen, Ergebnis im Stil (Teil für Mission 1 vorgezogen vor WP-15) | M1.3, Oberflächen-Thread | [07](../game-design/07-ui-ux.md) | D-031, D-032 |
 | P2-5 | Zwergenbank und Bonus für frühes Rufen | M1.4 (Balance aus dem Spieltest) | K3 | D-026 |
 | P2-6 | Aufwertungen mit Gabelung, Zielwahl | P2-5 (gleiche Wirtschaftsrechnung) | K1 | D-024 |
 | P2-6b | **Balance-Labor, Grundstock:** Lauf-Werkzeug, Zufalls- und Menschenbot, Zielwerte, PR-Stufe in der CI | P2-5, P2-6 | K11 | D-028 |
-| P2-7 | Festungsfähigkeit Steinregen | P2-4 (Knopf im HUD) | K2a | D-025 |
+| P2-7 | ~~Festungsfähigkeit Steinregen~~ vorgezogen als R-3 | – | K2a | D-025, D-060 |
 | P2-8 | Synergie sichtbar („Sporenfunke", E2), Einstieg ohne Erklärtext | P2-1, P2-3 | K8 | – |
 | P2-9 | Mission 1 neu abstimmen, Spieltest 2 | alle | – | Abnahme Phase 2 |
 
@@ -67,8 +89,8 @@ Missionsdatei schon bereit.
 ## Ausblick Phase 3 [VORSCHLAG]
 
 Region 1 „Flüsterwald" nach [05](../game-design/05-campaign-and-progression.md#region-1-und-die-vollversion) (D-027):
-Kampagnenkarte, sieben Haupt- und zwei Nebenmissionen mit Gabelung, Boss,
-Sterne und Eisern-Modus, Völker Zwerge und Elfen (K2b), Fortschritt (K5),
+die Missionen M2 bis M7, N1 und N2 auf der schon stehenden Karte (R-2), Boss,
+Eisern-Modus, Freischaltung der Völker (R-4), Fortschritt (K5),
 Kartenwerkzeug. Jede Mission läuft vor der Auslieferung durch den großen
 Balance-Lauf (K11). Richtung entschieden (D-025, D-027). Name und Marke werden hier
 entschieden (K10).
@@ -91,6 +113,10 @@ entschieden (K10).
 | Projektplanung | Grafik | Konzepte für Zwergenbank, Völker, Spezialisierungen, Boss (K1–K3, K7) | entschieden (D-024 bis D-026), Assets ab jetzt möglich |
 | Projektplanung | Oberfläche | Turmmenü mit Aufwerten und Zielwahl (K1), Fähigkeitsknopf (K2a), Kampagnenkarte (K4) | Entwürfe ab jetzt, Umsetzung Phase 2/3 |
 | Code | alle | Ereignisliste der Simulation | steht (WP-11) |
+| Oberfläche | Code | Hauptmenü, Kampagnenkarte, Völkerwahl als Entwurf | vor R-1, R-2, R-4 |
+| Grafik | Code | Menühintergrund, Karte Flüsterwald, Wappen und Porträts | R-1, R-2, R-4; Platzhalter erlaubt, damit Code nicht wartet |
+| Animation | Code | Effekt-Uhr (D-050), Steinregen, Mondmal, Bollwerk, Kartenübergänge | R-3, R-4, R-2 |
+| Code | Animation | Ereignisse für Fähigkeiten und Kartenfortschritt | mit R-2, R-3 |
 
 ## Kandidaten aus der Marktanalyse [VORSCHLAG]
 
