@@ -32,7 +32,12 @@ enum BattleStyle {
     /// Größen in Feldern, wie im Asset-Vertrag.
     static let towerFootprint: CGFloat = 0.8
     static let towerHeight: CGFloat = 1.1
-    static func enemyHeight(_ kind: EnemyKind) -> CGFloat { kind == .brute ? 1.0 : 0.7 }
+    /// Gemalte Bilder sind Quadrate mit dem Fuß auf Höhe des Ankers
+    /// (art/asset-vertrag.json; die CI prüft die Bilder dagegen).
+    static let towerSpriteSide: CGFloat = 1.9
+    static let fortressSpriteSide: CGFloat = 2.4
+    static let fortressAnchorY: CGFloat = 0.15
+    static func enemyHeight(_ kind: EnemyKind) -> CGFloat { kind == .brute ? 1.2 : 0.9 }
     static let shadow = SKColor(white: 0, alpha: 0.3)
 
     static let healthBack = SKColor(white: 0, alpha: 0.6)

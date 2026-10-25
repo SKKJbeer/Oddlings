@@ -20,6 +20,22 @@ jobs:
       - name: Architektur- und Sicherheitsregeln
         run: scripts/regeln-pruefen.sh
 
+  # Grafik: Atlas gegen den Asset-Vertrag, Kartenvorlage gegen die Weggeometrie.
+  art:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Pillow
+        run: python -m pip install --quiet "pillow==11.3.0"
+      - name: Grafik-Pipeline testen
+        run: python -m unittest discover -s tools/art-check/tests -v
+      - name: Atlas prüfen
+        run: python tools/art-check/check_assets.py .
+
   # Die Simulation braucht nur Foundation. Unter Linux geprüft, damit ein
   # versehentlicher Apple-Import sofort rot wird, nicht erst im Mac-Lauf.
   core-linux:
