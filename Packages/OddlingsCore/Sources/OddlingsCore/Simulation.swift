@@ -146,8 +146,17 @@ public struct Simulation: Sendable {
                 state.enemies[target].hp -= stats.damage
                 events.append(.towerFired(towerID: tower.id, targets: [state.enemies[target].id]))
                 events.append(.enemyDamaged(id: state.enemies[target].id, amount: stats.damage))
-            case .lightning, .spore:
-                // Kette (WP-07) und Puls (WP-08) folgen; bis dahin feuern sie nicht.
+            case .lightning:
+                guard let first = firstTarget(in: state.enemies, around: tower.cell.center, range: stats.range)
+                else { continue }
+                let chain = chainTargets(in: state.enemies, from: first, stats: stats)
+                events.append(.towerFired(towerID: tower.id, targets: chain.map { state.enemies[$0.index].id }))
+                for hit in chain {
+                    state.enemies[hit.index].hp -= hit.damage
+                    events.append(.enemyDamaged(id: state.enemies[hit.index].id, amount: hit.damage))
+                }
+            case .spore:
+                // Puls (WP-08) folgt; bis dahin feuert er nicht.
                 continue
             }
             state.towers[index].cooldownTicks = ticks(stats.attackInterval)
@@ -165,6 +174,35 @@ public struct Simulation: Sendable {
             best = index
         }
         return best
+    }
+
+    /// Kette des Blitzturms: vom ersten Ziel zum nächstgelegenen noch nicht
+    /// getroffenen Gegner im Sprungradius, je Sprung um `chainFalloff` schwächer.
+    /// Gemessen wird vom zuletzt getroffenen Gegner aus, nicht vom Turm.
+    func chainTargets(in enemies: [Enemy], from first: Int, stats: TowerConfig) -> [(index: Int, damage: Double)] {
+        let jumps = stats.chainJumps ?? 0
+        let radius = stats.chainRadius ?? 0
+        let falloff = stats.chainFalloff ?? 1
+        let positions = enemies.map { map.path.position(at: $0.distance) }
+        var hits: [(index: Int, damage: Double)] = [(first, stats.damage)]
+        var damage = stats.damage
+        var current = first
+        for _ in 0..<jumps {
+            damage *= falloff
+            var next: Int?, nextDistance = Double.infinity
+            for (index, enemy) in enemies.enumerated() where enemy.hp > 0 && !hits.contains(where: { $0.index == index }) {
+                let distance = positions[index].distance(to: positions[current])
+                // Strikt kleiner: Bei gleichem Abstand bleibt der ältere (kleinere ID).
+                if distance <= radius && distance < nextDistance {
+                    next = index
+                    nextDistance = distance
+                }
+            }
+            guard let found = next else { break }
+            hits.append((found, damage))
+            current = found
+        }
+        return hits
     }
 
     private func collectKills(_ state: inout GameState, _ events: inout [Event]) {

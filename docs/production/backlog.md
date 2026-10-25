@@ -96,6 +96,7 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
 - **Abnahme:** Kette trifft nur noch nicht getroffene Gegner in Reichweite des letzten Ziels.
 - **Tests:** Fall aus [testing-strategy.md](../technical/testing-strategy.md) (18 / 14,4 / 11,52); Kette bricht ab, wenn niemand im Radius.
 - **Abh.:** WP-06 · **Risiken:** gering
+- **Stand:** Umgesetzt in `Simulation.chainTargets`; Regeltests in `LightningTests` auf eigener `TestConfig` (gerader Weg), damit Balanceänderungen sie nicht brechen. Bei gleichem Abstand springt die Kette zum älteren Gegner ([VORSCHLAG], wie bei der Zielwahl).
 
 ### WP-08 · Sporenturm
 - **Ziel:** Kontrolle.
