@@ -5,7 +5,7 @@ ergänzt). Die Reihenfolge und Abhängigkeiten stehen in der
 [Roadmap](roadmap.md), die Pakete im [Backlog](backlog.md), offene Fragen im
 [Register](offene-fragen.md).
 
-**Stand: 25.10.2026, 17:50** · Phase 1 technisch fertig, es fehlt nur noch der Spieltest (M1.4)
+**Stand: 25.10.2026, 18:35** · Phase 1: neue Oberfläche wird eingebaut, danach Spieltest. Hauptmenü, Weltkarte und Völker vorgezogen (D-060)
 
 ## Fertig
 
@@ -20,7 +20,9 @@ ergänzt). Die Reihenfolge und Abhängigkeiten stehen in der
   im Stil Stylized 3D (D-016) statt Platzhalterformen.
 - Grafikstil gewählt (D-016, Stylized 3D). Oberflächenkonzept für Phase 1 und 2 steht
   ([07](../game-design/07-ui-ux.md)), Kreismenü und Platz der Festungsfähigkeit entschieden
-  (D-031, D-033).
+  (D-031, D-033), Schriften Lilita One und Nunito entschieden (D-032).
+- Reihenfolge entschieden (Steffen, 25.10.2026): **erst die neue Oberfläche, dann der Spieltest.**
+- Hauptmenü, Kampagnenkarte Region 1 und Völkerwahl mit Festungsfähigkeit vorgezogen (D-060).
 - Richtung für Phase 2 und 3 entschieden: Aufwertungen mit Gabelung (D-024),
   Festungsfähigkeit und Völker (D-025), Zwergenbank für alle (D-026), Region 1 mit
   sieben Haupt- und zwei Nebenmissionen (D-027). Balance-Labor eingeplant (D-028).
@@ -30,23 +32,27 @@ ergänzt). Die Reihenfolge und Abhängigkeiten stehen in der
 
 | Thread | Woran | Nächster Schritt |
 |---|---|---|
-| Designstand und MVP-Plan (Code) | Spieltest WP-15 vorbereitet ([Beobachtungsbogen](playtests/beobachtungsbogen.md)) | Protokolle auswerten, sobald gespielt wurde |
-| Spieloberfläche und Menüs | Entwürfe für Phase 2: Aufwerten, Bank, Fähigkeit | Einbau der neuen Oberfläche, falls du sie vor dem Spieltest willst |
-| AAA-Grafik | Erste Grafik ist im Spiel (0.5.2) | Laufzyklen und Treffereffekte, dann Zwergenbank und Völker |
+| Designstand und MVP-Plan (Code) | Neue Oberfläche für Mission 1, dann Hauptmenü und Speicherstand (R-1) | Bau mit neuer Oberfläche für den Spieltest |
+| Spieloberfläche und Menüs | Einbau der Oberfläche für Mission 1; Entwürfe für Hauptmenü, Kampagnenkarte, Völkerwahl | Entwürfe vor R-1, R-2, R-4 |
+| AAA-Grafik | Erste Grafik ist im Spiel (0.5.2) | Menühintergrund, Karte Flüsterwald, Wappen und Porträts |
+| Animationen und Effekte | Effekt-Uhr (D-050), Ansatz für Laufzyklen (D-051, liegt dir vor) | Steinregen, Volksfähigkeiten, Kartenübergänge |
 | Projektplanung | Roadmap, Register, dieses Dokument | Phase 2 schneiden, sobald der Spieltest ausgewertet ist |
 
 ## Als Nächstes
 
-1. **Spieltest mit drei Personen** (WP-15) auf **Bau 21** (mit Grafik), mit dem
-   [Beobachtungsbogen](playtests/beobachtungsbogen.md). Dazu die Leistungsmessung
-   auf dem iPhone (WP-01). Damit ist M1.4 und Phase 1 abgeschlossen.
-2. **Phase 2 schneiden** aus den Ergebnissen: zuerst Oberfläche und Bewegung der Grafik,
-   dann Zwergenbank, Aufwertungen und Festungsfähigkeit ([Roadmap](roadmap.md#entwurf-phase-2-vorschlag)).
+1. **Neue Oberfläche in TestFlight**: Kreismenü zum Bauen, Schriften, Kopfleiste im Stil.
+2. **Spieltest mit drei Personen** (WP-15) auf diesem Bau, mit dem
+   [Beobachtungsbogen](playtests/beobachtungsbogen.md). Er prüft Mission 1 und wartet
+   nicht auf Menü und Karte.
+3. **Spielrahmen** ([Roadmap](roadmap.md#vorgezogen-spielrahmen-d-060)): Hauptmenü mit
+   Speicherstand (R-1) und Steinregen (R-3) parallel, dann die Kampagnenkarte
+   Region 1 (R-2), dann die Völkerwahl (R-4).
+4. Danach der Rest von Phase 2: Zwergenbank, Aufwertungen, Ton.
 
 ## Wartet auf Steffen
 
 | Frage | Woher |
 |---|---|
-| Spieltest durchführen (drei Personen, Bogen ausfüllen) | WP-15 |
-| Neue Oberfläche **vor** dem Spieltest einbauen oder danach? | Oberflächen-Thread |
+| Spieltest durchführen, sobald der Bau mit neuer Oberfläche da ist | WP-15 |
+| Ansatz für echte Laufzyklen (D-051) | Animationen und Effekte |
 | Ohne Eile: Messung des Spikes auf dem iPhone | WP-01 |
