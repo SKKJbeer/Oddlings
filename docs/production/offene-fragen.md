@@ -45,3 +45,4 @@ entscheidet selbst und hält es fest (klein, technisch, umkehrbar).
 | Rüstung, Immunität, Bosse, Schattenflieger | Phase 3 | [K7](../konzepte/phase-2-3.md#k7--gegner-bosse-rüstung) | S | Vorschlag, wird mit Phase 3 vorgelegt |
 | Einstieg ohne Erklärtext | Phase 2 | [K8](../konzepte/phase-2-3.md#k8--einstieg-ohne-erklärtext) | C | Vorschlag, Abstimmung mit Oberflächen-Thread |
 | Ton und Haptik: Weg und Herkunft | Phase 2 | [K9](../konzepte/phase-2-3.md#k9--ton-und-haptik) | S | Vorschlag, neuer Thread zu Beginn Phase 2 |
+| Automatisierte Balance- und Stresstests | Phase 2 (Grundstock), Phase 4 (voll) | [K11](../konzepte/phase-2-3.md#k11--balance-labor-automatisierte-balance--und-stresstests) | S (Richtung), C (Umsetzung) | Richtung entschieden D-028 |

@@ -20,6 +20,8 @@ ergänzt). Die Reihenfolge und Abhängigkeiten stehen in der
 - Konzepte für Phase 2 und 3 ausgearbeitet: Aufwertungen, Festungsfähigkeit,
   Völker, Zwergenbank, Kampagne, Fortschritt, Speicherstand
   ([Konzepte](../konzepte/phase-2-3.md)).
+- Balance-Labor für automatisierte Balance- und Stresstests eingeplant (K11, D-028):
+  Grundstock in Phase 2, Vollausbau in Phase 4.
 
 ## Läuft
 

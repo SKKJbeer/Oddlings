@@ -47,6 +47,7 @@ Phase wie oben: Eine Mission wirkt wie das fertige Spiel.
 | P2-4 | Menüs, Pause, Einstellungen, Ergebnis im Stil | M1.3, Oberflächen-Thread | UI-Konzept | – |
 | P2-5 | Zwergenbank und Bonus für frühes Rufen | M1.4 (Balance aus dem Spieltest) | K3 | **E-3** |
 | P2-6 | Aufwertungen mit Gabelung, Zielwahl | P2-5 (gleiche Wirtschaftsrechnung) | K1 | **E-1** |
+| P2-6b | **Balance-Labor, Grundstock:** Lauf-Werkzeug, Zufalls- und Menschenbot, Zielwerte, PR-Stufe in der CI | P2-5, P2-6 | K11 | D-028 |
 | P2-7 | Festungsfähigkeit Steinregen | P2-4 (Knopf im HUD) | K2a | **E-2** |
 | P2-8 | Synergie sichtbar („Sporenfunke", E2), Einstieg ohne Erklärtext | P2-1, P2-3 | K8 | – |
 | P2-9 | Mission 1 neu abstimmen, Spieltest 2 | alle | – | Abnahme Phase 2 |
@@ -59,8 +60,17 @@ Missionsdatei schon bereit.
 Region 1 „Flüsterwald" nach [K4](../konzepte/phase-2-3.md#k4--kampagne-und-regionen):
 Kampagnenkarte, sieben Haupt- und zwei Nebenmissionen mit Gabelung, Boss,
 Sterne und Eisern-Modus, Völker Zwerge und Elfen (K2b), Fortschritt (K5),
-Kartenwerkzeug. Hängt an **E-2** und **E-4**. Name und Marke werden hier
+Kartenwerkzeug. Jede Mission läuft vor der Auslieferung durch den großen
+Balance-Lauf (K11). Hängt an **E-2** und **E-4**. Name und Marke werden hier
 entschieden (K10).
+
+## Ausblick Phase 4 [VORSCHLAG]
+
+| | Meilenstein | Konzept |
+|---|---|---|
+| M4.1 | **Balance-Labor voll ausgebaut:** Sucher-Bot, nächtlicher Lauf mit allen Missionen, Völkern und Startwerten, Stresstests, Bericht mit Vergleich zu `main`, Abgleich mit Spieltests | [K11](../konzepte/phase-2-3.md#k11--balance-labor-automatisierte-balance--und-stresstests), D-028 |
+| M4.2 | Leistung auf dem ältesten Zielgerät, absturzfrei | E4, WP-01 |
+| M4.3 | Externe Spieltests, Werte und Spieltest stimmen überein | Abnahme Phase 4 |
 
 ## Abhängigkeiten zwischen den Threads
 

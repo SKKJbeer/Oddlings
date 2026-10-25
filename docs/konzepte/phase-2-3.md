@@ -355,6 +355,56 @@ Phase 2, sobald die Rückmeldeliste (E1) aus dem Grafik-Thread steht.
 
 ---
 
+## K11 · Balance-Labor: automatisierte Balance- und Stresstests
+
+Steffen, 25.10.2026: Balancing ist ein Kernpunkt des Spiels und muss später
+ausgiebig und automatisiert getestet werden, mit vielen Stresstest-Läufen.
+Richtung **[ENTSCHIEDEN D-028]**, Ausgestaltung **[VORSCHLAG]**.
+
+**Ausgangslage.** Die Simulation läuft schon ohne Darstellung, deterministisch
+und unter Linux (WP-10). Die `BalanceTests` spielen eine Mission mit sieben
+Bauweisen eines einzigen Bots. Das reicht für Mission 1, nicht für Aufwertungen,
+Bank, Völker und eine Kampagne: Mit jedem dieser Teile wächst die Zahl der
+Möglichkeiten um eine Dimension.
+
+**Bausteine**
+
+| Baustein | Was er tut |
+|---|---|
+| Lauf-Werkzeug | Ein Kommandozeilenprogramm im Paket (`oddlings-balance`, nur Foundation): nimmt Missionen, Völker, Bauweisen, Startwerte und Lebensfaktoren und spielt alle Kombinationen ohne Darstellung, parallel auf allen Kernen |
+| Bot-Familie | Neben dem heutigen gierigen Bot: **Zufallsbot** (gesät, baut zufällige gültige Bauweisen), **Menschenbot** (Reaktionszeit, ungenaue Platzierung, verkauft nicht), **Sucher** (verändert eine Bauweise schrittweise und behält, was mehr Reserve bringt). Der Sucher findet dominante Strategien, bevor Spieler sie finden |
+| Startwerte | Die Mission selbst bleibt ohne Zufall. Gesät werden die Entscheidungen der Bots; viele Startwerte heißt viele leicht verschiedene Spieler |
+| Kennzahlen | Reserve je Bauweise, Siegquote je Bot-Art, Durchbrüche je Welle, Gold- und Schadenskurve, Nutzung und Schaden je Gold jedes Turms und jeder Spezialisierung, Missionsdauer |
+| Zielwerte | Eigene Datei neben der Missionsdatei (`balance-ziele.json`), keine Zahl im Code. Beispiele: keine Bauweise mehr als einen Grenzwert vor der zweitbesten; jede Spezialisierung ist mindestens einmal die beste Wahl; Monokultur verliert ab der mittleren Mission (Säule 1); der Menschenbot gewinnt Mission 1 fast immer, die Bossmission selten beim ersten Versuch |
+| Stresstests | Zehntausende Missionen ohne Absturz; dieselbe Prüfsumme in getrennten Prozessen; zufällige Befehlsfolgen (gültig und ungültig) gegen Invarianten wie „Gold nie negativ“, „ein Turm je Zelle“, „Mission endet genau einmal“; Schritte je Sekunde bei der spätesten Welle mit Höchstzahl an Gegnern |
+| Bericht | Markdown und CSV je Lauf, mit Vergleich zum letzten Lauf auf `main`: welche Kennzahl sich wie stark bewegt hat |
+
+**CI in zwei Stufen**
+
+1. **Bei jedem PR** (wie heute, Minuten): der kleine Satz Bauweisen je Mission,
+   Invarianten-Stichprobe, Zielwerte. Rot bei Verletzung.
+2. **Großer Lauf** nachts und per Knopf (Linux, Stunden erlaubt): ganze Matrix,
+   alle Bot-Arten, viele Startwerte, Sucher, Stresstests. Bericht als Artefakt;
+   rot, wenn ein Zielwert reißt oder eine Kennzahl ohne Balanceänderung mehr als
+   eine Schwelle wandert. Eine Balanceänderung ohne Bericht im PR wird nicht
+   zusammengeführt.
+
+**Zeitpunkt.** Nicht jetzt: Für eine Mission mit drei Türmen reichen die
+heutigen Tests, und Werte, die der Spieltest WP-15 ohnehin verschiebt, lohnt es
+nicht groß zu vermessen.
+- **Grundstock in Phase 2** (P2-6b), direkt nach Bank und Aufwertungen: Lauf-Werkzeug,
+  Zufalls- und Menschenbot, Zielwerte, PR-Stufe. Ab da gibt es mehr Möglichkeiten,
+  als ein Mensch überblickt.
+- **Ausbau in Phase 3**: jede Mission der Region läuft im großen Lauf, bevor sie
+  ausgeliefert wird; Völker als eigene Achse.
+- **Vollausbau in Phase 4** (Meilenstein M4.1): Sucher, nächtlicher Lauf, Stresstests,
+  Abgleich mit den Spieltests („Bot sagt leicht, Menschen scheitern“ ist ein Befund).
+
+**Grenzen.** Bots sind keine Menschen. Das Labor sagt, ob etwas kaputt oder
+dominant ist, nicht ob es Spaß macht. Das bleibt Aufgabe der Spieltests.
+
+---
+
 ## K10 · Was bewusst später entschieden wird
 
 | Frage | Übergabe | Wann | Warum nicht jetzt |

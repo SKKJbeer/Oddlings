@@ -183,4 +183,5 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
 Reihenfolge und Abhängigkeiten als Entwurf in der
 [Roadmap](roadmap.md#entwurf-phase-2-vorschlag) (P2-1 bis P2-9), Konzepte in
 [konzepte/phase-2-3.md](../konzepte/phase-2-3.md). Geschnitten wird
-nach WP-15; vorher werden hier keine Phase-2-Pakete angelegt.
+nach WP-15; vorher werden hier keine Phase-2-Pakete angelegt. Das Balance-Labor
+(K11, D-028) ist als P2-6b und Meilenstein M4.1 eingeplant.
