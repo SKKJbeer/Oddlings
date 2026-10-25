@@ -127,10 +127,17 @@ final class SpikeScene: SKScene {
     /// zeichnen; besteht er die Probe, besteht jeder schnellere sie auch.
     private func spawnLightning() {
         guard walkers.count >= 5 else { return }
-        let start = Int.random(in: 0..<(walkers.count - 4))
+        // Die Kette springt zu den auf dem Weg nächsten Figuren, nicht zu den
+        // Nachbarn in der Liste: Die laufen mit verschiedenem Tempo auseinander,
+        // und Linien quer über die Karte wären weder realistisch noch fair gemessen.
+        let start = walkers[Int.random(in: walkers.indices)]
+        let chain = walkers
+            .filter { $0.node !== start.node }
+            .sorted { abs($0.distance - start.distance) < abs($1.distance - start.distance) }
+            .prefix(4)
         let cg = CGMutablePath()
-        cg.move(to: walkers[start].node.position)
-        for j in 1...4 { cg.addLine(to: walkers[start + j].node.position) }
+        cg.move(to: start.node.position)
+        for w in chain { cg.addLine(to: w.node.position) }
         let bolt = SKShapeNode(path: cg)
         bolt.strokeColor = SKColor(red: 0.75, green: 0.85, blue: 1, alpha: 1)
         bolt.lineWidth = max(2, fieldSize * 0.06)
