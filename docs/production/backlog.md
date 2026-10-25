@@ -180,7 +180,7 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
 
 ## Danach (Phase 2, noch nicht geschnitten)
 
-Zwergenbank · Grafikstil und Asset-Weg · Ton · Animationen und Treffereffekte ·
-Fortsetzen nach App-Ende · Menüs · Bonus für frühes Rufen prüfen · Upgrades prüfen ·
-Panzerbestie/Rüstung prüfen. Kandidaten aus der Marktanalyse (E2, E5–E8, E11)
-stehen in der [Roadmap](roadmap.md#kandidaten-aus-der-marktanalyse-vorschlag).
+Reihenfolge und Abhängigkeiten als Entwurf in der
+[Roadmap](roadmap.md#entwurf-phase-2-vorschlag) (P2-1 bis P2-9), Konzepte in
+[konzepte/phase-2-3.md](../konzepte/phase-2-3.md). Geschnitten wird
+nach WP-15; vorher werden hier keine Phase-2-Pakete angelegt.
