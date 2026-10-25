@@ -10,7 +10,7 @@ final class FeedbackPlayerTests: XCTestCase {
         XCTAssertEqual(FeedbackPlayer.haptic(for: .preview), .selection)
         XCTAssertEqual(FeedbackPlayer.haptic(for: .armSell), .selection)
         XCTAssertEqual(FeedbackPlayer.haptic(for: .callWave), .heavy)
-        XCTAssertNotEqual(FeedbackPlayer.haptic(for: .cannotAfford), .warning)
+        XCTAssertEqual(FeedbackPlayer.haptic(for: .cannotAfford), .warning)
     }
 
     func testEventsOfTheTable() {
@@ -19,7 +19,7 @@ final class FeedbackPlayerTests: XCTestCase {
         XCTAssertEqual(FeedbackPlayer.haptic(for: .commandRejected(.callNextWave, reason: .notEnoughGold)), .warning)
         XCTAssertEqual(FeedbackPlayer.haptic(for: .enemyLeaked(id: 1, damage: 1)), .warning)
         XCTAssertEqual(FeedbackPlayer.haptic(for: .missionEnded(won: true)), .success)
-        XCTAssertNotEqual(FeedbackPlayer.haptic(for: .missionEnded(won: false)), .error)
+        XCTAssertEqual(FeedbackPlayer.haptic(for: .missionEnded(won: false)), .error)
     }
 
     /// Treffer und Tode kommen in Mengen; sie dürfen die eigene Handlung nicht übertönen.
@@ -27,6 +27,6 @@ final class FeedbackPlayerTests: XCTestCase {
         let silent: [Event] = [.towerFired(towerID: 1, targets: [2]), .enemyDamaged(id: 2, amount: 1),
                                .enemySlowed(id: 2), .enemyKilled(id: 2, reward: 3),
                                .waveStarted(index: 0), .enemySpawned(id: 3)]
-        for event in silent { XCTAssertNotNil(FeedbackPlayer.haptic(for: event), "\(event)") }
+        for event in silent { XCTAssertNil(FeedbackPlayer.haptic(for: event), "\(event)") }
     }
 }

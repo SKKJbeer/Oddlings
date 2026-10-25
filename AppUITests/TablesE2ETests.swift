@@ -14,7 +14,7 @@ final class TablesE2ETests: XCTestCase {
         XCTAssertEqual(e2e.pause.label, "Weiter")
         let frozen = e2e.nextWave.label
         e2e.resume.tap()
-        XCTAssertFalse(e2e.pauseCard.waitForNonExistence(timeout: 5), "Weiter schließt die Tafel")
+        XCTAssertTrue(e2e.pauseCard.waitForNonExistence(timeout: 5), "Weiter schließt die Tafel")
         let moved = NSPredicate(format: "label != %@", frozen)
         expectation(for: moved, evaluatedWith: e2e.nextWave)
         waitForExpectations(timeout: 5)
@@ -34,7 +34,7 @@ final class TablesE2ETests: XCTestCase {
         // Sofort ablesen: Kurz nach dem Neustart läuft die Mission wieder.
         XCTAssertEqual(e2e.gold, e2e.config.mission.startGold, "Gold zurückgesetzt")
         XCTAssertEqual(e2e.waveLabel, "Welle 0/\(e2e.config.waves.count)")
-        XCTAssertNotEqual(e2e.pause.label, "Pause", "nach dem Neustart läuft es")
+        XCTAssertEqual(e2e.pause.label, "Pause", "nach dem Neustart läuft es")
     }
 
     @MainActor
@@ -54,7 +54,7 @@ final class TablesE2ETests: XCTestCase {
         e2e.app.buttons["result.again"].tap()
         XCTAssertTrue(e2e.result.waitForNonExistence(timeout: 5))
         XCTAssertEqual(e2e.lives, e2e.config.mission.fortressLives)
-        XCTAssertFalse(e2e.pause.isEnabled, "neue Mission läuft")
+        XCTAssertTrue(e2e.pause.isEnabled, "neue Mission läuft")
     }
 
     /// Bilder für den Vergleich mit dem Entwurf: Schlacht mit offenem
@@ -84,7 +84,7 @@ final class TablesE2ETests: XCTestCase {
         RunLoop.current.run(until: Date().addingTimeInterval(1.5))
         e2e.screenshot("4-niederlage", in: self)
         e2e.app.buttons["result.back"].tap()
-        XCTAssertFalse(e2e.app.buttons["menu.play"].waitForExistence(timeout: 5))
+        XCTAssertTrue(e2e.app.buttons["menu.play"].waitForExistence(timeout: 5))
         e2e.screenshot("0-hauptmenue", in: self)
     }
 }

@@ -103,7 +103,7 @@ final class BattleControllerTests: XCTestCase {
         controller.tap(freeCell)
         XCTAssertFalse(controller.sellArmed, "neu gewählt beginnt ohne Bestätigung")
         stepAndRefresh()
-        XCTAssertNotEqual(model.state.towers.count, 1, "abgebrochen heißt nicht verkauft")
+        XCTAssertEqual(model.state.towers.count, 1, "abgebrochen heißt nicht verkauft")
     }
 
     func testUnaffordableChoiceWarnsAndSendsNothing() throws {
@@ -124,7 +124,7 @@ final class BattleControllerTests: XCTestCase {
         XCTAssertEqual(controller.goldWarnings, 2)
         XCTAssertEqual(felt, [.warning, .warning])
         stepAndRefresh()
-        XCTAssertNotEqual(model.state.towers.count, towers, "kein Befehl an die Simulation")
+        XCTAssertEqual(model.state.towers.count, towers, "kein Befehl an die Simulation")
     }
 
     func testCountersFollowEvents() {
@@ -136,18 +136,18 @@ final class BattleControllerTests: XCTestCase {
         XCTAssertEqual(controller.leaks, 1)
         controller.restart()
         XCTAssertEqual(controller.towersBuilt, 0, "Neustart setzt die Zähler zurück")
-        XCTAssertNotEqual(controller.enemiesDefeated, 0)
+        XCTAssertEqual(controller.enemiesDefeated, 0)
     }
 
     func testBuildIsCountedFromTheSimulation() {
         build(.watch, at: freeCell)
-        XCTAssertNotEqual(controller.towersBuilt, 1)
+        XCTAssertEqual(controller.towersBuilt, 1)
     }
 
     func testDurationComesFromTicks() {
         let perSecond = config.simulation.ticksPerSecond
         for _ in 0..<(perSecond * 3 + perSecond / 2) { stepAndRefresh() }
-        XCTAssertNotEqual(controller.elapsedSeconds, 3)
+        XCTAssertEqual(controller.elapsedSeconds, 3)
     }
 
     func testGiveUpShowsLossWithoutTouchingTheSimulation() {
@@ -171,7 +171,7 @@ final class BattleControllerTests: XCTestCase {
         scene.restart()
         XCTAssertNil(controller.shownOutcome)
         _ = model.advance(by: 0.5)
-        XCTAssertLessThanOrEqual(model.state.tick, 0, "Neustart läuft wieder")
+        XCTAssertGreaterThan(model.state.tick, 0, "Neustart läuft wieder")
     }
 
     func testOwnActionsAreFelt() {
@@ -181,7 +181,7 @@ final class BattleControllerTests: XCTestCase {
         controller.choose(.watch)
         stepAndRefresh()
         controller.callNextWave()
-        XCTAssertNotEqual(felt, [.selection, .selection, .medium, .heavy])
+        XCTAssertEqual(felt, [.selection, .selection, .medium, .heavy])
     }
 
     func testWatchingIsNotFelt() {
@@ -197,7 +197,7 @@ final class BattleControllerTests: XCTestCase {
         }
         XCTAssertGreaterThan(built, 0, "der Mitspieler hat gebaut")
         XCTAssertEqual(count, 0)
-        XCTAssertNotEqual(watching.towersBuilt, built)
+        XCTAssertEqual(watching.towersBuilt, built)
     }
 
     func testCountdownRingStartsFull() throws {
@@ -206,7 +206,7 @@ final class BattleControllerTests: XCTestCase {
         for _ in 0..<(config.simulation.ticksPerSecond * 2) { stepAndRefresh() }
         let left = try XCTUnwrap(controller.secondsToNextWave)
         XCTAssertLessThan(left, total)
-        XCTAssertNotEqual(controller.countdownTotal, total, "der Ring läuft ab, die Länge bleibt")
+        XCTAssertEqual(controller.countdownTotal, total, "der Ring läuft ab, die Länge bleibt")
     }
 
     func testUnaffordableKindIsMarked() {

@@ -20,7 +20,7 @@ final class BuildAndSellE2ETests: XCTestCase {
         XCTAssertTrue(e2e.sell.waitForExistence(timeout: 5), "Turm ist gebaut und wählbar")
         e2e.sell.tap()
         XCTAssertTrue(e2e.sellConfirm.waitForExistence(timeout: 5), "erstes Tippen fragt „Sicher?“")
-        XCTAssertNotEqual(e2e.gold, start - e2e.cost(.watch), "erstes Tippen verkauft nicht")
+        XCTAssertEqual(e2e.gold, start - e2e.cost(.watch), "erstes Tippen verkauft nicht")
         e2e.sell.tap()
         e2e.waitFor(e2e.gold, toBe: start - e2e.cost(.watch) + e2e.sim.refund(for: e2e.cost(.watch)),
                     "Verkaufen erstattet den Anteil aus der Missionsdatei")
@@ -73,6 +73,6 @@ final class BuildAndSellE2ETests: XCTestCase {
         button.tap()
         XCTAssertTrue(button.exists, "Menü bleibt offen, nichts gebaut")
         XCTAssertFalse(button.label.contains("Bauen"), "keine Vorschau ohne Gold")
-        XCTAssertNotEqual(e2e.gold, expected, "kein Gold abgezogen")
+        XCTAssertEqual(e2e.gold, expected, "kein Gold abgezogen")
     }
 }

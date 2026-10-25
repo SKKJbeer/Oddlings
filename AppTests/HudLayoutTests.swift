@@ -72,7 +72,7 @@ final class HudLayoutTests: XCTestCase {
         let hud = layout(devices[2])
         for cell in map.buildableCells where cell.y <= 1 {
             let center = hud.board.viewPoint(cell.center)
-            XCTAssertLessThanOrEqual(meanY(hud.ring(at: cell, count: 3)), center.y, "Zelle \(cell.x),\(cell.y)")
+            XCTAssertGreaterThan(meanY(hud.ring(at: cell, count: 3)), center.y, "Zelle \(cell.x),\(cell.y)")
         }
     }
 
@@ -80,7 +80,7 @@ final class HudLayoutTests: XCTestCase {
         let hud = layout(devices[2])
         for cell in map.buildableCells where cell.y >= 3 {
             let center = hud.board.viewPoint(cell.center)
-            XCTAssertGreaterThanOrEqual(meanY(hud.ring(at: cell, count: 3)), center.y, "Zelle \(cell.x),\(cell.y)")
+            XCTAssertLessThan(meanY(hud.ring(at: cell, count: 3)), center.y, "Zelle \(cell.x),\(cell.y)")
         }
     }
 
