@@ -21,3 +21,4 @@ Status: **entschieden** · **vorgeschlagen** (wartet auf Steffen) · **verworfen
 | D-012 | 25.10.2026 | Phase-0-Arbeit kommt per Pull Request ins Repo | entschieden | Steffen, 25.10.2026 |
 | D-014 | 25.10.2026 | Auf das Gerät über TestFlight: `.github/workflows/testflight.yml` bei jeder App-Änderung auf main und per Knopfdruck, interne Gruppe „Team" | entschieden (Steffen, 25.10.2026) | Signatur je Lauf per API (aus CardBeacon übernommen), Zugänge aus Zählora übertragen |
 | D-013 | 25.10.2026 | Bundle-ID `de.skkjbeer.oddlings` | entschieden (Steffen, 25.10.2026) | Muster von Stack & Siege (`de.skkjbeer.stackandsiege`) |
+| D-015 | 25.10.2026 | Geschäftsmodell: „kostenlos anspielen, Vollversion einmalig, später bezahlte Regionen“ statt Kosmetik zuerst? | offen, Steffen gefragt | [Marktanalyse](../game-design/market-analysis.md) E12; berührt die Leitplanke in [06](../game-design/06-monetization.md). Fairness-Leitplanken bleiben in jedem Fall |

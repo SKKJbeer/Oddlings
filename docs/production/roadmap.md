@@ -14,3 +14,21 @@ Abnahme erfüllt ist, nicht wenn Code existiert.
 
 Erst nach Phase 1 wird Phase 2 in Arbeitspakete zerlegt. Was Phase 1 lehrt,
 verändert Phase 2 sicher.
+
+## Kandidaten aus der Marktanalyse [VORSCHLAG]
+
+Aus [market-analysis.md](../game-design/market-analysis.md), Abschnitt 7. Nichts
+davon ist freigegeben; jeder Punkt wird beim Schneiden seiner Phase mit Steffen
+entschieden. Die Begründungen stehen dort, hier nur die Einordnung.
+
+| Phase | Empfehlung | Stand |
+|---|---|---|
+| 1 (Darstellung WP-11 ff.) | E1 Rückmeldeliste je Ereignis, E3 Zustände als Symbol, Lebensbalken nur bei Schaden | im MVP-Umfang, als Abnahme in WP-11/WP-13 übernommen |
+| 1 (WP-01) | E4 Leistungsgrenze: späteste Welle bei 2× auf dem ältesten Zielgerät | in die Messung aufgenommen |
+| 2 | E2 Synergie sichtbar („Sporenfunke", nur Darstellung) | Kandidat, Phase 2 „spürbare Synergie" |
+| 2 | E6 Aufwertungen mit genau einer Gabelung je Turm | Kandidat; D-008 (keine Upgrades im MVP) bleibt |
+| 2 | E7 Eine aktive Festungsfähigkeit mit Abklingzeit, kein Held | Kandidat, braucht Freigabe (neues Feature) |
+| 2 | E5 Zielwahl je Turm, E8 Goldbonus für frühes Rufen (D-009), E11 Bestiarium | Kandidaten |
+| 3 | E9 Sterne plus ein Einschränkungsmodus je Mission | Kandidat |
+| 3 | E10 Tägliche Herausforderung mit festem Startwert, offline | Scope-Verbot: nur mit Freigabe |
+| 4–5 | E12 Anspielen + Vollversion, E13 keine Helden/Türme gegen Geld, E14 Apple Arcade als zweiter Kanal, E15 kein PvP/keine Zufallskisten | E12 liegt Steffen zur Entscheidung vor (D-015) |

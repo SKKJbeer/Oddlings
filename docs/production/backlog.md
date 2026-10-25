@@ -25,6 +25,9 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
   CI-Ablauf (macOS) baut die App.
 - **Abnahme:** Auf Steffens iPhone stabil 60 Bilder/s (Anzeige in der App), HUD verursacht
   keine Einbrüche; CI grün. Ergebnis als Notiz in `docs/technical/architecture.md`.
+  Die 600-Sprite-Stufe steht für die späteste Welle bei 2×; die Grenze gilt auf dem
+  ältesten Zielgerät (iPhone XS/XR, D-006). Ist Steffens Gerät neuer, ist die
+  Messung eine Obergrenze, keine Zusage ([Marktanalyse](../game-design/market-analysis.md) E4).
 - **Weg aufs Gerät (D-014):** TestFlight. Einmalig von Steffen: App-Eintrag in App Store
   Connect (Bundle-ID `de.skkjbeer.oddlings`) und Apple-Zugänge aus Zählora übertragen
   (PulseMeter → Actions → „Apple-Zugänge weitergeben", Ziel Oddlings).
@@ -121,6 +124,11 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
 - **Umfang:** Karte, Weg, Bauzonen, Türme, Gegner mit Lebensbalken, Blitzlinien,
   Verlangsamung sichtbar (Einfärbung). Platzhaltergrafik (Formen, Farben).
 - **Abnahme:** Mission läuft sichtbar mit Bot-Befehlen ab; Interpolation flüssig.
+  Jedes Ereignis der Simulation hat eine sichtbare Rückmeldung (Liste je Ereignis,
+  [Marktanalyse](../game-design/market-analysis.md) E1); Verlangsamung als Zustand am
+  Gegner, Lebensbalken nur bei Schaden (E3). Grafik und Stil kommen aus dem
+  Art-Direction-Thread; WP-11 baut mit Platzhaltern so, dass Assets ohne
+  Regeländerung tauschbar sind.
 - **Tests:** Knotenzahl = Entitätenzahl über eine ganze Mission.
 - **Abh.:** WP-01, WP-09 · **Risiken:** Logik rutscht in die Szene (T2) → Review-Punkt
 
@@ -160,4 +168,5 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
 
 Zwergenbank · Grafikstil und Asset-Weg · Ton · Animationen und Treffereffekte ·
 Fortsetzen nach App-Ende · Menüs · Bonus für frühes Rufen prüfen · Upgrades prüfen ·
-Panzerbestie/Rüstung prüfen.
+Panzerbestie/Rüstung prüfen. Kandidaten aus der Marktanalyse (E2, E5–E8, E11)
+stehen in der [Roadmap](roadmap.md#kandidaten-aus-der-marktanalyse-vorschlag).
