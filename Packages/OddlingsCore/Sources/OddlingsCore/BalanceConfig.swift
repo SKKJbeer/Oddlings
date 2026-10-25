@@ -47,10 +47,14 @@ public struct MissionConfig: Codable, Equatable, Sendable {
     /// Sekunden
     public var timeBetweenWaves: Double
     public var sellRefundRate: Double
+    /// Fehlt sie, gibt jeder Sieg einen Stern. Optional, damit Regeltests
+    /// ohne Kampagne auskommen.
+    public var stars: StarThresholds?
 
     public init(
         id: String, fortressLives: Int, startGold: Int,
-        firstWaveDelay: Double, timeBetweenWaves: Double, sellRefundRate: Double
+        firstWaveDelay: Double, timeBetweenWaves: Double, sellRefundRate: Double,
+        stars: StarThresholds? = nil
     ) {
         self.id = id
         self.fortressLives = fortressLives
@@ -58,6 +62,18 @@ public struct MissionConfig: Codable, Equatable, Sendable {
         self.firstWaveDelay = firstWaveDelay
         self.timeBetweenWaves = timeBetweenWaves
         self.sellRefundRate = sellRefundRate
+        self.stars = stars
+    }
+}
+
+/// Wie viele Leben nach dem Sieg für zwei und drei Sterne übrig sein müssen (05).
+public struct StarThresholds: Codable, Equatable, Sendable {
+    public var two: Int
+    public var three: Int
+
+    public init(two: Int, three: Int) {
+        self.two = two
+        self.three = three
     }
 }
 

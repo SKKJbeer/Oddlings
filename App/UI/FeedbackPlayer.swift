@@ -40,6 +40,7 @@ enum FeedbackPlayer {
     }
 
     static func play(_ haptic: Haptic) {
+        guard AppSettings.vibration() else { return }
         switch haptic {
         case .selection: UISelectionFeedbackGenerator().selectionChanged()
         case .light: UIImpactFeedbackGenerator(style: .light).impactOccurred()

@@ -13,7 +13,9 @@ Simulationspaket `Packages/OddlingsCore`: Regeln von Mission 1 vollständig
 Sieg, Determinismus, Balancetests). Die App zeigt die Simulation
 (WP-11, mit Mitspieler) und ist spielbar (WP-12 bis WP-14: bauen und verkaufen per
 Tippen, Kopfleiste, Ergebnis und Neustart). UI-01 (0.6.0) bringt die Oberfläche
-nach Entwurf: Kreismenü, Tafeln, Haptik, Schriften (D-031, D-032). Als Nächstes WP-15 (erster Spieltest). Version und Bauten: [CHANGELOG.md](CHANGELOG.md).
+nach Entwurf: Kreismenü, Tafeln, Haptik, Schriften (D-031, D-032). Spielrahmen vorgezogen
+(D-060): 0.7.0 bringt Kampagnenkarte Region 1, Sterne, Speicherstand und Einstellungen
+([Konzept](docs/konzepte/r-spielrahmen.md)); danach R-3 Steinregen, R-4 Völker. Als Nächstes WP-15 (erster Spieltest). Version und Bauten: [CHANGELOG.md](CHANGELOG.md).
 Projekt erzeugen: `xcodegen generate` (Xcode-Projekt ist nicht eingecheckt).
 Aufs Gerät: `.github/workflows/testflight.yml` (bei App-Änderungen auf main automatisch),
 Hilfsskript `scripts/apple.py`. Ein Bau ist erst verfügbar, wenn Apple ihn als VALID meldet.

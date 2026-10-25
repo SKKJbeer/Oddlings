@@ -11,6 +11,33 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.7.0 – 25.10.2026 (Spielrahmen R-1 und R-2)
+
+**Neu**
+- Kampagnenkarte Region 1 „Flüsterwald“ (D-027, D-060): sieben Hauptmissionen mit
+  Gabelung nach Mission 4 (Sumpfpfad oder Ruinen), Boss, zwei Nebenmissionen ab 6
+  und 15 Sternen. Missionstafel rechts mit Art, Name, Sternen, was die Mission
+  lehrt, ihrer Neuheit und dem Grund, warum sie noch zu ist. Mission 1 ist
+  spielbar, die übrigen zeigen „gesperrt“ oder „in Arbeit“.
+- Sterne nach Leben übrig (1 / ab 15 / alle 20, Grenzen in der Missionsdatei).
+- Speicherstand nach D-022: lokal, atomar geschrieben, vorige Fassung bleibt,
+  beim Laden geprüft; ein Stand einer neueren App wird nicht überschrieben.
+  Gespeichert wird beim Ergebnis, nicht beim Verlassen der App.
+- Hauptmenü: „Weiter mit Mission 1“ führt direkt in die nächste Mission, „Spielen“
+  öffnet die Karte; nach dem Ergebnis geht es zur Karte zurück.
+- Einstellungen mit Vibration an/aus (getrennt vom Spielstand).
+- Konzept: [r-spielrahmen](docs/konzepte/r-spielrahmen.md).
+
+**Tests**
+- Kern: `StarRatingTests`, `CampaignTests`, `SaveGameTests`, `SaveStoreTests`
+  (22 neu, jeder einmal rot gesehen), u. a. kaputte Datei, übergroße Datei,
+  neueres Schema, Gabelung, Sternsumme.
+- App: `AppFlowTests`, `AppSettingsTests`.
+- E2E: `CampaignE2ETests` (Sieg → Sterne auf der Karte → App neu starten → Sterne
+  noch da; gesperrte Missionen starten nicht und sagen warum), Einstellung bleibt
+  nach Neustart, Weg Menü → Karte → Mission → Karte → Menü. Jeder Oberflächentest
+  spielt mit eigenem Spielstand im temporären Ordner.
+
 ## 0.6.0 – 25.10.2026 (Spieloberfläche UI 01)
 
 **Neu**
