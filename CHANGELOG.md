@@ -11,10 +11,30 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+<<<<<<< Updated upstream
 ## Dokumente, kein Bau – 25.10.2026 (Bedienung Phase 2, Kreismenü entschieden)
 
 - Bedienung für Aufwerten und Gabelung, Zielwahl, Zwergenbank, Bonus für frühes Rufen und Steinregen ([07](docs/game-design/07-ui-ux.md#8-phase-2-aufwerten-fähigkeit-bank)), Kampagnenkarte nach K4. D-033 entschieden: Steinregen unten rechts, Tempo oben neben der Pause.
 - D-031 entschieden: Türme werden im Kreismenü am Feld gewählt, Bauen und Verkaufen per zweitem Tippen ([07](docs/game-design/07-ui-ux.md#bauen)).
+=======
+## 0.5.2 – 25.10.2026 (Grafik), Bau folgt
+
+**Neu**
+- Gemalte Grafik im Stil „Stylized 3D" (D-016, aus drei Stilmustern gewählt):
+  Wachturm, Blitzturm, Sporenturm, Plünderer, Flitzer, Panzerbestie, Festung und
+  der Boden von Mission 1 mit eingemaltem Weg. Ersetzen die Platzhalterformen.
+- Bildwerkzeug `.claude/skills/spielgrafik` (aus Stack & Siege übernommen),
+  ergänzt um Freistellen mit Kontur, Atlas, Bild-zu-Bild und Karten aus der
+  Weggeometrie. Konzept: [grafik-01-spielfeld](docs/konzepte/grafik-01-spielfeld.md).
+- Art-Direction, Asset-Vertrag, Konzeptblätter der Figuren und Rückmeldung je
+  Ereignis unter `docs/art/`.
+
+**Tests**
+- CI-Job `art`: 14 Tests der Bildpipeline (Atlas gegen Vertrag, Herkunft,
+  Lizenz, Weg der Kartenvorlage) und die Prüfung des echten Atlas.
+- `AppTests/BattleSpritesTests`: Bilder gefunden, Maße und Anker, Boden deckt
+  die Karte, Weglinie entfällt.
+>>>>>>> Stashed changes
 
 ## Dokumente, kein Bau – 25.10.2026 (Oberfläche)
 

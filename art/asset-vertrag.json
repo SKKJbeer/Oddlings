@@ -1,0 +1,52 @@
+{
+  "_zweck": "Maschinenlesbarer Teil von docs/art/asset-vertrag.md. Figuren sind Quadrate mit Seite seiteZellen, Fuss auf Hoehe anker (= anchorPoint.y in der Szene). tools/art-check/check_assets.py prueft den Atlas dagegen.",
+  "atlas": "App/Assets.xcassets/Battle.spriteatlas",
+  "punkteJeZelle": 43,
+  "maxBytesJeDatei": 1500000,
+  "assets": {
+    "tower_watch": {
+      "seiteZellen": 1.9,
+      "anker": 0.2,
+      "alpha": true
+    },
+    "tower_lightning": {
+      "seiteZellen": 1.9,
+      "anker": 0.2,
+      "alpha": true
+    },
+    "tower_spore": {
+      "seiteZellen": 1.9,
+      "anker": 0.2,
+      "alpha": true
+    },
+    "fortress": {
+      "seiteZellen": 2.4,
+      "anker": 0.15,
+      "alpha": true
+    },
+    "enemy_raider": {
+      "seiteZellen": 0.9,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_runner": {
+      "seiteZellen": 0.9,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_brute": {
+      "seiteZellen": 1.2,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "map_mission01_ground": {
+      "zellen": [
+        16,
+        9
+      ],
+      "alpha": false,
+      "ordner": "App/Assets.xcassets/Maps",
+      "format": "jpg"
+    }
+  }
+}
