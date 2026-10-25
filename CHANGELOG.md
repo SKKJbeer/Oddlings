@@ -38,6 +38,12 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   Ergebnistafel nach Sieg und Niederlage.
 - `regeln-pruefen.sh`: keine Schriftdatei ohne Lizenz und Herkunftseintrag.
 
+## Dokumente, kein Bau – 25.10.2026 (Grafik: Konzept Phase 2 und Spielrahmen)
+
+- Konzept [Grafik 02](docs/konzepte/grafik-02-phase-2.md): Bilder für Aufwertungen,
+  Spezialisierungen, Zwergenbank, Steinregen, Hauptmenü, Regionskarte und
+  Volksbanner, mit Namen, Maßen und Qualitätsprüfung vor der Abgabe.
+
 ## 0.5.2 – 25.10.2026 (Grafik), Bau 21 (VALID)
 
 **Neu**

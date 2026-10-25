@@ -16,7 +16,9 @@ Spielkonzepte führen"). Vergeben bzw. reserviert:
 | D-020 bis D-029 | Projektplanung |
 | D-030 bis D-039 | Spieloberfläche und Menüs |
 | D-040 bis D-049 | AAA-Grafik |
-| ab D-050 | frei, Block von zehn bei der Projektplanung anfragen |
+| D-050 bis D-059 | Animationen und Effekte |
+| D-060 bis D-069 | Projektplanung |
+| ab D-070 | frei, Block von zehn bei der Projektplanung anfragen |
 
 Eine Nummer doppelt bricht den CI-Schritt `regeln` (`scripts/links-pruefen.py`).
 
@@ -56,3 +58,5 @@ Eine Nummer doppelt bricht den CI-Schritt `regeln` (`scripts/links-pruefen.py`).
 | D-031 | 25.10.2026 | **Turmauswahl im Kreismenü am Feld**, Bauen und Verkaufen per zweitem Tippen | **entschieden** (Steffen, 25.10.2026) | [07](../game-design/07-ui-ux.md#bauen); Optionen: Kreismenü (Empfehlung), feste Leiste am Rand, Kreismenü plus Anzeigeleiste |
 | D-032 | 25.10.2026 | Schriften **Lilita One** und **Nunito** (SIL OFL), als Datei in der App | **entschieden** (Steffen, 25.10.2026) | [07](../game-design/07-ui-ux.md#7-schrift); kostenlos, offline, gleiche Paarung wie Stack & Siege |
 | D-033 | 25.10.2026 | **Festungsfähigkeit unten rechts**, Tempo rückt in Phase 2 oben rechts neben die Pause | **entschieden** (Steffen, 25.10.2026) | [07](../game-design/07-ui-ux.md#festungsfähigkeit-steinregen); die Fähigkeit wird je Welle gebraucht, das Tempo einmal je Mission; gleich viele freie Felder wie in D-030 |
+| D-060 | 25.10.2026 | **Spielrahmen vorgezogen:** Hauptmenü, Kampagnenkarte Region 1 und Völkerwahl (mit Festungsfähigkeit) kommen vor dem Rest von Phase 2; die MVP-Grenze ist für diese Stücke aufgehoben | entschieden (Steffen, 25.10.2026: „aktuell fehlt ja auch noch alles mit menü und weltkarte völker und co wie im konzept“); Reihenfolge von Claude | [Roadmap](../production/roadmap.md#vorgezogen-spielrahmen-d-060); Spieltest WP-15 wartet nicht darauf |
+| D-061 | 25.10.2026 | Solange nur Mission 1 spielbar ist, sind beide Völker von Anfang an wählbar; die Freischaltung am Ende von Region 1 (D-027) greift, sobald M7 steht | entschieden (Steffen, 25.10.2026) | [Roadmap](../production/roadmap.md#vorgezogen-spielrahmen-d-060); sonst wären die Völker bis M7 unsichtbar |

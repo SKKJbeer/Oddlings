@@ -39,8 +39,11 @@ nachsehen (Abschnitt 7, Empfehlungen E1–E15), und die Liste „AAA-Anmutung"
 Plünderer, Flitzer (Panzerbestie optional), Gold, Wellen, Festungsleben, Sieg,
 Niederlage, Neustart, Verkaufen, Tests.
 
-**Nicht drin:** Zwergenbank (Phase 2), Upgrades, Multiplayer, PvP, Kampagne,
-Völker, Echtgeld, Backend, Meta-Progression, 3D, steuerbarer Held.
+**Vorgezogen (D-060, Steffen 25.10.2026):** Hauptmenü, Kampagnenkarte Region 1,
+Festungsfähigkeit und Völkerwahl, Pakete R-1 bis R-4 in der [Roadmap](docs/production/roadmap.md#vorgezogen-spielrahmen-d-060).
+
+**Nicht drin:** Zwergenbank (Phase 2), Upgrades, Multiplayer, PvP, weitere
+Missionen der Kampagne, Echtgeld, Backend, Meta-Progression, 3D, steuerbarer Held.
 
 ### Scope-Verbot
 
