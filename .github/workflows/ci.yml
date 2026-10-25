@@ -1,0 +1,93 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  balance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Balance-Prüfskript
+        run: python3 tools/balance-sim/sim.py --reserve
+
+  iphone:
+    runs-on: macos-15
+    timeout-minutes: 40
+    concurrency:
+      group: iphone-${{ github.event.pull_request.head.ref || github.ref_name }}
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Umgebung
+        run: |
+          xcodebuild -version
+          swift --version
+
+      - name: XcodeGen
+        run: brew install xcodegen
+
+      - name: Xcode-Projekt erzeugen
+        run: xcodegen generate
+
+      # Ein Simulator mit Namen statt „generic/platform": Der Probelauf unten
+      # braucht dasselbe Gerät, auf dem gebaut wurde.
+      - name: Simulator wählen
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          d = json.load(sys.stdin)["devices"]
+          ios = sorted((k for k in d if "iOS" in k), reverse=True)
+          for k in ios:
+              for dev in d[k]:
+                  if dev["name"].startswith("iPhone"):
+                      print(dev["udid"]); sys.exit()
+          sys.exit("kein iPhone-Simulator gefunden")')
+          echo "UDID=$UDID" >> "$GITHUB_ENV"
+          xcrun simctl list devices | grep "$UDID"
+
+      - name: App bauen
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project Oddlings.xcodeproj -scheme Oddlings \
+            -destination "id=$UDID" \
+            -derivedDataPath build/DerivedData \
+            CODE_SIGNING_ALLOWED=NO 2>&1 | tail -n 80
+
+      # Übersetzen beweist nicht, dass die App läuft. Starten, laufen lassen,
+      # nachsehen, ob der Prozess noch lebt, und ein Bild sichern.
+      - name: Probelauf im Simulator
+        run: |
+          APP=$(find build/DerivedData/Build/Products -name "Oddlings.app" -maxdepth 3 | head -1)
+          test -n "$APP" || { echo "::error::Oddlings.app nicht gefunden"; exit 1; }
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl install "$UDID" "$APP"
+          xcrun simctl launch "$UDID" de.skkjbeer.oddlings
+          sleep 20
+          mkdir -p build/probe
+          xcrun simctl io "$UDID" screenshot build/probe/spike.png
+          if ! xcrun simctl spawn "$UDID" launchctl list | grep -q de.skkjbeer.oddlings; then
+            echo "::error::Die App läuft nach 20 Sekunden nicht mehr."
+            ls ~/Library/Logs/DiagnosticReports/ 2>/dev/null | grep -i oddlings || true
+            exit 1
+          fi
+          echo "::notice::App läuft nach 20 Sekunden noch."
+
+      - name: Bild weiterreichen
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: simulator-probe
+          path: build/probe/
+          if-no-files-found: ignore
+          retention-days: 14
