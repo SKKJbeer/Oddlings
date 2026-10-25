@@ -156,10 +156,38 @@ Seit WP-10 gibt es nur noch diese eine Rechnung; das Python-Skript ist gelöscht
 
 ## Zwergenbank (Phase 2)
 
-Regeln, Zielgruppe (D-010) und Bonus für frühes Rufen: [K3](../konzepte/phase-2-3.md#k3--zwergenbank), vorgeschlagen als D-026.
+**[ENTSCHIEDEN D-026]** Steffen, 25.10.2026 (E-3). Zahlen sind Zielgrößen für die erste Rechnung; die Werte kommen in die Missionsdatei.
+
+Herkunft: Übergabe Nr. 8, klärt D-010.
 
 **[ENTSCHIEDEN]** Kein Kampfschaden, kostet beim Bau, erträgt nach Verzögerung,
 konkurriert mit Verteidigung.
+
+### Für wen (D-010)
+
+Die Übergabe nennt die Bank zugleich „Zwergen-Kennzeichen" und Wirtschaftsturm
+des Einzelspielers. **Die Bank ist ein Grundturm für alle** (der
+vierte, ab Phase 2). Zwerge haben ihren passiven Zug an der Bank ([03](03-races-and-avatar.md#wie-ein-volk-wirkt-phase-3)) und die
+Bank ist im Aussehen ein Zwergenbau. Grund: Die Bank trägt die Säule „Echte
+Entscheidungen" (jetzt verteidigen oder später ernten). Diese Entscheidung soll
+jeder Spieler haben, nicht nur wer Zwerge wählt.
+
+### Regeln
+
+
+- Kein Kampfschaden, belegt eine Zelle wie jeder Turm.
+- Ertrag beginnt nach der Verzögerung, dann fester Betrag je Intervall, bis der
+  Deckel erreicht ist. Danach steht sie leer da (sichtbar) und kann verkauft
+  werden. Verkaufen erstattet 70 % der Baukosten, unabhängig vom Ertrag.
+- Die Zeit läuft ab Bau, auch in der Aufbauzeit. Eine Bank im ersten Moment
+  ist also zur ersten Welle bereit; das ist der Reiz und das Risiko zugleich,
+  denn die 100 Gold fehlen in Welle 1 und 2.
+- Höchstzahl je Mission.
+- Jeder Ertrag ist ein Ereignis (`bankPaid`) mit sichtbarer Goldzahl an der Bank
+  (E1). Die Bank hat keine Aufwertungen in der ersten Fassung.
+- Keine Zinsen, kein Wachstum mit der Zeit. Beides schneeballt.
+
+### Startwerte
 
 **[VORSCHLAG] – Startwerte zur ersten Rechnung in Phase 2**, nicht für den MVP:
 
@@ -172,10 +200,21 @@ konkurriert mit Verteidigung.
 | Höchstzahl | 2 je Spieler | Gegen Schneeball |
 | Ertrag pro Bank gedeckelt | 300 Gold | Zweite Bremse; prüfen, ob nötig |
 
-Die Kennzahl, auf die alles zielt: **Eine Bank in Welle 1 soll sich etwa ab
-Welle 4 rechnen und in der Summe ungefähr so viel bringen, wie zwei Wachtürme an
-Durchbrüchen verhindert hätten.** Geprüft wird das mit derselben Simulation:
-Bauweise mit Bank gegen ohne, Reserve vergleichen.
+### Kennzahl
+
+
+Eine Bank in Welle 1 rechnet sich etwa ab Welle 4 und bringt
+in Summe ungefähr so viel, wie zwei Wachtürme an Durchbrüchen verhindert hätten.
+In den `BalanceTests` heißt das: Die beste Bauweise mit Bank liegt höchstens
+0,05 Reserve über oder unter der besten ohne Bank. Liegt sie deutlich darüber,
+ist die Bank Pflicht; deutlich darunter, ist sie bedeutungslos.
+
+### Bonus für frühes Rufen (D-009, E8)
+
+
+Gehört zur selben Wirtschaftsrunde und wird mit der Bank zusammen gerechnet:
+Wer die nächste Welle früher ruft, bekommt einen kleinen Goldbetrag je
+eingesparter Sekunde. Klein genug, dass Abwarten nie ein Fehler ist.
 
 ## Koop-Ressourcen [HYPOTHESE]
 

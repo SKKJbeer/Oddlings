@@ -10,8 +10,8 @@ Hier stehen Rollen und Regeln.
 - Jeder Turm hat einen erkennbaren Zweck.
 - Türme ergänzen sich; keiner ist in jeder Lage die beste Wahl.
 - Werte sind konfigurierbar, nicht im Code verstreut.
-- Upgrades kommen später (**[VORSCHLAG D-008]**: nicht im MVP). Konzept für Phase 2:
-  [K1](../konzepte/phase-2-3.md#k1--aufwertungen-mit-einer-gabelung-je-turm) (D-024).
+- Upgrades kommen nicht in den MVP (**[VORSCHLAG D-008]**), in Phase 2 mit einer Gabelung je Turm:
+  [Aufwertungen](#aufwertungen-mit-einer-gabelung-je-turm-phase-2) (D-024).
   Rüstung, Immunität, Bosse, Schattenflieger: [K7](../konzepte/phase-2-3.md#k7--gegner-bosse-rüstung).
 
 ## Türme im MVP
@@ -70,6 +70,69 @@ allein verliert, Blitz mit Sporen ist die stärkste geprüfte Kombination
 Damit Spieler das selbst entdecken, wird es nicht erklärt, sondern provoziert:
 Welle 5 ist eine dichte Kolonne Plünderer (Blitz glänzt), Welle 6 eine Welle
 schneller Flitzer (Verlangsamung glänzt). **[VORSCHLAG]**
+
+## Aufwertungen mit einer Gabelung je Turm (Phase 2)
+
+**[ENTSCHIEDEN D-024]** Steffen, 25.10.2026 (E-1). Zahlen sind Zielgrößen für die erste Rechnung; die Werte kommen in die Missionsdatei.
+
+Herkunft: Übergabe Nr. 7, Marktanalyse E5 und E6.
+
+**Warum überhaupt.** Alle Marktführer leben von Aufwertungen. Ohne sie gibt es
+ab der Mitte einer Mission nur noch eine Frage, „wohin der nächste Turm", und
+bei 114 Bauplätzen ist die schnell beantwortet. Aufwertungen bringen die zweite
+Frage dazu: verbreitern (neuer Turm, mehr Abdeckung) oder vertiefen (bestehender
+Turm, mehr Wirkung an einer Stelle).
+
+**Aufbau.** Drei Stufen, eine Wahl.
+
+| Stufe | Wie man hinkommt | Was sie tut |
+|---|---|---|
+| 1 | Bauen | Grundturm wie im MVP |
+| 2 | Aufwerten, Gold | Gleiche Rolle, spürbar stärker; schaltet die Zielwahl frei (E5) |
+| 3 | Spezialisieren, Gold, **eine von zwei** | Verstärkt je eine andere Synergie; die andere ist für diesen Turm weg |
+
+Die Wahl gilt je Turm und je Mission. Zwei Blitztürme dürfen verschieden
+spezialisiert sein. Das ist die eigentliche Tiefe: dieselbe Karte wird mit einer
+anderen Mischung anders gespielt.
+
+**Spezialisierungen.** Jede stärkt eine Kombination, keine ist reiner Mehrschaden.
+
+| Turm | A | B |
+|---|---|---|
+| Wachturm | **Falkenhorst:** große Reichweite, schwerer Schuss, langsamer. Gegen Panzerbestien und Bosse | **Salve:** trifft zwei Ziele je Schuss. Gegen Flitzerschwärme |
+| Blitzturm | **Gewitterkrone:** zwei Sprünge mehr; Sprünge auf verlangsamte Gegner verlieren keinen Schaden. Verstärkt die Kernsynergie | **Funkensäule:** erster Treffer deutlich stärker, weniger Sprünge. Blitz auch gegen zähe Einzelziele |
+| Sporenturm | **Moorherz:** größerer Radius, stärkere Verlangsamung. Reine Kontrolle | **Fäulnis:** verlangsamte Gegner nehmen von allen Türmen mehr Schaden. Macht Sporen neben Wachtürmen wertvoll (Befund aus WP-10, siehe [04](../game-design/04-economy-and-balance.md#ergebnis-der-prüfung)) |
+
+Neue Regeln, die das braucht: ein Zustand „verwundbar" (Schadensfaktor mit
+Dauer, wie die Verlangsamung, stapelt nicht), Mehrfachziel beim Wachturm,
+Abfall abhängig vom Zustand des Ziels. Alle drei passen in die bestehende
+Simulation (Ereignisse, Zustand als Wert); keine braucht Zufall.
+
+**Wirtschaft.** Zielgröße: Stufe 2 kostet etwa 70 % des Grundturms und bringt
+etwa 50 % mehr Wirkung, ist also je Gold leicht besser als ein zweiter Turm,
+deckt aber keinen neuen Wegabschnitt ab. Spezialisierung kostet etwa so viel wie
+ein Grundturm. Verkaufen erstattet 70 % von **allem**, was im Turm steckt
+(`Tower.spent` gibt es schon).
+
+**Bedienung.** Turm antippen → im Turmmenü aus WP-12 „Aufwerten (Preis)". Auf
+Stufe 2 zeigt das Menü zwei Karten nebeneinander, je mit Symbol, einem Satz und
+Preis. Zielwahl als Umschalter im selben Menü (erster / letzter / stärkster).
+Abhängigkeit zum Thread „Spieloberfläche und Menüs".
+
+**Grafik.** Je Turm Stufe 2 als Anbau am selben Bild, Stufe 3 je eigene Ansicht:
+sechs neue Turmbilder. Abhängigkeit zum Thread „AAA-Grafik".
+
+**Prüfung.** `BalanceTests` bekommen Bauweisen mit Aufwertungen. Erwartung:
+Mischungen mit passenden Spezialisierungen haben die größte Reserve, und jede
+der sechs Spezialisierungen ist in mindestens einer Bauweise die beste Wahl.
+Ist eine nie die beste, ist sie falsch, nicht der Test.
+
+**Freischaltung.** In Region 1 kommen Stufe 2 und die Spezialisierungen nach und
+nach dazu ([05](05-campaign-and-progression.md#region-1-flüsterwald-kostenlos)), damit Mission 1 so einfach bleibt, wie sie ist.
+
+**Verworfen:** eine lineare dritte
+Stufe ohne Wahl: halb so viel Grafik, aber nur „mehr Zahl", das widerspricht
+Säule 1 und 3.
 
 ## Gegner
 
