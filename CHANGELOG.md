@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.10.1 – 26.10.2026 (Zwerge: Wachtürme billiger, D-062)
+## 0.10.1 – 26.10.2026 (Zwerge: Wachtürme billiger, D-062), Bau 28 (VALID)
 
 **Geändert**
 - Die Zwerge haben jetzt einen passiven Zug: Wachtürme kosten bei ihnen 10 % weniger
