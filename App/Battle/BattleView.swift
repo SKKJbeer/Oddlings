@@ -2,7 +2,7 @@ import OddlingsCore
 import SpriteKit
 import SwiftUI
 
-/// Mission 1, gespielt oder vom Mitspieler vorgeführt.
+/// Eine Mission, gespielt oder vom Mitspieler vorgeführt.
 ///
 /// Kopfleiste oben, darunter die Karte. Szene und Baumenü teilen sich genau
 /// einen Rahmen, damit `BoardLayout` in beiden dieselbe Zelle findet.
@@ -15,17 +15,21 @@ struct BattleView: View {
     @Environment(\.scenePhase) private var scenePhase
     var onClose: () -> Void
 
-    init(mode: Mode, onClose: @escaping () -> Void) {
+    /// Meldet ein Ergebnis an den Aufrufer (Fortschritt, R-1), mit den Leben,
+    /// die übrig sind. Beim Zuschauen bleibt es leer: Eine Vorführung ist kein Sieg.
+    var onFinish: ((Outcome, Int) -> Void)?
+
+    init(mission config: BalanceConfig, mode: Mode, onClose: @escaping () -> Void,
+         onFinish: ((Outcome, Int) -> Void)? = nil) {
         self.onClose = onClose
-        let config: BalanceConfig
-        do {
-            config = try BalanceConfig.missionOne()
-        } catch {
-            // Eine fehlerhafte Missionsdatei ist ein Baufehler; die Tests
-            // fangen ihn, bevor er ausgeliefert wird.
-            fatalError("Mission 1 lädt nicht: \(error)")
-        }
-        let model = BattleModel(config: config, seed: 1, autoplay: mode == .watch)
+        self.onFinish = onFinish
+        var autoplay = mode == .watch
+        #if DEBUG
+        // Der Mitspieler baut auch im eigenen Spiel, damit ein Oberflächentest
+        // einen echten Sieg samt Speichern durchspielen kann.
+        autoplay = autoplay || ProcessInfo.processInfo.arguments.contains("--e2e-mitspieler")
+        #endif
+        let model = BattleModel(config: config, seed: 1, autoplay: autoplay)
         #if DEBUG
         model.timeScale = Self.testTimeScale ?? 1
         #endif
@@ -59,6 +63,9 @@ struct BattleView: View {
         .persistentSystemOverlays(.hidden)
         .onChange(of: scenePhase) { _, phase in
             if phase != .active { controller.pauseForBackground() }
+        }
+        .onChange(of: controller.shownOutcome) { _, outcome in
+            if let outcome { onFinish?(outcome, controller.lives) }
         }
     }
 
