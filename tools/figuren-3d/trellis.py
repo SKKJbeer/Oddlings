@@ -15,7 +15,7 @@ SPACE = "trellis-community/TRELLIS"
 def main() -> None:
     vorlage, ziel = sys.argv[1], sys.argv[2]
     seed = int(sys.argv[3]) if len(sys.argv) > 3 else 1
-    client = Client(SPACE, hf_token=os.environ.get("HF_TOKEN") or None)
+    client = Client(SPACE, token=os.environ.get("HF_TOKEN") or None)
     # Die Space legt je Sitzung ein Arbeitsverzeichnis an; ohne diesen Aufruf fehlt es.
     client.predict(api_name="/start_session")
     ergebnis = client.predict(
