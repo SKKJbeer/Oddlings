@@ -92,6 +92,15 @@
       "punkte": 40,
       "alpha": true,
       "ordner": "App/Assets.xcassets/UI"
+    },
+    "ui_keyart_menu": {
+      "pixel": [
+        2796,
+        1290
+      ],
+      "alpha": false,
+      "ordner": "App/Assets.xcassets/UI",
+      "format": "jpg"
     }
   }
 }
