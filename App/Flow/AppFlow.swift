@@ -47,6 +47,7 @@ final class AppFlow {
         if let store {
             let loaded = store.load(campaign: campaign)
             for note in loaded.notes { Self.log.error("\(note, privacy: .public)") }
+            Self.log.notice("Spielstand \(String(describing: loaded.source), privacy: .public), Avatar \(loaded.save.avatar == nil ? "fehlt" : "da", privacy: .public), \(store.directory.path, privacy: .public)")
             loadedSave = loaded.save
             loadedWritable = loaded.writable
         }
@@ -141,6 +142,7 @@ final class AppFlow {
         guard let store else { return }
         do {
             try store.save(save, allowed: writable)
+            Self.log.notice("Spielstand geschrieben, Avatar \(save.avatar == nil ? "fehlt" : "da", privacy: .public)")
         } catch {
             Self.log.error("Spielstand nicht geschrieben: \(String(describing: error), privacy: .public)")
         }

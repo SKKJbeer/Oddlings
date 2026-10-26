@@ -118,7 +118,10 @@ jobs:
           mkdir -p build/probe && cp build/app-test.log build/probe/
           # Die Spielstände der Oberflächentests mit ins Artefakt: Geht ein
           # Neustart-Test schief, zeigt die Datei, ob geschrieben wurde.
-          data=$(xcrun simctl get_app_container "$UDID" de.skkjbeer.oddlings data 2>/dev/null || true)
+          xcrun simctl spawn "$UDID" log show --last 1h --style compact \
+            --predicate 'subsystem == "de.skkjbeer.oddlings" AND category == "save"' > build/probe/speicher.log 2>&1 || true
+          data=$(xcrun simctl get_app_container "$UDID" de.skkjbeer.oddlings data 2>&1 || true)
+          echo "App-Daten: $data"
           if [ -n "$data" ] && [ -d "$data/tmp" ]; then
             mkdir -p build/probe/speicher
             for dir in "$data"/tmp/e2e-*; do
