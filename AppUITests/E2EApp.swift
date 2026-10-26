@@ -22,6 +22,9 @@ struct E2EApp {
     /// und die Leben fallen wieder (im ersten Lauf so gesehen).
     static let readableFastForward = "10"
 
+    /// Für `--e2e-erste-welle`: weit länger, als ein Test dauert.
+    static let wavesOnHold = "600"
+
     /// Jeder Test spielt mit eigenem Spielstand im temporären Ordner, damit ein
     /// Sieg aus einem Test den nächsten nicht verändert. `fresh: false` startet
     /// auf dem Stand, den ein früherer Start mit derselben `storage` schrieb.

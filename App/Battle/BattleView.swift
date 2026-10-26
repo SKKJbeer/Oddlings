@@ -29,6 +29,10 @@ struct BattleView: View {
         // einen echten Sieg samt Speichern durchspielen kann.
         autoplay = autoplay || ProcessInfo.processInfo.arguments.contains("--e2e-mitspieler")
         #endif
+        var config = config
+        #if DEBUG
+        if let delay = Self.testFirstWaveDelay { config.mission.firstWaveDelay = delay }
+        #endif
         let model = BattleModel(config: config, seed: 1, autoplay: autoplay)
         #if DEBUG
         model.timeScale = Self.testTimeScale ?? 1
@@ -85,10 +89,18 @@ struct BattleView: View {
     #if DEBUG
     /// `--e2e-zeitraffer N` aus den End-zu-End-Tests. Nur im Debug-Bau, damit
     /// kein ausgelieferter Bau einen Schalter für das Spieltempo hat.
-    private static var testTimeScale: Double? {
+    private static var testTimeScale: Double? { positiveArgument(after: "--e2e-zeitraffer") }
+
+    /// `--e2e-erste-welle N`: Tests, die nur bauen und bedienen, halten die
+    /// erste Welle zurück. Sonst hängt ihr Ergebnis davon ab, ob der Rechner
+    /// schneller ist als die Wartezeit der Mission (Beute wäre Gold, ein Leck
+    /// eine Niederlage).
+    private static var testFirstWaveDelay: Double? { positiveArgument(after: "--e2e-erste-welle") }
+
+    private static func positiveArgument(after flag: String) -> Double? {
         let arguments = ProcessInfo.processInfo.arguments
-        guard let index = arguments.firstIndex(of: "--e2e-zeitraffer"), index + 1 < arguments.count else { return nil }
-        return Double(arguments[index + 1]).flatMap { $0 > 0 ? $0 : nil }
+        guard let index = arguments.firstIndex(of: flag), index + 1 < arguments.count else { return nil }
+        return Double(arguments[index + 1]).flatMap { $0 > 0 && $0.isFinite ? $0 : nil }
     }
     #endif
 }

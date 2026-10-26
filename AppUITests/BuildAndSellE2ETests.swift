@@ -54,7 +54,8 @@ final class BuildAndSellE2ETests: XCTestCase {
 
     @MainActor
     func testUnaffordableTowerWarnsAndBuildsNothing() throws {
-        let e2e = try E2EApp(["--play"])
+        // Ohne Welle bringt keine Beute Gold, der Vergleich bleibt genau.
+        let e2e = try E2EApp(["--play", "--e2e-erste-welle", E2EApp.wavesOnHold])
         e2e.waitForBoard()
         var cells = e2e.map.buildableCells.makeIterator()
         let cheapest = TowerKind.allCases.min { e2e.cost($0) < e2e.cost($1) }!
