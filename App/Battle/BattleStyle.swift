@@ -38,35 +38,17 @@ enum BattleStyle {
     static let fortressSpriteSide: CGFloat = 2.4
     static let fortressAnchorY: CGFloat = 0.15
     static func enemyHeight(_ kind: EnemyKind) -> CGFloat { kind == .brute ? 1.2 : 0.9 }
-    static let shadow = SKColor(white: 0, alpha: 0.3)
 
     static let healthBack = SKColor(white: 0, alpha: 0.6)
     static let healthFill = SKColor(red: 0.35, green: 0.90, blue: 0.40, alpha: 1)
     static let healthWidth: CGFloat = 0.7
     static let healthHeight: CGFloat = 0.08
-    static let slowTint = SKColor(red: 0.62, green: 0.85, blue: 0.35, alpha: 1)
 
-    static let bolt = SKColor(red: 0.80, green: 0.88, blue: 1.00, alpha: 1)
-    static let arrow = SKColor(red: 1.00, green: 0.95, blue: 0.80, alpha: 1)
-    static let sporeCloud = SKColor(red: 0.62, green: 0.85, blue: 0.35, alpha: 0.35)
-    static let gold = SKColor(red: 1.00, green: 0.84, blue: 0.25, alpha: 1)
     static let leak = SKColor(red: 1.00, green: 0.25, blue: 0.20, alpha: 1)
     static let fortress = SKColor(red: 0.55, green: 0.55, blue: 0.62, alpha: 1)
 
-    static let shotLife: TimeInterval = 0.10
-    static let boltLife: TimeInterval = 0.18
-    static let pulseLife: TimeInterval = 0.35
-    /// Steinregen: Schatten bis zum Einschlag, dann Staub. Platzhalter, bis der
-    /// Animations-Thread den Effekt liefert (R-3).
-    static let strikeShadow = SKColor(white: 0, alpha: 0.35)
-    static let strikeDust = SKColor(red: 0.62, green: 0.55, blue: 0.45, alpha: 0.6)
-    static let impactLife: TimeInterval = 0.5
-    /// Mondmal und Bollwerk (R-4), ebenso Platzhalter.
-    static let moonShadow = SKColor(red: 0.45, green: 0.50, blue: 0.95, alpha: 0.30)
-    static let moonGlow = SKColor(red: 0.70, green: 0.75, blue: 1.00, alpha: 0.55)
+    /// Mondmal am Gegner (R-4); die Effekte der Fähigkeiten stehen in `FxStyle`.
     static let markTint = SKColor(red: 0.70, green: 0.75, blue: 1.00, alpha: 1)
-    static let wall = SKColor(red: 0.55, green: 0.42, blue: 0.30, alpha: 1)
-    static let wallEdge = SKColor(red: 0.25, green: 0.18, blue: 0.12, alpha: 1)
     /// Mauer in Feldern: quer zum Weg so breit wie der Weg, dazu die Dicke.
     static let wallLength: CGFloat = 1.1
     static let wallThickness: CGFloat = 0.28
@@ -79,10 +61,6 @@ enum BattleStyle {
         case .moonMark: "moon.stars.fill"
         }
     }
-    static let hitFlash: TimeInterval = 0.06
-    static let deathLife: TimeInterval = 0.30
-    static let floatLife: TimeInterval = 0.70
-    static let bannerLife: TimeInterval = 1.6
     /// Lilita One (D-032), angemeldet in `AppFonts`.
     static let font = AppFonts.display
     static let fastSpeed = 2

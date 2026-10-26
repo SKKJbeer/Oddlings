@@ -9,6 +9,7 @@ struct RaceTests {
         let table = try RaceTable.bundled()
         #expect(table[.dwarves]?.ability.kind == .bulwark)
         #expect(table[.elves]?.ability.kind == .moonMark)
+        #expect(table[.dwarves]?.costFactor?[.watch] == 0.9, "D-062")
         #expect(table.issues().isEmpty)
     }
 
@@ -25,6 +26,29 @@ struct RaceTests {
         #expect(rest == base, "sonst bleibt alles, wie es ist")
     }
 
+    @Test("Ein Volk senkt nur den genannten Preis und rundet auf ganzes Gold")
+    func costFactor() throws {
+        let base = TestConfig.make()
+        let race = RaceConfig(ability: MoonMarkTests.ability, costFactor: [.watch: 0.9])
+        let applied = base.applying(race)
+        let cost = base.towers[.watch]!.cost
+        #expect(applied.towers[.watch]?.cost == Int((Double(cost) * 0.9).rounded()))
+        #expect(applied.towers[.watch]!.cost < cost)
+        var rest = applied
+        rest.towers[.watch]?.cost = cost
+        rest.ability = base.ability
+        #expect(rest == base, "sonst bleibt alles, wie es ist")
+    }
+
+    @Test("Mission 1: Zwerge bauen den Wachturm günstiger, Elfen zahlen den vollen Preis")
+    func missionOneWatchCost() throws {
+        let mission = try BalanceConfig.missionOne()
+        let table = try RaceTable.bundled()
+        let full = mission.towers[.watch]!.cost
+        #expect(mission.applying(try #require(table[.dwarves])).towers[.watch]!.cost < full)
+        #expect(mission.applying(try #require(table[.elves])).towers[.watch]!.cost == full)
+    }
+
     @Test("Mission 1 besteht die Prüfung für jedes Volk")
     func missionOnePerRace() throws {
         let mission = try BalanceConfig.missionOne()
@@ -35,16 +59,17 @@ struct RaceTests {
         }
     }
 
-    @Test("Prüfung: fehlendes Volk, ungültige Fähigkeit, Reichweite nicht positiv")
+    @Test("Prüfung: fehlendes Volk, ungültige Fähigkeit, Faktor nicht positiv")
     func validation() {
         let table = RaceTable(races: [
             .dwarves: RaceConfig(ability: AbilityConfig(kind: .bulwark, cooldown: 10, snapDistance: 1),
-                                 rangeFactor: [.watch: 0]),
+                                 rangeFactor: [.watch: 0], costFactor: [.spore: -1]),
         ])
         #expect(Set(table.issues()) == [
             ConfigIssue(field: "races.elves", rule: .missingRace),
             ConfigIssue(field: "races.dwarves.ability.duration", rule: .missingAbilityValue),
             ConfigIssue(field: "races.dwarves.rangeFactor.watch", rule: .mustBePositive),
+            ConfigIssue(field: "races.dwarves.costFactor.spore", rule: .mustBePositive),
         ])
     }
 
