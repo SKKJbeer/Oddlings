@@ -27,7 +27,8 @@
   "licht": {
     "haupt": 5.0,
     "fuell": 1.6,
-    "welt": 1.0
+    "welt": 1.0,
+    "rand": 3.0
   },
   "knochen": {
     "becken": {
@@ -226,5 +227,11 @@
       ]
     }
   ],
-  "kameraHoehe": 25
+  "kameraHoehe": 25,
+  "stil": {
+    "saettigung": 1.5,
+    "helligkeit": 1.25,
+    "eigenlicht": 0.35,
+    "kontur": 0.008
+  }
 }

@@ -50,3 +50,9 @@ gleicher TRELLIS-Aufruf mit Seed 1 aus `requisit-keule.png` und `requisit-sack.p
 Kapuze das Gesicht; der gemalte Plünderer ist ebenfalls fast auf Augenhöhe
 gemalt. Zweiter Render mit `angleichen.py` (Stärke 0,75):
 `art/fx-02/raider-zweiter-render.jpg`.
+
+**Comic-Look** (26.10.2026, nach Steffens Rückmeldung „das Gemälde sieht
+wesentlich besser aus"): `stil` in `rig.json` macht die Texturfarbe satter und
+heller, lässt einen Teil selbst leuchten (flächige Schatten), zeichnet mit einer
+dunklen Hülle Umriss und Innenkonturen, dazu Randlicht von hinten. Ergebnis:
+`art/fx-02/raider-comic-render.jpg`.

@@ -150,9 +150,57 @@ def requisit(r):
     ob.parent_bone = r["knochen"]
     bpy.context.view_layer.update()
     ob.matrix_world = welt
+    return ob
 
-for r in rig.get("requisiten", []):
-    requisit(r)
+teile = [koerper] + [requisit(r) for r in rig.get("requisiten", [])]
+
+# Comic-Look wie die gemalten Figuren (D-016): Ein Lichtmodell allein macht
+# aus der TRELLIS-Textur eine dunkle, weiche Puppe. Darum (1) Farben vor dem
+# Licht satter, (2) ein Teil der Farbe leuchtet selbst, damit Schatten
+# flächig bleiben statt abzusaufen, (3) eine dunkle Hülle hinter dem Netz
+# zeichnet Umriss und Innenkonturen (Ohren vor dem Kopf, Arm vor dem Bauch).
+stil = {"saettigung": 1.0, "helligkeit": 1.0, "eigenlicht": 0.0, "kontur": 0.0, **rig.get("stil", {})}
+umriss = bpy.data.materials.new("umriss")
+umriss.use_nodes = True
+un = umriss.node_tree.nodes
+un.clear()
+ausgang = un.new("ShaderNodeOutputMaterial")
+mischung = un.new("ShaderNodeMixShader")
+geo = un.new("ShaderNodeNewGeometry")
+farbe = un.new("ShaderNodeEmission")
+farbe.inputs["Color"].default_value = (0.016, 0.008, 0.006, 1)  # 34/22/18 linear
+durch = un.new("ShaderNodeBsdfTransparent")
+ul = umriss.node_tree.links
+ul.new(geo.outputs["Backfacing"], mischung.inputs["Fac"])
+ul.new(farbe.outputs[0], mischung.inputs[1])
+ul.new(durch.outputs[0], mischung.inputs[2])
+ul.new(mischung.outputs[0], ausgang.inputs["Surface"])
+for teil in teile:
+    for m in teil.data.materials:
+        if not (m and m.node_tree):
+            continue
+        nodes, links = m.node_tree.nodes, m.node_tree.links
+        bsdf = next((n for n in nodes if n.type == 'BSDF_PRINCIPLED'), None)
+        if bsdf is None or not bsdf.inputs["Base Color"].is_linked:
+            continue
+        quelle = bsdf.inputs["Base Color"].links[0].from_socket
+        hsv = nodes.new("ShaderNodeHueSaturation")
+        hsv.inputs["Saturation"].default_value = stil["saettigung"]
+        hsv.inputs["Value"].default_value = stil["helligkeit"]
+        links.new(quelle, hsv.inputs["Color"])
+        links.new(hsv.outputs["Color"], bsdf.inputs["Base Color"])
+        if stil["eigenlicht"] > 0:
+            bsdf.inputs["Emission Color"].default_value = (0, 0, 0, 1)
+            links.new(hsv.outputs["Color"], bsdf.inputs["Emission Color"])
+            bsdf.inputs["Emission Strength"].default_value = stil["eigenlicht"]
+    if stil["kontur"] > 0:
+        teil.data.materials.append(umriss)
+        hulle = teil.modifiers.new("kontur", 'SOLIDIFY')
+        hulle.thickness = stil["kontur"] / max(teil.scale)
+        hulle.offset = 1
+        hulle.use_flip_normals = True
+        hulle.use_rim = False
+        hulle.material_offset = len(teil.data.materials) - 1
 
 # Bewegungen: je Knochen eine Drehung (Grad um x = vor/zurück, um y = seitlich)
 # als Sinus über die Folge, dazu Hub des Beckens. Werte stehen in rig.json.
@@ -203,7 +251,9 @@ dreh.rotation_euler[2] = math.radians(rig.get("blick", 45))
 # Stärken je Figur in rig.json, weil die Texturen von TRELLIS je Bild
 # unterschiedlich hell ausfallen.
 licht = {"haupt": 3.2, "fuell": 0.9, "welt": 0.5, **rig.get("licht", {})}
-for name, rot in [("haupt", (45, 0, -40)), ("fuell", (65, 0, 140))]:
+# Randlicht von hinten oben setzt die Figur wie im Gemälde vom Boden ab.
+licht.setdefault("rand", 0.0)
+for name, rot in [("haupt", (45, 0, -40)), ("fuell", (65, 0, 140)), ("rand", (-55, 0, 25))]:
     e = licht[name]
     l = bpy.data.lights.new(name, 'SUN')
     l.energy = e
