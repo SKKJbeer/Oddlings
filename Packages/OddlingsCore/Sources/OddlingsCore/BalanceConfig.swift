@@ -16,11 +16,15 @@ public struct BalanceConfig: Codable, Equatable, Sendable {
     public var simStrategies: [String: [TowerKind]]?
     /// Name der Bauweise, mit der der Mitspieler die Mission vorführt.
     public var demoStrategy: String?
+    /// Festungsfähigkeit der Mission (D-025). Fehlt sie, gibt es keinen Knopf,
+    /// und die Simulation lehnt den Befehl ab.
+    public var ability: AbilityConfig?
 
     public init(
         simulation: SimulationConfig, mission: MissionConfig, map: MapConfig,
         towers: [TowerKind: TowerConfig], enemies: [EnemyKind: EnemyConfig], waves: [WaveConfig],
-        simStrategies: [String: [TowerKind]]? = nil, demoStrategy: String? = nil
+        simStrategies: [String: [TowerKind]]? = nil, demoStrategy: String? = nil,
+        ability: AbilityConfig? = nil
     ) {
         self.simulation = simulation
         self.mission = mission
@@ -30,6 +34,33 @@ public struct BalanceConfig: Codable, Equatable, Sendable {
         self.waves = waves
         self.simStrategies = simStrategies
         self.demoStrategy = demoStrategy
+        self.ability = ability
+    }
+}
+
+/// Steinregen (03, „Eine aktive Festungsfähigkeit"): Wurf auf eine Stelle am
+/// Weg, nach `delay` Schaden und Anhalten im Kreis, dann Abklingzeit.
+public struct AbilityConfig: Codable, Equatable, Sendable {
+    /// Felder
+    public var radius: Double
+    public var damage: Double
+    /// Sekunden vom Wurf bis zum Einschlag
+    public var delay: Double
+    /// Sekunden, die Getroffene stehen
+    public var stunDuration: Double
+    /// Sekunden ab dem Wurf bis zur nächsten Bereitschaft
+    public var cooldown: Double
+    /// So viele Felder darf der Wurf neben dem Weg liegen; er wird auf den Weg gezogen.
+    public var snapDistance: Double
+
+    public init(radius: Double, damage: Double, delay: Double, stunDuration: Double,
+                cooldown: Double, snapDistance: Double) {
+        self.radius = radius
+        self.damage = damage
+        self.delay = delay
+        self.stunDuration = stunDuration
+        self.cooldown = cooldown
+        self.snapDistance = snapDistance
     }
 }
 

@@ -51,6 +51,8 @@ struct E2EApp {
     var resume: XCUIElement { app.buttons["pause.resume"] }
     var restart: XCUIElement { app.buttons["pause.restart"] }
     var giveUp: XCUIElement { app.buttons["pause.quit"] }
+    var ability: XCUIElement { app.buttons["ability"] }
+    var abilityState: String { ability.value as? String ?? "" }
     var mapView: XCUIElement { app.otherElements["map"] }
     var mapStart: XCUIElement { app.buttons["map.start"] }
     var mapBack: XCUIElement { app.buttons["map.back"] }
@@ -76,6 +78,15 @@ struct E2EApp {
         let field = min(size.width / CGFloat(map.width), size.height / CGFloat(map.height))
         let x = (size.width - field * CGFloat(map.width)) / 2 + (CGFloat(cell.x) + 0.5) * field
         let y = (size.height - field * CGFloat(map.height)) / 2 + (CGFloat(cell.y) + 0.5) * field
+        board.coordinate(withNormalizedOffset: .zero).withOffset(CGVector(dx: x, dy: y)).tap()
+    }
+
+    /// Tippt einen Feldpunkt, etwa eine Stelle am Weg (Steinregen).
+    func tap(_ point: Point) {
+        let size = board.frame.size
+        let field = min(size.width / CGFloat(map.width), size.height / CGFloat(map.height))
+        let x = (size.width - field * CGFloat(map.width)) / 2 + CGFloat(point.x) * field
+        let y = (size.height - field * CGFloat(map.height)) / 2 + CGFloat(point.y) * field
         board.coordinate(withNormalizedOffset: .zero).withOffset(CGVector(dx: x, dy: y)).tap()
     }
 

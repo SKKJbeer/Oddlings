@@ -17,6 +17,8 @@
     "minDistanceFromPath": 0.9,
     "path": [[-1, 1.5], [4.5, 1.5], [4.5, 6.5], [9.5, 6.5], [9.5, 2.5], [13.5, 2.5], [13.5, 7.5], [17, 7.5]]
   },
+  "_ability": "Steinregen (D-025, R-3). HYPOTHESE bis zum Spieltest; Mission 1 hat ihn, solange sie die einzige spielbare ist (D-060).",
+  "ability": { "radius": 1.2, "damage": 20, "delay": 0.8, "stunDuration": 1.0, "cooldown": 35, "snapDistance": 1.0 },
   "towers": {
     "watch":     { "cost": 50, "range": 2.5, "damage": 12, "attackInterval": 0.8, "targeting": "first" },
     "lightning": { "cost": 80, "range": 2.2, "damage": 18, "attackInterval": 1.2, "targeting": "first",

@@ -20,6 +20,8 @@ final class FeedbackPlayerTests: XCTestCase {
         XCTAssertEqual(FeedbackPlayer.haptic(for: .enemyLeaked(id: 1, damage: 1)), .warning)
         XCTAssertEqual(FeedbackPlayer.haptic(for: .missionEnded(won: true)), .success)
         XCTAssertEqual(FeedbackPlayer.haptic(for: .missionEnded(won: false)), .error)
+        XCTAssertEqual(FeedbackPlayer.haptic(for: .abilityCast(center: Point(x: 1, y: 1), impactTick: 5)), .light)
+        XCTAssertEqual(FeedbackPlayer.haptic(for: .abilityImpact(center: Point(x: 1, y: 1), hits: [])), .heavy)
     }
 
     /// Treffer und Tode kommen in Mengen; sie dürfen die eigene Handlung nicht übertönen.

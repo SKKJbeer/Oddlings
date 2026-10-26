@@ -56,6 +56,11 @@ enum BattleStyle {
     static let shotLife: TimeInterval = 0.10
     static let boltLife: TimeInterval = 0.18
     static let pulseLife: TimeInterval = 0.35
+    /// Steinregen: Schatten bis zum Einschlag, dann Staub. Platzhalter, bis der
+    /// Animations-Thread den Effekt liefert (R-3).
+    static let strikeShadow = SKColor(white: 0, alpha: 0.35)
+    static let strikeDust = SKColor(red: 0.62, green: 0.55, blue: 0.45, alpha: 0.6)
+    static let impactLife: TimeInterval = 0.5
     static let hitFlash: TimeInterval = 0.06
     static let deathLife: TimeInterval = 0.30
     static let floatLife: TimeInterval = 0.70

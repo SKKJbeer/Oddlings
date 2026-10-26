@@ -145,6 +145,30 @@ Spiel: Unterstützende Türme müssen im Zweifel großzügig sein, weil ihr Nutz
 für Spieler schwer zu sehen ist (Risiko P1 in der
 [Analyse](../production/phase-0-analyse.md)).
 
+### Steinregen (R-3, 25.10.2026) [HYPOTHESE]
+
+Prüfung aus [03](03-races-and-avatar.md#eine-aktive-festungsfähigkeit-phase-2):
+Der Bot wirft, sobald der Stein bereit ist, auf die Stelle mit den meisten
+Gegnern im Kreis (mindestens zwei, ohne vorauszuzielen). Die Reserve der
+Mischung darf um höchstens 0,1 steigen. Gemessen mit der Mischung (ohne Stein
+1,35):
+
+| Schaden | Anhalten | Abklingzeit | Reserve mit Stein | Zuwachs |
+|---|---|---|---|---|
+| 40 | 1,0 s | 25 s | 1,64 | +0,29 |
+| 20 | 1,0 s | 25 s | 1,50 | +0,15 |
+| 30 | 1,0 s | 40 s | 1,47 | +0,12 |
+| 20 | 0,5 s | 30 s | 1,42 | +0,07 |
+| **20** | **1,0 s** | **35 s** | **1,42** | **+0,075** |
+
+Die ersten, gerechneten Werte (40 / 1 s / 25 s) waren fast dreimal zu stark: Der
+Stein trifft gerade dann, wenn sich Gegner vor den Türmen stauen, und das
+Anhalten lässt sie länger im Feuer stehen. Gewählt ist die letzte Zeile: Ein
+deutliches Anhalten fühlt sich besser an als ein kurzes, dafür kommt der Stein
+etwa jede zweite Welle. `BalanceTests` hält die Grenze fest. Der Zuwachs springt
+bei kleinen Änderungen (15 Schaden ergab mehr als 20), weil einzelne Würfe über
+eine Welle entscheiden; deshalb liegt der Wert mit Abstand unter der Grenze.
+
 ### Grenzen der Rechnung
 
 - Keine Menschen: perfekte Platzierung, keine Reaktionszeit, kein Verkaufen.

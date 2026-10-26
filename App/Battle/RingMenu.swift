@@ -30,7 +30,7 @@ struct RingMenu: View {
 
     @ViewBuilder private func menu(at cell: Cell, hud: HudLayout) -> some View {
         switch controller.selection {
-        case .none:
+        case .none, .aiming:
             EmptyView()
         case .cell(_, let choice):
             let kinds = TowerKind.allCases

@@ -49,6 +49,13 @@ struct BattleView: View {
                 ZStack {
                     SpriteView(scene: scene, preferredFramesPerSecond: 60, options: [.ignoresSiblingOrder])
                     RingMenu(controller: controller, insets: boardInsets)
+                    // Nach dem Ende gibt es nichts mehr zu werfen; die Ergebnistafel liegt darüber.
+                    if controller.hasAbility && !controller.isFinished {
+                        AbilityButton(controller: controller)
+                            .padding(.trailing, safeArea.trailing + BattleStyle.hudMargin)
+                            .padding(.bottom, safeArea.bottom + BattleStyle.hudMargin)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+                    }
                     // Tafeln liegen auf der Karte, nicht über der Leiste: Pause
                     // und Tempo bleiben dort bedienbar.
                     BattleOverlay(controller: controller, onRestart: { scene.restart() }, onClose: onClose)
@@ -84,4 +91,26 @@ struct BattleView: View {
         return Double(arguments[index + 1]).flatMap { $0 > 0 ? $0 : nil }
     }
     #endif
+}
+
+/// Steinregen unten rechts (D-033). Schlichter Platzhalter, bis die Oberfläche
+/// den Knopf mit Ladering und Zielansicht nach 07 liefert; die Kennung bleibt.
+private struct AbilityButton: View {
+    let controller: BattleController
+
+    var body: some View {
+        Button(action: controller.toggleAim) {
+            RingButtonFace(highlighted: controller.aiming, tint: UITheme.parchment, size: BattleStyle.tapTarget) {
+                Image(systemName: "circle.hexagongrid.circle.fill")
+                    .font(.system(size: 20, weight: .black))
+                    .foregroundStyle(UITheme.cream)
+                    .opacity(controller.abilityReady ? 1 : 0.35 + 0.65 * controller.abilityCharge)
+            }
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(BattleTexts.ability)
+        .accessibilityValue(BattleTexts.abilityState(ready: controller.abilityReady, aiming: controller.aiming,
+                                                     charge: controller.abilityCharge))
+        .accessibilityIdentifier("ability")
+    }
 }

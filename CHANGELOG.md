@@ -11,7 +11,32 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.7.0 – 25.10.2026 (Spielrahmen R-1 und R-2)
+## 0.8.0 – 25.10.2026 (Festungsfähigkeit Steinregen, R-3)
+
+**Neu**
+- Steinregen (D-025, D-060): Knopf unten rechts, dann auf den Weg tippen. Der
+  Wurf rastet am Weg ein, nach 0,8 s schlägt er im Kreis ein, macht Schaden und
+  hält Getroffene 1 s an. Danach lädt er 35 s. Daneben gezielt kostet nichts.
+  Mission 1 hat ihn, solange sie die einzige spielbare ist. Werte
+  **[HYPOTHESE]** bis zum Spieltest.
+- Knopf und Effekt sind Platzhalter; Ladering, Zielansicht (Oberfläche) und
+  Einschlag (Animation) folgen.
+- Konzept: [r-3-steinregen](docs/konzepte/r-3-steinregen.md).
+
+**Balance**
+- Gemessen, bevor die Werte feststanden: Die ersten Werte (40 Schaden, 25 s)
+  hoben die Reserve um 0,29, erlaubt sind 0,1. Jetzt +0,075
+  ([04](docs/game-design/04-economy-and-balance.md#steinregen-r-3-25102026-hypothese)).
+
+**Tests**
+- Kern: `AbilityTests` (8), Wiederholung mit Würfen in `DeterminismTests`,
+  Grenze der Reserve in `BalanceTests`; jeder einmal rot gesehen. Die feste
+  Prüfsumme ist neu, weil sie Anhalten und Fähigkeit mitzählt.
+- App: Zielen, Werfen, Laden und Zuschauen in `BattleControllerTests`, Haptik.
+- E2E: `AbilityE2ETests` (bereit, daneben gezielt, Wurf, Laden, wieder bereit;
+  nach dem Ende kein Knopf).
+
+## 0.7.0 – 25.10.2026 (Spielrahmen R-1 und R-2), Bau 23 (VALID)
 
 **Neu**
 - Kampagnenkarte Region 1 „Flüsterwald“ (D-027, D-060): sieben Hauptmissionen mit

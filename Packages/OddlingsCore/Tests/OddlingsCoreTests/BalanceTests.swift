@@ -38,4 +38,15 @@ struct BalanceTests {
         // Mission 1 soll leicht bleiben: Selbst Monokultur hat etwas Luft.
         #expect(watchOnly > 1.0)
     }
+
+    /// 03: Die Fähigkeit hilft, ersetzt aber keine Türme. Gemessen an der
+    /// Mischung, der Bauweise, die ein Spieler am ehesten wählt.
+    @Test("Steinregen hebt die Reserve, aber um höchstens 0,1")
+    func abilityBounded() throws {
+        let mix = try order("Mix")
+        let without = sim.reserve(mix)
+        let with = sim.reserve(mix, castsAbility: true)
+        #expect(with > without)
+        #expect(with <= without + 0.1)
+    }
 }
