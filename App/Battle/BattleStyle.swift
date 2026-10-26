@@ -41,6 +41,14 @@ enum BattleStyle {
     static let towerSpriteSide: CGFloat = 1.9
     static let fortressSpriteSide: CGFloat = 2.4
     static let fortressAnchorY: CGFloat = 0.15
+    /// Die Festung steht im Rand hinter dem Wegende, nicht im Feld: Dort ist jede
+    /// Zelle neben dem Weg bebaubar. Zellen nach rechts und unten vom Wegende.
+    static let fortressOffset = CGPoint(x: 0.85, y: 0.9)
+    /// Reihenfolge innerhalb der Bodenebene. `ignoresSiblingOrder` zeichnet
+    /// Geschwister mit gleicher zPosition beliebig; bis 0.10.3 lag so die
+    /// Festung unter dem Boden.
+    static let groundZ: CGFloat = -1
+    static let fortressZ: CGFloat = 1
     static func enemyHeight(_ kind: EnemyKind) -> CGFloat { kind == .brute ? 1.2 : 0.9 }
 
     static let healthBack = SKColor(white: 0, alpha: 0.6)

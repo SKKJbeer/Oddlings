@@ -193,7 +193,8 @@ final class BattleScene: SKScene {
         // Die Festung sitzt, wo der Weg die Karte verlässt.
         let end = map.path.points[map.path.points.count - 1]
         let gate = Point(x: min(end.x, Double(map.width)), y: end.y)
-        fortress.path = CGPath(roundedRect: CGRect(x: -field * 0.6, y: -field * 0.9, width: field * 1.2, height: field * 1.8),
+        fortress.path = CGPath(roundedRect: CGRect(x: (BattleStyle.fortressOffset.x - 0.6) * field, y: -field * 0.9,
+                                                   width: field * 1.2, height: field * 1.8),
                                cornerWidth: field * 0.2, cornerHeight: field * 0.2, transform: nil)
         fortress.removeAllChildren()
         if let picture = BattleSprites.fortress(field: field) {
@@ -201,15 +202,14 @@ final class BattleScene: SKScene {
             // für das Aufblitzen bei einem Durchbruch.
             fortress.fillColor = .clear
             fortress.strokeColor = .clear
-            // Das Tor sitzt auf der Kartenkante; das Bild rückt so weit herein,
-            // dass die Festung ganz zu sehen ist.
-            picture.position = CGPoint(x: -BattleStyle.fortressSpriteSide * field * 0.3, y: -field * 0.9)
+            picture.position = CGPoint(x: BattleStyle.fortressOffset.x * field, y: -BattleStyle.fortressOffset.y * field)
             fortress.addChild(picture)
         } else {
             fortress.fillColor = BattleStyle.fortress
             fortress.strokeColor = .black
         }
         fortress.position = toScene(gate)
+        fortress.zPosition = BattleStyle.fortressZ
         fortressRest = fortress.position
         fortressHit.path = fortress.path
         fortressHit.fillColor = BattleStyle.leak

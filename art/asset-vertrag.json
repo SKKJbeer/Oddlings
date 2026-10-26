@@ -41,12 +41,13 @@
     },
     "map_mission01_ground": {
       "zellen": [
-        16,
-        9
+        20,
+        13
       ],
       "alpha": false,
       "ordner": "App/Assets.xcassets/Maps",
-      "format": "jpg"
+      "format": "jpg",
+      "rand": 2
     },
     "fx_glow": {
       "alpha": true,

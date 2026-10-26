@@ -53,17 +53,21 @@ enum BattleSprites {
         return sprite
     }
 
-    /// Gemalter Boden über die ganze Karte, Weg eingemalt. Liegt er im Katalog,
-    /// entfällt die gezeichnete Weglinie; die Bauzonen bleiben als Overlay.
+    /// Gemalter Boden über die ganze Karte und `groundMargin` Zellen Wald je
+    /// Seite, Weg eingemalt. Liegt er im Katalog, entfällt die gezeichnete
+    /// Weglinie; die Bauzonen bleiben als Overlay.
     static func ground(missionID: String, layout: BoardLayout) -> SKSpriteNode? {
         let name = groundName(missionID: missionID)
         guard let texture = texture(named: name) else { return nil }
         let sprite = SKSpriteNode(texture: texture)
         sprite.name = name
+        let margin = BattleStyle.groundMargin
         sprite.anchorPoint = .zero
-        sprite.size = CGSize(width: layout.field * CGFloat(layout.columns), height: layout.field * CGFloat(layout.rows))
-        // Linke untere Ecke der Karte in Szenenkoordinaten.
-        sprite.position = layout.scenePoint(Point(x: 0, y: Double(layout.rows)))
+        sprite.size = CGSize(width: layout.field * (CGFloat(layout.columns) + 2 * margin),
+                             height: layout.field * (CGFloat(layout.rows) + 2 * margin))
+        // Linke untere Ecke des Bildes in Szenenkoordinaten.
+        sprite.position = layout.scenePoint(Point(x: -Double(margin), y: Double(layout.rows) + Double(margin)))
+        sprite.zPosition = BattleStyle.groundZ
         return sprite
     }
 
