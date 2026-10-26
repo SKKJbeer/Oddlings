@@ -40,4 +40,54 @@ enum BattleTexts {
     static let resultLost = "Die Festung ist gefallen"
     static func sell(refund: Int) -> String { "Verkaufen +\(refund)" }
     static func price(_ cost: Int) -> String { "\(cost) Gold" }
+
+    // MARK: Oberfläche UI 01
+
+    /// Eine Zeile Rolle und eine Zeile Zusammenspiel für die Infotafel
+    /// (07-ui-ux.md, „Turm antippen“). Rollen aus 02-combat-and-towers.md.
+    static func role(_ kind: TowerKind) -> String {
+        switch kind {
+        case .watch: "Ein Ziel, zuverlässig"
+        case .lightning: "Springt durch Gruppen"
+        case .spore: "Verlangsamt alles im Kreis"
+        }
+    }
+
+    static func combo(_ kind: TowerKind) -> String {
+        switch kind {
+        case .watch: "Schießt länger auf Verlangsamte"
+        case .lightning: "Stark, wo Sporen Gruppen stauen"
+        case .spore: "Macht Blitze stärker"
+        }
+    }
+
+    static func missing(_ gold: Int) -> String { "fehlt \(gold)" }
+    static let tapAgainToBuild = "Nochmal tippen: bauen"
+    static let notEnoughGold = "Zu wenig Gold"
+    static let sellArmed = "Sicher?"
+    static func confirmSell(refund: Int) -> String { "Nochmal tippen: +\(refund) Gold" }
+    static func refundLine(_ refund: Int) -> String { "Verkauf bringt +\(refund) Gold" }
+
+    static let giveUp = "Aufgeben"
+    static let menu = "Menü"
+    static let wonBanner = "Sieg!"
+    static let lostBanner = "Die Festung ist gefallen"
+    static let againWon = "Nochmal spielen"
+    static let againLost = "Nochmal versuchen"
+    static let livesLeft = "Leben übrig"
+    static let duration = "Dauer"
+    static let towersBuilt = "Türme gebaut"
+    static let wavesHeld = "Wellen gehalten"
+    static let enemiesDefeated = "Besiegte Gegner"
+    static func clock(_ seconds: Int) -> String {
+        let rest = seconds % 60
+        return "\(seconds / 60):\(rest < 10 ? "0" : "")\(rest)"
+    }
+    static func nextWaveShort(_ wave: Int) -> String { "Welle \(wave)" }
+
+    static let play = "Spielen"
+    static let watch = "Vorführung ansehen"
+    static let spike = "Leistungsprobe"
+    static let mission = "Mission 1"
+    static let offline = "Offline · ohne Konto"
 }

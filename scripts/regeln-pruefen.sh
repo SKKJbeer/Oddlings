@@ -51,6 +51,16 @@ for wf in .github/workflows/*.yml; do
   done < <(grep -E '^\s*-?\s*uses:' "$wf")
 done
 
+# Schriften nur mit Lizenz und Herkunft (CLAUDE.md, Sicherheit; D-032). Eine
+# Schriftdatei ohne Eintrag in ENTSTEHUNG.md ist eine Fremddatei unbekannter Herkunft.
+while IFS= read -r schrift; do
+  ordner=$(dirname "$schrift")
+  name=$(basename "$schrift")
+  [ -f "$ordner/ENTSTEHUNG.md" ] || { melde "$schrift: ENTSTEHUNG.md fehlt im Ordner"; continue; }
+  grep -q "\`$name\`" "$ordner/ENTSTEHUNG.md" || melde "$schrift: nicht in $ordner/ENTSTEHUNG.md verzeichnet"
+  ls "$ordner"/OFL*.txt >/dev/null 2>&1 || melde "$schrift: keine Lizenzdatei (OFL*.txt) daneben"
+done < <(git ls-files -co --exclude-standard -- '*.ttf' '*.otf')
+
 # Dokumente verweisen aufeinander statt sich zu wiederholen. Ein toter Verweis
 # macht eine Entscheidung unauffindbar.
 python3 scripts/links-pruefen.py || melde "Tote Verweise oder doppelte Entscheidungsnummern (siehe oben)"

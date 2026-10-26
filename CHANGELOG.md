@@ -11,6 +11,33 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.6.0 – 25.10.2026 (Spieloberfläche UI 01)
+
+**Neu**
+- Kreismenü am Feld (D-031): drei runde Turmknöpfe im Bogen mit Preisschild,
+  erstes Tippen zeigt Reichweite und Infotafel (Rolle, Zusammenspiel), zweites baut.
+  Der Bogen weicht Rändern, Kamera und Home-Leiste aus (`HudLayout`).
+- Verkaufen mit zweitem Tippen: „Verkaufen +N“, dann „Sicher?“.
+- Zu wenig Gold: Schild „fehlt N“, Gold blinkt, Warnhaptik, kein Befehl.
+- Kopfleiste neu: Leben, Gold, Welle mit Symbolen, Zahlen rollen bei Änderung,
+  Leben wackeln bei Durchbruch; „Welle N“ mit Countdown-Ring; 2× goldfarben.
+- Pausentafel mit Stand, „Weiter“, „Neu starten“ und „Aufgeben“.
+- Ergebnistafel mit Band „Sieg!“ bzw. „Die Festung ist gefallen“ und hochzählenden
+  Werten: Leben übrig, Dauer, Türme gebaut bzw. Wellen gehalten, Dauer, besiegte Gegner.
+- Haptik zu jeder eigenen Handlung (07, Abschnitt 5), beim Zuschauen keine.
+- Hauptmenü im Stil der Entwürfe, „Spielen“ groß im Daumenbereich.
+- Schriften Lilita One und Nunito (D-032), mit Lizenz und Herkunft in `App/UI/Fonts/`.
+- Konzept: [ui-01-hud-und-tafeln](docs/konzepte/ui-01-hud-und-tafeln.md).
+
+**Tests**
+- Neu: `HudLayoutTests` (jede Bauzelle auf vier iPhone-Größen), `FeedbackPlayerTests`,
+  `AppFontsTests`; `BattleControllerTests` um Verkaufen mit Bestätigung, Aufgeben,
+  Zähler, Dauer, Haptik und Countdown-Ring erweitert.
+- E2E: `TablesE2ETests` (Pause, Neu starten, Aufgeben, Bildschirmfotos zum
+  Vergleich mit dem Entwurf), Verkaufen mit Bestätigung, „fehlt N“, Werte der
+  Ergebnistafel nach Sieg und Niederlage.
+- `regeln-pruefen.sh`: keine Schriftdatei ohne Lizenz und Herkunftseintrag.
+
 ## Dokumente, kein Bau – 25.10.2026 (Grafik: Konzept Phase 2 und Spielrahmen)
 
 - Konzept [Grafik 02](docs/konzepte/grafik-02-phase-2.md): Bilder für Aufwertungen,

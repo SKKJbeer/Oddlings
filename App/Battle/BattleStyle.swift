@@ -60,7 +60,8 @@ enum BattleStyle {
     static let deathLife: TimeInterval = 0.30
     static let floatLife: TimeInterval = 0.70
     static let bannerLife: TimeInterval = 1.6
-    static let font = "AvenirNext-Heavy"
+    /// Lilita One (D-032), angemeldet in `AppFonts`.
+    static let font = AppFonts.display
     static let fastSpeed = 2
 
     static let selection = SKColor(red: 1.00, green: 0.95, blue: 0.70, alpha: 1)
@@ -74,6 +75,13 @@ enum BattleStyle {
     /// Knapp unter der Tippgröße: Im Querformat zählt jeder Punkt Höhe für die Karte.
     static let hudHeight: CGFloat = 40
     static let hudMargin: CGFloat = 6
+    /// Kreismenü (07-ui-ux.md, Grundsatz 5): runde Knöpfe deutlich über 44 pt.
+    static let ringButton: CGFloat = 54
+    static let ringGap: CGFloat = 6
+    static let infoPanel = CGSize(width: 214, height: 96)
+    static var hudMetrics: HudLayout.Metrics {
+        HudLayout.Metrics(button: ringButton, gap: ringGap, margin: screenMargin, panel: infoPanel)
+    }
 
     /// Längste Bildzeit, die nachgeholt wird.
     static let maxCatchUp: TimeInterval = 0.25

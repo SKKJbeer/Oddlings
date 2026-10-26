@@ -43,6 +43,14 @@ struct E2EApp {
     var pausedHint: XCUIElement { app.staticTexts["hud.paused"] }
     func build(_ kind: TowerKind) -> XCUIElement { app.buttons["build.\(kind.rawValue)"] }
     var sell: XCUIElement { app.buttons["sell"] }
+    var sellConfirm: XCUIElement { app.staticTexts["sell.confirm"] }
+    var pauseCard: XCUIElement { app.otherElements["pause.card"] }
+    var resume: XCUIElement { app.buttons["pause.resume"] }
+    var restart: XCUIElement { app.buttons["pause.restart"] }
+    var giveUp: XCUIElement { app.buttons["pause.quit"] }
+    /// Wert einer Kachel der Ergebnistafel, z. B. `result.lives`. Vorgelesen
+    /// wird immer der echte Wert, auch während die Anzeige noch hochzählt.
+    func resultValue(_ id: String) -> String { app.staticTexts[id].label }
 
     func cost(_ kind: TowerKind) -> Int { config.towers[kind]?.cost ?? 0 }
 
@@ -93,6 +101,21 @@ struct E2EApp {
             RunLoop.current.run(until: Date().addingTimeInterval(0.1))
         }
         XCTAssertEqual(element.label, expected, file: file, line: line)
+    }
+
+    /// Bildschirmfoto als Anhang und, wenn die CI einen Ordner nennt
+    /// (`ODDLINGS_BILDER`), als Datei zum Vergleich mit dem Entwurf.
+    func screenshot(_ name: String, in test: XCTestCase) {
+        let shot = XCUIScreen.main.screenshot()
+        let attachment = XCTAttachment(screenshot: shot)
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        test.add(attachment)
+        if let folder = ProcessInfo.processInfo.environment["ODDLINGS_BILDER"], !folder.isEmpty {
+            let url = URL(fileURLWithPath: folder).appendingPathComponent("\(name).png")
+            try? FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+            try? shot.pngRepresentation.write(to: url)
+        }
     }
 
     private func number(in element: XCUIElement) -> Int {

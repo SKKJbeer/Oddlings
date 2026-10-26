@@ -57,7 +57,7 @@ final class BattleScene: SKScene {
         // Effekte vor dem Abgleich, solange getötete Gegner noch eine Node haben.
         for event in events { play(event) }
         sync()
-        controller?.afterFrame()
+        controller?.afterFrame(events: events)
         showSelection()
     }
 

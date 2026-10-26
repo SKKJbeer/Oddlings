@@ -102,6 +102,9 @@ jobs:
         run: |
           set -o pipefail
           status=0
+          # Bildschirmfotos der Oberflächentests (TablesE2ETests) landen im
+          # Artefakt simulator-probe, zum Vergleich mit dem Entwurf.
+          export TEST_RUNNER_ODDLINGS_BILDER="$PWD/build/probe/oberflaeche"
           xcodebuild test \
             -project Oddlings.xcodeproj -scheme Oddlings \
             -destination "id=$UDID" \

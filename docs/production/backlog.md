@@ -167,6 +167,16 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
 - **Tests:** UI-Test: Mission mit Bot zu Ende, Neustart.
 - **Abh.:** WP-12, WP-13 · **Risiken:** gering
 
+### UI-01 · Spieloberfläche nach Entwurf ✓ 0.6.0
+- **Ziel:** Der Spieltest misst die Bedienung, die bleibt (Steffen, 25.10.2026: vor WP-15).
+- **Umfang:** Kreismenü am Feld (D-031), Verkaufen mit zweitem Tippen, Kopfleiste mit
+  Symbolen und Countdown-Ring, Pausen- und Ergebnistafel mit Werten, Haptik,
+  Hauptmenü, Schriften Lilita One und Nunito (D-032).
+- **Konzept:** [ui-01-hud-und-tafeln](../konzepte/ui-01-hud-und-tafeln.md)
+- **Tests:** `HudLayoutTests`, `FeedbackPlayerTests`, `AppFontsTests`, erweiterte
+  `BattleControllerTests`; E2E `TablesE2ETests` und angepasste Bau-/Verkaufstests.
+- **Abh.:** WP-12 bis WP-14 · **Risiken:** gezeichnete Tafeln bis zu den UI-Bildern
+
 ### WP-15 · Erster Spieltest
 - **Ziel:** Phase 1 abschließen mit Menschen, nicht mit Code.
 - **Umfang:** Build auf Steffens Gerät bzw. TestFlight; drei Personen spielen Mission 1;
@@ -174,7 +184,7 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
   Dauer, Ergebnis, Abbrüche, Fehltipps (entscheidet D-030, HUD-Ecken).
 - **Abnahme:** Protokoll in `docs/production/playtests/`; Balancewerte angepasst oder
   bestätigt; Phase 2 geschnitten.
-- **Abh.:** WP-14 · **Risiken:** Ergebnis „macht keinen Spaß" ist ein gültiges Ergebnis
+- **Abh.:** WP-14, UI-01 · **Risiken:** Ergebnis „macht keinen Spaß" ist ein gültiges Ergebnis
 
 ---
 
