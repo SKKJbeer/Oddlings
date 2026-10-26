@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.10.2 – 26.10.2026 (Grafik 04: gemalte Kampagnenkarte)
+## 0.10.2 – 26.10.2026 (Grafik 04: gemalte Kampagnenkarte), Bau 29 (VALID)
 
 **Neu**
 - Gemalte Karte von Region 1 (`map_region01`): Flüsterwald mit Lichtungen unter
