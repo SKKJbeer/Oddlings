@@ -1,6 +1,6 @@
 import Foundation
 
-/// Startvölker (03). Seit 0.7.0 im Speicherstand, seit R-4 wirksam; ihre Werte
+/// Startvölker (03). Seit R-4 wirksam, seit R-5 Teil des Avatars; ihre Werte
 /// stehen in `races.json` (`RaceTable`).
 public enum Race: String, Codable, CaseIterable, CodingKeyRepresentable, Sendable {
     case dwarves, elves
@@ -10,16 +10,18 @@ public enum Race: String, Codable, CaseIterable, CodingKeyRepresentable, Sendabl
 public struct SaveGame: Codable, Equatable, Sendable {
     /// Schema dieser App-Fassung. Jede Änderung am Aufbau hebt sie und bringt
     /// eine Migration in `SaveGameCodec.migrate` mit.
-    public static let currentSchema = 1
+    /// 1: Fortschritt und Volk (0.7.0). 2: Avatar statt Volk (R-5).
+    public static let currentSchema = 2
 
     public var schemaVersion: Int
     public var progress: CampaignProgress
-    public var race: Race?
+    /// Fehlt, bis der Spieler ihn beim ersten „Spielen“ aufbaut.
+    public var avatar: Avatar?
 
-    public init(progress: CampaignProgress = CampaignProgress(), race: Race? = nil) {
+    public init(progress: CampaignProgress = CampaignProgress(), avatar: Avatar? = nil) {
         schemaVersion = Self.currentSchema
         self.progress = progress
-        self.race = race
+        self.avatar = avatar
     }
 }
 
@@ -48,6 +50,9 @@ public enum SaveGameCodec {
         case starsOutOfRange(mission: String, stars: Int)
         case duplicateMission(String)
         case unknownRace(String)
+        /// Name oder Porträt fehlt oder besteht die Prüfung nicht. Kostet den
+        /// Avatar, nicht den Fortschritt: Der Spieler baut ihn neu auf.
+        case invalidAvatar
     }
 
     public struct Decoded: Equatable, Sendable {
@@ -82,19 +87,34 @@ public enum SaveGameCodec {
                 records.append(record)
             }
         }
-        var race: Race?
-        if let name = migrated.race {
-            if let known = Race(rawValue: name) { race = known } else { dropped.append(.unknownRace(name)) }
+        var avatar: Avatar?
+        if let rawAvatar = migrated.avatar {
+            if let raceName = rawAvatar.race, Race(rawValue: raceName) == nil {
+                dropped.append(.unknownRace(raceName))
+            } else if let race = rawAvatar.race.flatMap(Race.init(rawValue:)), let name = rawAvatar.name,
+                      let portrait = rawAvatar.portrait, let valid = Avatar(race: race, name: name, portrait: portrait) {
+                avatar = valid
+            } else {
+                dropped.append(.invalidAvatar)
+            }
         }
-        return Decoded(save: SaveGame(progress: CampaignProgress(records: records), race: race), dropped: dropped)
+        return Decoded(save: SaveGame(progress: CampaignProgress(records: records), avatar: avatar), dropped: dropped)
     }
 
-    /// Hebt ältere Schemata Schritt für Schritt auf das aktuelle. Schema 1 ist
-    /// das erste, also gibt es noch keinen Schritt; ein unbekanntes kleineres
-    /// Schema (0, negativ) ist kein Spielstand dieser App.
+    /// Hebt ältere Schemata Schritt für Schritt auf das aktuelle; ein
+    /// unbekanntes kleineres Schema (0, negativ) ist kein Spielstand dieser App.
     static func migrate(_ raw: RawSave) throws(Failure) -> RawSave {
+        var raw = raw
         switch raw.schemaVersion {
-        case SaveGame.currentSchema: raw
+        case 1:
+            // Schema 1 kannte nur das Volk, gewählt vor jeder Mission. Ohne Name
+            // und Porträt ist das kein Avatar: Der Spieler baut ihn einmal auf
+            // und behält seinen Fortschritt (Konzept r-5-avatar.md).
+            raw.race = nil
+            raw.avatar = nil
+            raw.schemaVersion = 2
+            return try migrate(raw)
+        case SaveGame.currentSchema: return raw
         default: throw .unknownSchema(raw.schemaVersion)
         }
     }
@@ -104,7 +124,15 @@ public enum SaveGameCodec {
     struct RawSave: Decodable {
         var schemaVersion: Int
         var progress: RawProgress?
+        /// Nur Schema 1.
         var race: String?
+        var avatar: RawAvatar?
+    }
+
+    struct RawAvatar: Decodable {
+        var race: String?
+        var name: String?
+        var portrait: String?
     }
 
     struct RawProgress: Decodable {

@@ -34,10 +34,6 @@ enum CampaignStyle {
     static let trailWidth: CGFloat = 5
     static let ring: CGFloat = 4
     static let pulse: Double = 1.4
-    /// Apples Mindestgröße für Tippziele, nicht mehr: Im Querformat zählt jeder
-    /// Punkt Höhe auf der Tafel.
-    static let raceButtonHeight: CGFloat = 44
-
     static func raceSymbol(_ race: Race) -> String {
         switch race {
         case .dwarves: "hammer.fill"

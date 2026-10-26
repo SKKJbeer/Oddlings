@@ -31,13 +31,16 @@ ergänzt). Die Reihenfolge und Abhängigkeiten stehen in der
   Speicherstand und Einstellungen (0.7.0, R-1/R-2), Festungsfähigkeit Steinregen
   (0.8.0, R-3, Bau 24), Völkerwahl Zwerge mit Bollwerk und Elfen mit Mondmal
   (Zwerge bauen Wachtürme 10 % billiger, D-062, ab 0.10.1)
-  (0.9.0, R-4, **Bau 25 VALID**). Spielbar bleibt nur Mission 1 (D-061).
+  (0.9.0, R-4, **Bau 25 VALID**). Spielbar bleibt nur Mission 1.
+- **Avatar einmal am Anfang** (0.11.0, R-5, D-063): Volk, Porträt und Name beim ersten
+  „Spielen“, danach ist das Volk gesetzt. Rollenspielartig wird der Avatar über Rang
+  mit Talentwahl ohne Mehrkraft (D-064, Paket R-6).
 
 ## Läuft
 
 | Thread | Woran | Nächster Schritt |
 |---|---|---|
-| Designstand und MVP-Plan (Code) | Spielrahmen R-1 bis R-4 ist ausgeliefert | Spieltest WP-15 begleiten, danach Phase 2 |
+| Designstand und MVP-Plan (Code) | R-5 Avatar-Aufbau (0.11.0) | R-6 Avatarrang mit Talentwahl, Spieltest WP-15 begleiten |
 | Spieloberfläche und Menüs | Einbau der Oberfläche für Mission 1; Entwürfe für Hauptmenü, Kampagnenkarte, Völkerwahl | Entwürfe vor R-1, R-2, R-4 |
 | AAA-Grafik | Erste Grafik ist im Spiel (0.5.2) | Menühintergrund, Karte Flüsterwald, Wappen und Porträts |
 | Animationen und Effekte | FX 01 in TestFlight (0.10.0, Bau 27): Laufen, Treffer, Tod, Turmangriffe, Fähigkeiten | FX 02: Gegner als 3D-Figuren mit Gliedmaßen (D-051), [Konzept](../konzepte/fx-02-figuren-in-3d.md) |
@@ -55,6 +58,7 @@ ergänzt). Die Reihenfolge und Abhängigkeiten stehen in der
 
 | Frage | Woher |
 |---|---|
+| Wechsel des Volks, bevor es eine Spielwährung gibt (Entscheidungskarte) | R-5 |
 | Spieltest durchführen, sobald der Bau mit neuer Oberfläche da ist | WP-15 |
 | Herkunft der 3D-Modelle für FX 02 (Entscheidungskarte) | Animationen und Effekte |
 | Ohne Eile: Messung des Spikes auf dem iPhone | WP-01 |

@@ -11,6 +11,8 @@ import os
 final class AppFlow {
     enum Screen: Equatable {
         case menu
+        /// Avatar-Aufbau (R-5), einmal vor der ersten Karte.
+        case setup
         case map
         case battle(node: String)
         case watch
@@ -24,10 +26,13 @@ final class AppFlow {
     var selectedNode: String
     /// Knoten, dessen Wertung gerade besser wurde. Die Karte hebt ihn hervor.
     private(set) var justImproved: String?
-    /// Gewähltes Volk (R-4). Ohne Wahl gilt die Fähigkeit der Missionsdatei.
-    private(set) var race: Race?
-    /// Werte der Völker. Fehlt die Datei, gibt es keine Wahl; die Kerntests
-    /// laden dieselbe Datei und fangen das vor der Auslieferung.
+    /// Einmal aufgebaut, danach gesetzt (R-5, D-063).
+    private(set) var avatar: Avatar?
+    /// Das Volk des Avatars bestimmt jede Mission. Ohne Avatar (nur die
+    /// Oberflächentests mit `--play`) gilt die Fähigkeit der Missionsdatei.
+    var race: Race? { avatar?.race }
+    /// Werte der Völker. Die Kerntests laden dieselbe Datei und fangen einen
+    /// Fehler vor der Auslieferung; fehlt sie trotzdem, spielt die Mission ohne Volk.
     let races: RaceTable?
 
     @ObservationIgnored private let store: SaveStore?
@@ -50,7 +55,7 @@ final class AppFlow {
         save = loadedSave
         writable = loadedWritable
         progress = loadedSave.progress
-        race = loadedSave.race
+        avatar = loadedSave.avatar
         do {
             races = try RaceTable.bundled()
         } catch {
@@ -71,14 +76,16 @@ final class AppFlow {
     func showWatch() { screen = .watch }
     func showSpike() { screen = .spike }
 
+    /// Ohne Avatar führt jeder Weg zur Karte erst durch den Aufbau.
     func showMap() {
         justImproved = nil
-        screen = .map
+        screen = avatar == nil ? .setup : .map
     }
 
     /// Startet nur, was die Regeln öffnen. Die Karte zeigt gesperrte Knoten
     /// ohne Startknopf; dies ist die zweite Sicherung dahinter.
     func start(_ nodeID: String) {
+        guard avatar != nil else { return showMap() }
         guard let node = campaign.node(nodeID), state(of: node).isPlayable else { return }
         selectedNode = nodeID
         justImproved = nil
@@ -98,17 +105,19 @@ final class AppFlow {
         return mission.applying(config)
     }
 
-    // MARK: Volk
+    // MARK: Avatar
 
-    /// Beide Völker sind wählbar, solange nur Mission 1 spielbar ist (D-061).
-    var canChooseRace: Bool { races != nil }
-
-    /// Gemerkt im Spielstand, damit die nächste Mission mit demselben Volk beginnt.
-    func choose(_ race: Race) {
-        guard canChooseRace, race != self.race else { return }
-        self.race = race
-        save.race = race
+    /// Legt den Avatar an, genau einmal: Danach ist das Volk gesetzt (D-063).
+    /// Ein Wechsel kommt erst mit einer Spielwährung, über die Steffen noch
+    /// entscheidet. Vom Aufbau aus geht es zur Karte.
+    @discardableResult
+    func createAvatar(race: Race, name: String, portrait: String) -> Bool {
+        guard avatar == nil, let created = Avatar(race: race, name: name, portrait: portrait) else { return false }
+        avatar = created
+        save.avatar = created
         persist()
+        if screen == .setup { screen = .map }
+        return true
     }
 
     // MARK: Ergebnis

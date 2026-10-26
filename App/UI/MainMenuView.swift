@@ -14,6 +14,8 @@ struct MainMenuView: View {
     var onWatch: () -> Void
     var onSpike: () -> Void
     var onSettings: () -> Void = {}
+    /// Avatarschild oben links neben den Einstellungen (R-5); fehlt vor dem Aufbau.
+    var avatar: Avatar?
 
     var body: some View {
         GeometryReader { geometry in
@@ -35,16 +37,21 @@ struct MainMenuView: View {
                     .padding(.leading, 24)
                     .padding(.bottom, 18)
                     .overlay(alignment: .topLeading) {
-                        Button(action: onSettings) {
-                            RingButtonFace(highlighted: false, tint: UITheme.woodRim, size: 48) {
-                                Image(systemName: "gearshape.fill")
-                                    .font(.system(size: 22, weight: .bold))
-                                    .foregroundStyle(UITheme.cream)
+                        HStack(spacing: 12) {
+                            Button(action: onSettings) {
+                                RingButtonFace(highlighted: false, tint: UITheme.woodRim, size: 48) {
+                                    Image(systemName: "gearshape.fill")
+                                        .font(.system(size: 22, weight: .bold))
+                                        .foregroundStyle(UITheme.cream)
+                                }
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel(MenuTexts.settings)
+                            .accessibilityIdentifier("menu.settings")
+                            if let avatar {
+                                AvatarBadge(avatar: avatar).accessibilityIdentifier("menu.avatar")
                             }
                         }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel(MenuTexts.settings)
-                        .accessibilityIdentifier("menu.settings")
                         .padding(.top, 18)
                         .padding(.leading, 24)
                     }

@@ -8,7 +8,7 @@ final class CampaignE2ETests: XCTestCase {
 
     @MainActor
     func testWinEarnsStarsThatSurviveRelaunch() throws {
-        let e2e = try E2EApp(["--e2e-zeitraffer", E2EApp.fastForward, "--e2e-mitspieler"], storage: "sieg")
+        let e2e = try E2EApp(["--e2e-zeitraffer", E2EApp.fastForward, "--e2e-mitspieler"], storage: "sieg", avatar: .elves)
         let resume = e2e.app.buttons["menu.continue"]
         XCTAssertTrue(resume.waitForExistence(timeout: 15), "Menü bietet die nächste Mission an")
         XCTAssertTrue(resume.label.contains("Mission 1"), resume.label)
@@ -41,7 +41,7 @@ final class CampaignE2ETests: XCTestCase {
 
     @MainActor
     func testLockedMissionsShowWhyAndDoNotStart() throws {
-        let e2e = try E2EApp()
+        let e2e = try E2EApp(avatar: .elves)
         let play = e2e.app.buttons["menu.play"]
         XCTAssertTrue(play.waitForExistence(timeout: 15))
         play.tap()

@@ -79,9 +79,10 @@ PR legt nur Volk und Name an, das Speicherformat lässt Platz für Rang und Tale
 
 - **Kern (OddlingsCore):** `SaveGame` bekommt `avatar: Avatar?` mit
   `Avatar { race: Race, name: String, portrait: String }`. Das Schema wird 2. `SaveGameCodec.migrate`
-  macht aus Schema 1 mit `race` einen Avatar ohne Namen nicht automatisch, sondern
-  lässt `avatar` leer: Wer schon getestet hat, baut seinen Avatar einmal neu auf.
-  Die alte Wahl wird als Vorauswahl übernommen.
+  macht aus Schema 1 mit `race` keinen Avatar, sondern lässt `avatar` leer: Wer
+  schon getestet hat, baut seinen Avatar einmal neu auf und behält seinen
+  Fortschritt. Eine Vorauswahl aus der alten Wahl gibt es nicht; sie beträfe nur
+  Testbauten und bräuchte ein eigenes Feld.
 - **Prüfung beim Laden** (Sicherheitsregel „was von außen kommt“): Der Name wird
   getrimmt, ist 1 bis 16 Zeichen lang und enthält keine Steuerzeichen. Die
   Porträtkennung besteht nur aus Kleinbuchstaben, Ziffern und Bindestrich

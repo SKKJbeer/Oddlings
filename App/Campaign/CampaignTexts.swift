@@ -9,7 +9,6 @@ enum CampaignTexts {
     static let start = "Starten"
     static let again = "Nochmal spielen"
     static let back = "Menü"
-    static let raceLabel = "Volk"
 
     static func race(_ race: Race) -> String {
         switch race {
