@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.9.1 – 26.10.2026 (Grafik 03: Titelbild und Oberflächensymbole)
+## 0.9.1 – 26.10.2026 (Grafik 03: Titelbild und Oberflächensymbole), Bau 26 (VALID)
 
 **Neu**
 - Gemaltes Titelbild im Hauptmenü (`ui_keyart_menu`): Festung auf dem Hügel, die
