@@ -142,7 +142,7 @@ final class AppFlow {
         guard let store else { return }
         do {
             try store.save(save, allowed: writable)
-            Self.log.notice("Spielstand geschrieben, Avatar \(save.avatar == nil ? "fehlt" : "da", privacy: .public)")
+            Self.log.notice("Spielstand geschrieben, Avatar \(self.save.avatar == nil ? "fehlt" : "da", privacy: .public)")
         } catch {
             Self.log.error("Spielstand nicht geschrieben: \(String(describing: error), privacy: .public)")
         }
