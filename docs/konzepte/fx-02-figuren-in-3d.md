@@ -57,7 +57,7 @@ Panzerbestie folgen. Fällt der Plünderer durch, bleibt das Spiel bei Stufe 1
 ## Werkzeugkette
 
 ```
-art/spielfeld/enemy_raider-frei.png
+art/figuren-3d/enemy_raider/vorlage.png   (eigene Vorlage aus dem Grafik-Thread)
         │ TRELLIS (einmal, Ergebnis eingecheckt)
         ▼
 art/figuren-3d/enemy_raider/modell.glb ──▶ tools/figuren-3d/rig.py   Skelett aus rig.json, automatische Gewichte
@@ -78,6 +78,17 @@ art/figuren-3d/enemy_raider/modell.glb ──▶ tools/figuren-3d/rig.py   Skele
                  tools/art-check/check_assets.py prüft Anzahl, Größe, Anker
 ```
 
+- **Eingang für TRELLIS** (Grafik-Thread, 26.10.2026): nicht das freigestellte
+  Spielbild, denn dessen Kontur würde in die Textur gebacken und nach dem Rendern
+  käme ein zweiter Rand. Der Grafik-Thread malt je Figur eine eigene Vorlage im
+  selben Aussehen: Dreiviertelansicht, gerade stehend, Arme etwas vom Körper,
+  Waffe und Sack getrennt auf demselben Blatt (sie hängen später an Hand- und
+  Rückenknochen). Freigestellt mit `kontur=0`. Reihenfolge nach Schwierigkeit:
+  Plünderer zuerst (Probe), Panzerbestie leicht, Flitzer am schwersten.
+- **Kontur und Farbe** wie `freistellen.py` (0,009 der Bildhöhe, Farbe 34/22/18,
+  Alpha-Schwelle 96), damit Lauf- und Standbild gleich wirken. Farbangleich in
+  Lab an das gemalte Bild (Mittelwert und Streuung der deckenden Pixel, L schwach,
+  a/b stärker) mit `angleichen.py` aus dem Skill `spielgrafik`.
 - **Was eingecheckt wird:** das Modell (`.glb`), `rig.json` (Gelenkpunkte je
   Figur), die Skripte und die fertigen Bilder. Gerendert wird bei mir, nicht in
   der App und nicht im CI. Das CI prüft nur die fertigen Bilder.
@@ -91,6 +102,13 @@ art/figuren-3d/enemy_raider/modell.glb ──▶ tools/figuren-3d/rig.py   Skele
   schweres Stampfen).
 - **Licht** von links oben wie in den Gemälden, damit Figuren und Türme
   zusammenpassen. Der Grafik-Thread legt Kontur und Farbangleich fest.
+
+## Asset-Vertrag für Bildfolgen
+
+Ein Eintrag je Folge mit den Feldern des Standbilds und der Anzahl, zum Beispiel
+`"enemy_raider_walk": {"folge": 8, "seiteZellen": 0.9, "anker": 0.1, "alpha": true}`,
+ebenso `_hit` (3) und `_die` (6). `check_assets.py` erwartet daraus `_00` bis
+`_07`: lückenlos, gleich groß, gleicher Fußanker, Entstehung je Folge.
 
 ## Einbau in die App
 
@@ -138,5 +156,5 @@ Mission 1 läuft überwiegend seitlich, darum erst eine Richtung, gespiegelt.
 
 1. **Steffen:** Weg A, B oder C, und bei A: darf das Bild über die öffentliche
    Hugging-Face-Seite laufen, oder lieber eine gemietete Grafikkarte?
-2. **Grafik-Thread:** Kontur, Farbangleich und Asset-Vertrag für Bildfolgen.
+2. **Grafik-Thread:** Vorlage des Plünderers malen (nach der Regionskarte), `angleichen.py` und die Prüfung der Bildfolgen.
 3. Türme bleiben vorerst gemalte Standbilder mit den Bewegungen aus FX 01.
