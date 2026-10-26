@@ -61,6 +61,7 @@ final class FxDirector {
         self.world = world
         self.field = field
         self.reduceMotion = reduceMotion
+        FxTextures.prewarm()
     }
 
     var runningTweens: Int { tweens.count }

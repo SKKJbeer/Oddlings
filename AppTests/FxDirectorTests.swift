@@ -272,4 +272,5 @@ final class FxDirectorTests: XCTestCase {
         run(scene, seconds: FxStyle.wallFall + 0.1)
         XCTAssertNil(wall.parent, "danach weg")
     }
+
 }
