@@ -18,6 +18,7 @@ public struct GameState: Codable, Equatable, Sendable {
     public var nextEntityID: Int
     public var outcome: Outcome?
     public var rng: SplitMix64
+    public var ability = AbilityState()
 
     public var isOver: Bool { outcome != nil }
 }
@@ -51,6 +52,26 @@ public struct Enemy: Codable, Equatable, Sendable {
     public var distance: Double
     /// Aktive Verlangsamung; nil, sobald sie abgelaufen ist.
     public var slow: SlowEffect? = nil
+    /// Erster Tick, in dem der Gegner nach Steinregen wieder läuft.
+    public var stunUntilTick: Int? = nil
+}
+
+/// Stand der Festungsfähigkeit. Bereit ab Tick 0 (03).
+public struct AbilityState: Codable, Equatable, Sendable {
+    /// Erster Tick, in dem wieder geworfen werden darf.
+    public var readyTick = 0
+    /// Geworfen, noch nicht eingeschlagen.
+    public var strike: Strike?
+
+    public init(readyTick: Int = 0, strike: Strike? = nil) {
+        self.readyTick = readyTick
+        self.strike = strike
+    }
+}
+
+public struct Strike: Codable, Equatable, Sendable {
+    public var center: Point
+    public var impactTick: Int
 }
 
 /// Verlangsamung durch Sporen. `untilTick` ist der erste Tick ohne Wirkung.
@@ -66,6 +87,8 @@ public enum Command: Codable, Equatable, Sendable {
     case sell(towerID: Int)
     /// Startet die nächste Welle sofort, statt auf den Takt zu warten.
     case callNextWave
+    /// Festungsfähigkeit auf eine Stelle (Felder); wird auf den Weg gezogen.
+    case useAbility(Point)
 }
 
 public enum Rejection: Equatable, Sendable {
@@ -75,6 +98,9 @@ public enum Rejection: Equatable, Sendable {
     case outsideMap
     case unknownTower
     case noWaveLeft
+    case abilityNotReady
+    case notOnPath
+    case noAbility
 }
 
 public enum Event: Equatable, Sendable {
@@ -90,4 +116,7 @@ public enum Event: Equatable, Sendable {
     case enemySpawned(id: Int)
     case enemyLeaked(id: Int, damage: Int)
     case missionEnded(won: Bool)
+    /// Geworfen: Der Schatten liegt ab jetzt bei `center`, der Einschlag kommt in `impactTick`.
+    case abilityCast(center: Point, impactTick: Int)
+    case abilityImpact(center: Point, hits: [Int])
 }

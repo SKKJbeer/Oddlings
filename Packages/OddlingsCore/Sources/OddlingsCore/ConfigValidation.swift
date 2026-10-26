@@ -19,6 +19,7 @@ public struct ConfigIssue: Equatable, Sendable, CustomStringConvertible {
         case noWaves
         case emptyWave
         case starsOutOfOrder           // 0 < two ≤ three ≤ fortressLives
+        case delayNotBelowCooldown
     }
 
     public init(field: String, rule: Rule) {
@@ -39,6 +40,7 @@ public struct ConfigIssue: Equatable, Sendable, CustomStringConvertible {
         case .pathTooShort: "\(field) braucht mindestens zwei Punkte"
         case .noWaves: "\(field) braucht mindestens eine Welle"
         case .emptyWave: "\(field) braucht mindestens eine Gruppe"
+        case .delayNotBelowCooldown: "\(field) muss kleiner als cooldown sein"
         case .starsOutOfOrder: "\(field) braucht 0 < two ≤ three ≤ fortressLives"
         }
     }
@@ -130,6 +132,20 @@ extension BalanceConfig {
             positive(enemy.speed, "\(field).speed")
             nonNegative(Double(enemy.reward), "\(field).reward")
             positive(Double(enemy.leakDamage), "\(field).leakDamage")
+        }
+
+        if let ability {
+            positive(ability.radius, "ability.radius")
+            nonNegative(ability.damage, "ability.damage")
+            nonNegative(ability.delay, "ability.delay")
+            nonNegative(ability.stunDuration, "ability.stunDuration")
+            positive(ability.cooldown, "ability.cooldown")
+            nonNegative(ability.snapDistance, "ability.snapDistance")
+            // Sonst läge der Einschlag nach der nächsten Bereitschaft, und ein
+            // zweiter Wurf überschriebe den ersten, bevor er trifft.
+            if !(ability.delay < ability.cooldown) {
+                found.append(.init(field: "ability.delay", rule: .delayNotBelowCooldown))
+            }
         }
 
         if waves.isEmpty { found.append(.init(field: "waves", rule: .noWaves)) }

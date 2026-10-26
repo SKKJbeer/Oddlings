@@ -22,7 +22,10 @@ final class TablesE2ETests: XCTestCase {
 
     @MainActor
     func testPauseCardRestartsMission() throws {
-        let e2e = try E2EApp(["--play", "--e2e-zeitraffer", E2EApp.readableFastForward])
+        // Zeitraffer ohne Türme verliert die Mission, bevor gebaut ist; die
+        // Welle wartet deshalb.
+        let e2e = try E2EApp(["--play", "--e2e-zeitraffer", E2EApp.readableFastForward,
+                              "--e2e-erste-welle", E2EApp.wavesOnHold])
         e2e.waitForBoard()
         let cell = try XCTUnwrap(e2e.map.buildableCells.first)
         e2e.build(.watch, at: cell)

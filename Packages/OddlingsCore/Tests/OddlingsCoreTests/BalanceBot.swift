@@ -18,6 +18,9 @@ enum Strategies {
 struct BalanceBot {
     let sim: Simulation
     var order: [TowerKind]
+    /// Wirft den Steinregen, sobald er bereit ist und mindestens zwei Gegner
+    /// zusammenstehen (03: „Bot wirft auf die dichteste Stelle").
+    var castsAbility = false
     private let candidates: [Cell]
     private let samples: [Point]
 
@@ -45,7 +48,24 @@ struct BalanceBot {
             placed.append((kind, cell))
             commands.append(.build(kind, cell))
         }
+        if castsAbility, let target = densestPoint(in: state) { commands.append(.useAbility(target)) }
         return commands
+    }
+
+    /// Die Gegnerposition mit den meisten Nachbarn im Wirkkreis, ohne
+    /// vorauszuzielen: Der Bot soll eine Untergrenze messen, keinen Meister.
+    private func densestPoint(in state: GameState) -> Point? {
+        guard let ability = sim.config.ability, state.tick >= state.ability.readyTick else { return nil }
+        let points = state.enemies.filter { $0.hp > 0 }.map { sim.map.path.position(at: $0.distance) }
+        var best: Point?, bestCount = 1
+        for p in points {
+            let count = points.filter { $0.distance(to: p) <= ability.radius }.count
+            if count > bestCount {
+                best = p
+                bestCount = count
+            }
+        }
+        return best
     }
 
     private func bestCell(for kind: TowerKind, stats: TowerConfig, placed: [(kind: TowerKind, cell: Cell)]) -> Cell? {
@@ -85,8 +105,10 @@ struct BotRun {
 extension Simulation {
     /// Spielt eine Mission mit dem Bot zu Ende. Gedeckelt, damit ein Fehler
     /// den Test rot macht statt ihn hängen zu lassen.
-    func play(_ order: [TowerKind], seed: UInt64 = 1, until stopTick: Int = 200_000) -> BotRun {
+    func play(_ order: [TowerKind], seed: UInt64 = 1, until stopTick: Int = 200_000,
+              castsAbility: Bool = false) -> BotRun {
         var bot = BalanceBot(sim: self, order: order)
+        bot.castsAbility = castsAbility
         var run = BotRun(state: newGame(seed: seed))
         while !run.state.isOver && run.state.tick < stopTick {
             let commands = bot.commands(for: run.state)
@@ -100,11 +122,11 @@ extension Simulation {
 
     /// Größter Faktor auf das Leben aller Gegner, bei dem die Bauweise noch
     /// gewinnt. Gleiche Suche wie im Prüfskript: 0,5 bis 4, neun Halbierungen.
-    func reserve(_ order: [TowerKind]) -> Double {
+    func reserve(_ order: [TowerKind], castsAbility: Bool = false) -> Double {
         func wins(_ factor: Double) -> Bool {
             var scaled = config
             for kind in EnemyKind.allCases { scaled.enemies[kind]?.hp *= factor }
-            return Simulation(config: scaled).play(order).state.outcome == .won
+            return Simulation(config: scaled).play(order, castsAbility: castsAbility).state.outcome == .won
         }
         var lo = 0.5, hi = 4.0
         guard wins(lo) else { return 0 }

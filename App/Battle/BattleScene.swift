@@ -77,7 +77,12 @@ final class BattleScene: SKScene {
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
-        controller?.tap(layout.cell(atScene: touch.location(in: self)))
+        let location = touch.location(in: self)
+        if controller?.aiming == true {
+            controller?.cast(at: layout.fieldPoint(atScene: location))
+        } else {
+            controller?.tap(layout.cell(atScene: location))
+        }
         showSelection()
     }
 
@@ -93,6 +98,7 @@ final class BattleScene: SKScene {
         case .none: cell = nil
         case .cell(let c, _): cell = c
         case .tower: cell = controller?.selectedTower?.cell
+        case .aiming: cell = nil
         }
         guard let cell else { return }
         let mark = SKShapeNode(rectOf: CGSize(width: field, height: field), cornerRadius: field * 0.12)
@@ -265,6 +271,11 @@ final class BattleScene: SKScene {
         case .towerSold(let id, let refund):
             guard let position = towerNodes[id]?.position else { return }
             float("+\(refund)", at: position, color: BattleStyle.gold)
+        case .abilityCast(let center, let impactTick):
+            let seconds = Double(impactTick - model.state.tick) / Double(model.sim.config.simulation.ticksPerSecond)
+            strikeShadow(at: toScene(center), radius: model.sim.config.ability?.radius ?? 0, until: seconds)
+        case .abilityImpact(let center, _):
+            strikeDust(at: toScene(center), radius: model.sim.config.ability?.radius ?? 0)
         case .towerBuilt, .enemySpawned, .enemySlowed:
             // Bauen zeigt sich über den Zustand (Aufbau-Animation in `sync`),
             // Verlangsamung als Markierung am Gegner.
@@ -278,6 +289,7 @@ final class BattleScene: SKScene {
         case .build(_, let cell): return toScene(cell.center)
         case .sell(let id): return towerNodes[id]?.position ?? CGPoint(x: size.width / 2, y: size.height / 2)
         case .callNextWave: return CGPoint(x: size.width / 2, y: size.height / 2)
+        case .useAbility(let point): return toScene(point)
         }
     }
 
@@ -319,6 +331,26 @@ final class BattleScene: SKScene {
         node.setScale(0.3)
         node.run(.scale(to: 1, duration: BattleStyle.pulseLife))
         fade(node, after: BattleStyle.pulseLife)
+    }
+
+    /// Der Schatten wächst bis zum Einschlag: Er sagt, wo und wann es trifft.
+    private func strikeShadow(at center: CGPoint, radius: Double, until seconds: TimeInterval) {
+        let node = SKShapeNode(circleOfRadius: CGFloat(radius) * field)
+        node.fillColor = BattleStyle.strikeShadow
+        node.strokeColor = .clear
+        node.position = center
+        node.setScale(0.2)
+        effectLayer.addChild(node)
+        node.run(.sequence([.scale(to: 1, duration: max(seconds, 0)), .removeFromParent()]))
+    }
+
+    private func strikeDust(at center: CGPoint, radius: Double) {
+        let node = SKShapeNode(circleOfRadius: CGFloat(radius) * field)
+        node.fillColor = BattleStyle.strikeDust
+        node.strokeColor = .clear
+        node.position = center
+        node.run(.scale(to: 1.3, duration: BattleStyle.impactLife))
+        fade(node, after: BattleStyle.impactLife)
     }
 
     private func pop(at position: CGPoint) {

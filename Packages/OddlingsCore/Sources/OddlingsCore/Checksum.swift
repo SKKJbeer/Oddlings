@@ -65,6 +65,16 @@ extension GameState {
             } else {
                 sum.add(0)
             }
+            sum.add(enemy.stunUntilTick)
+        }
+        sum.add(ability.readyTick)
+        if let strike = ability.strike {
+            sum.add(1)
+            sum.add(strike.center.x)
+            sum.add(strike.center.y)
+            sum.add(strike.impactTick)
+        } else {
+            sum.add(0)
         }
         sum.add(nextEntityID)
         sum.add(outcome?.rawValue ?? "")

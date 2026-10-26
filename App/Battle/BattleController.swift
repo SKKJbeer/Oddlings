@@ -17,6 +17,8 @@ final class BattleController {
         /// Gebauter Turm. `sellArmed`: Verkaufen wurde einmal angetippt, das
         /// zweite Tippen verkauft (07-ui-ux.md, Grundsatz 4).
         case tower(id: Int, sellArmed: Bool = false)
+        /// Steinregen ist gewählt; der nächste Tipp auf die Karte wirft (07).
+        case aiming
     }
 
     @ObservationIgnored let model: BattleModel
@@ -48,6 +50,9 @@ final class BattleController {
     private(set) var leaks = 0
     /// Steigt, wenn ein Kauf am Gold scheitert; die Goldanzeige blinkt.
     private(set) var goldWarnings = 0
+    /// Ladeanteil des Steinregens, 0 bis 1. In Hundertsteln, damit der Knopf
+    /// nicht in jedem Bild neu zeichnet.
+    private(set) var abilityCharge = 1.0
 
     /// Rückmeldung an den Finger. Austauschbar, damit Tests mitschreiben können.
     @ObservationIgnored var haptics: @MainActor (Haptic) -> Void
@@ -86,7 +91,7 @@ final class BattleController {
     /// Zelle, an der das Kreismenü hängt.
     var anchorCell: Cell? {
         switch selection {
-        case .none: nil
+        case .none, .aiming: nil
         case .cell(let cell, _): cell
         case .tower: selectedTower?.cell
         }
@@ -113,10 +118,25 @@ final class BattleController {
 
     func refund(for tower: Tower) -> Int { model.sim.refund(for: tower.spent) }
 
+    /// Nur wenn die Mission eine Fähigkeit hat und man selbst spielt (03).
+    var hasAbility: Bool { interactive && model.sim.config.ability != nil }
+    var abilityReady: Bool { hasAbility && abilityCharge >= 1 && !isFinished }
+    var aiming: Bool { selection == .aiming }
+    var abilityRadius: Double { model.sim.config.ability?.radius ?? 0 }
+
+    /// Wohin ein Wurf auf `point` fiele, oder nil, wenn er zu weit neben dem
+    /// Weg läge. Dieselbe Rechnung wie die Simulation, damit die Vorschau nie
+    /// etwas verspricht, das abgelehnt wird.
+    func snappedTarget(for point: Point) -> Point? {
+        guard let ability = model.sim.config.ability else { return nil }
+        let center = map.path.nearestPoint(to: point)
+        return center.distance(to: point) <= ability.snapDistance ? center : nil
+    }
+
     /// Reichweite, die die Szene um die Auswahl zeichnet, in Feldern.
     var previewRange: (center: Point, range: Double)? {
         switch selection {
-        case .none, .cell(_, choice: nil):
+        case .none, .aiming, .cell(_, choice: nil):
             return nil
         case .cell(let cell, let kind?):
             guard let stats = model.sim.config.towers[kind] else { return nil }
@@ -184,6 +204,32 @@ final class BattleController {
         }
     }
 
+    /// Knopf unten rechts: öffnet das Zielen und schließt dabei das Kreismenü,
+    /// ein zweiter Druck bricht ab (07).
+    func toggleAim() {
+        guard hasAbility, !isFinished else { return }
+        if aiming {
+            selection = .none
+        } else if abilityReady {
+            selection = .aiming
+            haptics(FeedbackPlayer.haptic(for: .selectCell))
+        } else {
+            haptics(FeedbackPlayer.haptic(for: .cannotAfford))
+        }
+    }
+
+    /// Wurf beim Zielen. Daneben gezielt kostet nichts und lässt das Zielen
+    /// offen, damit man gleich neu ansetzt (r-3-steinregen.md).
+    func cast(at point: Point?) {
+        guard aiming else { return }
+        guard let point, let target = snappedTarget(for: point) else {
+            haptics(FeedbackPlayer.haptic(for: .cannotAfford))
+            return
+        }
+        model.enqueue(.useAbility(target))
+        selection = .none
+    }
+
     func callNextWave() {
         guard canCallNextWave else { return }
         model.enqueue(.callNextWave)
@@ -242,6 +288,8 @@ final class BattleController {
             if selectedTower == nil { selection = .none }
         case .cell(let cell, _):
             if state.towers.contains(where: { $0.cell == cell }) { selection = .none }
+        case .aiming:
+            if !abilityReady { selection = .none }
         }
     }
 
@@ -274,6 +322,12 @@ final class BattleController {
         let state = model.state
         if gold != state.gold { gold = state.gold }
         if lives != state.fortressLives { lives = state.fortressLives }
+        if let ability = model.sim.config.ability {
+            let total = Double(model.sim.ticks(ability.cooldown))
+            let left = Double(max(0, state.ability.readyTick - state.tick))
+            let charge = ((1 - left / max(total, 1)) * 100).rounded(.down) / 100
+            if abilityCharge != charge { abilityCharge = charge }
+        }
         if wave != state.waveIndex + 1 { wave = state.waveIndex + 1 }
         if outcome != state.outcome {
             outcome = state.outcome

@@ -33,6 +33,18 @@ struct DeterminismTests {
         #expect(copy.checksum == original.state.checksum)
     }
 
+    @Test("Replay mit Steinregen: dieselben Würfe ergeben dieselbe Prüfsumme")
+    func replayWithAbility() throws {
+        let order = try #require(Strategies.missionOne().first { $0.name.hasPrefix("Mix") }).order
+        let original = sim.play(order, castsAbility: true)
+        let casts = original.log.flatMap(\.commands).filter { if case .useAbility = $0 { true } else { false } }
+        #expect(casts.count > 3, "der Bot hat mehrmals geworfen")
+        var copy = sim.newGame(seed: 1)
+        replay(original.log, on: &copy, with: sim)
+        #expect(copy == original.state)
+        #expect(copy.checksum == original.state.checksum)
+    }
+
     @Test("Speichern und Laden mitten in der Welle, mit Türmen und Verlangsamung")
     func saveLoadMidWave() throws {
         let order = try #require(Strategies.missionOne().first { $0.name.hasPrefix("Mix") }).order
@@ -82,6 +94,12 @@ struct DeterminismTests {
         changed = state
         changed.nextWaveTick = nil
         #expect(changed.checksum != state.checksum)
+        changed = state
+        changed.ability.readyTick = 1
+        #expect(changed.checksum != state.checksum)
+        changed = state
+        changed.ability.strike = Strike(center: Point(x: 1, y: 1), impactTick: 5)
+        #expect(changed.checksum != state.checksum)
     }
 
     @Test("Feste Prüfsumme einer kleinen Mission, gleich auf Linux und macOS")
@@ -106,6 +124,8 @@ struct DeterminismTests {
         #expect(state.isOver)
         // Ändert sich dieser Wert, hat sich eine Regel geändert oder die Simulation
         // ist nicht mehr bitgleich. Beides ist ein Befund, kein Grund zum Anpassen.
-        #expect(state.checksum == 4_506_832_313_563_992_051)
+        // Zuletzt geändert mit R-3: Die Prüfsumme nimmt Anhalten und Fähigkeit
+        // auf. Diese Mission hat keine Fähigkeit, der Ablauf ist derselbe.
+        #expect(state.checksum == 1_289_287_716_859_575_347)
     }
 }

@@ -19,10 +19,21 @@ enum BattleTexts {
         case .outsideMap: "Außerhalb der Karte"
         case .unknownTower: "Turm nicht gefunden"
         case .noWaveLeft: "Keine Welle mehr"
+        case .abilityNotReady: "Noch nicht bereit"
+        case .notOnPath: "Nur auf den Weg"
+        case .noAbility: "Hier nicht verfügbar"
         }
     }
 
     static let build = "Bauen"
+    static let ability = "Steinregen"
+
+    /// Für VoiceOver und die Oberflächentests: Der Knopf sagt, was er gerade kann.
+    static func abilityState(ready: Bool, aiming: Bool, charge: Double) -> String {
+        if aiming { return "Ziel auf den Weg tippen" }
+        if ready { return "bereit" }
+        return "lädt, \(Int((charge * 100).rounded(.down))) Prozent"
+    }
     static let back = "Zurück"
     static let pause = "Pause"
     static let resume = "Weiter"

@@ -35,7 +35,7 @@ public struct Simulation: Sendable {
     }
 
     /// Ein Tick. Die Reihenfolge ist festgeschrieben, weil sie Ergebnisse
-    /// ändert (data-models.md): Befehle → Wellen/Spawns → Türme feuern (nach ID)
+    /// ändert (data-models.md): Befehle → Einschlag der Fähigkeit → Wellen/Spawns → Türme feuern (nach ID)
     /// → Tote auswerten und Gold gutschreiben → Bewegung → Durchbrüche → Ende.
     /// Befehle laufen in der übergebenen Reihenfolge.
     @discardableResult
@@ -43,6 +43,7 @@ public struct Simulation: Sendable {
         guard !state.isOver else { return [] }
         var events: [Event] = []
         for command in commands { apply(command, to: &state, &events) }
+        strikeIfDue(&state, &events)
         startWaveIfDue(&state, &events)
         spawnDue(&state, &events)
         fireTowers(&state, &events)
@@ -91,7 +92,40 @@ public struct Simulation: Sendable {
             // Der Plan verschiebt sich mit: Der Takt zur übernächsten Welle läuft
             // ab dem letzten Erscheinen dieser, wie bei einem regulären Start.
             state.nextWaveTick = state.tick
+
+        case .useAbility(let point):
+            guard let ability = config.ability else {
+                return events.append(.commandRejected(command, reason: .noAbility))
+            }
+            guard state.tick >= state.ability.readyTick else {
+                return events.append(.commandRejected(command, reason: .abilityNotReady))
+            }
+            let center = map.path.nearestPoint(to: point)
+            guard center.distance(to: point) <= ability.snapDistance else {
+                return events.append(.commandRejected(command, reason: .notOnPath))
+            }
+            let impact = state.tick + ticks(ability.delay)
+            state.ability = AbilityState(readyTick: state.tick + ticks(ability.cooldown),
+                                         strike: Strike(center: center, impactTick: impact))
+            events.append(.abilityCast(center: center, impactTick: impact))
         }
+    }
+
+    /// Getroffen ist, wer beim Einschlag im Kreis steht, nicht wer beim Wurf dort
+    /// stand: Der Schatten ist die Ankündigung, man zielt voraus (03).
+    private func strikeIfDue(_ state: inout GameState, _ events: inout [Event]) {
+        guard let strike = state.ability.strike, state.tick >= strike.impactTick,
+              let ability = config.ability else { return }
+        state.ability.strike = nil
+        let hits = enemiesInRange(state.enemies, around: strike.center, range: ability.radius)
+        let until = state.tick + ticks(ability.stunDuration)
+        for hit in hits {
+            state.enemies[hit].hp -= ability.damage
+            // Kein Stapeln: Ein zweiter Treffer verlängert bis zu seinem Ende, nie darüber hinaus.
+            state.enemies[hit].stunUntilTick = max(state.enemies[hit].stunUntilTick ?? 0, until)
+            events.append(.enemyDamaged(id: state.enemies[hit].id, amount: ability.damage))
+        }
+        events.append(.abilityImpact(center: strike.center, hits: hits.map { state.enemies[$0].id }))
     }
 
     /// Abgerundet (Backlog WP-05). 90 × 0,7 ist in Double 62,999…; ohne den
@@ -260,6 +294,10 @@ public struct Simulation: Sendable {
         let perTick = 1 / Double(config.simulation.ticksPerSecond)
         for index in state.enemies.indices {
             guard let enemy = config.enemies[state.enemies[index].kind] else { continue }
+            if let stun = state.enemies[index].stunUntilTick {
+                if stun > state.tick { continue }
+                state.enemies[index].stunUntilTick = nil
+            }
             var factor = 1.0
             if let slow = state.enemies[index].slow {
                 if slow.untilTick > state.tick { factor = slow.factor } else { state.enemies[index].slow = nil }

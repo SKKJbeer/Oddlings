@@ -35,6 +35,8 @@ enum FeedbackPlayer {
         case .commandRejected: .warning
         case .enemyLeaked: .warning
         case .missionEnded(let won): won ? .success : .error
+        case .abilityCast: .light
+        case .abilityImpact: .heavy
         case .towerFired, .enemyDamaged, .enemySlowed, .enemyKilled, .waveStarted, .enemySpawned: nil
         }
     }

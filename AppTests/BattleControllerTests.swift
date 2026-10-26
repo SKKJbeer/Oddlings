@@ -280,4 +280,68 @@ final class BattleControllerTests: XCTestCase {
         XCTAssertEqual(controller.wave, 0)
         XCTAssertFalse(controller.paused)
     }
+
+    // MARK: Steinregen (R-3)
+
+    private var ability: AbilityConfig { config.ability! }
+    private var onPath: Point { model.sim.map.path.position(at: model.sim.map.path.length / 3) }
+    private var offPath: Point {
+        let map = model.sim.map
+        let cell = map.buildableCells.first { map.path.distance(from: $0.center) > ability.snapDistance + 0.5 }
+        return try! XCTUnwrap(cell).center
+    }
+
+    func testAimingClosesTheRingMenuAndToggles() {
+        XCTAssertTrue(controller.hasAbility)
+        XCTAssertTrue(controller.abilityReady, "bereit ab Beginn")
+        controller.tap(freeCell)
+        controller.toggleAim()
+        XCTAssertEqual(controller.selection, .aiming, "Zielen schließt das Kreismenü")
+        controller.toggleAim()
+        XCTAssertEqual(controller.selection, .none, "zweiter Druck bricht ab")
+    }
+
+    func testCastQueuesCommandAndChargeRunsUp() {
+        recordHaptics()
+        controller.toggleAim()
+        controller.cast(at: onPath)
+        XCTAssertEqual(controller.selection, .none)
+        stepAndRefresh()
+        XCTAssertNotNil(model.state.ability.strike, "Wurf ist in der Simulation")
+        XCTAssertFalse(controller.abilityReady)
+        XCTAssertLessThan(controller.abilityCharge, 0.01)
+
+        felt = []
+        controller.toggleAim()
+        XCTAssertEqual(controller.selection, .none, "nicht bereit: kein Zielen")
+        XCTAssertEqual(felt, [.warning])
+
+        let half = model.sim.ticks(ability.cooldown) / 2
+        for _ in 0..<half { stepAndRefresh() }
+        XCTAssertEqual(controller.abilityCharge, 0.5, accuracy: 0.02)
+        while !controller.abilityReady && model.state.outcome == nil { stepAndRefresh() }
+        XCTAssertTrue(controller.abilityReady, "nach der Abklingzeit wieder bereit")
+        XCTAssertEqual(model.state.tick, model.state.ability.readyTick, "genau zur Bereitschaft, nicht früher")
+    }
+
+    func testCastBesideThePathKeepsAimingAndCostsNothing() {
+        recordHaptics()
+        controller.toggleAim()
+        felt = []
+        controller.cast(at: offPath)
+        XCTAssertEqual(controller.selection, .aiming)
+        XCTAssertEqual(felt, [.warning])
+        stepAndRefresh()
+        XCTAssertNil(model.state.ability.strike)
+        XCTAssertTrue(controller.abilityReady)
+        XCTAssertEqual(controller.snappedTarget(for: onPath), onPath)
+        XCTAssertNil(controller.snappedTarget(for: offPath))
+    }
+
+    func testWatchModeHasNoAbility() {
+        let watch = BattleController(model: model, interactive: false)
+        XCTAssertFalse(watch.hasAbility)
+        watch.toggleAim()
+        XCTAssertEqual(watch.selection, .none)
+    }
 }

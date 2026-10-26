@@ -41,6 +41,17 @@ struct BoardLayout: Equatable {
         return Cell(x: x, y: y)
     }
 
+    /// Feldpunkt unter einem Punkt der Ansicht, auch außerhalb der Karte: Die
+    /// Simulation entscheidet, ob er nah genug am Weg liegt.
+    func fieldPoint(atView point: CGPoint) -> Point? {
+        guard field > 0 else { return nil }
+        return Point(x: Double((point.x - origin.x) / field), y: Double((point.y - origin.y) / field))
+    }
+
+    func fieldPoint(atScene point: CGPoint) -> Point? {
+        fieldPoint(atView: CGPoint(x: point.x, y: size.height - point.y))
+    }
+
     func cell(atScene point: CGPoint) -> Cell? {
         cell(atView: CGPoint(x: point.x, y: size.height - point.y))
     }

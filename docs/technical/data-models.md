@@ -91,7 +91,10 @@ Fortschritt aus.
 ## Befehle und Ereignisse
 
 ```swift
-enum Command: Codable, Equatable { case build(TowerKind, Cell), sell(towerID: Int), callNextWave }
+enum Command: Codable, Equatable {
+    case build(TowerKind, Cell), sell(towerID: Int), callNextWave
+    case useAbility(Point)                                // Steinregen (R-3), rastet am Weg ein
+}
 
 enum Event: Equatable {
     case towerBuilt(id: Int), towerSold(id: Int, refund: Int)
@@ -101,14 +104,18 @@ enum Event: Equatable {
     case enemyDamaged(id: Int, amount: Double), enemySlowed(id: Int)
     case enemyKilled(id: Int, reward: Int), enemyLeaked(id: Int, damage: Int)
     case missionEnded(won: Bool)
+    case abilityCast(center: Point, impactTick: Int)      // Schatten bis zum Einschlag
+    case abilityImpact(center: Point, hits: [Int])
 }
 
 func step(_ state: inout GameState, commands: [Command], config: BalanceConfig) -> [Event]
 ```
 
 **Reihenfolge innerhalb eines Schritts** (festgeschrieben, weil sie Ergebnisse
-ändert): Befehle → Wellen/Spawns → Türme feuern (nach ID) → Tote auswerten und
-Gold gutschreiben → Bewegung → Durchbrüche → Sieg/Niederlage.
+ändert): Befehle → Einschlag des Steinregens → Wellen/Spawns → Türme feuern (nach ID) → Tote auswerten und
+Gold gutschreiben → Bewegung (Angehaltene stehen) → Durchbrüche → Sieg/Niederlage.
+Fähigkeit im Zustand: `GameState.ability { readyTick, strike }`, am Gegner
+`stunUntilTick`; beides zählt in die Prüfsumme.
 
 ## Speicherstand (Phase 2)
 
