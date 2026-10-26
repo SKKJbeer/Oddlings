@@ -173,3 +173,11 @@ ohne Echtgeld: keine Muenzen mit Waehrungszeichen, keine Geldkoffer.
 ## Vorgaben des Betreibers
 - Grafik fuer dieses und andere Projekte kuenftig auf diesem Weg erstellen.
 - Keine Emojis in UI-Grafik, keine Verweise auf aeltere Spiele.
+
+### Keyart und Menübilder (Oddlings, 26.10.2026)
+
+Bild-zu-Bild über eine flach gezeichnete Vorlage mit eingesetzten Figuren ergibt
+flache Flash-Optik (Stärke 0,45 und 0,55 verworfen); reines Text-zu-Bild malt
+eigene Türme und Gegner, die nicht zum Spiel passen. Bewährt: den Hintergrund
+ohne Figuren und Gebäude malen lassen und die freigestellten Spielfiguren mit
+Schatten und Farbangleichung darüber setzen, wie bei den Menüs der Marktführer.

@@ -69,6 +69,20 @@ def pruefe(wurzel):
                         fuss = (bild.height - box[3]) / bild.height
                         if abs(fuss - regel["anker"]) > 0.03:
                             fehler.append(f"{name}@{f}x: Fuss bei {fuss:.2f}, Vertrag {regel['anker']}")
+            if "punkte" in regel:
+                # Symbole: Quadrat in Punkten, Inhalt mittig, weil SwiftUI sie zentriert in den Knopf setzt.
+                soll = round(regel["punkte"] * f)
+                if bild.size != (soll, soll):
+                    fehler.append(f"{name}@{f}x: Groesse {bild.size}, Vertrag Quadrat {soll}px")
+                elif bild.mode == "RGBA":
+                    box = bild.getchannel("A").point(lambda v: 255 if v > 24 else 0).getbbox()
+                    if box and max(abs((box[0] + box[2]) / 2 - soll / 2), abs((box[1] + box[3]) / 2 - soll / 2)) > 0.06 * soll:
+                        fehler.append(f"{name}@{f}x: Inhalt nicht mittig")
+            if "pixel" in regel:
+                # Grosse Bilder (Titelbild, Regionskarte) sind in Geraetepixeln fuer @3x festgelegt.
+                soll = tuple(round(v * f / 3) for v in regel["pixel"])
+                if bild.size != soll:
+                    fehler.append(f"{name}@{f}x: Groesse {bild.size}, Vertrag {soll}")
             if "zellen" in regel:
                 soll = (round(regel["zellen"][0] * pt * f), round(regel["zellen"][1] * pt * f))
                 if bild.size != soll:

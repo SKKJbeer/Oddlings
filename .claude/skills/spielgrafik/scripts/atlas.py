@@ -5,6 +5,10 @@ atlas.py <frei.png> <name> <seite_in_zellen> <anker_y> [zellenpunkte=43] [atlas=
 atlas.py <boden.png> <name> <breite>x<hoehe> voll [zellenpunkte] [ordner]
   Boden: ganzes Bild, kein Rand, als JPEG (Qualitaet 88). Ein gemalter Boden
   waere als PNG @3x ueber 5 MB und gehoert nicht in einen Sprite-Atlas.
+atlas.py <bild.png> <name> <B>x<H>px voll [_] [ordner]
+  Grosses Bild (Titelbild, Regionskarte) in Geraetepixeln fuer @3x, @2x = 2/3. JPEG.
+atlas.py <frei.png> <name> <punkte>pt mitte [_] [ordner]
+  Symbol: Inhalt mittig auf ein Quadrat mit 6 % Rand, Seite in Punkten. PNG mit Alpha.
 
 Die Groesse ergibt sich aus dem Asset-Vertrag (docs/art/asset-vertrag.md und
 art/asset-vertrag.json): Seite in Zellen mal Punkte je Zelle, dann x2/x3. So
@@ -18,10 +22,23 @@ import json, os, sys
 from PIL import Image
 
 quelle, name, groesse, anker = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
-pt = float(sys.argv[5]) if len(sys.argv) > 5 else 43.0
+pt = float(sys.argv[5]) if len(sys.argv) > 5 and sys.argv[5] != "_" else 43.0
 atlas = sys.argv[6] if len(sys.argv) > 6 else "App/Assets.xcassets/Battle.spriteatlas"
 bild = Image.open(quelle).convert("RGBA")
-if anker == "voll":
+if anker == "voll" and groesse.endswith("px"):
+    pb, ph = map(int, groesse[:-2].split("x"))
+    bild = bild.convert("RGB")
+    ziel = lambda f: (round(pb * f / 3), round(ph * f / 3))
+elif anker == "mitte":
+    box = bild.getchannel("A").point(lambda v: 255 if v > 24 else 0).getbbox()
+    inhalt = bild.crop(box)
+    # Rand, damit die Kontur beim Verkleinern nicht an der Kante abgeschnitten wird.
+    seite = round(max(inhalt.size) / 0.88)
+    quadrat = Image.new("RGBA", (seite, seite), (0, 0, 0, 0))
+    quadrat.alpha_composite(inhalt, ((seite - inhalt.width) // 2, (seite - inhalt.height) // 2))
+    bild = quadrat
+    ziel = lambda f: (round(float(groesse[:-2]) * f),) * 2
+elif anker == "voll":
     bz, hz = map(float, groesse.split("x"))
     bild = bild.convert("RGB")  # Boden ohne Alphakanal: keine Loecher, kleinere Datei
     ziel = lambda f: (round(bz * pt * f), round(hz * pt * f))

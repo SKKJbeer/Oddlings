@@ -123,6 +123,54 @@ class AtlasPruefung(unittest.TestCase):
         self.assertTrue(any("Bytes" in z for z in self.fehler()))
 
 
+class Oberflaechenbilder(unittest.TestCase):
+    """Symbole (Punktgroesse, mittig) und grosse Bilder (Pixelgroesse, JPEG) im UI-Ordner."""
+    V = {"atlas": "Atlas.spriteatlas", "punkteJeZelle": 10, "maxBytesJeDatei": 400000,
+         "assets": {"ui_icon_x": {"punkte": 20, "alpha": True, "ordner": "UI"},
+                    "ui_bild": {"pixel": [60, 30], "alpha": False, "ordner": "UI", "format": "jpg"}}}
+
+    def setUp(self):
+        self.w = tempfile.mkdtemp()
+        os.makedirs(os.path.join(self.w, "art"))
+        json.dump(self.V, open(os.path.join(self.w, "art/asset-vertrag.json"), "w"))
+        open(os.path.join(self.w, "art/ENTSTEHUNG.md"), "w").write("`ui_icon_x` `ui_bild` FLUX.1-schnell")
+        self.symbol(lambda s: (s // 4, s // 4, 3 * s // 4, 3 * s // 4))
+        self.lege("ui_bild", "jpg", lambda f: Image.new("RGB", (20 * f, 10 * f), (0, 90, 0)))
+
+    def tearDown(self):
+        shutil.rmtree(self.w)
+
+    def lege(self, name, endung, mache):
+        o = os.path.join(self.w, "UI", f"{name}.imageset")
+        os.makedirs(o, exist_ok=True)
+        open(os.path.join(o, "Contents.json"), "w").write("{}")
+        for f in (2, 3):
+            mache(f).save(os.path.join(o, f"{name}@{f}x.{endung}"))
+
+    def symbol(self, kasten, seite=20):
+        def mache(f):
+            s = seite * f
+            b = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+            b.paste((200, 50, 50, 255), kasten(s))
+            return b
+        self.lege("ui_icon_x", "png", mache)
+
+    def test_gueltig(self):
+        self.assertEqual(check_assets.pruefe(self.w), [])
+
+    def test_symbol_falsche_groesse(self):
+        self.symbol(lambda s: (s // 4, s // 4, 3 * s // 4, 3 * s // 4), seite=24)
+        self.assertTrue(any("Quadrat" in z for z in check_assets.pruefe(self.w)))
+
+    def test_symbol_nicht_mittig(self):
+        self.symbol(lambda s: (0, 0, s // 3, s // 3))
+        self.assertTrue(any("nicht mittig" in z for z in check_assets.pruefe(self.w)))
+
+    def test_bild_falsche_pixel(self):
+        self.lege("ui_bild", "jpg", lambda f: Image.new("RGB", (21 * f, 10 * f), (0, 90, 0)))
+        self.assertTrue(any("ui_bild" in z and "Groesse" in z for z in check_assets.pruefe(self.w)))
+
+
 class EchtesRepo(unittest.TestCase):
     def test_repo_atlas_haelt_den_vertrag(self):
         self.assertEqual(check_assets.pruefe(WURZEL), [])
@@ -136,6 +184,27 @@ class EchtesRepo(unittest.TestCase):
             self.assertIn(f"tower_{t}", vertrag)
         for g in ids(konf["enemies"]):
             self.assertIn(f"enemy_{g}", vertrag)
+
+
+class Regionsvorlage(unittest.TestCase):
+    def test_lichtungen_liegen_unter_den_knoten(self):
+        region = os.path.join(WURZEL, "Packages/OddlingsCore/Sources/OddlingsCore/Resources/Campaign/region-01.json")
+        knoten = json.load(open(region))["nodes"]
+        with tempfile.TemporaryDirectory() as t:
+            aus = os.path.join(t, "r.png")
+            subprocess.run([sys.executable, os.path.join(WURZEL, ".claude/skills/spielgrafik/scripts/regionsvorlage.py"),
+                            region, aus, "640"], check=True, capture_output=True)
+            bild = Image.open(aus).convert("RGB")
+            self.assertEqual(bild.size, (640, 400))  # 16:10 wie CampaignStyle.mapAspect
+            hell = lambda p: 0.299 * p[0] + 0.587 * p[1] + 0.114 * p[2]
+            for k in knoten:
+                p = bild.getpixel((int(k["position"][0] * 640), int(k["position"][1] * 400)))
+                if k["kind"] == "boss":
+                    self.assertGreater(p[0], p[1], k["id"])  # Bosslichtung roetlich-dunkel, nicht Wald
+                else:
+                    self.assertGreater(hell(p), 105, k["id"])  # Lichtung heller als jede Baumkrone
+            # Weit weg von allen Knoten ist Wald.
+            self.assertLess(hell(bild.getpixel((int(0.40 * 640), int(0.15 * 400)))), 105)
 
 
 class Kartenvorlage(unittest.TestCase):
