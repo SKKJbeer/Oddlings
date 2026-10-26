@@ -48,6 +48,11 @@ final class AvatarE2ETests: XCTestCase {
         XCTAssertEqual(e2e.mapAvatar.label, "Lyra, Elfen")
         XCTAssertTrue(e2e.raceDetail.contains("Mondmal"), e2e.raceDetail)
         XCTAssertFalse(e2e.app.buttons["map.race.dwarves"].exists, "auf der Tafel gibt es keine Volkswahl mehr")
+        e2e.mapBack.tap()
+        XCTAssertTrue(e2e.app.descendants(matching: .any)["menu.avatar"].waitForExistence(timeout: 5),
+                      "das Schild steht sofort im Hauptmenü")
+        tapPlay(e2e)
+        XCTAssertTrue(e2e.mapStart.waitForExistence(timeout: 5), "kein zweiter Aufbau")
         e2e.mapStart.tap()
         e2e.waitForBoard()
         XCTAssertTrue(e2e.ability.waitForExistence(timeout: 5))

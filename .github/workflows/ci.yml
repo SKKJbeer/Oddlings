@@ -116,6 +116,15 @@ jobs:
           # Artefakt: Bei einem wackligen Oberflächentest zeigt es, welcher
           # Schritt auf die App gewartet hat.
           mkdir -p build/probe && cp build/app-test.log build/probe/
+          # Die Spielstände der Oberflächentests mit ins Artefakt: Geht ein
+          # Neustart-Test schief, zeigt die Datei, ob geschrieben wurde.
+          data=$(xcrun simctl get_app_container "$UDID" de.skkjbeer.oddlings data 2>/dev/null || true)
+          if [ -n "$data" ] && [ -d "$data/tmp" ]; then
+            mkdir -p build/probe/speicher
+            for dir in "$data"/tmp/e2e-*; do
+              [ -d "$dir" ] && cp -R "$dir" build/probe/speicher/ || true
+            done
+          fi
           exit $status
 
       # Übersetzen beweist nicht, dass die App läuft. Starten, laufen lassen,
