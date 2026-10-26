@@ -43,8 +43,9 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - `AppUITests/EffectsE2ETests`: alle Effektarten laufen in der echten App.
 - CI-Probelauf misst die Bildrate im Simulator und wird unter 30 Bildern je
   Sekunde rot. Gemessen: 49 Bilder je Sekunde im Mittel (Simulator ohne
-  Grafikkarte). Ein Haker von 842 ms beim ersten Münzwurf kam vom Zeichnen der
-  Textur; die Effekttexturen werden jetzt beim Anlegen der Szene vorab gezeichnet.
+  Grafikkarte). Ein einzelner Haker von 842 ms kam vermutlich vom ersten Zeichnen einer
+  Textur (nicht belegt); die Effekttexturen werden jetzt beim Anlegen der Szene
+  vorab gezeichnet, der nächste Probelauf zeigt, ob es reicht.
 
 ## 0.9.0 – 26.10.2026 (Völkerwahl Zwerge und Elfen, R-4)
 

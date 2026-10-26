@@ -31,7 +31,7 @@ enum FxTextures {
     }
 
     /// Alle Texturen vorab zeichnen und hochladen. Sonst zeichnet der erste
-    /// Münzwurf mitten im Gefecht und das Bild hakt (Probelauf: 842 ms).
+    /// Münzwurf mitten im Gefecht, und das Bild kann haken.
     static func prewarm() {
         let all = Name.allCases.map { texture($0) }
         SKTexture.preload(all) {}
