@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.6.0 – 25.10.2026 (Spieloberfläche UI 01)
+## 0.6.0 – 25.10.2026 (Spieloberfläche UI 01), Bau 22 (VALID)
 
 **Neu**
 - Kreismenü am Feld (D-031): drei runde Turmknöpfe im Bogen mit Preisschild,
@@ -28,6 +28,8 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Hauptmenü im Stil der Entwürfe, „Spielen“ groß im Daumenbereich.
 - Schriften Lilita One und Nunito (D-032), mit Lizenz und Herkunft in `App/UI/Fonts/`.
 - Konzept: [ui-01-hud-und-tafeln](docs/konzepte/ui-01-hud-und-tafeln.md).
+- Nach Durchsicht der Bildschirmfotos: Band der Niederlage dunkler (Schiefer statt
+  Hellgrau), damit die helle Schrift lesbar bleibt (Kontrast über 6 : 1).
 
 **Tests**
 - Neu: `HudLayoutTests` (jede Bauzelle auf vier iPhone-Größen), `FeedbackPlayerTests`,
