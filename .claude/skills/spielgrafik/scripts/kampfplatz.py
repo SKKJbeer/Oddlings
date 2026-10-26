@@ -98,14 +98,15 @@ def wegabstand(x, y):
 gras = flaeche(os.path.join(teile, "gras.png"), C // 8, 1.3)
 # Bluetenteppich beruhigen: halb mit dem Median gemischt bleiben Halme, die vielen
 # Bluetenpunkte treten zurueck. Sonst wirkt das Feld wie Tapete und Gegner gehen unter.
-gras = Image.blend(gras, gras.filter(ImageFilter.MedianFilter(2 * (C // 26) + 1)), 0.55)
+# MedianFilter(1) bricht in Pillow 12 mit SIGFPE ab (gemessen 26.10.2026), deshalb mindestens 3.
+gras = Image.blend(gras, gras.filter(ImageFilter.MedianFilter(max(3, 2 * (C // 26) + 1))), 0.55)
 # Grosse helle und dunkle Grasflaechen: Ohne sie sieht man das Muster der Textur.
 tonung = Image.effect_noise((max(2, BB // (C * 3)), max(2, HH // (C * 3))), 60).resize((BB, HH), Image.BICUBIC)
 gras = Image.composite(ImageEnhance.Brightness(ImageEnhance.Color(gras).enhance(0.85)).enhance(0.8), gras,
                        tonung.point(lambda v: max(0, min(255, (v - 128) * 4))))
 # Wie bei Mission 1 bisher: Median gegen die grossen Kiesel, sonst liegen Schokostuecke im Weg.
 weg = flaeche(os.path.join(teile, "weg.png"), C // 8, 1.1)
-weg = ImageEnhance.Color(weg.filter(ImageFilter.MedianFilter(2 * (C // 18) + 1))).enhance(0.7)
+weg = ImageEnhance.Color(weg.filter(ImageFilter.MedianFilter(max(3, 2 * (C // 18) + 1)))).enhance(0.7)
 # Waldboden im Rand dunkel und kuehl, die Lichtung hell: Das Feld ist der Ort, an dem
 # gespielt wird, der Blick soll dort bleiben.
 bild = ImageEnhance.Brightness(ImageEnhance.Color(gras).enhance(0.8)).enhance(0.42)

@@ -1,20 +1,31 @@
 # Karten — Entstehung
 
-## `map_mission01_ground` (Mission 1)
+## `map_mission01_ground` (Mission 1, Lichtung im Flüsterwald)
 
-Der Weg ist nicht frei gemalt, sondern liegt auf der Geometrie aus
-`mvp-mission-01.json` (`map.path`, Zellkoordinaten, Ursprung oben links).
+Grafik 05 (26.10.2026, [Konzept](../../docs/konzepte/grafik-05-kampfplatz.md)).
+Das Bild deckt das Feld **plus 2 Zellen Rand** je Seite (20 × 13 Zellen), der
+Rand ist Wald und füllt iPhone-Breite und iPad-Höhe. Der Weg liegt auf der
+Geometrie aus `mvp-mission-01.json` (`map.path`), Bäume nur im Rand.
 
-1. **Texturen** (FLUX.1-schnell, 512 × 512, Seed 21, euler, 4 Schritte):
-   - `textur-gras-rohbild.png`: Stil-Teil `stylized 3D cartoon render, hand-painted textures, vibrant saturated colors, warm light from top left, highly detailed, mobile strategy game terrain, seen from directly above, seamless, full bleed, no objects, no text, no letters`, Motiv `lush green meadow ground texture with dense short grass blades, small clover patches, tiny yellow and white flowers, subtle light and shadow variation`. Benutzt nur der Ausschnitt (60, 140, 400, 512): Rest hat Baumstümpfe und Steine.
-   - `textur-sand-rohbild.png`: gleicher Stil-Teil, Motiv `sandy dirt path ground texture, packed warm beige sand with small pebbles, faint footprints and wheel ruts, subtle cracks`. Ausschnitt (100, 140, 400, 512), Medianfilter 25 gegen die großen Kiesel, Sättigung × 0,55, Helligkeit × 0,92.
-2. **Zusammensetzen:** `karte_zusammensetzen.py mvp-mission-01.json gras sand aus 64` → `mission01-zusammengesetzt.png` (1024 × 576, 64 px je Zelle).
-3. **Bild-zu-Bild:** `INIT=mission01-zusammengesetzt.png STAERKE=0.35 erzeugen.sh aus 5 "<prompt>" 1024x576` → `mission01-rohbild.png`. Prompt: `mobile strategy game battlefield ground seen from directly above, stylized 3D cartoon render, hand-painted textures, vibrant saturated colors, lush green meadow with small flowers, a sandy dirt path with packed earth, small pebbles, footprints and soft darker sunken edges where the grass overhangs, warm afternoon light from top left, highly detailed, no buildings, no characters, no text, no letters, full bleed`.
-4. **Hochrechnen:** Real-ESRGAN x4 anime 6B, dann Lanczos auf 2064 × 1161, `atlas.py … 16x9 voll 43 App/Assets.xcassets/Maps` (JPEG, Qualität 88).
+1. **Collage:** `kampfplatz.py mvp-mission-01.json <teile> aus.png 130 2` mit den
+   Teilen der Kampagnenkarte (Gras, Weg, Bäume, Höhle; zerlegt aus
+   `region01/`, siehe unten). Zufall fest (`random.Random(7)`). Auf 1024 × 640
+   verkleinert → `mission01-collage.png`.
+2. **Übermalen:** `INIT=mission01-collage.png STAERKE=0.4 VERSCHIEBUNG=0.5
+   erzeugen.sh aus 5 "<prompt>" 1024x640` → `mission01-rohbild.png`. Prompt:
+   `mobile strategy game battlefield seen from directly above, a sunlit forest clearing surrounded by dense round tree canopies, stylized 3D cartoon render, hand-painted textures, vibrant saturated colors, lush green grass with subtle variation and small flowers, a winding packed brown dirt path with small pebbles and grass tufts along its edges, a dark rocky goblin cave entrance on the left, warm afternoon light from top left, soft tree shadows, highly detailed, no buildings, no characters, no text, no letters, full bleed`.
+   Das Übermalen vereinheitlicht Licht und Malstil von Gras, Weg und Wald.
+3. **Retusche:** `RAND=6 retusche.py rohbild retusche "358,322,412,372:425,322"`
+   → `mission01-retusche.png`. Entfernt eine kleine Figur mit roter Mütze auf
+   einer Bauzelle (trotz „no characters").
+4. **Hochrechnen:** `hochskalieren.sh retusche aus 2580x1677` (Real-ESRGAN x4
+   anime 6B, Lanczos), `atlas.py aus map_mission01_ground 20x13 voll _
+   App/Assets.xcassets/Maps` (JPEG, Qualität 88).
 
-**Verworfen:** `verworfen-frei-gemalt.png`, Bild-zu-Bild mit Stärke 0,7 direkt
-auf `mission01-vorlage.png` (`kartenvorlage.py`): Der Weg wurde zur
-Schlangenlinie und bekam Steine, die Oberfläche wirkte flach.
+**Verworfen:** die erste Fassung (0.5.2 bis 0.10.3): Wiese ohne Rand mit
+rechtwinkligem Sandband, gemalt nach `karte_zusammensetzen.py`. Flach, ohne
+Wald, nicht aus derselben Welt wie die Kampagnenkarte (Steffen, 26.10.2026:
+„sieht noch billig und nicht abgestimmt mit dem rest aus").
 
 ## `map_region01` (Kampagnenkarte Region 1, Flüsterwald)
 

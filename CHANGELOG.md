@@ -11,6 +11,26 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.10.4 – 26.10.2026 (Grafik 05: Kampfplatz und Festung), Bau offen
+
+**Neu**
+- Der Kampfplatz ist eine Lichtung im Flüsterwald, aus denselben gemalten Teilen
+  wie die Kampagnenkarte: Waldrand bis an den Bildschirmrand (2 Zellen Rand je
+  Seite, auf iPhone und iPad ohne leere Streifen), Weg mit runden Ecken, die
+  Goblinhöhle am Wegeingang, warmes Licht und Baumschatten.
+- Neue Festung: Zwergenfeste mit zwei Ecktürmen, Fackeln und Bannern, im Stil
+  der Türme. Sie steht im rechten Rand und verdeckt keine Bauzelle.
+
+**Behoben**
+- Die Festung war unsichtbar: Boden und Festung hatten dieselbe `zPosition`, und
+  mit `ignoresSiblingOrder` lag der Boden oben.
+
+**Tests**
+- App: Boden deckt die ganze Szene (iPhone und iPad), Festung über Boden und
+  Bauzonen, Festung über keiner Bauzelle. Kunstprüfung: Vertrag 20 × 13 Zellen,
+  Weg im Bild auf der Weggeometrie, Waldrand dunkler als das Feld, Collage legt
+  keine Bäume auf Bauzellen.
+
 ## 0.10.3 – 26.10.2026 (Wackliger Fähigkeitstest behoben), Bau 30 (VALID)
 
 **Behoben**
