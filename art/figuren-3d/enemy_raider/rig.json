@@ -1,32 +1,11 @@
 {
-  "_zweck": "Skelett des Plünderers (TRELLIS-Modell, Seed 1); Punkte als Anteile der Modellbox, Blick nach -y",
+  "_zweck": "Skelett des Plünderers (TRELLIS-Modell aus vorlage-2, Seed 1); Punkte als Anteile der Modellbox, Blick nach -y",
   "blick": 35,
-  "ruhe": {
-    "arm_l": [
-      "y",
-      -35
-    ],
-    "arm_r": [
-      "y",
-      35
-    ],
-    "bein_l": [
-      "y",
-      -7
-    ],
-    "bein_r": [
-      "y",
-      7
-    ],
-    "rumpf": [
-      "x",
-      7
-    ]
-  },
+  "ruhe": {},
   "bildHoehe": 1.4,
   "licht": {
     "haupt": 5.0,
-    "fuell": 1.6,
+    "fuell": 2.2,
     "welt": 1.0,
     "rand": 3.0
   },
@@ -35,24 +14,24 @@
       "von": [
         0,
         -0.1,
-        0.27
+        0.29
       ],
       "bis": [
         0,
         -0.1,
-        0.38
+        0.4
       ]
     },
     "rumpf": {
       "von": [
         0,
         -0.1,
-        0.38
+        0.4
       ],
       "bis": [
         0,
         -0.1,
-        0.6
+        0.62
       ],
       "eltern": "becken"
     },
@@ -60,7 +39,7 @@
       "von": [
         0,
         -0.1,
-        0.6
+        0.62
       ],
       "bis": [
         0,
@@ -71,26 +50,26 @@
     },
     "bein_l": {
       "von": [
-        -0.17,
         -0.1,
-        0.27
+        -0.1,
+        0.29
       ],
       "bis": [
-        -0.17,
-        -0.15,
+        -0.12,
+        -0.12,
         0.02
       ],
       "eltern": "becken"
     },
     "bein_r": {
       "von": [
-        0.17,
+        0.1,
         -0.1,
-        0.27
+        0.29
       ],
       "bis": [
-        0.17,
-        -0.15,
+        0.12,
+        -0.12,
         0.02
       ],
       "eltern": "becken"
@@ -102,22 +81,22 @@
         0.58
       ],
       "bis": [
-        -0.37,
-        -0.35,
-        0.44
+        -0.33,
+        -0.15,
+        0.33
       ],
       "eltern": "rumpf"
     },
     "arm_r": {
       "von": [
-        0.2,
+        0.18,
         -0.1,
         0.58
       ],
       "bis": [
-        0.37,
-        -0.35,
-        0.44
+        0.25,
+        -0.18,
+        0.43
       ],
       "eltern": "rumpf"
     }
@@ -194,43 +173,11 @@
       }
     }
   },
-  "requisiten": [
-    {
-      "datei": "requisit-sack.glb",
-      "knochen": "rumpf",
-      "groesse": 0.45,
-      "ort": [
-        0.05,
-        0.45,
-        0.5
-      ],
-      "drehung": [
-        0,
-        0,
-        0
-      ]
-    },
-    {
-      "datei": "requisit-keule.glb",
-      "knochen": "arm_r",
-      "groesse": 0.45,
-      "ausrichten": true,
-      "ort": [
-        0.37,
-        -0.35,
-        0.4
-      ],
-      "drehung": [
-        -30,
-        0,
-        0
-      ]
-    }
-  ],
-  "kameraHoehe": 25,
+  "requisiten": [],
+  "kameraHoehe": 12,
   "stil": {
     "saettigung": 1.5,
-    "helligkeit": 1.25,
+    "helligkeit": 1.4,
     "eigenlicht": 0.35,
     "kontur": 0.008
   }
