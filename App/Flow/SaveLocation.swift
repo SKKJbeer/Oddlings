@@ -1,5 +1,6 @@
 import Foundation
 import OddlingsCore
+import os
 
 /// Wo der Spielstand liegt. Application Support, weil iOS dort nichts von sich
 /// aus löscht und die Datei nicht in der Dateien-App erscheint.
@@ -25,16 +26,18 @@ enum SaveLocation {
 
     #if DEBUG
     /// SwiftUI legt die Startansicht mehr als einmal an, und jede Anlage holt
-    /// den Speicher. Gelöscht wird deshalb nur beim ersten Mal im Prozess,
-    /// sonst wäre ein eben gebauter Avatar beim nächsten Neustart weg.
-    private static let wipeLock = NSLock()
-    nonisolated(unsafe) private static var wiped = Set<URL>()
-
+    /// den Speicher. Gelöscht wird deshalb nur einmal je Prozess: Eine Marke mit
+    /// der Prozessnummer im Verzeichnis sagt, dass dieser Start schon geleert
+    /// hat. Sonst wäre ein eben gebauter Avatar beim nächsten Neustart weg.
     private static func wipeOnce(_ directory: URL) {
-        wipeLock.lock()
-        defer { wipeLock.unlock() }
-        guard wiped.insert(directory).inserted else { return }
+        let marker = directory.appendingPathComponent("e2e-prozess")
+        let process = String(ProcessInfo.processInfo.processIdentifier)
+        if (try? String(contentsOf: marker, encoding: .utf8)) == process { return }
         try? FileManager.default.removeItem(at: directory)
+        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        try? process.write(to: marker, atomically: true, encoding: .utf8)
+        Logger(subsystem: "de.skkjbeer.oddlings", category: "save")
+            .notice("E2E-Speicher geleert: \(directory.lastPathComponent, privacy: .public)")
     }
 
     static func argument(after flag: String) -> String? {
