@@ -15,8 +15,14 @@ final class UIArtTests: XCTestCase {
     }
 
     func testHudIconsAreInTheCatalog() {
-        for name in ["ui_icon_heart", "ui_icon_gold"] {
+        for name in ["ui_icon_heart", "ui_icon_gold", "ui_icon_wave", "ui_icon_sell", "ui_icon_pause", "ui_icon_next_wave"] {
             XCTAssertNotNil(UITheme.image(name), name)
         }
+    }
+
+    func testMenuKeyArtIsPaintedLandscape() throws {
+        let picture = try XCTUnwrap(UITheme.image("ui_keyart_menu"))
+        // Querformat wie das breiteste iPhone, damit scaledToFill nur oben und unten wenig abschneidet.
+        XCTAssertEqual(picture.size.width / picture.size.height, 2796.0 / 1290.0, accuracy: 0.01)
     }
 }
