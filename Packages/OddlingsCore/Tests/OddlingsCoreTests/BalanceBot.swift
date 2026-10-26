@@ -18,6 +18,14 @@ enum Strategies {
 struct BalanceBot {
     let sim: Simulation
     var order: [TowerKind]
+    /// Setzt die Fähigkeit, sobald sie bereit ist und mindestens zwei Gegner
+    /// zusammenstehen (03: „Bot wirft auf die dichteste Stelle"). Das Bollwerk
+    /// setzt er dorthin, wo die meisten Türme hinreichen und eine Traube
+    /// darauf zuläuft: Eine Mauer wirkt durch die Türme davor, nicht selbst.
+    var castsAbility = false
+    /// Testwert: so weit vor der Mauer zählt der Bot die Traube.
+    static let wallApproach = 3.0
+    static let sampleStep = 0.25
     private let candidates: [Cell]
     private let samples: [Point]
 
@@ -29,7 +37,7 @@ struct BalanceBot {
         var d = 0.0
         while d < sim.map.path.length {
             points.append(sim.map.path.position(at: d))
-            d += 0.25
+            d += Self.sampleStep
         }
         samples = points
     }
@@ -45,7 +53,51 @@ struct BalanceBot {
             placed.append((kind, cell))
             commands.append(.build(kind, cell))
         }
+        if castsAbility, let target = abilityTarget(in: state) { commands.append(.useAbility(target)) }
         return commands
+    }
+
+    private func abilityTarget(in state: GameState) -> Point? {
+        guard let ability = sim.config.ability, state.tick >= state.ability.readyTick else { return nil }
+        switch ability.kind {
+        case .stoneRain, .moonMark: return densestPoint(in: state, radius: ability.radius ?? 0)
+        case .bulwark: return wallPoint(in: state)
+        }
+    }
+
+    /// Der Wegpunkt mit den meisten Türmen in Reichweite, vor dem mindestens
+    /// zwei Gegner auf `wallApproach` Feldern heranlaufen. Bei Gleichstand der
+    /// frühere Punkt.
+    private func wallPoint(in state: GameState) -> Point? {
+        let distances = state.enemies.filter { $0.hp > 0 }.map(\.distance)
+        var best: Point?, bestCover = 0
+        for (index, p) in samples.enumerated() {
+            let d = Double(index) * Self.sampleStep
+            guard distances.filter({ $0 <= d && $0 > d - Self.wallApproach }).count >= 2 else { continue }
+            let cover = state.towers.filter { tower in
+                tower.kind != .spore && p.distance(to: tower.cell.center) <= sim.config.towers[tower.kind]!.range
+            }.count
+            if cover > bestCover {
+                best = p
+                bestCover = cover
+            }
+        }
+        return best
+    }
+
+    /// Die Gegnerposition mit den meisten Nachbarn im Wirkkreis, ohne
+    /// vorauszuzielen: Der Bot soll eine Untergrenze messen, keinen Meister.
+    private func densestPoint(in state: GameState, radius: Double) -> Point? {
+        let points = state.enemies.filter { $0.hp > 0 }.map { sim.map.path.position(at: $0.distance) }
+        var best: Point?, bestCount = 1
+        for p in points {
+            let count = points.filter { $0.distance(to: p) <= radius }.count
+            if count > bestCount {
+                best = p
+                bestCount = count
+            }
+        }
+        return best
     }
 
     private func bestCell(for kind: TowerKind, stats: TowerConfig, placed: [(kind: TowerKind, cell: Cell)]) -> Cell? {
@@ -85,8 +137,10 @@ struct BotRun {
 extension Simulation {
     /// Spielt eine Mission mit dem Bot zu Ende. Gedeckelt, damit ein Fehler
     /// den Test rot macht statt ihn hängen zu lassen.
-    func play(_ order: [TowerKind], seed: UInt64 = 1, until stopTick: Int = 200_000) -> BotRun {
+    func play(_ order: [TowerKind], seed: UInt64 = 1, until stopTick: Int = 200_000,
+              castsAbility: Bool = false) -> BotRun {
         var bot = BalanceBot(sim: self, order: order)
+        bot.castsAbility = castsAbility
         var run = BotRun(state: newGame(seed: seed))
         while !run.state.isOver && run.state.tick < stopTick {
             let commands = bot.commands(for: run.state)
@@ -100,11 +154,11 @@ extension Simulation {
 
     /// Größter Faktor auf das Leben aller Gegner, bei dem die Bauweise noch
     /// gewinnt. Gleiche Suche wie im Prüfskript: 0,5 bis 4, neun Halbierungen.
-    func reserve(_ order: [TowerKind]) -> Double {
+    func reserve(_ order: [TowerKind], castsAbility: Bool = false) -> Double {
         func wins(_ factor: Double) -> Bool {
             var scaled = config
             for kind in EnemyKind.allCases { scaled.enemies[kind]?.hp *= factor }
-            return Simulation(config: scaled).play(order).state.outcome == .won
+            return Simulation(config: scaled).play(order, castsAbility: castsAbility).state.outcome == .won
         }
         var lo = 0.5, hi = 4.0
         guard wins(lo) else { return 0 }

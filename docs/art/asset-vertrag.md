@@ -27,7 +27,7 @@ Sie folgen den IDs der Simulation.
 | `fortress` | Festung am Wegende |
 | `map_mission01_ground` | Boden der ganzen Karte, Weg eingemalt |
 | `buildzone_tile` | Markierung einer bebaubaren Zelle, Overlay |
-| `fx_glow`, `fx_spark`, `fx_ring`, `fx_puff`, `fx_coin`, `fx_arrow`, `fx_bolt`, `fx_confetti` | Effekte, siehe „Effekte“ unten |
+| `fx_glow`, `fx_spark`, `fx_ring`, `fx_puff`, `fx_coin`, `fx_arrow`, `fx_bolt`, `fx_confetti`, `fx_star`, `fx_stone`, `fx_wall` | Effekte, siehe „Effekte“ unten |
 | `icon_slowed` | Zustandssymbol über dem Gegner (E3) |
 
 ## Kamera, Licht, Maße
@@ -70,6 +70,9 @@ Staub, Gegnerfarbe), damit ein Bild für alle Farben reicht.
 | `fx_arrow` | Pfeil nach rechts, Holz, Eisen, rote Federn, farbig | etwa 4,4 : 1 |
 | `fx_bolt` | Querschnitt eines Strahls, wird in die Länge gezogen | hoch, Mitte hell |
 | `fx_confetti` | Splitter und Konfetti | etwa 3 : 2 |
+| `fx_star` | Betäubungssternchen, farbig mit Kontur | 1 : 1 |
+| `fx_stone` | Fels und Splitter des Steinregens, grau, wird getönt | 1 : 1 |
+| `fx_wall` | Bollwerk von oben, Länge quer zum Weg senkrecht | etwa 2 : 7 |
 
 ## Bewegung
 

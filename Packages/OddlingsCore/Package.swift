@@ -12,7 +12,7 @@ let package = Package(
     targets: [
         .target(
             name: "OddlingsCore",
-            resources: [.copy("Resources/Balance")]
+            resources: [.copy("Resources/Balance"), .copy("Resources/Campaign")]
         ),
         .testTarget(name: "OddlingsCoreTests", dependencies: ["OddlingsCore"]),
     ]

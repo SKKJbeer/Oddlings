@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.5.3 – 25.10.2026 (Bewegung und Effekte)
+## 0.10.0 – 26.10.2026 (Bewegung und Effekte, FX 01)
 
 **Neu**
 - Gegner laufen: Hüpfen im Schritttakt je Gegnerart, Stauchen beim Aufsetzen,
@@ -26,6 +26,12 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Bau: Turm fällt auf seinen Platz und federt nach, Staubring. Verkauf: Turm
   versinkt in Staub, Münzen. Durchbruch: Festung bebt, Bild wackelt.
   Wellenbanner springt ein, Sieg mit Konfetti. Türme atmen leicht in Ruhe.
+- Festungsfähigkeiten: Steinregen warnt mit wachsendem Schatten und pulsierendem
+  Ring, Felsen prasseln genau zum Einschlag, Druckwelle, Staub, Splitter und
+  Wackeln; Getroffene zeigen kreisende Sternchen, solange sie betäubt sind.
+  Mondmal sammelt kühles Licht und leuchtet auf, das Mal am Gegner ist ein
+  pulsierender Mond. Bollwerk schießt federnd als Steinmauer aus dem Boden und
+  versinkt am Ende in Staub. Die Platzhalter aus 0.8.0 und 0.9.0 sind ersetzt.
 - „Bewegung reduzieren" in iOS schaltet Wackeln und Atmen ab.
 - Konzept: [fx-01-bewegung-und-effekte](docs/konzepte/fx-01-bewegung-und-effekte.md),
   Entscheidungen D-050 (Effekt-Uhr), D-051 (Gliedmaßen, vorgeschlagen).
@@ -36,6 +42,129 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - `AppUITests/EffectsE2ETests`: alle Effektarten laufen in der echten App.
 - CI-Probelauf misst die Bildrate im Simulator und wird unter 30 Bildern je
   Sekunde rot.
+
+## 0.9.0 – 26.10.2026 (Völkerwahl Zwerge und Elfen, R-4)
+
+**Neu**
+- Auf der Missionstafel der Karte stehen Zwerge und Elfen über „Starten“. Ohne
+  Wahl gilt der Steinregen. Die Wahl steht im Spielstand. Beide Völker sind
+  sofort wählbar, solange nur Mission 1 spielbar ist (D-061).
+- Zwerge: Bollwerk. Eine Mauer quer zum Weg, sofort und 4 s lang. Wer sie von
+  vorn erreicht, bleibt dort stehen.
+- Elfen: Mondmal. Nach 0,5 s nehmen Gegner im Kreis 4 s lang jeden Treffer
+  ×1,5. Dazu reichen Sporentürme 10 % weiter.
+- Knopf unten rechts mit Bild und Namen je Volk. Mauer, Mal und Effekte sind
+  Platzhalter.
+- Werte stehen in `Balance/races.json` und gelten als **[HYPOTHESE]**. Beim
+  Laden wird die Datei geprüft wie die Missionsdatei.
+- Ein passiver Zug der Zwerge fehlt, bis die Zwergenbank kommt. Die Frage an
+  Steffen ist offen.
+- Konzept: [r-4-voelker](docs/konzepte/r-4-voelker.md).
+
+**Balance**
+- Je Volk höchstens +0,1 Reserve, zwischen den Völkern höchstens 0,05. Gemessen:
+  Zwerge +0,05, Elfen +0,07
+  ([04](docs/game-design/04-economy-and-balance.md#völker-zwerge-und-elfen-r-4-26102026-hypothese)).
+
+**Tests**
+- Kern: `BulwarkTests` (5), `MoonMarkTests` (6) und `RaceTests` (6). Dazu
+  Wiederholung je Volk, Prüfsumme mit Mauer und Mal und die Völkergrenze in
+  `BalanceTests`. Jeder neue Test wurde einmal rot gesehen. Die feste
+  Prüfsumme ist neu, weil sie Mauer und Mal mitzählt.
+- App: Wahl und Spielstand in `AppFlowTests`, Fähigkeit je Volk in
+  `BattleControllerTests`, Mauer und Mal in `BattleSceneTests`, Haptik.
+- E2E: `RaceE2ETests`. Dort wird ein Volk gewählt und die Mission gestartet,
+  dann die App neu gestartet und ein Bollwerk gesetzt. Ein zweiter Test prüft,
+  dass die Tafel mit der Wahl ins Bild passt.
+- Zwei ältere E2E-Tests liefen gegen die Uhr der Mission. Sie halten die erste
+  Welle jetzt mit `--e2e-erste-welle` zurück (nur im Debug-Bau).
+
+## 0.8.0 – 25.10.2026 (Festungsfähigkeit Steinregen, R-3), Bau 24 (VALID)
+
+**Neu**
+- Steinregen (D-025, D-060): Knopf unten rechts, dann auf den Weg tippen. Der
+  Wurf rastet am Weg ein, nach 0,8 s schlägt er im Kreis ein, macht Schaden und
+  hält Getroffene 1 s an. Danach lädt er 35 s. Daneben gezielt kostet nichts.
+  Mission 1 hat ihn, solange sie die einzige spielbare ist. Werte
+  **[HYPOTHESE]** bis zum Spieltest.
+- Knopf und Effekt sind Platzhalter; Ladering, Zielansicht (Oberfläche) und
+  Einschlag (Animation) folgen.
+- Konzept: [r-3-steinregen](docs/konzepte/r-3-steinregen.md).
+
+**Balance**
+- Gemessen, bevor die Werte feststanden: Die ersten Werte (40 Schaden, 25 s)
+  hoben die Reserve um 0,29, erlaubt sind 0,1. Jetzt +0,075
+  ([04](docs/game-design/04-economy-and-balance.md#steinregen-r-3-25102026-hypothese)).
+
+**Tests**
+- Kern: `AbilityTests` (8), Wiederholung mit Würfen in `DeterminismTests`,
+  Grenze der Reserve in `BalanceTests`; jeder einmal rot gesehen. Die feste
+  Prüfsumme ist neu, weil sie Anhalten und Fähigkeit mitzählt.
+- App: Zielen, Werfen, Laden und Zuschauen in `BattleControllerTests`, Haptik.
+- E2E: `AbilityE2ETests` (bereit, daneben gezielt, Wurf, Laden, wieder bereit;
+  nach dem Ende kein Knopf).
+
+## 0.7.0 – 25.10.2026 (Spielrahmen R-1 und R-2), Bau 23 (VALID)
+
+**Neu**
+- Kampagnenkarte Region 1 „Flüsterwald“ (D-027, D-060): sieben Hauptmissionen mit
+  Gabelung nach Mission 4 (Sumpfpfad oder Ruinen), Boss, zwei Nebenmissionen ab 6
+  und 15 Sternen. Missionstafel rechts mit Art, Name, Sternen, was die Mission
+  lehrt, ihrer Neuheit und dem Grund, warum sie noch zu ist. Mission 1 ist
+  spielbar, die übrigen zeigen „gesperrt“ oder „in Arbeit“.
+- Sterne nach Leben übrig (1 / ab 15 / alle 20, Grenzen in der Missionsdatei).
+- Speicherstand nach D-022: lokal, atomar geschrieben, vorige Fassung bleibt,
+  beim Laden geprüft; ein Stand einer neueren App wird nicht überschrieben.
+  Gespeichert wird beim Ergebnis, nicht beim Verlassen der App.
+- Hauptmenü: „Weiter mit Mission 1“ führt direkt in die nächste Mission, „Spielen“
+  öffnet die Karte; nach dem Ergebnis geht es zur Karte zurück.
+- Einstellungen mit Vibration an/aus (getrennt vom Spielstand).
+- Konzept: [r-spielrahmen](docs/konzepte/r-spielrahmen.md).
+
+**Tests**
+- Kern: `StarRatingTests`, `CampaignTests`, `SaveGameTests`, `SaveStoreTests`
+  (22 neu, jeder einmal rot gesehen), u. a. kaputte Datei, übergroße Datei,
+  neueres Schema, Gabelung, Sternsumme.
+- App: `AppFlowTests`, `AppSettingsTests`.
+- E2E: `CampaignE2ETests` (Sieg → Sterne auf der Karte → App neu starten → Sterne
+  noch da; gesperrte Missionen starten nicht und sagen warum), Einstellung bleibt
+  nach Neustart, Weg Menü → Karte → Mission → Karte → Menü. Jeder Oberflächentest
+  spielt mit eigenem Spielstand im temporären Ordner.
+
+## 0.6.0 – 25.10.2026 (Spieloberfläche UI 01), Bau 22 (VALID)
+
+**Neu**
+- Kreismenü am Feld (D-031): drei runde Turmknöpfe im Bogen mit Preisschild,
+  erstes Tippen zeigt Reichweite und Infotafel (Rolle, Zusammenspiel), zweites baut.
+  Der Bogen weicht Rändern, Kamera und Home-Leiste aus (`HudLayout`).
+- Verkaufen mit zweitem Tippen: „Verkaufen +N“, dann „Sicher?“.
+- Zu wenig Gold: Schild „fehlt N“, Gold blinkt, Warnhaptik, kein Befehl.
+- Kopfleiste neu: Leben, Gold, Welle mit Symbolen, Zahlen rollen bei Änderung,
+  Leben wackeln bei Durchbruch; „Welle N“ mit Countdown-Ring; 2× goldfarben.
+- Pausentafel mit Stand, „Weiter“, „Neu starten“ und „Aufgeben“.
+- Ergebnistafel mit Band „Sieg!“ bzw. „Die Festung ist gefallen“ und hochzählenden
+  Werten: Leben übrig, Dauer, Türme gebaut bzw. Wellen gehalten, Dauer, besiegte Gegner.
+- Haptik zu jeder eigenen Handlung (07, Abschnitt 5), beim Zuschauen keine.
+- Hauptmenü im Stil der Entwürfe, „Spielen“ groß im Daumenbereich.
+- Schriften Lilita One und Nunito (D-032), mit Lizenz und Herkunft in `App/UI/Fonts/`.
+- Konzept: [ui-01-hud-und-tafeln](docs/konzepte/ui-01-hud-und-tafeln.md).
+- Nach Durchsicht der Bildschirmfotos: Band der Niederlage dunkler (Schiefer statt
+  Hellgrau), damit die helle Schrift lesbar bleibt (Kontrast über 6 : 1).
+
+**Tests**
+- Neu: `HudLayoutTests` (jede Bauzelle auf vier iPhone-Größen), `FeedbackPlayerTests`,
+  `AppFontsTests`; `BattleControllerTests` um Verkaufen mit Bestätigung, Aufgeben,
+  Zähler, Dauer, Haptik und Countdown-Ring erweitert.
+- E2E: `TablesE2ETests` (Pause, Neu starten, Aufgeben, Bildschirmfotos zum
+  Vergleich mit dem Entwurf), Verkaufen mit Bestätigung, „fehlt N“, Werte der
+  Ergebnistafel nach Sieg und Niederlage.
+- `regeln-pruefen.sh`: keine Schriftdatei ohne Lizenz und Herkunftseintrag.
+
+## Dokumente, kein Bau – 25.10.2026 (Grafik: Konzept Phase 2 und Spielrahmen)
+
+- Konzept [Grafik 02](docs/konzepte/grafik-02-phase-2.md): Bilder für Aufwertungen,
+  Spezialisierungen, Zwergenbank, Steinregen, Hauptmenü, Regionskarte und
+  Volksbanner, mit Namen, Maßen und Qualitätsprüfung vor der Abgabe.
 
 ## 0.5.2 – 25.10.2026 (Grafik), Bau 21 (VALID)
 

@@ -99,6 +99,33 @@ enum FxStyle {
     static let sporePuffs = 12
     static let sporeColor = SKColor(red: 0.62, green: 0.92, blue: 0.40, alpha: 1)
 
+    // MARK: Festungsfähigkeit (R-3, R-4)
+
+    /// Steinregen: Schatten und Ring warnen bis zum Einschlag, Steine fallen
+    /// so, dass sie zum Einschlag ankommen.
+    static let strikeShadowAlpha: CGFloat = 0.55
+    static let strikeRing = SKColor(red: 1.00, green: 0.55, blue: 0.25, alpha: 1)
+    static let strikeStones = 7
+    static let stoneFall: TimeInterval = 0.45
+    static let stoneSize: CGFloat = 0.42
+    static let stone = SKColor(red: 0.62, green: 0.58, blue: 0.54, alpha: 1)
+    static let impactShards = 12
+    static let impactDust = 12
+    static let shakeImpact: Double = 0.65
+    /// Mondmal: kühles Licht statt Steinen, kein Wackeln.
+    static let moon = SKColor(red: 0.62, green: 0.70, blue: 1.00, alpha: 1)
+    static let moonSparks = 16
+    /// Betäubung: Sternchen über dem Kopf (Höhe und Radius in Gegnerhöhen).
+    static let stunStars = 3
+    static let stunStarSize: CGFloat = 0.2
+    static let stunHeight: CGFloat = 1.25
+    static let stunRadius: Double = 0.32
+    static let stunSpin: Double = 7
+    /// Bollwerk: wächst federnd aus dem Boden, versinkt am Ende.
+    static let wallRise: TimeInterval = 0.32
+    static let wallFall: TimeInterval = 0.35
+    static let shakeWall: Double = 0.4
+
     // MARK: Gold, Text, Banner
 
     static let coinsPerKill = 3

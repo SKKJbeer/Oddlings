@@ -2,7 +2,7 @@ import OddlingsCore
 import SpriteKit
 import SwiftUI
 
-/// Mission 1, gespielt oder vom Mitspieler vorgeführt.
+/// Eine Mission, gespielt oder vom Mitspieler vorgeführt.
 ///
 /// Kopfleiste oben, darunter die Karte. Szene und Baumenü teilen sich genau
 /// einen Rahmen, damit `BoardLayout` in beiden dieselbe Zelle findet.
@@ -11,20 +11,29 @@ struct BattleView: View {
 
     @State private var scene: BattleScene
     @State private var controller: BattleController
+    @State private var safeArea = EdgeInsets()
     @Environment(\.scenePhase) private var scenePhase
     var onClose: () -> Void
 
-    init(mode: Mode, onClose: @escaping () -> Void) {
+    /// Meldet ein Ergebnis an den Aufrufer (Fortschritt, R-1), mit den Leben,
+    /// die übrig sind. Beim Zuschauen bleibt es leer: Eine Vorführung ist kein Sieg.
+    var onFinish: ((Outcome, Int) -> Void)?
+
+    init(mission config: BalanceConfig, mode: Mode, onClose: @escaping () -> Void,
+         onFinish: ((Outcome, Int) -> Void)? = nil) {
         self.onClose = onClose
-        let config: BalanceConfig
-        do {
-            config = try BalanceConfig.missionOne()
-        } catch {
-            // Eine fehlerhafte Missionsdatei ist ein Baufehler; die Tests
-            // fangen ihn, bevor er ausgeliefert wird.
-            fatalError("Mission 1 lädt nicht: \(error)")
-        }
-        let model = BattleModel(config: config, seed: 1, autoplay: mode == .watch)
+        self.onFinish = onFinish
+        var autoplay = mode == .watch
+        #if DEBUG
+        // Der Mitspieler baut auch im eigenen Spiel, damit ein Oberflächentest
+        // einen echten Sieg samt Speichern durchspielen kann.
+        autoplay = autoplay || ProcessInfo.processInfo.arguments.contains("--e2e-mitspieler")
+        #endif
+        var config = config
+        #if DEBUG
+        if let delay = Self.testFirstWaveDelay { config.mission.firstWaveDelay = delay }
+        #endif
+        let model = BattleModel(config: config, seed: 1, autoplay: autoplay)
         #if DEBUG
         model.timeScale = Self.testTimeScale ?? 1
         #endif
@@ -43,7 +52,17 @@ struct BattleView: View {
                     .padding([.horizontal, .top], BattleStyle.hudMargin)
                 ZStack {
                     SpriteView(scene: scene, preferredFramesPerSecond: 60, options: [.ignoresSiblingOrder])
-                    BattleMenu(controller: controller)
+                    RingMenu(controller: controller, insets: boardInsets)
+                    // Nach dem Ende gibt es nichts mehr zu werfen; die Ergebnistafel liegt darüber.
+                    if controller.hasAbility && !controller.isFinished {
+                        AbilityButton(controller: controller)
+                            .padding(.trailing, safeArea.trailing + BattleStyle.hudMargin)
+                            .padding(.bottom, safeArea.bottom + BattleStyle.hudMargin)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+                    }
+                    // Tafeln liegen auf der Karte, nicht über der Leiste: Pause
+                    // und Tempo bleiben dort bedienbar.
+                    BattleOverlay(controller: controller, onRestart: { scene.restart() }, onClose: onClose)
                     #if DEBUG
                     FxStatsOverlay(scene: scene)
                     #endif
@@ -52,22 +71,61 @@ struct BattleView: View {
                 .accessibilityElement(children: .contain)
                 .accessibilityIdentifier("battle.board")
             }
-            BattleOverlay(controller: controller, onRestart: { scene.restart() }, onClose: onClose)
         }
+        .onGeometryChange(for: EdgeInsets.self) { $0.safeAreaInsets } action: { safeArea = $0 }
         .statusBarHidden()
         .persistentSystemOverlays(.hidden)
         .onChange(of: scenePhase) { _, phase in
             if phase != .active { controller.pauseForBackground() }
         }
+        .onChange(of: controller.shownOutcome) { _, outcome in
+            if let outcome { onFinish?(outcome, controller.lives) }
+        }
+    }
+
+    /// Die Karte reicht seitlich und unten unter Kamera und Home-Leiste; das
+    /// Kreismenü darf dort nicht liegen. Oben grenzt sie an die Kopfleiste.
+    private var boardInsets: HudLayout.Insets {
+        HudLayout.Insets(top: 0, left: safeArea.leading, bottom: safeArea.bottom, right: safeArea.trailing)
     }
 
     #if DEBUG
     /// `--e2e-zeitraffer N` aus den End-zu-End-Tests. Nur im Debug-Bau, damit
     /// kein ausgelieferter Bau einen Schalter für das Spieltempo hat.
-    private static var testTimeScale: Double? {
+    private static var testTimeScale: Double? { positiveArgument(after: "--e2e-zeitraffer") }
+
+    /// `--e2e-erste-welle N`: Tests, die nur bauen und bedienen, halten die
+    /// erste Welle zurück. Sonst hängt ihr Ergebnis davon ab, ob der Rechner
+    /// schneller ist als die Wartezeit der Mission (Beute wäre Gold, ein Leck
+    /// eine Niederlage).
+    private static var testFirstWaveDelay: Double? { positiveArgument(after: "--e2e-erste-welle") }
+
+    private static func positiveArgument(after flag: String) -> Double? {
         let arguments = ProcessInfo.processInfo.arguments
-        guard let index = arguments.firstIndex(of: "--e2e-zeitraffer"), index + 1 < arguments.count else { return nil }
-        return Double(arguments[index + 1]).flatMap { $0 > 0 ? $0 : nil }
+        guard let index = arguments.firstIndex(of: flag), index + 1 < arguments.count else { return nil }
+        return Double(arguments[index + 1]).flatMap { $0 > 0 && $0.isFinite ? $0 : nil }
     }
     #endif
+}
+
+/// Festungsfähigkeit unten rechts (D-033), Bild je Volk (07). Schlichter Platzhalter, bis die Oberfläche
+/// den Knopf mit Ladering und Zielansicht nach 07 liefert; die Kennung bleibt.
+private struct AbilityButton: View {
+    let controller: BattleController
+
+    var body: some View {
+        Button(action: controller.toggleAim) {
+            RingButtonFace(highlighted: controller.aiming, tint: UITheme.parchment, size: BattleStyle.tapTarget) {
+                Image(systemName: BattleStyle.abilitySymbol(controller.abilityKind))
+                    .font(.system(size: 20, weight: .black))
+                    .foregroundStyle(UITheme.cream)
+                    .opacity(controller.abilityReady ? 1 : 0.35 + 0.65 * controller.abilityCharge)
+            }
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(BattleTexts.ability(controller.abilityKind))
+        .accessibilityValue(BattleTexts.abilityState(ready: controller.abilityReady, aiming: controller.aiming,
+                                                     charge: controller.abilityCharge))
+        .accessibilityIdentifier("ability")
+    }
 }

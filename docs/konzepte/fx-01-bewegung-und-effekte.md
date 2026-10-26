@@ -39,6 +39,12 @@ versinken beim Verkauf. Alles bei 60 Bildern je Sekunde auf dem iPhone.
 | `commandRejected` | Zelle blinkt rot, Text wackelt seitlich | 0,3 s |
 | `waveStarted` | Banner springt mit Überschwingen ein, bleibt, fährt aus | 1,6 s |
 | `missionEnded(won: true)` | Konfettiregen | 1,5 s |
+| `abilityCast` Steinregen | Schatten wächst bis zum Einschlag, Ring pulsiert und zieht sich zusammen, Felsen prasseln versetzt und landen zum Einschlag | Warnzeit (0,8 s) |
+| `abilityImpact` Steinregen | Lichtblitz, Druckwelle, Staubwolken, Steinsplitter im Bogen, Bild wackelt | 0,5 s |
+| Betäubt (`stunUntilTick`) | drei Sternchen kreisen über dem Kopf, hinten kleiner und blasser | solange betäubt |
+| `abilityCast` / `abilityImpact` Mondmal | kühles Licht sammelt sich, leuchtet auf, Funken; kein Wackeln | Warnzeit + 0,3 s |
+| Mondmal am Gegner | pulsierender Mond über dem Kopf, wippt mit | solange markiert |
+| `barrierRaised` / `barrierFell` | Steinmauer schießt federnd aus dem Boden mit Staub und Ruck; am Ende versinkt sie in Staub | 0,32 s / 0,35 s |
 | Türme in Ruhe | ganz leichtes Atmen (Skalierung um 1 %), Blitzturm mit pulsierendem Glühen | dauerhaft |
 
 **Nicht drin**
@@ -49,6 +55,9 @@ versinken beim Verkauf. Alles bei 60 Bildern je Sekunde auf dem iPhone.
 - Neue Bilder. Effekttexturen werden im Code erzeugt und unter den
   Vertragsnamen `fx_*` durch Atlasbilder ersetzbar.
 - Keine Regel ändert sich, `Packages/` bleibt unberührt.
+
+Die Fähigkeiten (R-3, R-4) kamen während der Arbeit auf `main`; ihre
+Platzhalter sind mit diesem Paket ersetzt (Nachtrag 26.10.2026).
 
 ## Architektur
 

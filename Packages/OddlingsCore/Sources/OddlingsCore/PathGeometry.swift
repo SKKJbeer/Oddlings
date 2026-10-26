@@ -61,6 +61,26 @@ public struct PathGeometry: Equatable, Sendable {
         return total
     }
 
+    /// Der Wegpunkt, der `point` am nächsten liegt. Bei gleichem Abstand gewinnt
+    /// der frühere Abschnitt, damit das Ergebnis nicht von Rundung abhängt.
+    public func nearestPoint(to point: Point) -> Point { nearest(to: point).point }
+
+    /// Wie `nearestPoint`, dazu die Wegstrecke bis dorthin. Das Bollwerk steht
+    /// an einer Strecke, nicht an einem Punkt: Gegner kennen nur ihre Strecke.
+    public func nearest(to point: Point) -> (point: Point, distance: Double) {
+        var best = points[0], bestDistance = Double.infinity, bestAlong = 0.0
+        for index in points.indices.dropLast() {
+            let candidate = point.projection(onSegment: points[index], points[index + 1])
+            let distance = point.distance(to: candidate)
+            if distance < bestDistance {
+                best = candidate
+                bestDistance = distance
+                bestAlong = startDistances[index] + points[index].distance(to: candidate)
+            }
+        }
+        return (best, bestAlong)
+    }
+
     /// Kürzester Abstand eines Punkts zum Weg.
     public func distance(from point: Point) -> Double {
         var best = Double.infinity
@@ -77,10 +97,14 @@ extension Point {
     }
 
     func distance(toSegment a: Point, _ b: Point) -> Double {
+        distance(to: projection(onSegment: a, b))
+    }
+
+    func projection(onSegment a: Point, _ b: Point) -> Point {
         let dx = b.x - a.x, dy = b.y - a.y
         let lengthSquared = dx * dx + dy * dy
-        guard lengthSquared > 0 else { return distance(to: a) }
+        guard lengthSquared > 0 else { return a }
         let t = min(1, max(0, ((x - a.x) * dx + (y - a.y) * dy) / lengthSquared))
-        return distance(to: Point(x: a.x + dx * t, y: a.y + dy * t))
+        return Point(x: a.x + dx * t, y: a.y + dy * t)
     }
 }

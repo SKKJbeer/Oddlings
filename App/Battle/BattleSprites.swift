@@ -107,6 +107,11 @@ final class EnemyNode: SKNode {
     private let health = SKSpriteNode()
     private let healthLag = SKSpriteNode()
     private let healthFill = SKSpriteNode()
+    /// Mondmal (R-4): leuchtender Mond über dem Kopf, wippt mit dem Lauf.
+    private let moonMark = SKSpriteNode()
+    /// Betäubt (Steinregen): Sternchen kreisen über dem Kopf.
+    private let stars = SKNode()
+    private var starAngle: Double = 0
     private let healthWidth: CGFloat
     private var shownFraction: Double = 1
 
@@ -153,6 +158,24 @@ final class EnemyNode: SKNode {
         }
         health.isHidden = true
         addChild(health)
+
+        moonMark.texture = FxTextures.texture(.glow)
+        moonMark.color = BattleStyle.markTint
+        moonMark.colorBlendFactor = 1
+        moonMark.blendMode = .add
+        moonMark.size = CGSize(width: height * 0.5, height: height * 0.5)
+        moonMark.position = CGPoint(x: 0, y: height * 1.4)
+        moonMark.isHidden = true
+        motion.addChild(moonMark)
+
+        stars.position = CGPoint(x: 0, y: height * FxStyle.stunHeight)
+        stars.isHidden = true
+        for _ in 0..<FxStyle.stunStars {
+            let star = SKSpriteNode(texture: FxTextures.texture(.star))
+            star.size = CGSize(width: field * FxStyle.stunStarSize, height: field * FxStyle.stunStarSize)
+            stars.addChild(star)
+        }
+        motion.addChild(stars)
     }
 
     @available(*, unavailable)
@@ -172,7 +195,7 @@ final class EnemyNode: SKNode {
 
     /// Lebensbalken und Verlangsamung aus dem Zustand; `dt` für das
     /// nachlaufende Schadensstück.
-    func show(_ enemy: Enemy, dt: Double) {
+    func show(_ enemy: Enemy, dt: Double = 0, stunned: Bool = false) {
         let fraction = max(0, min(1, enemy.hp / enemy.maxHP))
         shownFraction = FxMath.lag(shownFraction, towards: fraction, dt: dt, rate: FxStyle.healthLagRate)
         health.isHidden = fraction >= 1
@@ -182,7 +205,31 @@ final class EnemyNode: SKNode {
             sprite.color = FxStyle.slowTint
             sprite.colorBlendFactor = enemy.slow == nil ? 0 : FxStyle.slowTintFactor
         }
+        moonMark.isHidden = enemy.vulnerable == nil
+        if !moonMark.isHidden {
+            moonMark.alpha = CGFloat(0.75 + 0.25 * sin(starAngle * 0.8))
+        }
+        stars.isHidden = !stunned
+        starAngle += dt * FxStyle.stunSpin
+        if stunned {
+            // Kreis von schräg oben gesehen: hinten kleiner und blasser.
+            let radius = Double(height) * FxStyle.stunRadius
+            for (index, star) in stars.children.enumerated() {
+                let angle = starAngle + Double(index) / Double(stars.children.count) * 2 * Double.pi
+                star.position = CGPoint(x: cos(angle) * radius, y: sin(angle) * radius * 0.35)
+                let front = (1 - sin(angle)) / 2
+                star.setScale(CGFloat(0.7 + 0.3 * front))
+                star.alpha = CGFloat(0.55 + 0.45 * front)
+                star.zRotation = CGFloat(angle * 0.5)
+            }
+        }
     }
+
+    /// Für die Darstellungstests: ob Sternchen kreisen.
+    var showsStun: Bool { !stars.isHidden }
+
+    /// Für die Darstellungstests: ob das Mondmal gerade zu sehen ist.
+    var showsMoonMark: Bool { !moonMark.isHidden }
 
     /// Lebensbalken weg, sobald der Gegner stirbt oder durchbricht.
     func hideHealth() { health.isHidden = true }

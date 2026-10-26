@@ -22,11 +22,17 @@ struct E2EApp {
     /// und die Leben fallen wieder (im ersten Lauf so gesehen).
     static let readableFastForward = "10"
 
-    init(_ arguments: [String] = []) throws {
+    /// Für `--e2e-erste-welle`: weit länger, als ein Test dauert.
+    static let wavesOnHold = "600"
+
+    /// Jeder Test spielt mit eigenem Spielstand im temporären Ordner, damit ein
+    /// Sieg aus einem Test den nächsten nicht verändert. `fresh: false` startet
+    /// auf dem Stand, den ein früherer Start mit derselben `storage` schrieb.
+    init(_ arguments: [String] = [], storage: String = "standard", fresh: Bool = true) throws {
         config = try BalanceConfig.missionOne()
         sim = Simulation(config: config)
         XCUIDevice.shared.orientation = .landscapeLeft
-        app.launchArguments = arguments
+        app.launchArguments = arguments + ["--e2e-speicher", storage] + (fresh ? ["--e2e-frisch"] : [])
         app.launch()
     }
 
@@ -43,6 +49,24 @@ struct E2EApp {
     var pausedHint: XCUIElement { app.staticTexts["hud.paused"] }
     func build(_ kind: TowerKind) -> XCUIElement { app.buttons["build.\(kind.rawValue)"] }
     var sell: XCUIElement { app.buttons["sell"] }
+    var sellConfirm: XCUIElement { app.staticTexts["sell.confirm"] }
+    var pauseCard: XCUIElement { app.otherElements["pause.card"] }
+    var resume: XCUIElement { app.buttons["pause.resume"] }
+    var restart: XCUIElement { app.buttons["pause.restart"] }
+    var giveUp: XCUIElement { app.buttons["pause.quit"] }
+    var ability: XCUIElement { app.buttons["ability"] }
+    var abilityState: String { ability.value as? String ?? "" }
+    var mapView: XCUIElement { app.otherElements["map"] }
+    var mapStart: XCUIElement { app.buttons["map.start"] }
+    var mapBack: XCUIElement { app.buttons["map.back"] }
+    func node(_ id: String) -> XCUIElement { app.buttons["map.node.\(id)"] }
+    func race(_ race: Race) -> XCUIElement { app.buttons["map.race.\(race.rawValue)"] }
+    var raceDetail: String { app.staticTexts["map.race.detail"].label }
+    /// Was ein Knoten zeigt, in Worten (CampaignTexts.accessibilityValue).
+    func nodeState(_ id: String) -> String { node(id).value as? String ?? "" }
+    /// Wert einer Kachel der Ergebnistafel, z. B. `result.lives`. Vorgelesen
+    /// wird immer der echte Wert, auch während die Anzeige noch hochzählt.
+    func resultValue(_ id: String) -> String { app.staticTexts[id].label }
 
     func cost(_ kind: TowerKind) -> Int { config.towers[kind]?.cost ?? 0 }
 
@@ -59,6 +83,15 @@ struct E2EApp {
         let field = min(size.width / CGFloat(map.width), size.height / CGFloat(map.height))
         let x = (size.width - field * CGFloat(map.width)) / 2 + (CGFloat(cell.x) + 0.5) * field
         let y = (size.height - field * CGFloat(map.height)) / 2 + (CGFloat(cell.y) + 0.5) * field
+        board.coordinate(withNormalizedOffset: .zero).withOffset(CGVector(dx: x, dy: y)).tap()
+    }
+
+    /// Tippt einen Feldpunkt, etwa eine Stelle am Weg (Steinregen).
+    func tap(_ point: Point) {
+        let size = board.frame.size
+        let field = min(size.width / CGFloat(map.width), size.height / CGFloat(map.height))
+        let x = (size.width - field * CGFloat(map.width)) / 2 + CGFloat(point.x) * field
+        let y = (size.height - field * CGFloat(map.height)) / 2 + CGFloat(point.y) * field
         board.coordinate(withNormalizedOffset: .zero).withOffset(CGVector(dx: x, dy: y)).tap()
     }
 
@@ -93,6 +126,21 @@ struct E2EApp {
             RunLoop.current.run(until: Date().addingTimeInterval(0.1))
         }
         XCTAssertEqual(element.label, expected, file: file, line: line)
+    }
+
+    /// Bildschirmfoto als Anhang und, wenn die CI einen Ordner nennt
+    /// (`ODDLINGS_BILDER`), als Datei zum Vergleich mit dem Entwurf.
+    func screenshot(_ name: String, in test: XCTestCase) {
+        let shot = XCUIScreen.main.screenshot()
+        let attachment = XCTAttachment(screenshot: shot)
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        test.add(attachment)
+        if let folder = ProcessInfo.processInfo.environment["ODDLINGS_BILDER"], !folder.isEmpty {
+            let url = URL(fileURLWithPath: folder).appendingPathComponent("\(name).png")
+            try? FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+            try? shot.pngRepresentation.write(to: url)
+        }
     }
 
     private func number(in element: XCUIElement) -> Int {

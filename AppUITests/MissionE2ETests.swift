@@ -11,6 +11,8 @@ final class MissionE2ETests: XCTestCase {
         e2e.waitForBoard()
         XCTAssertTrue(e2e.result.waitForExistence(timeout: 240), "Mission endet")
         XCTAssertEqual(e2e.result.label, "Niederlage")
+        XCTAssertLessThan(Int(e2e.resultValue("result.waves")) ?? -1, e2e.config.waves.count, "nicht alle Wellen gehalten")
+        XCTAssertEqual(e2e.resultValue("result.defeated"), "0", "ohne Türme besiegt niemand einen Gegner")
         XCTAssertEqual(e2e.lives, 0)
         XCTAssertFalse(e2e.nextWave.exists, "nach dem Ende keine Welle mehr")
         XCTAssertFalse(e2e.pause.isEnabled, "nach dem Ende keine Pause")
@@ -31,6 +33,9 @@ final class MissionE2ETests: XCTestCase {
         XCTAssertFalse(e2e.nextWave.exists, "Zuschauen ruft keine Wellen")
         XCTAssertTrue(e2e.result.waitForExistence(timeout: 180), "Mission endet")
         XCTAssertEqual(e2e.result.label, "Sieg")
+        XCTAssertEqual(e2e.resultValue("result.lives"), "\(e2e.lives)", "Tafel nennt die Leben der Leiste")
+        XCTAssertGreaterThan(Int(e2e.resultValue("result.towers")) ?? 0, 0, "der Mitspieler hat gebaut")
+        XCTAssertTrue(e2e.app.staticTexts["result.duration"].label.contains(":"), "Dauer als Minuten:Sekunden")
         e2e.app.buttons["result.back"].tap()
         XCTAssertTrue(e2e.app.buttons["menu.play"].waitForExistence(timeout: 5), "zurück im Startbildschirm")
     }

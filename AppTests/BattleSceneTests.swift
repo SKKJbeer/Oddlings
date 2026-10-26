@@ -49,4 +49,34 @@ final class BattleSceneTests: XCTestCase {
         XCTAssertTrue((perHalfSecond - 1...perHalfSecond).contains(ticks[0]), "\(ticks)")
         XCTAssertTrue((2 * perHalfSecond - 1...2 * perHalfSecond).contains(ticks[1]), "\(ticks)")
     }
+
+    /// Bollwerk (R-4): Die Mauer erscheint mit dem Ereignis und geht mit ihm.
+    func testWallStandsWhileTheBarrierDoes() throws {
+        let races = try RaceTable.bundled()
+        let config = try BalanceConfig.missionOne().applying(try XCTUnwrap(races[.dwarves]))
+        let model = BattleModel(config: config, seed: 1, autoplay: false)
+        let controller = BattleController(model: model, interactive: true)
+        let scene = BattleScene(model: model)
+        scene.controller = controller
+        let frameTime = 1 / Double(config.simulation.ticksPerSecond)
+        controller.toggleAim()
+        controller.cast(at: model.sim.map.path.position(at: model.sim.map.path.length / 3))
+        scene.frame(after: frameTime)
+        XCTAssertNotNil(model.state.ability.barrier)
+        XCTAssertNotNil(scene.childNode(withName: "//\(BattleScene.wallName)"), "Mauer steht")
+        while model.state.ability.barrier != nil && !model.state.isOver { scene.frame(after: frameTime) }
+        XCTAssertNil(scene.childNode(withName: "//\(BattleScene.wallName)"), "Mauer ist gefallen")
+    }
+
+    /// Mondmal (R-4): Markierte Gegner tragen das Zeichen, solange es gilt.
+    func testMarkedEnemyShowsTheMoon() throws {
+        let enemy = Enemy(id: 1, kind: .raider, hp: 10, maxHP: 10, distance: 0)
+        let node = EnemyNode(enemy: enemy, field: 40)
+        node.show(enemy)
+        XCTAssertFalse(node.showsMoonMark)
+        var marked = enemy
+        marked.vulnerable = VulnerableEffect(factor: 2, untilTick: 10)
+        node.show(marked)
+        XCTAssertTrue(node.showsMoonMark)
+    }
 }

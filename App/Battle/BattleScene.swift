@@ -91,7 +91,7 @@ final class BattleScene: SKScene {
         for event in events { play(event) }
         sync(dt: fxTime)
         fx.advance(by: fxTime)
-        controller?.afterFrame()
+        controller?.afterFrame(events: events)
         showSelection()
     }
 
@@ -117,7 +117,12 @@ final class BattleScene: SKScene {
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
-        controller?.tap(layout.cell(atScene: touch.location(in: self)))
+        let location = touch.location(in: self)
+        if controller?.aiming == true {
+            controller?.cast(at: layout.fieldPoint(atScene: location))
+        } else {
+            controller?.tap(layout.cell(atScene: location))
+        }
         showSelection()
     }
 
@@ -133,6 +138,7 @@ final class BattleScene: SKScene {
         case .none: cell = nil
         case .cell(let c, _): cell = c
         case .tower: cell = controller?.selectedTower?.cell
+        case .aiming: cell = nil
         }
         guard let cell else { return }
         let mark = SKShapeNode(rectOf: CGSize(width: field, height: field), cornerRadius: field * 0.12)
@@ -271,7 +277,7 @@ final class BattleScene: SKScene {
             if abs(ahead.x - here.x) > FxStyle.facingThreshold { node.facing = ahead.x > here.x ? 1 : -1 }
             node.apply(FxMath.pose(distance: distance, phase: FxMath.phase(forID: enemy.id),
                                    gait: FxStyle.gait(enemy.kind)), field: field)
-            node.show(enemy, dt: dt)
+            node.show(enemy, dt: dt, stunned: (enemy.stunUntilTick ?? Int.min) > state.tick)
             if appeared { fx.spawn(node) }
         }
         for (id, node) in enemyNodes where liveEnemies[id] == nil {
@@ -329,6 +335,19 @@ final class BattleScene: SKScene {
             if won { fx.victory(size: size) }
         case .commandRejected(let command, let reason):
             fx.rejected(at: position(of: command), text: BattleTexts.rejection(reason))
+        case .abilityCast(let center, let impactTick):
+            // Das Bollwerk steht sofort; es zeigt sich mit `barrierRaised`.
+            guard let ability = model.sim.config.ability, ability.kind != .bulwark else { return }
+            let seconds = Double(impactTick - model.state.tick) / Double(model.sim.config.simulation.ticksPerSecond)
+            fx.strikeWarning(at: toScene(center), radius: ability.radius ?? 0, seconds: seconds,
+                             moon: ability.kind == .moonMark)
+        case .abilityImpact(let center, _):
+            guard let ability = model.sim.config.ability else { return }
+            fx.strikeImpact(at: toScene(center), radius: ability.radius ?? 0, moon: ability.kind == .moonMark)
+        case .barrierRaised(let distance, _):
+            raiseWall(at: distance)
+        case .barrierFell:
+            fx.lowerWall(named: Self.wallName)
         case .enemySlowed:
             // Verlangsamung zeigt sich über den Zustand (Farbton am Gegner).
             break
@@ -341,6 +360,19 @@ final class BattleScene: SKScene {
         case .build(_, let cell): return toScene(cell.center)
         case .sell(let id): return towerNodes[id]?.position ?? CGPoint(x: size.width / 2, y: size.height / 2)
         case .callNextWave: return CGPoint(x: size.width / 2, y: size.height / 2)
+        case .useAbility(let point): return toScene(point)
         }
+    }
+
+    static let wallName = "barrier"
+
+    /// Mauer quer zum Weg. Die Richtung kommt aus zwei Punkten kurz davor und
+    /// dahinter, damit sie auch an einer Kurve stimmt. Eine zur Zeit (Regel).
+    private func raiseWall(at distance: Double) {
+        let path = model.sim.map.path
+        let before = toScene(path.position(at: distance - BattleStyle.wallProbe))
+        let after = toScene(path.position(at: distance + BattleStyle.wallProbe))
+        fx.raiseWall(named: Self.wallName, at: toScene(path.position(at: distance)),
+                     angle: atan2(after.y - before.y, after.x - before.x))
     }
 }

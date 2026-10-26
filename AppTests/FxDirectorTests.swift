@@ -182,4 +182,93 @@ final class FxDirectorTests: XCTestCase {
         XCTAssertEqual(node.facing, 1)
         XCTAssertGreaterThan(node.motion.xScale, 0)
     }
+
+    // MARK: Festungsfähigkeit
+
+    /// Szene mit Mitspieler-Steuerung, damit ein Wurf wie auf dem Gerät läuft.
+    private func abilityScene(_ race: Race?) throws -> (BattleScene, BattleController) {
+        var config = try BalanceConfig.missionOne()
+        if let race { config = config.applying(try XCTUnwrap(try RaceTable.bundled()[race])) }
+        let model = BattleModel(config: config, seed: 1, autoplay: false)
+        let controller = BattleController(model: model, interactive: true)
+        let scene = BattleScene(model: model)
+        scene.fx.reduceMotion = false
+        scene.controller = controller
+        return (scene, controller)
+    }
+
+    /// Wirft auf den vordersten Gegner, sobald einer weit genug gelaufen ist.
+    private func castOnFirstEnemy(_ scene: BattleScene, _ controller: BattleController) throws {
+        let model = scene.model
+        model.enqueue(.callNextWave)
+        var frames = 0
+        while (model.state.enemies.first?.distance ?? 0) < 3 && frames < 20_000 {
+            scene.frame(after: frameTime)
+            frames += 1
+        }
+        let enemy = try XCTUnwrap(model.state.enemies.first, "Gegner läuft")
+        controller.toggleAim()
+        controller.cast(at: model.sim.map.path.position(at: enemy.distance + 0.8))
+    }
+
+    /// Steinregen: erst Warnung mit fallenden Felsen, dann Einschlag mit
+    /// Wackeln; Getroffene zeigen Sternchen, solange sie betäubt sind.
+    func testStoneRainWarnsStrikesAndStuns() throws {
+        let (scene, controller) = try abilityScene(nil)
+        XCTAssertEqual(scene.model.sim.config.ability?.kind, .stoneRain)
+        try castOnFirstEnemy(scene, controller)
+        scene.frame(after: frameTime)
+        XCTAssertEqual(scene.fx.stats.casts, 1, scene.fx.stats.summary)
+        XCTAssertEqual(scene.fx.stats.impacts, 0, "Einschlag erst nach der Warnzeit")
+        var shook = false, stunned = false
+        for _ in 0..<Int(2 / frameTime) {
+            scene.frame(after: frameTime)
+            if scene.fx.stats.impacts > 0 && scene.fx.world.position != .zero { shook = true }
+            if scene.enemyNodes.values.contains(where: \.showsStun) { stunned = true }
+        }
+        XCTAssertEqual(scene.fx.stats.impacts, 1, scene.fx.stats.summary)
+        XCTAssertTrue(shook, "Einschlag wackelt")
+        XCTAssertTrue(stunned, "Getroffene zeigen Sternchen")
+        for _ in 0..<Int(2 / frameTime) { scene.frame(after: frameTime) }
+        XCTAssertFalse(scene.enemyNodes.values.contains(where: \.showsStun), "Sternchen gehen mit der Betäubung")
+    }
+
+    /// Mondmal: Licht statt Felsen, kein Wackeln.
+    func testMoonMarkGlowsWithoutShaking() throws {
+        let (scene, controller) = try abilityScene(.elves)
+        try castOnFirstEnemy(scene, controller)
+        var shook = false
+        for _ in 0..<Int(1.5 / frameTime) {
+            scene.frame(after: frameTime)
+            if scene.fx.world.position != .zero { shook = true }
+        }
+        XCTAssertEqual(scene.fx.stats.casts, 1, scene.fx.stats.summary)
+        XCTAssertEqual(scene.fx.stats.impacts, 1, scene.fx.stats.summary)
+        XCTAssertFalse(shook)
+        XCTAssertTrue(scene.enemyNodes.values.contains(where: \.showsMoonMark), "Mal am Gegner")
+    }
+
+    /// Bollwerk: Mauer schießt federnd hoch, steht, versinkt am Ende und ist
+    /// danach ganz weg.
+    func testBulwarkRisesStandsAndSinks() throws {
+        let (scene, controller) = try abilityScene(.dwarves)
+        let model = scene.model
+        controller.toggleAim()
+        controller.cast(at: model.sim.map.path.position(at: model.sim.map.path.length / 3))
+        scene.frame(after: frameTime)
+        let wall = try XCTUnwrap(scene.effectLayer.childNode(withName: BattleScene.wallName))
+        XCTAssertLessThan(wall.xScale, 0.6, "wächst aus dem Boden")
+        XCTAssertEqual(scene.fx.stats.walls, 1)
+        var overshoot = false
+        for _ in 0..<Int(FxStyle.wallRise / frameTime) + 2 {
+            scene.frame(after: frameTime)
+            if wall.xScale > 1.01 { overshoot = true }
+        }
+        XCTAssertTrue(overshoot, "federt nach")
+        XCTAssertEqual(wall.xScale, 1, accuracy: 0.001)
+        while model.state.ability.barrier != nil && !model.state.isOver { scene.frame(after: frameTime) }
+        XCTAssertNotNil(wall.parent, "versinkt noch")
+        run(scene, seconds: FxStyle.wallFall + 0.1)
+        XCTAssertNil(wall.parent, "danach weg")
+    }
 }

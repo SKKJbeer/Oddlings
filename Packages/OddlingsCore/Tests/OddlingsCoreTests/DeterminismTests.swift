@@ -33,6 +33,33 @@ struct DeterminismTests {
         #expect(copy.checksum == original.state.checksum)
     }
 
+    @Test("Replay mit Steinregen: dieselben Würfe ergeben dieselbe Prüfsumme")
+    func replayWithAbility() throws {
+        let order = try #require(Strategies.missionOne().first { $0.name.hasPrefix("Mix") }).order
+        let original = sim.play(order, castsAbility: true)
+        let casts = original.log.flatMap(\.commands).filter { if case .useAbility = $0 { true } else { false } }
+        #expect(casts.count > 3, "der Bot hat mehrmals geworfen")
+        var copy = sim.newGame(seed: 1)
+        replay(original.log, on: &copy, with: sim)
+        #expect(copy == original.state)
+        #expect(copy.checksum == original.state.checksum)
+    }
+
+    @Test("Wiederholung je Volk: gleiche Befehle, gleicher Zustand")
+    func replayPerRace() throws {
+        let order = try #require(Strategies.missionOne().first { $0.name.hasPrefix("Mix") }).order
+        let table = try RaceTable.bundled()
+        for race in Race.allCases {
+            let raced = Simulation(config: sim.config.applying(try #require(table[race])))
+            let original = raced.play(order, castsAbility: true)
+            let casts = original.log.flatMap(\.commands).filter { if case .useAbility = $0 { true } else { false } }
+            #expect(casts.count > 3, "\(race): der Bot hat mehrmals gesetzt")
+            var copy = raced.newGame(seed: 1)
+            replay(original.log, on: &copy, with: raced)
+            #expect(copy == original.state, "\(race)")
+        }
+    }
+
     @Test("Speichern und Laden mitten in der Welle, mit Türmen und Verlangsamung")
     func saveLoadMidWave() throws {
         let order = try #require(Strategies.missionOne().first { $0.name.hasPrefix("Mix") }).order
@@ -82,6 +109,25 @@ struct DeterminismTests {
         changed = state
         changed.nextWaveTick = nil
         #expect(changed.checksum != state.checksum)
+        changed = state
+        changed.ability.readyTick = 1
+        #expect(changed.checksum != state.checksum)
+        changed = state
+        changed.ability.strike = Strike(center: Point(x: 1, y: 1), impactTick: 5)
+        #expect(changed.checksum != state.checksum)
+        changed = state
+        changed.ability.barrier = Barrier(distance: 3, untilTick: 9)
+        #expect(changed.checksum != state.checksum)
+        var moved = changed
+        moved.ability.barrier?.distance = 4
+        #expect(moved.checksum != changed.checksum)
+        var marked = state
+        marked.enemies = [Enemy(id: 1, kind: .raider, hp: 1, maxHP: 1, distance: 0)]
+        var unmarked = marked
+        marked.enemies[0].vulnerable = VulnerableEffect(factor: 2, untilTick: 9)
+        #expect(marked.checksum != unmarked.checksum)
+        unmarked.enemies[0].vulnerable = VulnerableEffect(factor: 3, untilTick: 9)
+        #expect(marked.checksum != unmarked.checksum)
     }
 
     @Test("Feste Prüfsumme einer kleinen Mission, gleich auf Linux und macOS")
@@ -106,6 +152,9 @@ struct DeterminismTests {
         #expect(state.isOver)
         // Ändert sich dieser Wert, hat sich eine Regel geändert oder die Simulation
         // ist nicht mehr bitgleich. Beides ist ein Befund, kein Grund zum Anpassen.
-        #expect(state.checksum == 4_506_832_313_563_992_051)
+        // Zuletzt geändert mit R-4: Die Prüfsumme nimmt Mauer und Mondmal auf.
+        // Diese Mission hat keine Fähigkeit, der Ablauf ist derselbe (R-3 hatte
+        // 1_289_287_716_859_575_347, nur mit Anhalten und Wurf).
+        #expect(state.checksum == 172_753_100_083_930_067)
     }
 }

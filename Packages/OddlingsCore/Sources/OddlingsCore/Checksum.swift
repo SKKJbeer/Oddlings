@@ -65,6 +65,30 @@ extension GameState {
             } else {
                 sum.add(0)
             }
+            sum.add(enemy.stunUntilTick)
+            if let vulnerable = enemy.vulnerable {
+                sum.add(1)
+                sum.add(vulnerable.factor)
+                sum.add(vulnerable.untilTick)
+            } else {
+                sum.add(0)
+            }
+        }
+        sum.add(ability.readyTick)
+        if let strike = ability.strike {
+            sum.add(1)
+            sum.add(strike.center.x)
+            sum.add(strike.center.y)
+            sum.add(strike.impactTick)
+        } else {
+            sum.add(0)
+        }
+        if let barrier = ability.barrier {
+            sum.add(1)
+            sum.add(barrier.distance)
+            sum.add(barrier.untilTick)
+        } else {
+            sum.add(0)
         }
         sum.add(nextEntityID)
         sum.add(outcome?.rawValue ?? "")

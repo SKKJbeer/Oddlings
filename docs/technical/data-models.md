@@ -91,7 +91,10 @@ Fortschritt aus.
 ## Befehle und Ereignisse
 
 ```swift
-enum Command: Codable, Equatable { case build(TowerKind, Cell), sell(towerID: Int), callNextWave }
+enum Command: Codable, Equatable {
+    case build(TowerKind, Cell), sell(towerID: Int), callNextWave
+    case useAbility(Point)                                // Fähigkeit des Volks, rastet am Weg ein
+}
 
 enum Event: Equatable {
     case towerBuilt(id: Int), towerSold(id: Int, refund: Int)
@@ -101,14 +104,28 @@ enum Event: Equatable {
     case enemyDamaged(id: Int, amount: Double), enemySlowed(id: Int)
     case enemyKilled(id: Int, reward: Int), enemyLeaked(id: Int, damage: Int)
     case missionEnded(won: Bool)
+    case abilityCast(center: Point, impactTick: Int)      // Schatten bis zum Einschlag
+    case abilityImpact(center: Point, hits: [Int])       // Steinregen oder Mondmal
+    case barrierRaised(distance: Double, untilTick: Int), barrierFell   // Bollwerk (R-4)
 }
 
 func step(_ state: inout GameState, commands: [Command], config: BalanceConfig) -> [Event]
 ```
 
 **Reihenfolge innerhalb eines Schritts** (festgeschrieben, weil sie Ergebnisse
-ändert): Befehle → Wellen/Spawns → Türme feuern (nach ID) → Tote auswerten und
-Gold gutschreiben → Bewegung → Durchbrüche → Sieg/Niederlage.
+ändert): Befehle → Mauer fällt, Einschlag von Stein oder Mal → Wellen/Spawns → Türme feuern (nach ID) → Tote auswerten und
+Gold gutschreiben → Bewegung (Angehaltene stehen, niemand läuft durch die Mauer)
+→ Durchbrüche → Sieg/Niederlage.
+Fähigkeit im Zustand: `GameState.ability { readyTick, strike, barrier }`, am
+Gegner `stunUntilTick` und `vulnerable { factor, untilTick }`; alles zählt in
+die Prüfsumme. Jeder Treffer läuft durch `Simulation.hurt`, damit das Mondmal für
+Türme und Stein gleich wirkt.
+
+**Völker (R-4):** `AbilityConfig.kind` ist `stoneRain`, `bulwark` oder
+`moonMark`. Fehlt `kind`, gilt `stoneRain`. `issues()` verlangt genau die Felder
+der Art. Die Werte der Völker stehen in `Balance/races.json` (`RaceTable`, beim
+Laden geprüft). `BalanceConfig.applying(_:)` macht daraus eine zweite
+Konfiguration derselben Mission, deshalb kennt die Simulation keine Völker.
 
 ## Speicherstand (Phase 2)
 

@@ -1,0 +1,17 @@
+{
+  "_status": "Region 1 „Flüsterwald“ nach D-027 und 05. Nur M1 ist gebaut; die übrigen Knoten haben noch keine Missionsdatei. Lage auf der Karte nach der Skizze in 05, Lage der Nebenmissionen VORSCHLAG.",
+  "id": "region-01",
+  "nodes": [
+    { "id": "m1",  "kind": "main", "mission": "mvp-mission-01", "position": [0.08, 0.62], "requires": [], "novelty": "basics" },
+    { "id": "m2",  "kind": "main", "position": [0.22, 0.48], "requires": ["m1"], "novelty": "bank" },
+    { "id": "m3",  "kind": "main", "position": [0.36, 0.58], "requires": ["m2"], "novelty": "upgrades" },
+    { "id": "m4",  "kind": "main", "position": [0.48, 0.45], "requires": ["m3"], "novelty": "ability" },
+    { "id": "m5a", "kind": "main", "position": [0.60, 0.24], "requires": ["m4"], "novelty": "specializations" },
+    { "id": "m6a", "kind": "main", "position": [0.74, 0.22], "requires": ["m5a"], "novelty": "specializations" },
+    { "id": "m5b", "kind": "main", "position": [0.60, 0.68], "requires": ["m4"], "novelty": "specializations" },
+    { "id": "m6b", "kind": "main", "position": [0.74, 0.70], "requires": ["m5b"], "novelty": "specializations" },
+    { "id": "m7",  "kind": "boss", "position": [0.90, 0.46], "requires": ["m6a", "m6b"], "requiresAny": true, "novelty": "boss" },
+    { "id": "n1",  "kind": "side", "position": [0.24, 0.84], "requires": [], "stars": 6, "novelty": "specialRule" },
+    { "id": "n2",  "kind": "side", "position": [0.88, 0.86], "requires": [], "stars": 15, "novelty": "specialRule" }
+  ]
+}

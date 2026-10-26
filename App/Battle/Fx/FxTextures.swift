@@ -16,6 +16,9 @@ enum FxTextures {
         case arrow = "fx_arrow"
         case bolt = "fx_bolt"
         case confetti = "fx_confetti"
+        case star = "fx_star"
+        case stone = "fx_stone"
+        case wall = "fx_wall"
     }
 
     private static var cache: [Name: SKTexture] = [:]
@@ -47,6 +50,9 @@ enum FxTextures {
         case .coin: return coin(side: 48)
         case .arrow: return arrow(width: 96, height: 22)
         case .bolt: return beam(width: 16, height: 32)
+        case .star: return star(side: 32)
+        case .stone: return stone(side: 48)
+        case .wall: return wall(width: 32, height: 112)
         case .confetti: return render(CGSize(width: 12, height: 8)) { context, size in
             context.setFillColor(UIColor.white.cgColor)
             context.addPath(CGPath(roundedRect: CGRect(origin: .zero, size: size), cornerWidth: 2, cornerHeight: 2, transform: nil))
@@ -184,6 +190,77 @@ enum FxTextures {
             guard let gradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: colors,
                                             locations: [0, 0.3, 0.5, 0.7, 1]) else { return }
             context.drawLinearGradient(gradient, start: CGPoint(x: 0, y: 0), end: CGPoint(x: 0, y: size.height), options: [])
+        }
+    }
+
+    /// Betäubungsstern: fünf Zacken, gold, mit Kontur.
+    private static func star(side: CGFloat) -> UIImage {
+        render(CGSize(width: side, height: side)) { context, size in
+            let center = CGPoint(x: size.width / 2, y: size.height / 2)
+            let outer = size.width / 2 - 2, inner = outer * 0.45
+            let path = CGMutablePath()
+            for index in 0..<10 {
+                let radius = index % 2 == 0 ? outer : inner
+                let angle = CGFloat(index) * .pi / 5 - .pi / 2
+                let point = CGPoint(x: center.x + cos(angle) * radius, y: center.y + sin(angle) * radius)
+                if index == 0 { path.move(to: point) } else { path.addLine(to: point) }
+            }
+            path.closeSubpath()
+            context.addPath(path)
+            context.setFillColor(UIColor(red: 1.00, green: 0.86, blue: 0.30, alpha: 1).cgColor)
+            context.setStrokeColor(outline.cgColor)
+            context.setLineWidth(2)
+            context.setLineJoin(.round)
+            context.drawPath(using: .fillStroke)
+        }
+    }
+
+    /// Fels für den Steinregen: grau, eckig gerundet, Licht von oben.
+    private static func stone(side: CGFloat) -> UIImage {
+        render(CGSize(width: side, height: side)) { context, size in
+            let points: [(CGFloat, CGFloat)] = [(0.18, 0.42), (0.34, 0.16), (0.66, 0.12), (0.86, 0.36),
+                                                (0.84, 0.70), (0.58, 0.88), (0.26, 0.82), (0.10, 0.62)]
+            let path = CGMutablePath()
+            for (index, (x, y)) in points.enumerated() {
+                let point = CGPoint(x: x * size.width, y: y * size.height)
+                if index == 0 { path.move(to: point) } else { path.addLine(to: point) }
+            }
+            path.closeSubpath()
+            context.addPath(path)
+            context.setFillColor(UIColor(white: 0.78, alpha: 1).cgColor)
+            context.setStrokeColor(outline.cgColor)
+            context.setLineWidth(2.5)
+            context.setLineJoin(.round)
+            context.drawPath(using: .fillStroke)
+            // Schattenseite unten, Glanz oben links.
+            context.setFillColor(UIColor(white: 0.55, alpha: 1).cgColor)
+            context.fillEllipse(in: CGRect(x: size.width * 0.38, y: size.height * 0.56,
+                                           width: size.width * 0.38, height: size.height * 0.22))
+            context.setFillColor(UIColor(white: 1, alpha: 0.7).cgColor)
+            context.fillEllipse(in: CGRect(x: size.width * 0.3, y: size.height * 0.24,
+                                           width: size.width * 0.2, height: size.height * 0.12))
+        }
+    }
+
+    /// Bollwerk von oben: Steinblöcke in einer Reihe, Mörtelfugen, Kontur.
+    private static func wall(width: CGFloat, height: CGFloat) -> UIImage {
+        render(CGSize(width: width, height: height)) { context, size in
+            let blocks = 5
+            let gap: CGFloat = 2
+            let blockHeight = (size.height - gap * CGFloat(blocks + 1)) / CGFloat(blocks)
+            for index in 0..<blocks {
+                let inset: CGFloat = index % 2 == 0 ? 2 : 4
+                let rect = CGRect(x: inset, y: gap + CGFloat(index) * (blockHeight + gap),
+                                  width: size.width - inset * 2, height: blockHeight)
+                let path = CGPath(roundedRect: rect, cornerWidth: 4, cornerHeight: 4, transform: nil)
+                context.addPath(path)
+                context.setFillColor(UIColor(red: 0.66, green: 0.52, blue: 0.38, alpha: 1).cgColor)
+                context.setStrokeColor(outline.cgColor)
+                context.setLineWidth(2)
+                context.drawPath(using: .fillStroke)
+                context.setFillColor(UIColor(white: 1, alpha: 0.28).cgColor)
+                context.fill(CGRect(x: rect.minX + 3, y: rect.minY + 3, width: rect.width - 6, height: rect.height * 0.25))
+            }
         }
     }
 }

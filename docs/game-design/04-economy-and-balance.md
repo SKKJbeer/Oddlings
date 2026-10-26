@@ -145,6 +145,60 @@ Spiel: Unterstützende Türme müssen im Zweifel großzügig sein, weil ihr Nutz
 für Spieler schwer zu sehen ist (Risiko P1 in der
 [Analyse](../production/phase-0-analyse.md)).
 
+### Steinregen (R-3, 25.10.2026) [HYPOTHESE]
+
+Prüfung aus [03](03-races-and-avatar.md#eine-aktive-festungsfähigkeit-phase-2):
+Der Bot wirft, sobald der Stein bereit ist, auf die Stelle mit den meisten
+Gegnern im Kreis (mindestens zwei, ohne vorauszuzielen). Die Reserve der
+Mischung darf um höchstens 0,1 steigen. Gemessen mit der Mischung (ohne Stein
+1,35):
+
+| Schaden | Anhalten | Abklingzeit | Reserve mit Stein | Zuwachs |
+|---|---|---|---|---|
+| 40 | 1,0 s | 25 s | 1,64 | +0,29 |
+| 20 | 1,0 s | 25 s | 1,50 | +0,15 |
+| 30 | 1,0 s | 40 s | 1,47 | +0,12 |
+| 20 | 0,5 s | 30 s | 1,42 | +0,07 |
+| **20** | **1,0 s** | **35 s** | **1,42** | **+0,075** |
+
+Die ersten, gerechneten Werte (40 / 1 s / 25 s) waren fast dreimal zu stark: Der
+Stein trifft gerade dann, wenn sich Gegner vor den Türmen stauen, und das
+Anhalten lässt sie länger im Feuer stehen. Gewählt ist die letzte Zeile: Ein
+deutliches Anhalten fühlt sich besser an als ein kurzes, dafür kommt der Stein
+etwa jede zweite Welle. `BalanceTests` hält die Grenze fest. Der Zuwachs springt
+bei kleinen Änderungen (15 Schaden ergab mehr als 20), weil einzelne Würfe über
+eine Welle entscheiden; deshalb liegt der Wert mit Abstand unter der Grenze.
+
+### Völker Zwerge und Elfen (R-4, 26.10.2026) [HYPOTHESE]
+
+Werte in `Balance/races.json`. Prüfung aus [03](03-races-and-avatar.md):
+Völker verändern den Spielstil, sind aber nie Voraussetzung. Je Volk darf die
+Reserve der Mischung mit Fähigkeit um höchstens 0,1 über der Mission ohne
+Fähigkeit liegen (1,35), und Zwerge und Elfen dürfen höchstens 0,05
+auseinanderliegen. Der Bot setzt das Bollwerk auf den Wegpunkt mit den meisten
+Angriffstürmen in Reichweite, vor dem mindestens zwei Gegner auf drei Feldern
+heranlaufen; das Mondmal wirft er wie den Stein. Gemessen mit Abklingzeit 35 s:
+
+| Volk | Werte | Reserve | Zuwachs |
+|---|---|---|---|
+| Zwerge | Mauer 2 s | 1,35 | ±0 |
+| Zwerge | Mauer 3 s | 1,35 | ±0 |
+| **Zwerge** | **Mauer 4 s** | **1,40** | **+0,05** |
+| Zwerge | Mauer 5 s | 1,33 | −0,02 |
+| Elfen | Faktor 1,3, Mal 4 s, Sporen ×1,0 | 1,38 | +0,03 |
+| Elfen | Faktor 1,3, Mal 4 s, Sporen ×1,1 | 1,37 | +0,02 |
+| Elfen | Faktor 1,5, Mal 4 s, Sporen ×1,0 | 1,38 | +0,03 |
+| **Elfen** | **Faktor 1,5, Mal 4 s, Sporen ×1,1** | **1,42** | **+0,07** |
+
+Zum Vergleich der Steinregen ohne Volk: 1,42. Gewählt sind die fetten Zeilen,
+Zwerge und Elfen liegen 0,02 auseinander. Zwei Befunde: Eine längere Mauer hilft
+nicht von selbst (5 s war schwächer als 4 s), weil sich dahinter eine Traube
+sammelt, die nach dem Fall auf einmal durchläuft. Und eine Mauer an der
+dichtesten Traube statt vor den Türmen half gar nicht (erster Bot, 1,31 bis
+1,36); das Bollwerk lohnt sich nur vor der eigenen Feuerlinie, das muss die
+Oberfläche beim Zielen zeigen. Der passive Zug der Zwerge fehlt, solange es keine
+Zwergenbank gibt (Frage an Steffen offen, [r-4-voelker](../konzepte/r-4-voelker.md)).
+
 ### Grenzen der Rechnung
 
 - Keine Menschen: perfekte Platzierung, keine Reaktionszeit, kein Verkaufen.

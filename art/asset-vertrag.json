@@ -79,6 +79,18 @@
     "fx_confetti": {
       "alpha": true,
       "effekt": true
+    },
+    "fx_star": {
+      "alpha": true,
+      "effekt": true
+    },
+    "fx_stone": {
+      "alpha": true,
+      "effekt": true
+    },
+    "fx_wall": {
+      "alpha": true,
+      "effekt": true
     }
   }
 }

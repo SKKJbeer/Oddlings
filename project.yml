@@ -36,7 +36,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: de.skkjbeer.oddlings
         PRODUCT_NAME: Oddlings
-        MARKETING_VERSION: "0.5.3"
+        MARKETING_VERSION: "0.10.0"
         CURRENT_PROJECT_VERSION: "1"
         # Nur iPhone (D-006). Ein iPad startet die App trotzdem, im Kompatibilitätsmodus.
         TARGETED_DEVICE_FAMILY: "1"

@@ -19,6 +19,9 @@ final class BuildAndSellE2ETests: XCTestCase {
         e2e.tap(cell)
         XCTAssertTrue(e2e.sell.waitForExistence(timeout: 5), "Turm ist gebaut und wählbar")
         e2e.sell.tap()
+        XCTAssertTrue(e2e.sellConfirm.waitForExistence(timeout: 5), "erstes Tippen fragt „Sicher?“")
+        XCTAssertEqual(e2e.gold, start - e2e.cost(.watch), "erstes Tippen verkauft nicht")
+        e2e.sell.tap()
         e2e.waitFor(e2e.gold, toBe: start - e2e.cost(.watch) + e2e.sim.refund(for: e2e.cost(.watch)),
                     "Verkaufen erstattet den Anteil aus der Missionsdatei")
 
@@ -50,8 +53,9 @@ final class BuildAndSellE2ETests: XCTestCase {
     }
 
     @MainActor
-    func testUnaffordableTowerIsDisabled() throws {
-        let e2e = try E2EApp(["--play"])
+    func testUnaffordableTowerWarnsAndBuildsNothing() throws {
+        // Ohne Welle bringt keine Beute Gold, der Vergleich bleibt genau.
+        let e2e = try E2EApp(["--play", "--e2e-erste-welle", E2EApp.wavesOnHold])
         e2e.waitForBoard()
         var cells = e2e.map.buildableCells.makeIterator()
         let cheapest = TowerKind.allCases.min { e2e.cost($0) < e2e.cost($1) }!
@@ -63,7 +67,13 @@ final class BuildAndSellE2ETests: XCTestCase {
         }
         let free = try XCTUnwrap(cells.next())
         e2e.tap(free)
-        XCTAssertTrue(e2e.build(cheapest).waitForExistence(timeout: 5))
-        XCTAssertFalse(e2e.build(cheapest).isEnabled, "zu teuer ist ausgegraut")
+        let button = e2e.build(cheapest)
+        XCTAssertTrue(button.waitForExistence(timeout: 5))
+        XCTAssertTrue(button.label.contains("fehlt"), "Schild nennt, was fehlt: \(button.label)")
+        button.tap()
+        button.tap()
+        XCTAssertTrue(button.exists, "Menü bleibt offen, nichts gebaut")
+        XCTAssertFalse(button.label.contains("Bauen"), "keine Vorschau ohne Gold")
+        XCTAssertEqual(e2e.gold, expected, "kein Gold abgezogen")
     }
 }

@@ -47,7 +47,22 @@ enum BattleStyle {
     static let leak = SKColor(red: 1.00, green: 0.25, blue: 0.20, alpha: 1)
     static let fortress = SKColor(red: 0.55, green: 0.55, blue: 0.62, alpha: 1)
 
-    static let font = "AvenirNext-Heavy"
+    /// Mondmal am Gegner (R-4); die Effekte der Fähigkeiten stehen in `FxStyle`.
+    static let markTint = SKColor(red: 0.70, green: 0.75, blue: 1.00, alpha: 1)
+    /// Mauer in Feldern: quer zum Weg so breit wie der Weg, dazu die Dicke.
+    static let wallLength: CGFloat = 1.1
+    static let wallThickness: CGFloat = 0.28
+    /// So weit vor und hinter der Mauer wird die Wegrichtung abgelesen.
+    static let wallProbe: Double = 0.05
+    static func abilitySymbol(_ kind: AbilityKind) -> String {
+        switch kind {
+        case .stoneRain: "circle.hexagongrid.circle.fill"
+        case .bulwark: "shield.lefthalf.filled"
+        case .moonMark: "moon.stars.fill"
+        }
+    }
+    /// Lilita One (D-032), angemeldet in `AppFonts`.
+    static let font = AppFonts.display
     static let fastSpeed = 2
 
     static let selection = SKColor(red: 1.00, green: 0.95, blue: 0.70, alpha: 1)
@@ -61,6 +76,13 @@ enum BattleStyle {
     /// Knapp unter der Tippgröße: Im Querformat zählt jeder Punkt Höhe für die Karte.
     static let hudHeight: CGFloat = 40
     static let hudMargin: CGFloat = 6
+    /// Kreismenü (07-ui-ux.md, Grundsatz 5): runde Knöpfe deutlich über 44 pt.
+    static let ringButton: CGFloat = 54
+    static let ringGap: CGFloat = 6
+    static let infoPanel = CGSize(width: 214, height: 96)
+    static var hudMetrics: HudLayout.Metrics {
+        HudLayout.Metrics(button: ringButton, gap: ringGap, margin: screenMargin, panel: infoPanel)
+    }
 
     /// Längste Bildzeit, die nachgeholt wird.
     static let maxCatchUp: TimeInterval = 0.25

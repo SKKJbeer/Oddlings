@@ -16,11 +16,13 @@ final class FxDirector {
     struct Stats: Equatable {
         var arrows = 0, bolts = 0, combos = 0, spores = 0, hits = 0
         var deaths = 0, coins = 0, builds = 0, sells = 0, leaks = 0, spawns = 0
+        var casts = 0, impacts = 0, walls = 0
         var dropped = 0
 
         var summary: String {
             "arrows=\(arrows) bolts=\(bolts) combos=\(combos) spores=\(spores) hits=\(hits) deaths=\(deaths) "
-                + "coins=\(coins) builds=\(builds) sells=\(sells) leaks=\(leaks) spawns=\(spawns) dropped=\(dropped)"
+                + "coins=\(coins) builds=\(builds) sells=\(sells) leaks=\(leaks) spawns=\(spawns) "
+                + "casts=\(casts) impacts=\(impacts) walls=\(walls) dropped=\(dropped)"
         }
     }
 
@@ -108,6 +110,8 @@ final class FxDirector {
             }
         }
         tweens = []
+        // Was ohne Bewegung steht (das Bollwerk), geht mit.
+        layer.removeAllChildren()
         arrivals = [:]
         trauma = 0
         world.position = .zero
@@ -433,6 +437,125 @@ final class FxDirector {
     }
 
     // MARK: Oberfläche im Spielfeld
+
+    // MARK: Festungsfähigkeit
+
+    /// Vorwarnung bis zum Einschlag: Ein Schatten wächst, ein Ring pulsiert
+    /// und zieht sich zusammen. Beim Steinregen fallen Felsen so, dass sie
+    /// genau zum Einschlag landen; beim Mondmal sammelt sich Licht.
+    func strikeWarning(at center: CGPoint, radius: Double, seconds: Double, moon: Bool) {
+        stats.casts += 1
+        let life = max(seconds, 0.05)
+        let diameter = CGFloat(radius * 2) * field
+        if let shadow = sprite(.glow, essential: true) {
+            tinted(shadow, moon ? FxStyle.moon : .black, additive: moon)
+            shadow.position = center
+            shadow.zPosition = -2
+            animate(shadow, duration: life, end: .recycle) { node, t in
+                let s = CGFloat(0.3 + 0.9 * Ease.quadIn(t))
+                (node as? SKSpriteNode)?.size = CGSize(width: diameter * s, height: diameter * s * 0.55)
+                node.alpha = FxStyle.strikeShadowAlpha * CGFloat(0.4 + 0.6 * t)
+            }
+        }
+        if let ring = sprite(.ring, essential: true) {
+            tinted(ring, moon ? FxStyle.moon : FxStyle.strikeRing, additive: true)
+            ring.position = center
+            ring.zPosition = -1
+            animate(ring, duration: life, end: .recycle) { node, t in
+                let s = CGFloat(1.35 - 0.35 * Ease.cubicOut(t))
+                (node as? SKSpriteNode)?.size = CGSize(width: diameter * s, height: diameter * s * 0.55)
+                node.alpha = CGFloat(0.35 + 0.35 * (0.5 + 0.5 * sin(t * 6 * Double.pi)))
+            }
+        }
+        guard !moon else { return }
+        for index in 0..<FxStyle.strikeStones {
+            guard let stone = sprite(.stone, essential: false) else { return }
+            tinted(stone, FxStyle.stone)
+            let side = field * FxStyle.stoneSize * CGFloat(spread(0.7...1.2))
+            stone.size = CGSize(width: side, height: side)
+            stone.zPosition = 6
+            // Die ersten Steine früher, damit es prasselt statt aufschlägt.
+            let land = life - Double(FxStyle.strikeStones - 1 - index) * 0.035
+            let start = max(0, land - FxStyle.stoneFall)
+            let angle = spread(0...(2 * Double.pi))
+            let reach = radius * Double(field) * spread(0...0.75)
+            let goal = CGPoint(x: center.x + CGFloat(cos(angle) * reach), y: center.y + CGFloat(sin(angle) * reach * 0.55))
+            let height = Double(field) * spread(5...7)
+            let drift = Double(field) * spread(-0.8...0.8)
+            let spin = spread(-8...8)
+            animate(stone, delay: start, duration: land - start, end: .recycle) { node, t in
+                let s = Ease.quadIn(t)
+                node.position = CGPoint(x: goal.x + CGFloat(drift * (1 - s)), y: goal.y + CGFloat(height * (1 - s)))
+                node.zRotation = CGFloat(spin * t)
+                node.alpha = CGFloat(min(1, t * 4))
+            }
+        }
+    }
+
+    /// Einschlag: Lichtblitz, Druckwelle, Staub, fliegende Splitter, Wackeln.
+    /// Das Mondmal leuchtet auf und sprüht kühle Funken.
+    func strikeImpact(at center: CGPoint, radius: Double, moon: Bool) {
+        stats.impacts += 1
+        glowPoint(at: center, color: moon ? FxStyle.moon : .white, size: CGFloat(radius * 2.2), duration: 0.22)
+        ring(at: center, radius: radius * 1.15, color: moon ? FxStyle.moon : FxStyle.dust, duration: 0.45,
+             flatten: 0.55, additive: moon)
+        if moon {
+            sparks(at: center, count: FxStyle.moonSparks, color: FxStyle.moon, speed: 2.6, size: 0.3)
+            return
+        }
+        dust(at: center, count: FxStyle.impactDust, radius: radius, size: 0.75)
+        for _ in 0..<FxStyle.impactShards {
+            guard let shard = sprite(.stone, essential: false) else { break }
+            tinted(shard, FxStyle.stone)
+            let side = field * CGFloat(spread(0.12...0.22))
+            shard.size = CGSize(width: side, height: side)
+            shard.zPosition = 3
+            let angle = spread(0.2...(Double.pi - 0.2))
+            let velocity = Vec(x: cos(angle), y: sin(angle)) * (spread(2.0...3.6) * Double(field))
+            let spin = spread(-12...12)
+            let life = spread(0.4...0.6)
+            let start = vec(center)
+            let gravity = 10 * Double(field)
+            animate(shard, duration: life, end: .recycle) { node, t in
+                node.position = CGPoint(x: 0, y: 0) + FxMath.ballistic(start: start, velocity: velocity, gravity: gravity, at: t * life)
+                node.zRotation = CGFloat(spin * t)
+                node.alpha = CGFloat(t > 0.7 ? (1 - t) / 0.3 : 1)
+            }
+        }
+        shake(FxStyle.shakeImpact)
+    }
+
+    /// Bollwerk: Die Mauer schießt federnd aus dem Boden, mit Staub und einem
+    /// Ruck im Bild. Sie bleibt, bis `lowerWall` sie versenkt.
+    func raiseWall(named name: String, at position: CGPoint, angle: CGFloat) {
+        lowerWall(named: name)
+        stats.walls += 1
+        let wall = SKSpriteNode(texture: FxTextures.texture(.wall))
+        wall.name = name
+        wall.size = CGSize(width: BattleStyle.wallThickness * field, height: BattleStyle.wallLength * field)
+        wall.position = position
+        wall.zRotation = angle
+        wall.setScale(0.2)
+        layer.addChild(wall)
+        animate(wall, key: "wall", duration: FxStyle.wallRise) { node, t in
+            node.setScale(CGFloat(0.2 + 0.8 * Ease.backOut(t)))
+        }
+        ring(at: position, radius: 0.8, color: FxStyle.dust, duration: 0.35, flatten: 0.45)
+        dust(at: position, count: FxStyle.dustPuffs, radius: 0.55, size: 0.5)
+        shake(FxStyle.shakeWall)
+    }
+
+    /// Ende des Bollwerks: Die Mauer verliert sofort ihren Namen (für die
+    /// Szene ist sie weg) und versinkt in Staub.
+    func lowerWall(named name: String) {
+        guard let wall = layer.childNode(withName: name) else { return }
+        wall.name = nil
+        animate(wall, key: "wall", duration: FxStyle.wallFall, end: .remove) { node, t in
+            node.setScale(CGFloat(1 - 0.6 * Ease.quadIn(t)))
+            node.alpha = CGFloat(1 - Ease.quadIn(t))
+        }
+        dust(at: wall.position, count: FxStyle.dustPuffs / 2, radius: 0.4, size: 0.45)
+    }
 
     func rejected(at position: CGPoint, text: String) {
         if let tile = sprite(nil, essential: true) {

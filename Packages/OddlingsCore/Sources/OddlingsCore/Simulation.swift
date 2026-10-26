@@ -35,7 +35,7 @@ public struct Simulation: Sendable {
     }
 
     /// Ein Tick. Die Reihenfolge ist festgeschrieben, weil sie Ergebnisse
-    /// ändert (data-models.md): Befehle → Wellen/Spawns → Türme feuern (nach ID)
+    /// ändert (data-models.md): Befehle → Mauer fällt, Einschlag der Fähigkeit → Wellen/Spawns → Türme feuern (nach ID)
     /// → Tote auswerten und Gold gutschreiben → Bewegung → Durchbrüche → Ende.
     /// Befehle laufen in der übergebenen Reihenfolge.
     @discardableResult
@@ -43,6 +43,7 @@ public struct Simulation: Sendable {
         guard !state.isOver else { return [] }
         var events: [Event] = []
         for command in commands { apply(command, to: &state, &events) }
+        resolveAbility(&state, &events)
         startWaveIfDue(&state, &events)
         spawnDue(&state, &events)
         fireTowers(&state, &events)
@@ -91,6 +92,83 @@ public struct Simulation: Sendable {
             // Der Plan verschiebt sich mit: Der Takt zur übernächsten Welle läuft
             // ab dem letzten Erscheinen dieser, wie bei einem regulären Start.
             state.nextWaveTick = state.tick
+
+        case .useAbility(let point):
+            guard let ability = config.ability else {
+                return events.append(.commandRejected(command, reason: .noAbility))
+            }
+            guard state.tick >= state.ability.readyTick else {
+                return events.append(.commandRejected(command, reason: .abilityNotReady))
+            }
+            let (center, along) = map.path.nearest(to: point)
+            guard center.distance(to: point) <= ability.snapDistance else {
+                return events.append(.commandRejected(command, reason: .notOnPath))
+            }
+            state.ability.readyTick = state.tick + ticks(ability.cooldown)
+            switch ability.kind {
+            case .stoneRain, .moonMark:
+                let impact = state.tick + ticks(ability.delay ?? 0)
+                state.ability.strike = Strike(center: center, impactTick: impact)
+                events.append(.abilityCast(center: center, impactTick: impact))
+            case .bulwark:
+                // Steht sofort: Eine Mauer, die erst kommt, wenn die Gegner schon
+                // vorbei sind, wäre keine Planung, sondern Glück.
+                let until = state.tick + ticks(ability.duration ?? 0)
+                state.ability.barrier = Barrier(distance: along, untilTick: until)
+                events.append(.abilityCast(center: center, impactTick: state.tick))
+                events.append(.barrierRaised(distance: along, untilTick: until))
+            }
+        }
+    }
+
+    /// Erst fällt eine abgelaufene Mauer, dann schlägt ein fälliger Wurf ein.
+    /// Getroffen ist, wer beim Einschlag im Kreis steht, nicht wer beim Wurf dort
+    /// stand: Der Schatten ist die Ankündigung, man zielt voraus (03).
+    private func resolveAbility(_ state: inout GameState, _ events: inout [Event]) {
+        if let barrier = state.ability.barrier, state.tick >= barrier.untilTick {
+            state.ability.barrier = nil
+            events.append(.barrierFell)
+        }
+        guard let strike = state.ability.strike, state.tick >= strike.impactTick,
+              let ability = config.ability else { return }
+        state.ability.strike = nil
+        let hits = enemiesInRange(state.enemies, around: strike.center, range: ability.radius ?? 0)
+        switch ability.kind {
+        case .stoneRain:
+            let until = state.tick + ticks(ability.stunDuration ?? 0)
+            for hit in hits {
+                let dealt = hurt(&state.enemies[hit], by: ability.damage ?? 0, tick: state.tick)
+                // Kein Stapeln: Ein zweiter Treffer verlängert bis zu seinem Ende, nie darüber hinaus.
+                state.enemies[hit].stunUntilTick = max(state.enemies[hit].stunUntilTick ?? 0, until)
+                events.append(.enemyDamaged(id: state.enemies[hit].id, amount: dealt))
+            }
+        case .moonMark:
+            let mark = VulnerableEffect(factor: ability.damageFactor ?? 1,
+                                        untilTick: state.tick + ticks(ability.duration ?? 0))
+            for hit in hits { applyVulnerable(mark, to: &state.enemies[hit], tick: state.tick) }
+        case .bulwark:
+            break
+        }
+        events.append(.abilityImpact(center: strike.center, hits: hits.map { state.enemies[$0].id }))
+    }
+
+    /// Jeder Treffer läuft hier durch, damit Mondmal für alle Türme und den
+    /// Steinregen gleich wirkt. Gibt den verursachten Schaden zurück.
+    func hurt(_ enemy: inout Enemy, by amount: Double, tick: Int) -> Double {
+        var dealt = amount
+        if let mark = enemy.vulnerable, mark.untilTick > tick { dealt *= mark.factor }
+        enemy.hp -= dealt
+        return dealt
+    }
+
+    /// Wie bei der Verlangsamung: der stärkste aktive Faktor, und ein neues Mal
+    /// verkürzt ein laufendes nie.
+    func applyVulnerable(_ mark: VulnerableEffect, to enemy: inout Enemy, tick: Int) {
+        if let active = enemy.vulnerable, active.untilTick > tick {
+            enemy.vulnerable = VulnerableEffect(factor: max(active.factor, mark.factor),
+                                                untilTick: max(active.untilTick, mark.untilTick))
+        } else {
+            enemy.vulnerable = mark
         }
     }
 
@@ -152,17 +230,17 @@ public struct Simulation: Sendable {
             case .watch:
                 guard let target = firstTarget(in: state.enemies, around: tower.cell.center, range: stats.range)
                 else { continue }
-                state.enemies[target].hp -= stats.damage
+                let dealt = hurt(&state.enemies[target], by: stats.damage, tick: state.tick)
                 events.append(.towerFired(towerID: tower.id, targets: [state.enemies[target].id]))
-                events.append(.enemyDamaged(id: state.enemies[target].id, amount: stats.damage))
+                events.append(.enemyDamaged(id: state.enemies[target].id, amount: dealt))
             case .lightning:
                 guard let first = firstTarget(in: state.enemies, around: tower.cell.center, range: stats.range)
                 else { continue }
                 let chain = chainTargets(in: state.enemies, from: first, stats: stats)
                 events.append(.towerFired(towerID: tower.id, targets: chain.map { state.enemies[$0.index].id }))
                 for hit in chain {
-                    state.enemies[hit.index].hp -= hit.damage
-                    events.append(.enemyDamaged(id: state.enemies[hit.index].id, amount: hit.damage))
+                    let dealt = hurt(&state.enemies[hit.index], by: hit.damage, tick: state.tick)
+                    events.append(.enemyDamaged(id: state.enemies[hit.index].id, amount: dealt))
                 }
             case .spore:
                 let hits = enemiesInRange(state.enemies, around: tower.cell.center, range: stats.range)
@@ -170,9 +248,9 @@ public struct Simulation: Sendable {
                 guard !hits.isEmpty else { continue }
                 events.append(.towerFired(towerID: tower.id, targets: hits.map { state.enemies[$0].id }))
                 for hit in hits {
-                    state.enemies[hit].hp -= stats.damage
+                    let dealt = hurt(&state.enemies[hit], by: stats.damage, tick: state.tick)
                     applySlow(to: &state.enemies[hit], stats: stats, tick: state.tick)
-                    events.append(.enemyDamaged(id: state.enemies[hit].id, amount: stats.damage))
+                    events.append(.enemyDamaged(id: state.enemies[hit].id, amount: dealt))
                     events.append(.enemySlowed(id: state.enemies[hit].id))
                 }
             }
@@ -260,11 +338,23 @@ public struct Simulation: Sendable {
         let perTick = 1 / Double(config.simulation.ticksPerSecond)
         for index in state.enemies.indices {
             guard let enemy = config.enemies[state.enemies[index].kind] else { continue }
+            if let stun = state.enemies[index].stunUntilTick {
+                if stun > state.tick { continue }
+                state.enemies[index].stunUntilTick = nil
+            }
+            if let mark = state.enemies[index].vulnerable, mark.untilTick <= state.tick {
+                state.enemies[index].vulnerable = nil
+            }
             var factor = 1.0
             if let slow = state.enemies[index].slow {
                 if slow.untilTick > state.tick { factor = slow.factor } else { state.enemies[index].slow = nil }
             }
-            state.enemies[index].distance += enemy.speed * factor * perTick
+            let before = state.enemies[index].distance
+            var next = before + enemy.speed * factor * perTick
+            // Wer vor der Mauer ist, kommt bis an sie heran und nicht weiter; wer
+            // schon dahinter ist, läuft weiter (r-4-voelker.md).
+            if let barrier = state.ability.barrier, before <= barrier.distance { next = min(next, barrier.distance) }
+            state.enemies[index].distance = next
         }
     }
 
