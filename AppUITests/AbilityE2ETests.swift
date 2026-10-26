@@ -7,9 +7,12 @@ final class AbilityE2ETests: XCTestCase {
 
     @MainActor
     func testCastOnPathChargesAndComesBack() throws {
-        // Mit dem Mitspieler, sonst ist die Mission ohne Türme im Zeitraffer
-        // verloren, bevor der Stein wieder lädt (im ersten Lauf so gesehen).
-        let e2e = try E2EApp(["--play", "--e2e-mitspieler", "--e2e-zeitraffer", E2EApp.readableFastForward])
+        // Lange Abklingzeit und keine Welle: „lädt" bleibt stehen, egal wie
+        // lange XCTest nach dem Tippen auf Ruhe wartet. Vorher lief der Test im
+        // Zeitraffer, „lädt" hielt 3,5 s und war auf langsamen Läufern manchmal
+        // schon vorbei.
+        let e2e = try E2EApp(["--play", "--e2e-erste-welle", E2EApp.wavesOnHold,
+                              "--e2e-abklingzeit", E2EApp.abilityOnHold])
         e2e.waitForBoard()
         XCTAssertTrue(e2e.ability.waitForExistence(timeout: 5), "Knopf unten rechts")
         XCTAssertEqual(e2e.abilityState, "bereit", "bereit ab Beginn")
@@ -28,11 +31,11 @@ final class AbilityE2ETests: XCTestCase {
         let charging = NSPredicate(format: "value BEGINSWITH %@", "lädt")
         expectation(for: charging, evaluatedWith: e2e.ability)
         waitForExpectations(timeout: 5)
-
-        // 35 s Abklingzeit im Zehnfachen: wenige Sekunden.
-        let ready = NSPredicate(format: "value == %@", "bereit")
-        expectation(for: ready, evaluatedWith: e2e.ability)
-        waitForExpectations(timeout: 30)
+        // Ein zweites Tippen wirkt nicht noch einmal und öffnet kein Zielen.
+        e2e.ability.tap()
+        XCTAssertTrue(e2e.abilityState.hasPrefix("lädt"), e2e.abilityState)
+        // Dass die Fähigkeit nach der Abklingzeit wiederkommt, prüft
+        // BattleControllerTests.testCastQueuesCommandAndChargeRunsUp Schritt für Schritt.
     }
 
     @MainActor

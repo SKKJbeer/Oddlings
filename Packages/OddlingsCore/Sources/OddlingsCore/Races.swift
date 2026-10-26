@@ -1,17 +1,22 @@
 import Foundation
 
 /// Was ein Volk an einer Mission ändert (03, „Wie ein Volk wirkt"; R-4): die
-/// Festungsfähigkeit und Faktoren auf die Reichweite einzelner Türme. Die Türme
-/// selbst bleiben für alle gleich.
+/// Festungsfähigkeit und Faktoren auf Reichweite und Preis einzelner Türme. Die
+/// Türme selbst bleiben für alle gleich.
 public struct RaceConfig: Codable, Equatable, Sendable {
     public var ability: AbilityConfig
     /// Faktor auf die Reichweite je Turmart; eine fehlende Art bleibt bei 1.
     /// Nur zum Nachschlagen, nie darüber iterieren (Architekturregel 6).
     public var rangeFactor: [TowerKind: Double]?
+    /// Faktor auf den Baupreis je Turmart (D-062: Zwerge zahlen für Wachtürme
+    /// weniger). Gerundet auf ganzes Gold, weil die Kasse nur ganze Münzen kennt.
+    public var costFactor: [TowerKind: Double]?
 
-    public init(ability: AbilityConfig, rangeFactor: [TowerKind: Double]? = nil) {
+    public init(ability: AbilityConfig, rangeFactor: [TowerKind: Double]? = nil,
+                costFactor: [TowerKind: Double]? = nil) {
         self.ability = ability
         self.rangeFactor = rangeFactor
+        self.costFactor = costFactor
     }
 }
 
@@ -35,6 +40,9 @@ public struct RaceTable: Codable, Equatable, Sendable {
             for kind in TowerKind.allCases {
                 if let factor = config.rangeFactor?[kind], !(factor > 0) {
                     found.append(.init(field: "\(field).rangeFactor.\(kind.rawValue)", rule: .mustBePositive))
+                }
+                if let factor = config.costFactor?[kind], !(factor > 0) {
+                    found.append(.init(field: "\(field).costFactor.\(kind.rawValue)", rule: .mustBePositive))
                 }
             }
         }
@@ -70,6 +78,9 @@ extension BalanceConfig {
         config.ability = race.ability
         for kind in TowerKind.allCases {
             if let factor = race.rangeFactor?[kind] { config.towers[kind]?.range *= factor }
+            if let factor = race.costFactor?[kind], let cost = config.towers[kind]?.cost {
+                config.towers[kind]?.cost = Int((Double(cost) * factor).rounded())
+            }
         }
         return config
     }

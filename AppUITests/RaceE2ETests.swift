@@ -2,7 +2,7 @@ import OddlingsCore
 import XCTest
 
 /// Völkerwahl (R-4): auf der Missionstafel wählen, die Mission trägt die
-/// Fähigkeit des Volks, und die Wahl übersteht den Neustart der App.
+/// Fähigkeit und die Preise des Volks, und die Wahl übersteht den Neustart der App.
 final class RaceE2ETests: XCTestCase {
     override func setUp() { continueAfterFailure = false }
 
@@ -32,12 +32,27 @@ final class RaceE2ETests: XCTestCase {
         XCTAssertEqual(e2e.ability.label, "Mondmal")
 
         e2e.app.terminate()
-        let again = try E2EApp(["--e2e-erste-welle", E2EApp.wavesOnHold], storage: "volk", fresh: false)
+        let again = try E2EApp(["--e2e-erste-welle", E2EApp.wavesOnHold, "--e2e-abklingzeit", E2EApp.abilityOnHold],
+                               storage: "volk", fresh: false)
         openMap(again)
         XCTAssertTrue(again.race(.elves).isSelected, "die Wahl steht im Spielstand")
         again.race(.dwarves).tap()
+        XCTAssertTrue(again.raceDetail.contains("Wachtürme"), again.raceDetail)
         again.mapStart.tap()
         again.waitForBoard()
+
+        // D-062: Zwerge zahlen für den Wachturm weniger, sichtbar im Ring und an der Kasse.
+        let dwarves = again.config.applying(try XCTUnwrap(try RaceTable.bundled()[.dwarves]))
+        let price = try XCTUnwrap(dwarves.towers[.watch]?.cost)
+        XCTAssertLessThan(price, again.cost(.watch))
+        let cell = try XCTUnwrap(again.map.buildableCells.first)
+        let gold = again.gold
+        again.tap(cell)
+        XCTAssertTrue(again.build(.watch).waitForExistence(timeout: 5))
+        XCTAssertTrue(again.build(.watch).label.contains("\(price)"), again.build(.watch).label)
+        again.build(.watch).tap()
+        again.build(.watch).tap()
+        again.waitFor(again.gold, toBe: gold - price, "der Zwergenpreis wird abgebucht")
         XCTAssertTrue(again.ability.waitForExistence(timeout: 5))
         XCTAssertEqual(again.ability.label, "Bollwerk")
         XCTAssertEqual(again.abilityState, "bereit")

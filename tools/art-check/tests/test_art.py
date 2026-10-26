@@ -2,8 +2,8 @@
 
 python3 -m unittest discover -s tools/art-check/tests
 """
-import json, os, shutil, subprocess, sys, tempfile, unittest
-from PIL import Image
+import json, math, os, shutil, subprocess, sys, tempfile, unittest
+from PIL import Image, ImageDraw, ImageStat
 
 HIER = os.path.dirname(os.path.abspath(__file__))
 WURZEL = os.path.abspath(os.path.join(HIER, "../../.."))
@@ -186,25 +186,62 @@ class EchtesRepo(unittest.TestCase):
             self.assertIn(f"enemy_{g}", vertrag)
 
 
-class Regionsvorlage(unittest.TestCase):
-    def test_lichtungen_liegen_unter_den_knoten(self):
+class Regionscollage(unittest.TestCase):
+    """Einfarbige Teile statt gemalter: So laesst sich messen, ob ein Baum auf einer
+    Lichtung oder einem Weg gelandet ist."""
+
+    def test_lichtungen_und_wege_bleiben_frei(self):
         region = os.path.join(WURZEL, "Packages/OddlingsCore/Sources/OddlingsCore/Resources/Campaign/region-01.json")
-        knoten = json.load(open(region))["nodes"]
+        knoten = {k["id"]: k for k in json.load(open(region))["nodes"]}
         with tempfile.TemporaryDirectory() as t:
-            aus = os.path.join(t, "r.png")
-            subprocess.run([sys.executable, os.path.join(WURZEL, ".claude/skills/spielgrafik/scripts/regionsvorlage.py"),
-                            region, aus, "640"], check=True, capture_output=True)
+            Image.new("RGB", (200, 200), (120, 200, 90)).save(os.path.join(t, "gras.png"))
+            Image.new("RGB", (200, 200), (210, 180, 120)).save(os.path.join(t, "weg.png"))
+            baum = Image.new("RGBA", (60, 60), (0, 0, 0, 0))
+            ImageDraw.Draw(baum).ellipse((0, 0, 59, 59), fill=(255, 0, 255, 255))
+            baum.save(os.path.join(t, "baum0.png"))
+            aus = os.path.join(t, "k.png")
+            subprocess.run([sys.executable, os.path.join(WURZEL, ".claude/skills/spielgrafik/scripts/regionscollage.py"),
+                            region, t, aus, "800"], check=True, capture_output=True)
             bild = Image.open(aus).convert("RGB")
-            self.assertEqual(bild.size, (640, 400))  # 16:10 wie CampaignStyle.mapAspect
-            hell = lambda p: 0.299 * p[0] + 0.587 * p[1] + 0.114 * p[2]
-            for k in knoten:
-                p = bild.getpixel((int(k["position"][0] * 640), int(k["position"][1] * 400)))
-                if k["kind"] == "boss":
-                    self.assertGreater(p[0], p[1], k["id"])  # Bosslichtung roetlich-dunkel, nicht Wald
-                else:
-                    self.assertGreater(hell(p), 105, k["id"])  # Lichtung heller als jede Baumkrone
-            # Weit weg von allen Knoten ist Wald.
-            self.assertLess(hell(bild.getpixel((int(0.40 * 640), int(0.15 * 400)))), 105)
+            self.assertEqual(bild.size, (800, 500))  # 16:10 wie CampaignStyle.mapAspect
+            baumig = lambda p: p[0] > p[1] + 60 and p[2] > p[1] + 60  # magenta, auch abgedunkelt
+            for k in knoten.values():
+                x, y = k["position"][0] * 800, k["position"][1] * 500
+                # Knotenmitte und ein Ring in Medaillengroesse (26 von 454 pt) ohne Baum.
+                for w in range(0, 360, 30):
+                    r = 0 if w == 0 else 800 * 26 / 454
+                    p = (int(x + r * math.cos(math.radians(w))), int(y + r * math.sin(math.radians(w))))
+                    if 0 <= p[0] < 800 and 0 <= p[1] < 500:
+                        self.assertFalse(baumig(bild.getpixel(p)), f"{k['id']} {w}")
+            # Mitte jedes Weges frei, und abseits steht Wald.
+            for k in knoten.values():
+                for v in k.get("requires", []):
+                    (x0, y0), (x1, y1) = knoten[v]["position"], k["position"]
+                    mx = (x0 + x1) / 2 * 800 - (y1 - y0) * 500 * 0.18 / 2
+                    my = (y0 + y1) / 2 * 500 + (x1 - x0) * 800 * 0.18 / 2
+                    self.assertFalse(baumig(bild.getpixel((int(mx), int(my)))), f"{v}-{k['id']}")
+            self.assertTrue(baumig(bild.getpixel((int(0.40 * 800), int(0.12 * 500)))))
+
+
+class Regionskarte(unittest.TestCase):
+    """Das ausgelieferte Bild selbst: Unter jedem Knoten liegt eine Lichtung. Ein
+    neu gemaltes oder anders zusammengesetztes Bild, das die Lagen nicht trifft,
+    faellt hier auf und nicht erst auf dem iPhone."""
+
+    def test_unter_jedem_knoten_liegt_eine_lichtung(self):
+        region = os.path.join(WURZEL, "Packages/OddlingsCore/Sources/OddlingsCore/Resources/Campaign/region-01.json")
+        bild = Image.open(os.path.join(WURZEL, "App/Assets.xcassets/Maps/map_region01.imageset/map_region01@3x.jpg")).convert("L")
+        B, H = bild.size
+        self.assertAlmostEqual(B / H, 1.6, places=2)  # CampaignStyle.mapAspect
+        schnitt = ImageStat.Stat(bild).mean[0]
+        r = B * 26 / 454  # Medaille 52 pt auf einer rund 454 pt breiten Karte
+        for k in json.load(open(region))["nodes"]:
+            x, y = k["position"][0] * B, k["position"][1] * H
+            maske = Image.new("L", bild.size, 0)
+            ImageDraw.Draw(maske).ellipse((x - r, y - r, x + r, y + r), fill=255)
+            hell = ImageStat.Stat(bild, maske).mean[0]
+            # Lichtung im Sonnenlicht gegen dunklen Wald; die Bosslichtung ist absichtlich finster.
+            self.assertGreater(hell, schnitt * (1.1 if k["kind"] == "boss" else 1.25), k["id"])
 
 
 class Kartenvorlage(unittest.TestCase):

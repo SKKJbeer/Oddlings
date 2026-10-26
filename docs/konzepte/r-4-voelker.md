@@ -27,10 +27,11 @@ für alle gleich (03, Grundsätze).
 Mission 1 spielbar ist, gibt es keine Freischaltung. Die nach D-027 greift,
 sobald Mission 7 steht.
 
-**[OFFEN] Passiver Zug der Zwerge.** 03 sieht „Zwergenbank mit höherem
-Ertragsdeckel“ vor, die Bank kommt erst mit Mission 2. Empfehlung an Steffen:
-vorerst ohne passiven Zug, Ausgleich über das Bollwerk; die Entscheidung steht
-aus. Der Rest des Konzepts hängt nicht davon ab. 0.9.0 setzt die Empfehlung um.
+**[ENTSCHIEDEN D-062] Passiver Zug der Zwerge.** 03 sah „Zwergenbank mit höherem
+Ertragsdeckel“ vor, die Bank kommt erst mit Mission 2. 0.9.0 lieferte die Zwerge
+ohne passiven Zug. Steffen hat am 26.10.2026 entschieden: Wachtürme kosten bei den
+Zwergen 10 % weniger, als Gegenstück zur Sporenreichweite der Elfen. Umgesetzt in
+0.10.1 als `costFactor` je Turmart in `races.json`, gleich gebaut wie `rangeFactor`.
 
 ## Regeln
 

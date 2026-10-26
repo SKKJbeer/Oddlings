@@ -145,6 +145,15 @@
       "alpha": false,
       "ordner": "App/Assets.xcassets/UI",
       "format": "jpg"
+    },
+    "map_region01": {
+      "pixel": [
+        2400,
+        1500
+      ],
+      "alpha": false,
+      "ordner": "App/Assets.xcassets/Maps",
+      "format": "jpg"
     }
   }
 }

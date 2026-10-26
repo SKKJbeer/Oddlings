@@ -11,6 +11,50 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.10.3 – 26.10.2026 (Wackliger Fähigkeitstest behoben), Bau 30 (VALID)
+
+**Behoben**
+- `AbilityE2ETests.testCastOnPathChargesAndComesBack` schlug auf PR #42 und #43 je
+  einmal fehl. Ursache: Der Test lief im zehnfachen Tempo, „lädt“ hielt damit nur
+  3,5 s. Im fehlgeschlagenen Lauf brauchte der Test 52 statt 17 s, XCTest wartete
+  nach einem Tippen lange auf Ruhe in der App, und als er ablas, war der Knopf
+  schon wieder „bereit“. Neuer Testschalter `--e2e-abklingzeit` (nur DEBUG): Der
+  Test wirkt bei langer Abklingzeit und ohne Welle. Dass die Fähigkeit wiederkommt,
+  prüft `BattleControllerTests` ohne Uhr. Die Völkerprobe nutzt den Schalter auch.
+- Die CI legt das ganze Testprotokoll mit Zeitstempeln ins Artefakt `simulator-probe`.
+
+## 0.10.2 – 26.10.2026 (Grafik 04: gemalte Kampagnenkarte), Bau 29 (VALID)
+
+**Neu**
+- Gemalte Karte von Region 1 (`map_region01`): Flüsterwald mit Lichtungen unter
+  jeder Mission, Erdwegen entlang der Spur, Teichen am Sumpfpfad, Ruinen am
+  unteren Pfad und der Goblinhöhle über dem Bosskampf. Ersetzt den gezeichneten
+  Ersatzwald.
+
+**Werkzeug**
+- `regionscollage.py` setzt die Karte aus gemalten Einzelteilen an die
+  Knotenlagen aus `region-01.json`, `zerlegen.py` schneidet Teileblätter.
+  `regionsvorlage.py` entfällt: Bild-zu-Bild über die Vorlage traf die Knoten nie.
+
+**Tests**
+- Grafikprüfung: kein Baum auf Knoten, Medaille oder Weg (einfarbige Teile), und
+  im ausgelieferten Bild liegt unter jedem Knoten eine Lichtung.
+- App-Test: Karte im Katalog, Seitenverhältnis wie `CampaignStyle.mapAspect`.
+
+## 0.10.1 – 26.10.2026 (Zwerge: Wachtürme billiger, D-062), Bau 28 (VALID)
+
+**Geändert**
+- Die Zwerge haben jetzt einen passiven Zug: Wachtürme kosten bei ihnen 10 % weniger
+  (50 → 45 Gold). Das Baumenü zeigt den Zwergenpreis, die Missionstafel nennt den
+  Vorteil. Der Wert steht als `costFactor` in `races.json`.
+- Balance nachgemessen ([04](docs/game-design/04-economy-and-balance.md)): Mischung
+  Zwerge 1,40, Elfen 1,42; reine Wachtürme bei Zwergen 1,31, weiter hinter der Mischung.
+
+**Tests**
+- Kern: Preisfaktor je Volk, Rundung, Prüfung beim Laden, Mischung vor Monokultur je Volk.
+- App: Baumenü liest den Zwergenpreis; E2E baut als Zwerg einen Wachturm und prüft
+  Preis im Ring und Abbuchung.
+
 ## 0.10.0 – 26.10.2026 (Bewegung und Effekte, FX 01), Bau 27 (VALID)
 
 **Neu**
@@ -46,7 +90,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   mit einem Haker von 842 ms; seit die Effekttexturen beim Anlegen der Szene vorab
   gezeichnet werden, 59,7 Bilder je Sekunde, längstes Bild 37,9 ms.
 
-## 0.9.1 – 26.10.2026 (Grafik 03: Titelbild und Oberflächensymbole)
+## 0.9.1 – 26.10.2026 (Grafik 03: Titelbild und Oberflächensymbole), Bau 26 (VALID)
 
 **Neu**
 - Gemaltes Titelbild im Hauptmenü (`ui_keyart_menu`): Festung auf dem Hügel, die

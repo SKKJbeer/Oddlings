@@ -350,6 +350,11 @@ final class BattleControllerTests: XCTestCase {
             XCTAssertEqual(BattleTexts.ability(control.abilityKind), name)
             XCTAssertTrue(control.abilityReady, "\(race): bereit ab Beginn")
         }
+        // D-062: Das Baumenü liest den Preis aus der Konfiguration des Volks.
+        let dwarves = BattleController(model: BattleModel(config: config.applying(try XCTUnwrap(races[.dwarves])),
+                                                          seed: 1, autoplay: false), interactive: true)
+        XCTAssertLessThan(dwarves.cost(of: .watch), controller.cost(of: .watch))
+        XCTAssertEqual(dwarves.cost(of: .spore), controller.cost(of: .spore))
     }
 
     func testWatchModeHasNoAbility() {
