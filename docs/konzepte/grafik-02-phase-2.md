@@ -26,7 +26,7 @@ Dazu für den Spielrahmen (D-060, R-1 bis R-4):
 
 | Paket | Name | Form |
 |---|---|---|
-| R-1 Hauptmenü | `ui_menu_keyart` | Querformat 2796 × 1290, JPEG, Festung am Weg durch den Flüsterwald, alle drei Türme, Goblins im Anmarsch; links Platz für die Menüknöpfe |
+| R-1 Hauptmenü | `ui_keyart_menu` | Querformat 2796 × 1290, JPEG, Ordner UI, Festung am Weg durch den Flüsterwald, alle drei Türme, Goblins im Anmarsch; rechtes Drittel ruhig für die Menüknöpfe |
 | R-2 Kampagnenkarte | `map_region01` | 16:10, 2400 × 1500, JPEG, Ordner Maps, ohne Knoten und ohne Schrift; Ränder laufen dunkel in Wald aus |
 | R-3 Steinregen | `fx_stonefall_*` (oben) | wie Effekte |
 | R-4 Völkerwahl | `banner_race_dwarves`, `banner_race_elves` | Hochkant-Banner, Zwerge Rot/Messing mit Amboss, Elfen Grün/Silber mit Mondsichel |

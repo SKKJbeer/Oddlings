@@ -47,7 +47,26 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   Textur (nicht belegt); die Effekttexturen werden jetzt beim Anlegen der Szene
   vorab gezeichnet, der nächste Probelauf zeigt, ob es reicht.
 
-## 0.9.0 – 26.10.2026 (Völkerwahl Zwerge und Elfen, R-4)
+## 0.9.1 – 26.10.2026 (Grafik 03: Titelbild und Oberflächensymbole)
+
+**Neu**
+- Gemaltes Titelbild im Hauptmenü (`ui_keyart_menu`): Festung auf dem Hügel, die
+  drei Türme am Weg, Plünderer, Panzerbestie und Flitzer im Anmarsch. Es sind die
+  Figuren aus dem Spiel, nicht neu erfunden.
+- Gemalte Turmsymbole im Baumenü (`ui_tower_*`), aus denselben Bildern wie auf dem
+  Spielfeld.
+- Gemalte Symbole für die Kopfleiste (Herz, Gold, Welle, Verkaufen, Pause,
+  Horn) liegen im Katalog; die Leiste nimmt sie mit dem nächsten Oberflächenpaket.
+
+**Werkzeug**
+- `check_assets.py` prüft Symbole (Quadrat in Punkten, mittig) und große Bilder
+  (Gerätepixel für @3x). `regionsvorlage.py` legt die Vorlage der Regionskarte
+  aus `region-01.json` an.
+
+**Tests**
+- `UIArtTests` (App), neue Fälle in `tools/art-check/tests`; alle einmal rot gesehen.
+
+## 0.9.0 – 26.10.2026 (Völkerwahl Zwerge und Elfen, R-4), Bau 25 (VALID)
 
 **Neu**
 - Auf der Missionstafel der Karte stehen Zwerge und Elfen über „Starten“. Ohne

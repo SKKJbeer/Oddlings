@@ -91,6 +91,60 @@
     "fx_wall": {
       "alpha": true,
       "effekt": true
+    },
+    "ui_icon_heart": {
+      "punkte": 24,
+      "alpha": true,
+      "ordner": "App/Assets.xcassets/UI"
+    },
+    "ui_icon_gold": {
+      "punkte": 24,
+      "alpha": true,
+      "ordner": "App/Assets.xcassets/UI"
+    },
+    "ui_icon_sell": {
+      "punkte": 24,
+      "alpha": true,
+      "ordner": "App/Assets.xcassets/UI"
+    },
+    "ui_icon_wave": {
+      "punkte": 24,
+      "alpha": true,
+      "ordner": "App/Assets.xcassets/UI"
+    },
+    "ui_icon_pause": {
+      "punkte": 24,
+      "alpha": true,
+      "ordner": "App/Assets.xcassets/UI"
+    },
+    "ui_icon_next_wave": {
+      "punkte": 24,
+      "alpha": true,
+      "ordner": "App/Assets.xcassets/UI"
+    },
+    "ui_tower_watch": {
+      "punkte": 40,
+      "alpha": true,
+      "ordner": "App/Assets.xcassets/UI"
+    },
+    "ui_tower_lightning": {
+      "punkte": 40,
+      "alpha": true,
+      "ordner": "App/Assets.xcassets/UI"
+    },
+    "ui_tower_spore": {
+      "punkte": 40,
+      "alpha": true,
+      "ordner": "App/Assets.xcassets/UI"
+    },
+    "ui_keyart_menu": {
+      "pixel": [
+        2796,
+        1290
+      ],
+      "alpha": false,
+      "ordner": "App/Assets.xcassets/UI",
+      "format": "jpg"
     }
   }
 }

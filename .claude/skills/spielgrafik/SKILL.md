@@ -173,3 +173,24 @@ ohne Echtgeld: keine Muenzen mit Waehrungszeichen, keine Geldkoffer.
 ## Vorgaben des Betreibers
 - Grafik fuer dieses und andere Projekte kuenftig auf diesem Weg erstellen.
 - Keine Emojis in UI-Grafik, keine Verweise auf aeltere Spiele.
+
+### Keyart und Menübilder (Oddlings, 26.10.2026)
+
+Bild-zu-Bild über eine flach gezeichnete Vorlage mit eingesetzten Figuren ergibt
+flache Flash-Optik (Stärke 0,45 und 0,55 verworfen); reines Text-zu-Bild malt
+eigene Türme und Gegner, die nicht zum Spiel passen. Bewährt: den Hintergrund
+ohne Figuren und Gebäude malen lassen und die freigestellten Spielfiguren mit
+Schatten und Farbangleichung darüber setzen, wie bei den Menüs der Marktführer.
+Umgesetzt in `scripts/titelbild.py`. Die Figuren dafür aus den `*-frei.png` des
+Spielfelds hochrechnen (RGB auf Konturfarbe, Real-ESRGAN, Alpha per Lanczos), nicht
+die Rohbilder neu freistellen: rembg verlor beim Blitzturm die Funkenbögen.
+Freistellen braucht die eigene Umgebung (`$SPIELGRAFIK_HOME/../rv/bin/python`), mit
+dem System-Python fehlt rembg still.
+
+**Bild-zu-Bild bei großen Bildern (gemessen 26.10.2026):** Flux schnell kippt
+zwischen „Vorlage bleibt flach“ und „eigene Szene“: bei 4 Schritten schon ab
+Stärke 0,3 (1024 × 576), bei 8 Schritten zwischen 0,25 (2 Restschritte, flach) und
+0,4 (3 Restschritte, Vorlage weg), bei 16 Schritten ist 0,3 noch flach.
+`SCHRITTE` und `VERSCHIEBUNG` in `erzeugen.sh` sind dafür da; die Verschiebung
+allein half nicht. Für Karten mit festen Knotenlagen deshalb lieber eine Vorlage,
+die schon nach Malerei aussieht.

@@ -9,9 +9,12 @@ H="${SPIELGRAFIK_HOME:-$HOME/.cache/spielgrafik}"
 mkdir -p "$(dirname "$1")"
 G="${4:-512}"; B="${G%x*}"; H2="${G#*x}"
 EXTRA=()
+# Bei grossen Bildern verschiebt Flux den Zeitplan Richtung Rauschen: Schon Staerke 0,3
+# malt dann eine eigene Szene. VERSCHIEBUNG=0.5 haelt die Vorlage (gemessen 26.10.2026).
 [ -n "${INIT:-}" ] && EXTRA=(--init-img "$INIT" --strength "${STAERKE:-0.75}")
+[ -n "${VERSCHIEBUNG:-}" ] && EXTRA+=(--extra-sample-args "base_shift=$VERSCHIEBUNG,max_shift=$VERSCHIEBUNG")
 "$H/sdcpp/build/bin/sd-cli" --diffusion-model "$H/m/flux1-schnell-Q4_0.gguf" --vae "$H/m/ae-f16.gguf" \
   --clip_l "$H/m/clip_l-Q8_0.gguf" --t5xxl "$H/m/t5xxl-Q4_0.gguf" -p "$3" \
-  --cfg-scale 1.0 --sampling-method euler --steps 4 -W "$B" -H "$H2" --seed "$2" -t "$(nproc)" -o "$1" "${EXTRA[@]}" 2>&1 \
+  --cfg-scale 1.0 --sampling-method euler --steps "${SCHRITTE:-4}" -W "$B" -H "$H2" --seed "$2" -t "$(nproc)" -o "$1" "${EXTRA[@]}" 2>&1 \
   | grep -E "generate_image completed|rror" || true
 [ -s "$1" ] && echo "✓ $1 (seed $2)"
