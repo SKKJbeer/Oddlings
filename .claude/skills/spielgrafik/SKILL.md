@@ -27,6 +27,16 @@ description: Hochwertige Spielgrafik (App-Symbole, Figuren, Store-Bilder, Hinter
   `karte_zusammensetzen.py` legt sie entlang `map.path`, danach ein
   Bild-zu-Bild-Lauf mit geringer Stärke (`INIT=… STAERKE=0.35 erzeugen.sh`).
   Texturen bekommen trotz „no objects" Steine und Baumstümpfe: zuschneiden.
+- **Regionskarte (Knoten an festen Lagen):** Bild-zu-Bild über eine Vorlage
+  trifft die Lichtungen nie (26.10.2026, Stärke 0,3 bis 0,6, 4 bis 16
+  Schritte, auch mehrere leichte Durchgänge). Stattdessen Teileblätter malen
+  (`sprite sheet of six separate … each isolated on a plain white background`),
+  mit `zerlegen.py` in Einzelteile schneiden (Teile am Bildrand fallen weg) und
+  `regionscollage.py` setzen lassen: Boden, Wege auf der App-Kurve, Teiche und
+  Ruinen an die Lichtungsränder, Höhle über die Bossmedaille, Bäume zuletzt um
+  alles herum. Mit fünftem Argument zeichnet es die Medaillen in App-Größe ein.
+  Bäume malt FLUX trotz „seen from above" schräg mit Stamm; das passt zum
+  Märchenkarten-Stil und bleibt so. Blätter in 768, 1024 läuft über den Speicher.
 - **Prüfung:** `python3 tools/art-check/check_assets.py` und
   `python3 -m unittest discover -s tools/art-check/tests` (laufen in der CI).
   Jedes Atlas-Bild braucht seinen Namen in Backticks in einer

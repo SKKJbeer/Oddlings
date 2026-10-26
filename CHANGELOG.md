@@ -11,6 +11,24 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.10.2 – 26.10.2026 (Grafik 04: gemalte Kampagnenkarte)
+
+**Neu**
+- Gemalte Karte von Region 1 (`map_region01`): Flüsterwald mit Lichtungen unter
+  jeder Mission, Erdwegen entlang der Spur, Teichen am Sumpfpfad, Ruinen am
+  unteren Pfad und der Goblinhöhle über dem Bosskampf. Ersetzt den gezeichneten
+  Ersatzwald.
+
+**Werkzeug**
+- `regionscollage.py` setzt die Karte aus gemalten Einzelteilen an die
+  Knotenlagen aus `region-01.json`, `zerlegen.py` schneidet Teileblätter.
+  `regionsvorlage.py` entfällt: Bild-zu-Bild über die Vorlage traf die Knoten nie.
+
+**Tests**
+- Grafikprüfung: kein Baum auf Knoten, Medaille oder Weg (einfarbige Teile), und
+  im ausgelieferten Bild liegt unter jedem Knoten eine Lichtung.
+- App-Test: Karte im Katalog, Seitenverhältnis wie `CampaignStyle.mapAspect`.
+
 ## 0.10.1 – 26.10.2026 (Zwerge: Wachtürme billiger, D-062), Bau 28 (VALID)
 
 **Geändert**
@@ -60,7 +78,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   mit einem Haker von 842 ms; seit die Effekttexturen beim Anlegen der Szene vorab
   gezeichnet werden, 59,7 Bilder je Sekunde, längstes Bild 37,9 ms.
 
-## 0.9.1 – 26.10.2026 (Grafik 03: Titelbild und Oberflächensymbole)
+## 0.9.1 – 26.10.2026 (Grafik 03: Titelbild und Oberflächensymbole), Bau 26 (VALID)
 
 **Neu**
 - Gemaltes Titelbild im Hauptmenü (`ui_keyart_menu`): Festung auf dem Hügel, die
