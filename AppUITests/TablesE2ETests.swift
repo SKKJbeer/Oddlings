@@ -84,6 +84,10 @@ final class TablesE2ETests: XCTestCase {
         RunLoop.current.run(until: Date().addingTimeInterval(1.5))
         e2e.screenshot("4-niederlage", in: self)
         e2e.app.buttons["result.back"].tap()
+        XCTAssertTrue(e2e.mapBack.waitForExistence(timeout: 5))
+        RunLoop.current.run(until: Date().addingTimeInterval(1))
+        e2e.screenshot("5-weltkarte", in: self)
+        e2e.mapBack.tap()
         XCTAssertTrue(e2e.app.buttons["menu.play"].waitForExistence(timeout: 5))
         e2e.screenshot("0-hauptmenue", in: self)
     }

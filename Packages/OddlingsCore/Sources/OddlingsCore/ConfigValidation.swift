@@ -18,6 +18,7 @@ public struct ConfigIssue: Equatable, Sendable, CustomStringConvertible {
         case pathTooShort
         case noWaves
         case emptyWave
+        case starsOutOfOrder           // 0 < two ≤ three ≤ fortressLives
     }
 
     public init(field: String, rule: Rule) {
@@ -38,6 +39,7 @@ public struct ConfigIssue: Equatable, Sendable, CustomStringConvertible {
         case .pathTooShort: "\(field) braucht mindestens zwei Punkte"
         case .noWaves: "\(field) braucht mindestens eine Welle"
         case .emptyWave: "\(field) braucht mindestens eine Gruppe"
+        case .starsOutOfOrder: "\(field) braucht 0 < two ≤ three ≤ fortressLives"
         }
     }
 }
@@ -79,6 +81,12 @@ extension BalanceConfig {
         nonNegative(mission.timeBetweenWaves, "mission.timeBetweenWaves")
         if !(mission.sellRefundRate >= 0 && mission.sellRefundRate <= 1) {
             found.append(.init(field: "mission.sellRefundRate", rule: .mustBeRate))
+        }
+        // Ohne gültige Leben wäre jede Sterngrenze falsch; das meldet schon die
+        // Zeile darüber, ein zweiter Fehler für dieselbe Zahl hülfe niemandem.
+        if let stars = mission.stars, mission.fortressLives > 0,
+           !(stars.two > 0 && stars.two <= stars.three && stars.three <= mission.fortressLives) {
+            found.append(.init(field: "mission.stars", rule: .starsOutOfOrder))
         }
 
         positive(Double(map.width), "map.width")
@@ -163,6 +171,11 @@ extension BalanceConfig {
     /// Mission 1 aus den Paket-Ressourcen.
     public static func missionOne() throws(ConfigError) -> BalanceConfig {
         try bundled(named: "mvp-mission-01")
+    }
+
+    /// Eine Mission der Kampagne über den Dateinamen aus der Regionsdatei.
+    public static func bundledMission(named name: String) throws(ConfigError) -> BalanceConfig {
+        try bundled(named: name)
     }
 
     static func bundled(named name: String) throws(ConfigError) -> BalanceConfig {

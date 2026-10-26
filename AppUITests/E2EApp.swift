@@ -22,11 +22,14 @@ struct E2EApp {
     /// und die Leben fallen wieder (im ersten Lauf so gesehen).
     static let readableFastForward = "10"
 
-    init(_ arguments: [String] = []) throws {
+    /// Jeder Test spielt mit eigenem Spielstand im temporären Ordner, damit ein
+    /// Sieg aus einem Test den nächsten nicht verändert. `fresh: false` startet
+    /// auf dem Stand, den ein früherer Start mit derselben `storage` schrieb.
+    init(_ arguments: [String] = [], storage: String = "standard", fresh: Bool = true) throws {
         config = try BalanceConfig.missionOne()
         sim = Simulation(config: config)
         XCUIDevice.shared.orientation = .landscapeLeft
-        app.launchArguments = arguments
+        app.launchArguments = arguments + ["--e2e-speicher", storage] + (fresh ? ["--e2e-frisch"] : [])
         app.launch()
     }
 
@@ -48,6 +51,12 @@ struct E2EApp {
     var resume: XCUIElement { app.buttons["pause.resume"] }
     var restart: XCUIElement { app.buttons["pause.restart"] }
     var giveUp: XCUIElement { app.buttons["pause.quit"] }
+    var mapView: XCUIElement { app.otherElements["map"] }
+    var mapStart: XCUIElement { app.buttons["map.start"] }
+    var mapBack: XCUIElement { app.buttons["map.back"] }
+    func node(_ id: String) -> XCUIElement { app.buttons["map.node.\(id)"] }
+    /// Was ein Knoten zeigt, in Worten (CampaignTexts.accessibilityValue).
+    func nodeState(_ id: String) -> String { node(id).value as? String ?? "" }
     /// Wert einer Kachel der Ergebnistafel, z. B. `result.lives`. Vorgelesen
     /// wird immer der echte Wert, auch während die Anzeige noch hochzählt.
     func resultValue(_ id: String) -> String { app.staticTexts[id].label }

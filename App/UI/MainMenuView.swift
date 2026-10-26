@@ -5,9 +5,15 @@ import SwiftUI
 /// Daumenbereich. Kennt keine Navigation; was ein Knopf öffnet, entscheidet
 /// der Aufrufer über die Rückrufe.
 struct MainMenuView: View {
+    /// „Weiter mit Mission N" (07): springt ohne Umweg über die Karte in die
+    /// nächste offene Mission. Fehlt, wenn es nichts fortzusetzen gibt.
+    var continueTitle: String?
+    var continueDetail: String?
+    var onContinue: () -> Void = {}
     var onPlay: () -> Void
     var onWatch: () -> Void
     var onSpike: () -> Void
+    var onSettings: () -> Void = {}
 
     var body: some View {
         GeometryReader { geometry in
@@ -28,6 +34,20 @@ struct MainMenuView: View {
                     }
                     .padding(.leading, 24)
                     .padding(.bottom, 18)
+                    .overlay(alignment: .topLeading) {
+                        Button(action: onSettings) {
+                            RingButtonFace(highlighted: false, tint: UITheme.woodRim, size: 48) {
+                                Image(systemName: "gearshape.fill")
+                                    .font(.system(size: 22, weight: .bold))
+                                    .foregroundStyle(UITheme.cream)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(MenuTexts.settings)
+                        .accessibilityIdentifier("menu.settings")
+                        .padding(.top, 18)
+                        .padding(.leading, 24)
+                    }
                     Spacer(minLength: 0)
                     buttons
                         .frame(width: min(340, geometry.size.width * 0.4))
@@ -46,10 +66,19 @@ struct MainMenuView: View {
                 .font(UITheme.display(54))
                 .foregroundStyle(UITheme.coin)
                 .shadow(color: UITheme.outline, radius: 0, x: 0, y: 4)
-            Text(BattleTexts.mission)
-                .font(UITheme.bodyHeavy(17))
-                .foregroundStyle(UITheme.parchment)
-                .padding(.top, -10)
+            if let continueTitle {
+                Button(action: onContinue) {
+                    VStack(spacing: 0) {
+                        Text(continueTitle).font(UITheme.display(19))
+                        if let continueDetail {
+                            Text(continueDetail).font(UITheme.body(13)).foregroundStyle(UITheme.parchment)
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(ChunkyButtonStyle(kind: .wood, height: 54, fontSize: 19))
+                .accessibilityIdentifier("menu.continue")
+            }
             Button(action: onPlay) {
                 Label(BattleTexts.play, systemImage: "play.fill").frame(maxWidth: .infinity)
             }
