@@ -40,3 +40,13 @@ gesetzt, Arme per `ruhe` 35° an den Körper gelegt, Licht heller als Standard,
 weil die Textur dunkel ausfällt. Erster Render: `art/fx-02/raider-erster-render.jpg`
 (Helligkeit 1,35, Sättigung 1,45 und Kontur nur für die Vorschau, der echte
 Farbangleich kommt mit `angleichen.py`).
+
+**Requisiten in 3D** (`requisit-keule.glb`, `requisit-sack.glb`, 26.10.2026):
+gleicher TRELLIS-Aufruf mit Seed 1 aus `requisit-keule.png` und `requisit-sack.png`.
+`figur.py` hängt sie starr an `arm_r` bzw. `rumpf` (Feld `requisiten` in
+`rig.json`); die Keule wird an ihrer Längsachse ausgerichtet.
+
+**Kamera:** 25° statt 35° von oben und 35° statt 45° gedreht. Bei 35° verdeckt die
+Kapuze das Gesicht; der gemalte Plünderer ist ebenfalls fast auf Augenhöhe
+gemalt. Zweiter Render mit `angleichen.py` (Stärke 0,75):
+`art/fx-02/raider-zweiter-render.jpg`.

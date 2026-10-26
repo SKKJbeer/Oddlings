@@ -1,22 +1,218 @@
 {
   "_zweck": "Skelett des Plünderers (TRELLIS-Modell, Seed 1); Punkte als Anteile der Modellbox, Blick nach -y",
-  "blick": 45,
-  "ruhe": {"arm_l": ["y", -35], "arm_r": ["y", 35]},
+  "blick": 35,
+  "ruhe": {
+    "arm_l": [
+      "y",
+      -35
+    ],
+    "arm_r": [
+      "y",
+      35
+    ]
+  },
   "bildHoehe": 1.4,
-  "licht": {"haupt": 5.0, "fuell": 1.6, "welt": 1.0},
+  "licht": {
+    "haupt": 5.0,
+    "fuell": 1.6,
+    "welt": 1.0
+  },
   "knochen": {
-    "becken": {"von": [0, -0.1, 0.27], "bis": [0, -0.1, 0.38]},
-    "rumpf": {"von": [0, -0.1, 0.38], "bis": [0, -0.1, 0.60], "eltern": "becken"},
-    "kopf": {"von": [0, -0.1, 0.60], "bis": [0, -0.1, 1.0], "eltern": "rumpf"},
-    "bein_l": {"von": [-0.17, -0.1, 0.27], "bis": [-0.17, -0.15, 0.02], "eltern": "becken"},
-    "bein_r": {"von": [0.17, -0.1, 0.27], "bis": [0.17, -0.15, 0.02], "eltern": "becken"},
-    "arm_l": {"von": [-0.2, -0.1, 0.58], "bis": [-0.37, -0.35, 0.44], "eltern": "rumpf"},
-    "arm_r": {"von": [0.2, -0.1, 0.58], "bis": [0.37, -0.35, 0.44], "eltern": "rumpf"}
+    "becken": {
+      "von": [
+        0,
+        -0.1,
+        0.27
+      ],
+      "bis": [
+        0,
+        -0.1,
+        0.38
+      ]
+    },
+    "rumpf": {
+      "von": [
+        0,
+        -0.1,
+        0.38
+      ],
+      "bis": [
+        0,
+        -0.1,
+        0.6
+      ],
+      "eltern": "becken"
+    },
+    "kopf": {
+      "von": [
+        0,
+        -0.1,
+        0.6
+      ],
+      "bis": [
+        0,
+        -0.1,
+        1.0
+      ],
+      "eltern": "rumpf"
+    },
+    "bein_l": {
+      "von": [
+        -0.17,
+        -0.1,
+        0.27
+      ],
+      "bis": [
+        -0.17,
+        -0.15,
+        0.02
+      ],
+      "eltern": "becken"
+    },
+    "bein_r": {
+      "von": [
+        0.17,
+        -0.1,
+        0.27
+      ],
+      "bis": [
+        0.17,
+        -0.15,
+        0.02
+      ],
+      "eltern": "becken"
+    },
+    "arm_l": {
+      "von": [
+        -0.2,
+        -0.1,
+        0.58
+      ],
+      "bis": [
+        -0.37,
+        -0.35,
+        0.44
+      ],
+      "eltern": "rumpf"
+    },
+    "arm_r": {
+      "von": [
+        0.2,
+        -0.1,
+        0.58
+      ],
+      "bis": [
+        0.37,
+        -0.35,
+        0.44
+      ],
+      "eltern": "rumpf"
+    }
   },
   "folgen": {
-    "walk": {"bilder": 8, "hub": 0.03,
-      "schwingen": {"bein_l": ["x", 28, 0], "bein_r": ["x", 28, 0.5], "arm_l": ["x", 30, 0.5], "arm_r": ["x", 30, 0], "rumpf": ["z", 6, 0], "kopf": ["y", 4, 0.25]}},
-    "hit": {"bilder": 3, "verlauf": {"rumpf": ["x", -18], "kopf": ["x", -12]}},
-    "die": {"bilder": 6, "verlauf": {"becken": ["x", -80], "arm_l": ["y", 60], "arm_r": ["y", -60], "kopf": ["x", -20]}}
-  }
+    "walk": {
+      "bilder": 8,
+      "hub": 0.03,
+      "schwingen": {
+        "bein_l": [
+          "x",
+          28,
+          0
+        ],
+        "bein_r": [
+          "x",
+          28,
+          0.5
+        ],
+        "arm_l": [
+          "x",
+          30,
+          0.5
+        ],
+        "arm_r": [
+          "x",
+          30,
+          0
+        ],
+        "rumpf": [
+          "z",
+          6,
+          0
+        ],
+        "kopf": [
+          "y",
+          4,
+          0.25
+        ]
+      }
+    },
+    "hit": {
+      "bilder": 3,
+      "verlauf": {
+        "rumpf": [
+          "x",
+          -18
+        ],
+        "kopf": [
+          "x",
+          -12
+        ]
+      }
+    },
+    "die": {
+      "bilder": 6,
+      "verlauf": {
+        "becken": [
+          "x",
+          -80
+        ],
+        "arm_l": [
+          "y",
+          60
+        ],
+        "arm_r": [
+          "y",
+          -60
+        ],
+        "kopf": [
+          "x",
+          -20
+        ]
+      }
+    }
+  },
+  "requisiten": [
+    {
+      "datei": "requisit-sack.glb",
+      "knochen": "rumpf",
+      "groesse": 0.45,
+      "ort": [
+        0.05,
+        0.45,
+        0.5
+      ],
+      "drehung": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "datei": "requisit-keule.glb",
+      "knochen": "arm_r",
+      "groesse": 0.45,
+      "ausrichten": true,
+      "ort": [
+        0.37,
+        -0.35,
+        0.4
+      ],
+      "drehung": [
+        -30,
+        0,
+        0
+      ]
+    }
+  ],
+  "kameraHoehe": 25
 }

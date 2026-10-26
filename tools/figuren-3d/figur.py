@@ -92,6 +92,68 @@ arm.select_set(True)
 bpy.context.view_layer.objects.active = arm
 bpy.ops.object.parent_set(type='ARMATURE_AUTO')
 
+# Requisiten (Sack, Keule) sind eigene TRELLIS-Modelle: an der Figur
+# mitgeneriert, verschmölzen sie mit Hand und Rücken und ließen sich nicht
+# getrennt bewegen. Jedes hängt starr an einem Knochen.
+def requisit(r):
+    vorher = set(bpy.data.objects)
+    bpy.ops.import_scene.gltf(filepath=os.path.join(os.path.dirname(modell), r["datei"]))
+    neu = [o for o in bpy.data.objects if o not in vorher]
+    teile = [o for o in neu if o.type == 'MESH']
+    for o in neu:
+        if o.type != 'MESH':
+            bpy.data.objects.remove(o)
+    bpy.ops.object.select_all(action='DESELECT')
+    for o in teile:
+        o.parent = None
+        o.select_set(True)
+    bpy.context.view_layer.objects.active = teile[0]
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+    if len(teile) > 1:
+        bpy.ops.object.join()
+    ob = bpy.context.view_layer.objects.active
+    for m in ob.data.materials:
+        for n in (m.node_tree.nodes if m and m.node_tree else []):
+            if n.type == 'BSDF_PRINCIPLED':
+                n.inputs["Metallic"].default_value = 0.0
+    pkt = [v.co.copy() for v in ob.data.vertices]
+    mitte = sum(pkt, Vector()) / len(pkt)
+    if r.get("ausrichten"):
+        # Längsachse (größte Streuung) nach oben, das dickere Ende (Kopf der
+        # Keule, mehr Punkte) oben, Griff unten am Ursprung.
+        kov = Matrix(((0, 0, 0), (0, 0, 0), (0, 0, 0)))
+        for v in pkt:
+            d = v - mitte
+            for i in range(3):
+                for j in range(3):
+                    kov[i][j] += d[i] * d[j]
+        achse = Vector((1, 1, 1)).normalized()
+        for _ in range(50):
+            achse = (kov @ achse).normalized()
+        if sum(1 for v in pkt if (v - mitte).dot(achse) > 0) < len(pkt) / 2:
+            achse = -achse
+        dreh = achse.rotation_difference(Vector((0, 0, 1))).to_matrix().to_4x4()
+    else:
+        dreh = Matrix.Identity(4)
+    ob.data.transform(dreh @ Matrix.Translation(-mitte))
+    ecken = [Vector(c) for c in ob.bound_box]
+    groesse = max(max(c[i] for c in ecken) - min(c[i] for c in ecken) for i in range(3))
+    unten = min(c.z for c in ecken)
+    ob.data.transform(Matrix.Translation((0, 0, -unten if r.get("ausrichten") else 0)))
+    ob.scale = (r["groesse"] / groesse,) * 3
+    ob.rotation_euler = tuple(math.radians(g) for g in r.get("drehung", (0, 0, 0)))
+    ob.location = punkt(r["ort"])
+    bpy.context.view_layer.update()
+    welt = ob.matrix_world.copy()
+    ob.parent = arm
+    ob.parent_type = 'BONE'
+    ob.parent_bone = r["knochen"]
+    bpy.context.view_layer.update()
+    ob.matrix_world = welt
+
+for r in rig.get("requisiten", []):
+    requisit(r)
+
 # Bewegungen: je Knochen eine Drehung (Grad um x = vor/zurück, um y = seitlich)
 # als Sinus über die Folge, dazu Hub des Beckens. Werte stehen in rig.json.
 def setze(folge, i, n):
