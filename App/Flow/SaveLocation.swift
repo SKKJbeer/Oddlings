@@ -13,7 +13,7 @@ enum SaveLocation {
             let safe = name.filter { $0.isLetter || $0.isNumber || $0 == "-" }
             let directory = FileManager.default.temporaryDirectory.appendingPathComponent("e2e-\(safe)")
             if ProcessInfo.processInfo.arguments.contains("--e2e-frisch") {
-                try? FileManager.default.removeItem(at: directory)
+                wipeOnce(directory)
             }
             return SaveStore(directory: directory)
         }
@@ -24,6 +24,19 @@ enum SaveLocation {
     }
 
     #if DEBUG
+    /// SwiftUI legt die Startansicht mehr als einmal an, und jede Anlage holt
+    /// den Speicher. Gelöscht wird deshalb nur beim ersten Mal im Prozess,
+    /// sonst wäre ein eben gebauter Avatar beim nächsten Neustart weg.
+    private static let wipeLock = NSLock()
+    nonisolated(unsafe) private static var wiped = Set<URL>()
+
+    private static func wipeOnce(_ directory: URL) {
+        wipeLock.lock()
+        defer { wipeLock.unlock() }
+        guard wiped.insert(directory).inserted else { return }
+        try? FileManager.default.removeItem(at: directory)
+    }
+
     static func argument(after flag: String) -> String? {
         let arguments = ProcessInfo.processInfo.arguments
         guard let index = arguments.firstIndex(of: flag), index + 1 < arguments.count else { return nil }
