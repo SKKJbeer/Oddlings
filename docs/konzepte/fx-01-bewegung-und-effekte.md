@@ -113,7 +113,7 @@ damit eine Welle nicht im Gleichschritt hüpft.
 Aufblitzen und Tod erst bei Ankunft. Ein getroffener Gegner bleibt bis dahin
 stehen; das wirkt als kurzer Treffer-Halt.
 
-## Stufe 2: echte Gliedmaßen [OFFEN, Steffen]
+## Stufe 2: echte Gliedmaßen [ENTSCHIEDEN: 3D zu Sprite-Blättern, D-051]
 
 Ein Bildgenerator malt dieselbe Figur nicht Bild für Bild gleich, ein gemalter
 Laufzyklus flackert (Asset-Vertrag, „Bewegung"). Für Arme und Beine liegen
@@ -121,12 +121,16 @@ Steffen drei Wege vor:
 
 | Weg | Was | Aufwand | Risiko |
 |---|---|---|---|
-| **Teile-Rig in SpriteKit (Empfehlung)** | Jede Figur in Teile (Kopf, Rumpf, Arme, Beine, Sack) mit Gelenkpunkten, Laufzyklus als Schlüsselbilder | mittel, je Figur ein Teileblatt aus dem Grafik-Thread | Teile müssen Überlappungen sauber gemalt haben |
-| 3D-Modell zu Sprite-Blättern | Figur als 3D-Modell, riggen, Bildfolgen rendern | hoch, neue Pipeline | Stil weicht ab, App wird größer |
+| Teile-Rig in SpriteKit (war Empfehlung) | Jede Figur in Teile (Kopf, Rumpf, Arme, Beine, Sack) mit Gelenkpunkten, Laufzyklus als Schlüsselbilder | mittel, je Figur ein Teileblatt aus dem Grafik-Thread | Teile müssen Überlappungen sauber gemalt haben |
+| **3D-Modell zu Sprite-Blättern (gewählt)** | Figur als 3D-Modell, riggen, Bildfolgen rendern | hoch, neue Pipeline | Stil weicht ab, App wird größer |
 | prozedural bleiben | nur Stufe 1, nach WP-15 entscheiden | keiner | Gliedmaßen bleiben starr |
 
-Stufe 1 ist in jedem Fall nötig: Hüpfen, Stauchen und Effekte liegen beim
-Teile-Rig über den Gelenken.
+Steffen hat am 26.10.2026 den Weg über 3D-Modelle gewählt (D-051). Das wird
+ein eigenes Paket mit eigenem Konzept, zusammen mit dem Grafik-Thread: Woher
+die Modelle kommen (Lizenz), wie sie im Stil der gemalten Figuren gerendert
+werden, Bildfolgen je Richtung und App-Größe. Stufe 1 bleibt darunter: Schatten,
+Treffer, Tod und alle Effekte hängen nicht am Bild, und die Bildfolge ersetzt
+nur Hüpfen und Kippen.
 
 ## Leistung (60 Bilder je Sekunde)
 

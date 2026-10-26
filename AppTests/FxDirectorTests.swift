@@ -217,7 +217,8 @@ final class FxDirectorTests: XCTestCase {
         let (scene, controller) = try abilityScene(nil)
         XCTAssertEqual(scene.model.sim.config.ability?.kind, .stoneRain)
         try castOnFirstEnemy(scene, controller)
-        scene.frame(after: frameTime)
+        // Der Wurf geht mit dem nächsten Simulationsschritt raus (30/s).
+        for _ in 0..<4 where scene.fx.stats.casts == 0 { scene.frame(after: frameTime) }
         XCTAssertEqual(scene.fx.stats.casts, 1, scene.fx.stats.summary)
         XCTAssertEqual(scene.fx.stats.impacts, 0, "Einschlag erst nach der Warnzeit")
         var shook = false, stunned = false
@@ -255,7 +256,7 @@ final class FxDirectorTests: XCTestCase {
         let model = scene.model
         controller.toggleAim()
         controller.cast(at: model.sim.map.path.position(at: model.sim.map.path.length / 3))
-        scene.frame(after: frameTime)
+        for _ in 0..<4 where scene.fx.stats.walls == 0 { scene.frame(after: frameTime) }
         let wall = try XCTUnwrap(scene.effectLayer.childNode(withName: BattleScene.wallName))
         XCTAssertLessThan(wall.xScale, 0.6, "wächst aus dem Boden")
         XCTAssertEqual(scene.fx.stats.walls, 1)

@@ -34,7 +34,8 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   versinkt am Ende in Staub. Die Platzhalter aus 0.8.0 und 0.9.0 sind ersetzt.
 - „Bewegung reduzieren" in iOS schaltet Wackeln und Atmen ab.
 - Konzept: [fx-01-bewegung-und-effekte](docs/konzepte/fx-01-bewegung-und-effekte.md),
-  Entscheidungen D-050 (Effekt-Uhr), D-051 (Gliedmaßen, vorgeschlagen).
+  Entscheidungen D-050 (Effekt-Uhr), D-051 (Gliedmaßen über 3D-Modelle zu Sprite-Blättern, von Steffen gewählt;
+  folgt als eigenes Paket).
 
 **Tests**
 - `AppTests/FxMathTests`, `FxDirectorTests`, `FxBudgetTests` (ganze Mission bei

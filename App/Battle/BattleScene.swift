@@ -84,9 +84,9 @@ final class BattleScene: SKScene {
         lastEvents = events
         // Angehalten steht auch jeder Effekt; bei 2× laufen Effekte in Echtzeit.
         let fxTime = model.paused ? 0 : min(frameTime, BattleStyle.maxCatchUp)
-        // Wer in diesem Takt erscheint, kann im selben Takt schon getroffen
-        // werden: Seine Node muss stehen, bevor der Pfeil sie sucht.
-        addNewEnemies()
+        // Was in diesem Takt erscheint, kann im selben Takt schon schießen oder
+        // getroffen werden: Seine Node muss stehen, bevor der Pfeil sie sucht.
+        addNewPieces()
         // Effekte vor dem Abgleich, solange getötete Gegner noch eine Node haben.
         for event in events { play(event) }
         sync(dt: fxTime)
@@ -238,18 +238,8 @@ final class BattleScene: SKScene {
         var liveTowers: [Int: Bool] = [:]
         for tower in state.towers {
             liveTowers[tower.id] = true
-            let node: TowerNode
-            if let existing = towerNodes[tower.id] {
-                node = existing
-            } else {
-                node = TowerNode(tower: tower, field: field)
-                node.position = toScene(tower.cell.center)
-                // Weiter unten heißt weiter vorn; bleibt innerhalb der eigenen Ebene.
-                node.zPosition = 1 - node.position.y / max(size.height, 1)
-                towerLayer.addChild(node)
-                towerNodes[tower.id] = node
-                if pendingBuilds.remove(tower.id) != nil { fx.build(node) }
-            }
+            let node = towerNodes[tower.id] ?? makeTowerNode(tower)
+            if pendingBuilds.remove(tower.id) != nil { fx.build(node) }
             node.idle(time: fx.time, still: fx.reduceMotion)
         }
         for (id, node) in towerNodes where liveTowers[id] == nil {
@@ -286,11 +276,22 @@ final class BattleScene: SKScene {
         }
     }
 
-    private func addNewEnemies() {
+    private func addNewPieces() {
+        for tower in model.state.towers where towerNodes[tower.id] == nil { _ = makeTowerNode(tower) }
         for enemy in model.state.enemies where enemyNodes[enemy.id] == nil {
             let node = makeEnemyNode(enemy)
             node.position = toScene(model.sim.map.path.position(at: enemy.distance))
         }
+    }
+
+    private func makeTowerNode(_ tower: Tower) -> TowerNode {
+        let node = TowerNode(tower: tower, field: field)
+        node.position = toScene(tower.cell.center)
+        // Weiter unten heißt weiter vorn; bleibt innerhalb der eigenen Ebene.
+        node.zPosition = 1 - node.position.y / max(size.height, 1)
+        towerLayer.addChild(node)
+        towerNodes[tower.id] = node
+        return node
     }
 
     private func makeEnemyNode(_ enemy: Enemy) -> EnemyNode {
