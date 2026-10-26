@@ -112,6 +112,10 @@ jobs:
             CODE_SIGNING_ALLOWED=NO > build/app-test.log 2>&1 || status=$?
           grep -E "Test Case .*(passed|failed)|: error:|Executed [0-9]+ test" build/app-test.log || true
           tail -n 30 build/app-test.log
+          # Das ganze Protokoll mit den Zeitstempeln jedes Tippens kommt ins
+          # Artefakt: Bei einem wackligen Oberflächentest zeigt es, welcher
+          # Schritt auf die App gewartet hat.
+          mkdir -p build/probe && cp build/app-test.log build/probe/
           exit $status
 
       # Übersetzen beweist nicht, dass die App läuft. Starten, laufen lassen,
