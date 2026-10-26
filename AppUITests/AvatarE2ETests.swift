@@ -17,7 +17,7 @@ final class AvatarE2ETests: XCTestCase {
     @MainActor
     func testAvatarIsBuiltOnceAndSurvivesRelaunch() throws {
         let e2e = try E2EApp(["--e2e-erste-welle", E2EApp.wavesOnHold], storage: "avatar")
-        XCTAssertFalse(e2e.app.otherElements["menu.avatar"].exists, "vor dem Aufbau kein Avatarschild")
+        XCTAssertFalse(e2e.app.descendants(matching: .any)["menu.avatar"].exists, "vor dem Aufbau kein Avatarschild")
         tapPlay(e2e)
         XCTAssertTrue(e2e.setup.waitForExistence(timeout: 5), "ohne Avatar erst der Aufbau")
         XCTAssertFalse(e2e.mapStart.exists)
@@ -55,7 +55,7 @@ final class AvatarE2ETests: XCTestCase {
 
         e2e.app.terminate()
         let again = try E2EApp(storage: "avatar", fresh: false)
-        let badge = again.app.otherElements["menu.avatar"]
+        let badge = again.app.descendants(matching: .any)["menu.avatar"]
         XCTAssertTrue(badge.waitForExistence(timeout: 15), "Avatarschild im Hauptmenü")
         XCTAssertEqual(badge.label, "Lyra, Elfen")
         tapPlay(again)

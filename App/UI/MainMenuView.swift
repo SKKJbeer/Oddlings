@@ -52,6 +52,9 @@ struct MainMenuView: View {
                                 AvatarBadge(avatar: avatar).accessibilityIdentifier("menu.avatar")
                             }
                         }
+                        // Die Spalte darunter ist nur so breit wie „Offline“; das
+                        // Schild darf über sie hinausragen, statt umzubrechen.
+                        .fixedSize()
                         .padding(.top, 18)
                         .padding(.leading, 24)
                     }
