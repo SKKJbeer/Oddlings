@@ -26,8 +26,8 @@ final class AvatarE2ETests: XCTestCase {
         e2e.setupRace(.elves).tap()
         XCTAssertTrue(e2e.setupRace(.elves).isSelected)
         XCTAssertFalse(e2e.setupRace(.dwarves).isSelected)
-        let suggested = e2e.setupName.value as? String ?? ""
-        XCTAssertNotNil(Avatar.validName(suggested), "ein Name steht schon im Feld: \(suggested)")
+        let suggested = e2e.setupName.placeholderValue ?? ""
+        XCTAssertNotNil(Avatar.validName(suggested), "ein Vorschlag steht schon im Feld: \(suggested)")
         XCTAssertTrue(e2e.setupPortrait("elf-1").isSelected, "das erste Porträt des Volks ist vorgewählt")
         XCTAssertFalse(e2e.setupPortrait("dwarf-1").exists, "nur Porträts des gewählten Volks")
         XCTAssertTrue(e2e.setupConfirm.isEnabled)
@@ -35,12 +35,11 @@ final class AvatarE2ETests: XCTestCase {
         XCTAssertTrue(e2e.setupPortrait("elf-2").isSelected)
         XCTAssertFalse(e2e.setupPortrait("elf-1").isSelected)
 
-        // Eigenen Namen tippen: Cursor ans Ende, Vorschlag löschen.
-        e2e.setupName.coordinate(withNormalizedOffset: CGVector(dx: 0.95, dy: 0.5)).tap()
-        let delete = String(repeating: XCUIKeyboardKey.delete.rawValue, count: suggested.count + 2)
-        e2e.setupName.typeText(delete)
-        XCTAssertFalse(e2e.setupConfirm.isEnabled, "ohne Namen kein Avatar")
-        e2e.setupName.typeText("Lyra\n")
+        // Nur Leerzeichen sind kein Name; Tippen ersetzt den Vorschlag ganz.
+        e2e.setupName.tap()
+        e2e.setupName.typeText("   ")
+        XCTAssertFalse(e2e.setupConfirm.isEnabled, "nur Leerzeichen sind kein Name")
+        e2e.setupName.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 3) + "Lyra\n")
         XCTAssertEqual(e2e.setupName.value as? String, "Lyra")
         e2e.screenshot("6-avatar", in: self)
         e2e.setupConfirm.tap()

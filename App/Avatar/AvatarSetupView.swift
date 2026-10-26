@@ -9,15 +9,14 @@ struct AvatarSetupView: View {
 
     @State private var race: Race?
     @State private var portrait: String?
+    /// Was der Spieler tippt. Leer heißt: der Vorschlag gilt.
     @State private var name = ""
-    /// Hat der Spieler selbst getippt, überschreibt ein Volkswechsel den Namen nicht.
-    @State private var typed = false
+    /// Steht als Platzhalter im Feld. So ersetzt Tippen ihn ganz, statt dass
+    /// erst gelöscht werden muss.
+    @State private var suggestion = ""
 
-    private var nameField: Binding<String> {
-        Binding(get: { name }, set: { name = $0; typed = true })
-    }
-
-    private var ready: Bool { race != nil && Avatar.validName(name) != nil }
+    private var chosenName: String { name.isEmpty ? suggestion : name }
+    private var ready: Bool { race != nil && Avatar.validName(chosenName) != nil }
 
     var body: some View {
         HStack(alignment: .top, spacing: 20) {
@@ -71,7 +70,7 @@ struct AvatarSetupView: View {
             }
             label(AvatarTexts.name)
             HStack(spacing: 8) {
-                TextField(AvatarTexts.name, text: nameField)
+                TextField(suggestion.isEmpty ? AvatarTexts.name : suggestion, text: $name)
                     .font(UITheme.bodyHeavy(18))
                     .foregroundStyle(UITheme.outline)
                     .textInputAutocapitalization(.words)
@@ -85,7 +84,7 @@ struct AvatarSetupView: View {
                         // Länger als erlaubt wird nicht getippt, statt still abgewiesen.
                         if value.count > Avatar.maxNameLength { name = String(value.prefix(Avatar.maxNameLength)) }
                     }
-                Button { suggestName(replacing: true) } label: {
+                Button(action: suggestName) {
                     Image(systemName: "dice.fill").font(.system(size: 20, weight: .bold))
                 }
                 .buttonStyle(ChunkyButtonStyle(kind: .wood, height: 44, fontSize: 18))
@@ -115,21 +114,27 @@ struct AvatarSetupView: View {
         guard candidate != race else { return }
         race = candidate
         portrait = AvatarPortraits.of(candidate)[0].id
-        suggestName(replacing: !typed || name.isEmpty)
+        suggestion = ""
+        suggestNameKeepingTyped()
+    }
+
+    /// Würfel: neuer Vorschlag, ein getippter Name weicht ihm.
+    private func suggestName() {
+        name = ""
+        suggestNameKeepingTyped()
     }
 
     /// Vorschlag aus der Liste des Volks. Zufall ist hier erlaubt: Er berührt
     /// keine Spielregel, nur ein Textfeld.
-    private func suggestName(replacing: Bool) {
-        guard replacing, let race else { return }
-        let options = AvatarTexts.suggestions(race).filter { $0 != name }
-        name = options.randomElement() ?? name
-        typed = false
+    private func suggestNameKeepingTyped() {
+        guard let race else { return }
+        let options = AvatarTexts.suggestions(race).filter { $0 != suggestion }
+        suggestion = options.randomElement() ?? suggestion
     }
 
     private func confirm() {
         guard let race else { return }
-        flow.createAvatar(race: race, name: name, portrait: portrait ?? AvatarPortraits.of(race)[0].id)
+        flow.createAvatar(race: race, name: chosenName, portrait: portrait ?? AvatarPortraits.of(race)[0].id)
     }
 }
 
