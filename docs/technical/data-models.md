@@ -124,7 +124,8 @@ Türme und Stein gleich wirkt.
 **Völker (R-4):** `AbilityConfig.kind` ist `stoneRain`, `bulwark` oder
 `moonMark`. Fehlt `kind`, gilt `stoneRain`. `issues()` verlangt genau die Felder
 der Art. Die Werte der Völker stehen in `Balance/races.json` (`RaceTable`, beim
-Laden geprüft). `BalanceConfig.applying(_:)` macht daraus eine zweite
+Laden geprüft): Fähigkeit, dazu `rangeFactor` und `costFactor` je Turmart
+(Faktor > 0, Preis auf ganzes Gold gerundet). `BalanceConfig.applying(_:)` macht daraus eine zweite
 Konfiguration derselben Mission, deshalb kennt die Simulation keine Völker.
 
 ## Speicherstand (Phase 2)

@@ -1,9 +1,10 @@
 {
   "_status": "Völker Zwerge und Elfen (D-025, R-4). HYPOTHESE bis zum Spieltest; Messung und Begründung in docs/game-design/04-economy-and-balance.md.",
-  "_einheiten": "Sekunden, Felder; damageFactor und rangeFactor sind Faktoren.",
+  "_einheiten": "Sekunden, Felder; damageFactor, rangeFactor und costFactor sind Faktoren (Preis auf ganzes Gold gerundet).",
   "races": {
     "dwarves": {
-      "ability": { "kind": "bulwark", "duration": 4.0, "cooldown": 35, "snapDistance": 1.0 }
+      "ability": { "kind": "bulwark", "duration": 4.0, "cooldown": 35, "snapDistance": 1.0 },
+      "costFactor": { "watch": 0.9 }
     },
     "elves": {
       "ability": { "kind": "moonMark", "radius": 1.5, "delay": 0.5, "duration": 4.0, "damageFactor": 1.5,

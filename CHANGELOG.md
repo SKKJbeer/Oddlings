@@ -11,6 +11,20 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.10.1 – 26.10.2026 (Zwerge: Wachtürme billiger, D-062)
+
+**Geändert**
+- Die Zwerge haben jetzt einen passiven Zug: Wachtürme kosten bei ihnen 10 % weniger
+  (50 → 45 Gold). Das Baumenü zeigt den Zwergenpreis, die Missionstafel nennt den
+  Vorteil. Der Wert steht als `costFactor` in `races.json`.
+- Balance nachgemessen ([04](docs/game-design/04-economy-and-balance.md)): Mischung
+  Zwerge 1,40, Elfen 1,42; reine Wachtürme bei Zwergen 1,31, weiter hinter der Mischung.
+
+**Tests**
+- Kern: Preisfaktor je Volk, Rundung, Prüfung beim Laden, Mischung vor Monokultur je Volk.
+- App: Baumenü liest den Zwergenpreis; E2E baut als Zwerg einen Wachturm und prüft
+  Preis im Ring und Abbuchung.
+
 ## 0.10.0 – 26.10.2026 (Bewegung und Effekte, FX 01), Bau 27 (VALID)
 
 **Neu**

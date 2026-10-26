@@ -30,6 +30,7 @@ ergänzt). Die Reihenfolge und Abhängigkeiten stehen in der
 - **Spielrahmen (D-060) in TestFlight**: Hauptmenü, Kampagnenkarte Region 1, Sterne,
   Speicherstand und Einstellungen (0.7.0, R-1/R-2), Festungsfähigkeit Steinregen
   (0.8.0, R-3, Bau 24), Völkerwahl Zwerge mit Bollwerk und Elfen mit Mondmal
+  (Zwerge bauen Wachtürme 10 % billiger, D-062, ab 0.10.1)
   (0.9.0, R-4, **Bau 25 VALID**). Spielbar bleibt nur Mission 1 (D-061).
 
 ## Läuft
@@ -56,5 +57,4 @@ ergänzt). Die Reihenfolge und Abhängigkeiten stehen in der
 |---|---|
 | Spieltest durchführen, sobald der Bau mit neuer Oberfläche da ist | WP-15 |
 | Herkunft der 3D-Modelle für FX 02 (Entscheidungskarte) | Animationen und Effekte |
-| Passiver Zug der Zwerge ohne Bank (umgesetzt: vorerst keiner) | R-4 |
 | Ohne Eile: Messung des Spikes auf dem iPhone | WP-01 |

@@ -22,7 +22,7 @@ enum CampaignTexts {
     /// Die stehen in races.json und ändern sich mit dem Spieltest.
     static func raceDetail(_ race: Race?) -> String {
         switch race {
-        case .dwarves: "Bollwerk: eine Mauer hält die Gegner auf."
+        case .dwarves: "Bollwerk: eine Mauer hält die Gegner auf. Wachtürme kosten weniger."
         case .elves: "Mondmal: Markierte nehmen mehr Schaden. Sporentürme reichen weiter."
         case nil: "Ohne Volk wirfst du den Steinregen."
         }

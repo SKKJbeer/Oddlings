@@ -55,7 +55,7 @@ dem Release.
 | Volk | Festungsfähigkeit | Passiver Zug | Spielstil |
 |---|---|---|---|
 | ohne Volk (Phase 2) | Steinregen | – | Grundspiel |
-| Zwerge | **Bollwerk:** eine Mauer sperrt den Weg kurz, Gegner stauen sich | Zwergenbank mit höherem Ertragsdeckel | Wirtschaft, planen, stauen |
+| Zwerge | **Bollwerk:** eine Mauer sperrt den Weg kurz, Gegner stauen sich | Wachtürme 10 % billiger (D-062); später vielleicht die Zwergenbank mit höherem Ertragsdeckel | Wirtschaft, planen, stauen |
 | Elfen | **Mondmal:** Gegner im Kreis sind kurz verwundbar | Sporentürme mit etwas mehr Reichweite | Kontrolle, Präzision |
 
 Begründung:
