@@ -43,9 +43,14 @@ final class BattleSpritesTests: XCTestCase {
     func testPaintedGroundCoversTheWholeScene() throws {
         let config = try BalanceConfig.missionOne()
         let map = BattleModel(config: config, seed: 1, autoplay: false).sim.map
-        // iPhone 16 Pro Max und SE quer, iPad Pro 13" und mini quer.
+        // iPhone 16 Pro Max und SE quer, iPad Pro 13" und mini quer, je ganz und
+        // ohne die Kopfleiste darüber (60 pt): Die Karte bekommt nur, was unter
+        // der Leiste bleibt, und wird damit noch breiter als der Bildschirm.
+        // Im Probelauf zu 0.10.4 blieben so links und rechts je 1,3 Zellen leer.
         for size in [CGSize(width: 956, height: 440), CGSize(width: 667, height: 375),
-                     CGSize(width: 1376, height: 1032), CGSize(width: 1133, height: 744)] {
+                     CGSize(width: 1376, height: 1032), CGSize(width: 1133, height: 744),
+                     CGSize(width: 956, height: 380), CGSize(width: 874, height: 342),
+                     CGSize(width: 667, height: 315), CGSize(width: 1376, height: 972)] {
             let layout = BoardLayout(size: size, map: map)
             let ground = try XCTUnwrap(BattleSprites.ground(missionID: config.mission.id, layout: layout))
             XCTAssertLessThanOrEqual(ground.frame.minX, 0.5, "\(size)")
@@ -54,8 +59,8 @@ final class BattleSpritesTests: XCTestCase {
             XCTAssertGreaterThanOrEqual(ground.frame.maxY, size.height - 0.5, "\(size)")
             // Das Feld selbst liegt im Bild an der Stelle, die der Rand vorgibt.
             let topLeft = layout.scenePoint(Point(x: 0, y: 0))
-            XCTAssertEqual(ground.frame.minX, topLeft.x - BattleStyle.groundMargin * layout.field, accuracy: 0.5, "\(size)")
-            XCTAssertEqual(ground.frame.maxY, topLeft.y + BattleStyle.groundMargin * layout.field, accuracy: 0.5, "\(size)")
+            XCTAssertEqual(ground.frame.minX, topLeft.x - BattleStyle.groundMargin.width * layout.field, accuracy: 0.5, "\(size)")
+            XCTAssertEqual(ground.frame.maxY, topLeft.y + BattleStyle.groundMargin.height * layout.field, accuracy: 0.5, "\(size)")
         }
     }
 

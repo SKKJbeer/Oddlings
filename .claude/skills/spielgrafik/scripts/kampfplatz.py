@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Setzt den Boden einer Mission als Waldlichtung aus gemalten Teilen zusammen.
 
-kampfplatz.py <mission.json> <teileordner> <ausgabe> [px_je_zelle=130] [rand=2] [vorschau.png]
+kampfplatz.py <mission.json> <teileordner> <ausgabe> [px_je_zelle=130] [rand=2 | 4x2] [vorschau.png]
 
 Teileordner wie bei regionscollage.py (gleiche Teile, damit Kampfplatz und
 Kampagnenkarte eine Welt sind): gras.png, weg.png, baum*.png, hoehle*.png.
@@ -23,14 +23,16 @@ from PIL import Image, ImageChops, ImageDraw, ImageEnhance, ImageFilter
 
 mission, teile, ziel = sys.argv[1:4]
 C = int(sys.argv[4]) if len(sys.argv) > 4 else 130
-M = float(sys.argv[5]) if len(sys.argv) > 5 else 2
+# Rand je Seite in Zellen: "2" fuer alle Seiten oder "4x2" (waagrecht x senkrecht).
+rand_arg = sys.argv[5] if len(sys.argv) > 5 else "2"
+MX, MY = (float(v) for v in rand_arg.split("x")) if "x" in rand_arg else (float(rand_arg),) * 2
 vorschau = sys.argv[6] if len(sys.argv) > 6 else None
 karte = json.load(open(mission))["map"]
 W, H = karte["width"], karte["height"]
-BB, HH = round((W + 2 * M) * C), round((H + 2 * M) * C)
+BB, HH = round((W + 2 * MX) * C), round((H + 2 * MY) * C)
 pfad = [tuple(p) for p in karte["path"]]
 rnd = random.Random(7)
-at = lambda x, y: ((x + M) * C, (y + M) * C)
+at = lambda x, y: ((x + MX) * C, (y + MY) * C)
 
 UEBERHANG = 0.2   # Zellen, so weit darf eine Krone ins Feld ragen
 WEGBREITE = 0.95  # Zellen; BattleStyle.pathWidth (0,8) ist die Linie der Platzhaltergrafik
@@ -82,8 +84,8 @@ def gerundet(punkte):
 
 
 # Weg reicht ueber beide Enden hinaus: links in die Hoehle, rechts unter die Festung.
-ende = (pfad[-1][0] + M, pfad[-1][1])
-weglinie = gerundet([(pfad[0][0] - M, pfad[0][1])] + pfad[1:-1] + [ende])
+ende = (pfad[-1][0] + MX, pfad[-1][1])
+weglinie = gerundet([(pfad[0][0] - MX, pfad[0][1])] + pfad[1:-1] + [ende])
 wegpixel = [at(*p) for p in weglinie]
 dichte = [(weglinie[i][0] + (weglinie[i + 1][0] - weglinie[i][0]) * t / 4,
            weglinie[i][1] + (weglinie[i + 1][1] - weglinie[i][1]) * t / 4)
@@ -187,10 +189,10 @@ def frei(x, y, breite):
 
 
 schritt = 0.85
-y = -M - 0.5
-while y < H + M + 0.5:
-    x = -M - 0.5 + rnd.random() * schritt
-    while x < W + M + 0.5:
+y = -MY - 0.5
+while y < H + MY + 0.5:
+    x = -MX - 0.5 + rnd.random() * schritt
+    while x < W + MX + 0.5:
         px, py = x + rnd.uniform(-0.35, 0.35) * schritt, y + rnd.uniform(-0.35, 0.35) * schritt
         breite = rnd.uniform(1.15, 1.75)
         if frei(px, py, breite):
@@ -219,7 +221,7 @@ bild = Image.composite(ImageEnhance.Brightness(bild).enhance(1.16), bild, flecke
 bild = ImageChops.multiply(bild, Image.new("RGB", (BB, HH), (255, 238, 210)))
 # Aussenrand dunkel in den Wald: Er ist nur auf breiten Bildschirmen zu sehen.
 rand = Image.new("L", (BB, HH), 255)
-ImageDraw.Draw(rand).rounded_rectangle((*at(-M * 0.55, -M * 0.55), *at(W + M * 0.55, H + M * 0.55)), radius=C * 1.5, fill=0)
+ImageDraw.Draw(rand).rounded_rectangle((*at(-MX * 0.55, -MY * 0.55), *at(W + MX * 0.55, H + MY * 0.55)), radius=C * 1.5, fill=0)
 bild.paste(Image.new("RGB", (BB, HH), (8, 18, 12)), (0, 0), rand.filter(ImageFilter.GaussianBlur(C * 0.6)).point(lambda v: int(v * 0.8)))
 
 if ziel.lower().endswith((".jpg", ".jpeg")):

@@ -12,10 +12,10 @@ enum BattleStyle {
     static let pathWidth: CGFloat = 0.8
     static let buildZone = SKColor(white: 1, alpha: 0.07)
     static let buildZoneInset: CGFloat = 0.06
-    /// So viele Zellen reicht der gemalte Boden je Seite über das Feld hinaus:
-    /// genug für das breiteste iPhone (rund 1,8) und das iPad hochkant zum Feld
-    /// (rund 1,5). Steht auch im Asset-Vertrag (`rand`).
-    static let groundMargin: CGFloat = 2
+    /// So viele Zellen reicht der gemalte Boden links und rechts (`width`) und
+    /// oben und unten (`height`) über das Feld hinaus. Steht auch im
+    /// Asset-Vertrag (`rand`).
+    static let groundMargin = CGSize(width: 2, height: 2)
 
     static func towerColor(_ kind: TowerKind) -> SKColor {
         switch kind {
