@@ -13,7 +13,7 @@ lange Ohren). Ein eigenes kleines Skelett mit Gelenkpunkten je Figur ist
 nachvollziehbar und braucht kein Fremdkonto (Mixamo).
 """
 import bpy, json, math, os, sys
-from mathutils import Vector
+from mathutils import Matrix, Vector
 
 modell, rigdatei, aus = sys.argv[-4], sys.argv[-3], sys.argv[-2]
 pixel = int(sys.argv[-1])
@@ -52,6 +52,21 @@ koerper.location = (-(lo.x + hi.x) / 2 * s, -(lo.y + hi.y) / 2 * s, -lo.z * s)
 koerper.scale = (s, s, s)
 bpy.ops.object.transform_apply(location=True, scale=True)
 breite, tiefe = (hi.x - lo.x) * s, (hi.y - lo.y) * s
+
+# TRELLIS trennt das Netz an jeder Texturnaht in Hunderte Inseln; die
+# automatischen Gewichte wirken je Insel, ohne Verschweißen reißt die Figur
+# bei der Bewegung an den Nähten auf.
+bpy.ops.object.mode_set(mode='EDIT')
+bpy.ops.mesh.select_all(action='SELECT')
+bpy.ops.mesh.remove_doubles(threshold=rig.get("verschweissen", 0.002))
+bpy.ops.object.mode_set(mode='OBJECT')
+
+# TRELLIS liefert Metallic 1; damit spiegelt die Figur nur die dunkle Umgebung
+# und das Licht von links oben kommt nicht an.
+for m in koerper.data.materials:
+    for n in (m.node_tree.nodes if m and m.node_tree else []):
+        if n.type == 'BSDF_PRINCIPLED':
+            n.inputs["Metallic"].default_value = 0.0
 
 def punkt(p):
     # rig.json: x quer (-0,5..0,5 der Breite), y Tiefe, z Höhe (0..1)
@@ -92,6 +107,15 @@ def setze(folge, i, n):
         # Einmalige Bewegung (Treffer, Sturz): weich von 0 auf grad
         k = 1 - (1 - t) ** 2 if n > 1 else 1
         arm.pose.bones[name].rotation_euler["xyz".index(achse)] = math.radians(grad) * k
+    # Grundhaltung: TRELLIS-Vorlagen stehen mit abgespreizten Armen, damit
+    # Hände und Körper getrennt bleiben. Die Drehung steht in rig.json um eine
+    # Achse des Modells (nicht des Knochens) und wird unter die Bewegung gelegt.
+    for name, (achse, grad) in rig.get("ruhe", {}).items():
+        pb = arm.pose.bones[name]
+        ruhe = pb.bone.matrix_local.to_3x3()
+        welt = Matrix.Rotation(math.radians(grad), 3, achse.upper())
+        lokal = ruhe.inverted() @ welt @ ruhe
+        pb.rotation_euler = (lokal @ pb.rotation_euler.to_matrix()).to_euler('XYZ')
     hub = rig["folgen"][folge].get("hub", 0)
     if hub and "becken" in arm.pose.bones:
         arm.pose.bones["becken"].location = (0, abs(math.sin(2 * math.pi * t)) * hub, 0)
@@ -103,7 +127,7 @@ cam = bpy.data.objects.new("kamera", cam_daten)
 sc.collection.objects.link(cam)
 sc.camera = cam
 # 35° von oben wie die gemalten Figuren, Figur 45° zur Kamera gedreht
-el = math.radians(35)
+el = math.radians(rig.get("kameraHoehe", 35))
 mitte = 0.5
 cam.location = (0, -6 * math.cos(el), mitte + 6 * math.sin(el))
 cam.rotation_euler = (math.radians(90) - el, 0, 0)
@@ -114,7 +138,11 @@ arm.parent = dreh
 dreh.rotation_euler[2] = math.radians(rig.get("blick", 45))
 
 # Licht von links oben wie in den Gemälden
-for name, rot, e in [("haupt", (45, 0, -40), 3.2), ("fuell", (65, 0, 140), 0.9)]:
+# Stärken je Figur in rig.json, weil die Texturen von TRELLIS je Bild
+# unterschiedlich hell ausfallen.
+licht = {"haupt": 3.2, "fuell": 0.9, "welt": 0.5, **rig.get("licht", {})}
+for name, rot in [("haupt", (45, 0, -40)), ("fuell", (65, 0, 140))]:
+    e = licht[name]
     l = bpy.data.lights.new(name, 'SUN')
     l.energy = e
     ob = bpy.data.objects.new(name, l)
@@ -123,7 +151,7 @@ for name, rot, e in [("haupt", (45, 0, -40), 3.2), ("fuell", (65, 0, 140), 0.9)]
 welt = bpy.data.worlds.new("welt")
 sc.world = welt
 welt.use_nodes = True
-welt.node_tree.nodes["Background"].inputs[1].default_value = 0.5
+welt.node_tree.nodes["Background"].inputs[1].default_value = licht["welt"]
 sc.render.engine = 'CYCLES'
 sc.cycles.device = 'CPU'
 sc.cycles.samples = 32

@@ -26,3 +26,17 @@ rope, <gleicher Stil>, each isolated, no ground, no text, no letters". Zerlegt m
 **Abweichungen vom Spielbild:** Das Gesicht ist freundlicher als beim gemalten
 Plünderer, die Keule ist ein dünner Stab statt der dunklen Keule mit Eisenband.
 Farben werden nach dem Rendern mit `angleichen.py` an das Spielbild angeglichen.
+
+**Modell** (`modell.glb`, 26.10.2026): `tools/figuren-3d/trellis.py vorlage.png
+modell.glb 1` gegen die Space `trellis-community/TRELLIS` (TRELLIS, Microsoft,
+MIT-Lizenz), gradio_client 2.7.2, Seed 1, SS 7,5/12, SLat 3/12, mesh_simplify
+0,95, Textur 1024. Hochladen der Vorlage von Steffen freigegeben. Ergebnis: ein
+Netz mit 13 809 Punkten in 367 Inseln (Texturnähte), Material mit Metallic 1;
+beides gleicht `figur.py` beim Laden aus (Verschweißen, Metallic 0).
+Sack und Keule fehlen noch am Modell.
+
+**Skelett** (`rig.json`): Gelenkpunkte von Hand aus vier Ansichten des Modells
+gesetzt, Arme per `ruhe` 35° an den Körper gelegt, Licht heller als Standard,
+weil die Textur dunkel ausfällt. Erster Render: `art/fx-02/raider-erster-render.jpg`
+(Helligkeit 1,35, Sättigung 1,45 und Kontur nur für die Vorschau, der echte
+Farbangleich kommt mit `angleichen.py`).
