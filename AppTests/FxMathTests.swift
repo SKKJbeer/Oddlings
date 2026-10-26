@@ -164,7 +164,8 @@ final class FxMathTests: XCTestCase {
     /// Die Strecke bestimmt das Bild, nicht die Bildrate: Mit 30 und mit 120
     /// Bildern je Sekunde steht der Gegner an derselben Stelle im selben Bild.
     func testWalkFrameDoesNotDependOnFrameRate() {
-        let speed = 0.9
+        // 0,8 liegt mitten in Bild 5; auf einer Bildgrenze entschiede Rundung.
+        let speed = 0.8
         for fps in [30.0, 60.0, 120.0] {
             var distance = 0.0
             for _ in 0..<Int(fps) { distance += speed / fps }
