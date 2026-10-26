@@ -11,6 +11,42 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.10.0 – 26.10.2026 (Bewegung und Effekte, FX 01)
+
+**Neu**
+- Gegner laufen: Hüpfen im Schritttakt je Gegnerart, Stauchen beim Aufsetzen,
+  Wiegen, Vorneigung, Blick in Laufrichtung, Schatten wird in der Luft kleiner.
+  Verlangsamte Gegner trippeln langsamer und sind grün getönt.
+- Treffer blitzen hell auf, mit Rückstoß; der Lebensbalken hat ein nachlaufendes
+  Schadensstück. Tod: Stauchen, Zerplatzen in Rauch und Splittern, drei Münzen
+  springen heraus, `+Gold` springt auf.
+- Wachturm schießt Pfeile im Bogen (Treffer erst bei Ankunft), Blitzturm einen
+  gezackten Kettenblitz Glied für Glied mit leuchtendem Kristall, Sporenturm
+  pumpt einen Sporenring aus. Blitz auf verlangsamtes Ziel: Sporenfunke (E2).
+- Bau: Turm fällt auf seinen Platz und federt nach, Staubring. Verkauf: Turm
+  versinkt in Staub, Münzen. Durchbruch: Festung bebt, Bild wackelt.
+  Wellenbanner springt ein, Sieg mit Konfetti. Türme atmen leicht in Ruhe.
+- Festungsfähigkeiten: Steinregen warnt mit wachsendem Schatten und pulsierendem
+  Ring, Felsen prasseln genau zum Einschlag, Druckwelle, Staub, Splitter und
+  Wackeln; Getroffene zeigen kreisende Sternchen, solange sie betäubt sind.
+  Mondmal sammelt kühles Licht und leuchtet auf, das Mal am Gegner ist ein
+  pulsierender Mond. Bollwerk schießt federnd als Steinmauer aus dem Boden und
+  versinkt am Ende in Staub. Die Platzhalter aus 0.8.0 und 0.9.0 sind ersetzt.
+- „Bewegung reduzieren" in iOS schaltet Wackeln und Atmen ab.
+- Konzept: [fx-01-bewegung-und-effekte](docs/konzepte/fx-01-bewegung-und-effekte.md),
+  Entscheidungen D-050 (Effekt-Uhr), D-051 (Gliedmaßen über 3D-Modelle zu Sprite-Blättern, von Steffen gewählt;
+  folgt als eigenes Paket).
+
+**Tests**
+- `AppTests/FxMathTests`, `FxDirectorTests`, `FxBudgetTests` (ganze Mission bei
+  2×: Obergrenze, keine `SKShapeNode`, Rechenzeit je Bild).
+- `AppUITests/EffectsE2ETests`: alle Effektarten laufen in der echten App.
+- CI-Probelauf misst die Bildrate im Simulator und wird unter 30 Bildern je
+  Sekunde rot. Gemessen: 49 Bilder je Sekunde im Mittel (Simulator ohne
+  Grafikkarte). Ein einzelner Haker von 842 ms kam vermutlich vom ersten Zeichnen einer
+  Textur (nicht belegt); die Effekttexturen werden jetzt beim Anlegen der Szene
+  vorab gezeichnet, der nächste Probelauf zeigt, ob es reicht.
+
 ## 0.9.1 – 26.10.2026 (Grafik 03: Titelbild und Oberflächensymbole)
 
 **Neu**

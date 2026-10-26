@@ -63,6 +63,9 @@ struct BattleView: View {
                     // Tafeln liegen auf der Karte, nicht über der Leiste: Pause
                     // und Tempo bleiben dort bedienbar.
                     BattleOverlay(controller: controller, onRestart: { scene.restart() }, onClose: onClose)
+                    #if DEBUG
+                    FxStatsOverlay(scene: scene)
+                    #endif
                 }
                 .ignoresSafeArea(edges: [.horizontal, .bottom])
                 .accessibilityElement(children: .contain)
