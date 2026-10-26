@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.10.3 – 26.10.2026 (Wackliger Fähigkeitstest behoben)
+## 0.10.3 – 26.10.2026 (Wackliger Fähigkeitstest behoben), Bau 30 (VALID)
 
 **Behoben**
 - `AbilityE2ETests.testCastOnPathChargesAndComesBack` schlug auf PR #42 und #43 je
