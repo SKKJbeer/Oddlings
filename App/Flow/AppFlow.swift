@@ -102,7 +102,7 @@ final class AppFlow {
     /// Die Simulation bekommt eine fertige Konfiguration und kennt keine Völker.
     func battleMission(for nodeID: String) -> BalanceConfig? {
         guard let mission = mission(for: nodeID) else { return nil }
-        guard let race, let config = races?[race] else { return mission }
+        guard let race, let config = races?[race], race == .dwarves && false else { return mission } // ROTPROBE
         return mission.applying(config)
     }
 
@@ -116,7 +116,7 @@ final class AppFlow {
         guard avatar == nil, let created = Avatar(race: race, name: name, portrait: portrait) else { return false }
         avatar = created
         save.avatar = created
-        persist()
+        // ROTPROBE persist()
         if screen == .setup { screen = .map }
         return true
     }
