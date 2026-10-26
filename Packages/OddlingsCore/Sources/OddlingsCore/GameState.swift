@@ -56,6 +56,20 @@ public struct Enemy: Codable, Equatable, Sendable {
     public var stunUntilTick: Int? = nil
     /// Mondmal: nimmt mehr Schaden; nil, sobald es abgelaufen ist.
     public var vulnerable: VulnerableEffect? = nil
+
+    /// Öffentlich für die Darstellungstests der App; die Simulation legt
+    /// Gegner sonst selbst an.
+    public init(id: Int, kind: EnemyKind, hp: Double, maxHP: Double, distance: Double,
+                slow: SlowEffect? = nil, stunUntilTick: Int? = nil, vulnerable: VulnerableEffect? = nil) {
+        self.id = id
+        self.kind = kind
+        self.hp = hp
+        self.maxHP = maxHP
+        self.distance = distance
+        self.slow = slow
+        self.stunUntilTick = stunUntilTick
+        self.vulnerable = vulnerable
+    }
 }
 
 /// Verwundbar durch Mondmal. Wie die Verlangsamung: kein Stapeln, es gilt der
@@ -63,6 +77,11 @@ public struct Enemy: Codable, Equatable, Sendable {
 public struct VulnerableEffect: Codable, Equatable, Sendable {
     public var factor: Double
     public var untilTick: Int
+
+    public init(factor: Double, untilTick: Int) {
+        self.factor = factor
+        self.untilTick = untilTick
+    }
 }
 
 /// Bollwerk: eine Mauer an einer Stelle des Wegs, gemessen als Wegstrecke. Wer
