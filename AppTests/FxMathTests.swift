@@ -140,4 +140,50 @@ final class FxMathTests: XCTestCase {
         XCTAssertEqual(stats.worstMS, 50, accuracy: 1e-9)
         XCTAssertEqual(stats.averageFPS, 60 / (59.0 / 60 + 0.05), accuracy: 1e-9)
     }
+
+    // MARK: Bildfolgen (FX 02)
+
+    func testWalkFrameFollowsDistanceAndLoopsAfterTwoSteps() {
+        let stride = 0.25
+        XCTAssertEqual(FxMath.walkFrame(distance: 0, phase: 0, stride: stride, frames: 8), 0)
+        // Ein Bild je Achtel des Doppelschritts, aufsteigend.
+        var last = -1
+        for index in 0..<8 {
+            let frame = FxMath.walkFrame(distance: (Double(index) + 0.5) * 2 * stride / 8, phase: 0, stride: stride, frames: 8)
+            XCTAssertEqual(frame, index)
+            XCTAssertGreaterThan(frame, last)
+            last = frame
+        }
+        for distance in Swift.stride(from: 0.0, through: 3.0, by: 0.07) {
+            XCTAssertEqual(FxMath.walkFrame(distance: distance, phase: 0.2, stride: stride, frames: 8),
+                           FxMath.walkFrame(distance: distance + 2 * stride, phase: 0.2, stride: stride, frames: 8),
+                           "Folge wiederholt sich nach zwei Schritten")
+        }
+    }
+
+    /// Die Strecke bestimmt das Bild, nicht die Bildrate: Mit 30 und mit 120
+    /// Bildern je Sekunde steht der Gegner an derselben Stelle im selben Bild.
+    func testWalkFrameDoesNotDependOnFrameRate() {
+        let speed = 0.9
+        for fps in [30.0, 60.0, 120.0] {
+            var distance = 0.0
+            for _ in 0..<Int(fps) { distance += speed / fps }
+            XCTAssertEqual(FxMath.walkFrame(distance: distance, phase: 0, stride: 0.24, frames: 8),
+                           FxMath.walkFrame(distance: speed, phase: 0, stride: 0.24, frames: 8), "\(fps) fps")
+        }
+    }
+
+    func testWalkFramePhaseShiftsAndBadInputIsSafe() {
+        XCTAssertEqual(FxMath.walkFrame(distance: 0, phase: 0.5, stride: 0.25, frames: 8), 4)
+        XCTAssertEqual(FxMath.walkFrame(distance: 1, phase: 0, stride: 0, frames: 8), 0)
+        XCTAssertEqual(FxMath.walkFrame(distance: 1, phase: 0, stride: 0.25, frames: 0), 0)
+    }
+
+    func testOnceFrameRunsThroughAndHoldsTheLast() {
+        XCTAssertEqual(FxMath.onceFrame(0, frames: 6), 0)
+        XCTAssertEqual(FxMath.onceFrame(0.5, frames: 6), 3)
+        XCTAssertEqual(FxMath.onceFrame(1, frames: 6), 5)
+        XCTAssertEqual(FxMath.onceFrame(7, frames: 6), 5)
+        XCTAssertEqual(FxMath.onceFrame(-1, frames: 6), 0)
+    }
 }

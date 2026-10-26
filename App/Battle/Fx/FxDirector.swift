@@ -17,12 +17,14 @@ final class FxDirector {
         var arrows = 0, bolts = 0, combos = 0, spores = 0, hits = 0
         var deaths = 0, coins = 0, builds = 0, sells = 0, leaks = 0, spawns = 0
         var casts = 0, impacts = 0, walls = 0
+        /// Treffer und Stürze, die als Bildfolge gespielt wurden (FX 02).
+        var flinches = 0, falls = 0
         var dropped = 0
 
         var summary: String {
             "arrows=\(arrows) bolts=\(bolts) combos=\(combos) spores=\(spores) hits=\(hits) deaths=\(deaths) "
                 + "coins=\(coins) builds=\(builds) sells=\(sells) leaks=\(leaks) spawns=\(spawns) "
-                + "casts=\(casts) impacts=\(impacts) walls=\(walls) dropped=\(dropped)"
+                + "casts=\(casts) impacts=\(impacts) walls=\(walls) flinches=\(flinches) falls=\(falls) dropped=\(dropped)"
         }
     }
 
@@ -204,7 +206,7 @@ final class FxDirector {
     }
 
     /// Treffer: helles Aufblitzen, Rückstoß gegen die Laufrichtung, kurzes
-    /// Stauchen. Wartet auf einen fliegenden Pfeil.
+    /// Stauchen, mit Bildfolge dazu das Zucken. Wartet auf einen fliegenden Pfeil.
     func hit(_ enemy: EnemyNode) {
         let start = max(time, arrivals[enemy.enemyID] ?? time)
         guard start - enemy.lastHit >= FxStyle.hitFlashGap else { return }
@@ -217,6 +219,15 @@ final class FxDirector {
                 node.alpha = FxStyle.hitFlashAlpha * CGFloat(1 - Ease.quadIn(t))
             }
         }
+        if !enemy.hitFrames.isEmpty {
+            // Zucken als Bildfolge: Der Rumpf knickt weg, statt dass das Bild staucht.
+            stats.flinches += 1
+            let frames = enemy.hitFrames
+            animate(enemy.body, key: "frames", delay: delay, duration: FxStyle.hitFramesLife,
+                    onEnd: { [weak enemy] in enemy?.release() }) { [weak enemy] _, t in
+                enemy?.hold(frames[FxMath.onceFrame(t, frames: frames.count)])
+            }
+        }
         animate(enemy.reaction, key: "react", delay: delay, duration: FxStyle.hitLife * 1.6) { [weak enemy] node, t in
             let back = CGFloat(sin(Double.pi * min(1, t * 1.4)))
             node.position = CGPoint(x: -knock * back * (enemy?.facing ?? 1), y: 0)
@@ -225,19 +236,40 @@ final class FxDirector {
         }
     }
 
-    /// Tod: Treffer-Halt, Stauchen, Zerplatzen in Rauch, Splittern und Münzen.
+    /// Tod: Treffer-Halt, Stauchen, Zerplatzen in Rauch, Splittern und Münzen;
+    /// mit Bildfolge kippt die Figur um, statt zu zerplatzen.
     /// Die Szene hat den Gegner schon aus ihrer Liste genommen; der Director
     /// entfernt ihn am Ende.
     func death(_ enemy: EnemyNode, reward: Int) {
         stats.deaths += 1
         enemy.hideHealth()
         let delay = max(0, (arrivals[enemy.enemyID] ?? time) - time)
+        let falls = !enemy.dieFrames.isEmpty
         if let flash = enemy.flash {
-            animate(flash, key: "flash", delay: delay, duration: FxStyle.deathLife * 0.5) { node, t in
-                node.alpha = CGFloat(1 - t * 0.3)
+            // Beim Zerplatzen bleibt das Bild hell; beim Sturz verblasst das
+            // Aufblitzen, sonst fiele eine weiße Figur um.
+            animate(flash, key: "flash", delay: delay, duration: falls ? FxStyle.hitLife * 2 : FxStyle.deathLife * 0.5) { node, t in
+                node.alpha = CGFloat(falls ? 1 - t : 1 - t * 0.3)
             }
         }
+        if falls {
+            // Sturz als Bildfolge statt Zerplatzen: Die Figur kippt um, danach
+            // erst Rauch und Münzen. Derselbe Schlüssel wie das Zucken, damit
+            // ein laufendes Zucken den Sturz nicht mit `release` zurücksetzt.
+            stats.falls += 1
+            let frames = enemy.dieFrames
+            animate(enemy.body, key: "frames", delay: delay, duration: FxStyle.deathFramesLife) { [weak enemy] _, t in
+                enemy?.hold(frames[FxMath.onceFrame(t, frames: frames.count)])
+            }
+        }
+        let life = falls ? FxStyle.deathFramesLife + FxStyle.deathLife * 0.5 : FxStyle.deathLife
         animate(enemy.reaction, key: "react", delay: delay, duration: FxStyle.deathLife) { node, t in
+            guard !falls else {
+                // Kein Stauchen: Die Bildfolge zeigt den Sturz.
+                node.position = .zero
+                node.setScale(1)
+                return
+            }
             if t < 0.3 {
                 // Erst zusammendrücken …
                 let s = Ease.quadOut(t / 0.3)
@@ -250,12 +282,12 @@ final class FxDirector {
                 node.yScale = CGFloat(0.65 * (1 - s) + 0.6 * s * (1 - s))
             }
         }
-        animate(enemy, key: "fade", delay: delay, duration: FxStyle.deathLife, end: .remove) { node, t in
+        animate(enemy, key: "fade", delay: delay, duration: life, end: .remove) { node, t in
             node.alpha = CGFloat(1 - Ease.quadIn(max(0, t - 0.5) * 2))
         }
         let center = CGPoint(x: enemy.position.x, y: enemy.position.y + enemy.height * 0.45)
         let color = FxStyle.enemyColor(enemy.kind)
-        after(delay + FxStyle.deathLife * 0.55) { [weak self] in
+        after(delay + (falls ? FxStyle.deathFramesLife * 0.8 : FxStyle.deathLife * 0.55)) { [weak self] in
             guard let self else { return }
             self.burst(at: center, color: color)
             self.coins(at: center, count: FxStyle.coinsPerKill)

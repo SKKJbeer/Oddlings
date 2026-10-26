@@ -67,9 +67,26 @@ enum BattleSprites {
         return sprite
     }
 
+    /// Gerenderte Bildfolge eines Gegners (FX 02), z. B. `enemy_raider_walk_00`
+    /// bis `_07`. Geladen bis zum ersten fehlenden Bild; die Lückenlosigkeit
+    /// prüft `check_assets.py` gegen den Vertrag. Einmal je Name, nicht je
+    /// Gegner, denn eine Welle legt Dutzende an.
+    static func frames(_ kind: EnemyKind, _ motion: EnemyMotion) -> [SKTexture] {
+        let name = "\(enemyName(kind))_\(motion.rawValue)"
+        if let cached = frameCache[name] { return cached }
+        var textures: [SKTexture] = []
+        while textures.count < 100, let next = texture(named: name + String(format: "_%02d", textures.count)) {
+            textures.append(next)
+        }
+        frameCache[name] = textures
+        return textures
+    }
+
+    private static var frameCache: [String: [SKTexture]] = [:]
+
     static func enemyBody(_ kind: EnemyKind, field: CGFloat) -> SKNode {
         let height = BattleStyle.enemyHeight(kind) * field
-        if let texture = texture(named: enemyName(kind)) {
+        if let texture = frames(kind, .walk).first ?? texture(named: enemyName(kind)) {
             let sprite = SKSpriteNode(texture: texture)
             sprite.anchorPoint = CGPoint(x: 0.5, y: 0.1)
             sprite.size = CGSize(width: height, height: height)
@@ -82,6 +99,11 @@ enum BattleSprites {
         body.position = CGPoint(x: 0, y: height * 0.5)
         return body
     }
+}
+
+/// Bildfolgen eines Gegners; die Namen stehen im Asset-Vertrag.
+enum EnemyMotion: String, CaseIterable {
+    case walk, hit, die
 }
 
 /// Ein Gegner, in Ebenen gebaut, damit sich Bewegungen nicht gegenseitig
@@ -101,6 +123,15 @@ final class EnemyNode: SKNode {
     let height: CGFloat
     /// 1 = Blick nach rechts (so sind die Bilder gemalt), −1 nach links.
     var facing: CGFloat = 1
+    /// Bildfolgen (FX 02); leer, wenn die Art nur ein Standbild hat.
+    let walkFrames: [SKTexture]
+    let hitFrames: [SKTexture]
+    let dieFrames: [SKTexture]
+    /// Solange Treffer oder Sturz spielen, bestimmt der Director das Bild, nicht der Lauf.
+    private(set) var holdsFrame = false
+    /// Für die Darstellungstests: Nummer des gezeigten Laufbilds.
+    private(set) var walkIndex = 0
+    var hasFrames: Bool { !walkFrames.isEmpty }
     /// Effekt-Uhr des letzten Aufblitzens (Grenze je Gegner).
     var lastHit: Double = -.infinity
     private let shadow = SKSpriteNode()
@@ -119,6 +150,9 @@ final class EnemyNode: SKNode {
         enemyID = enemy.id
         kind = enemy.kind
         body = BattleSprites.enemyBody(enemy.kind, field: field)
+        walkFrames = BattleSprites.frames(enemy.kind, .walk)
+        hitFrames = BattleSprites.frames(enemy.kind, .hit)
+        dieFrames = BattleSprites.frames(enemy.kind, .die)
         height = BattleStyle.enemyHeight(enemy.kind) * field
         healthWidth = BattleStyle.healthWidth * field
         if let sprite = body as? SKSpriteNode {
@@ -189,6 +223,33 @@ final class EnemyNode: SKNode {
         motion.yScale = CGFloat(pose.scaleY)
         motion.zRotation = CGFloat(pose.tilt) * facing
         shadow.setScale(CGFloat(pose.shadow))
+    }
+
+    /// Laufbild aus der Strecke (`FxMath.walkFrame`); ohne Folge bleibt das Standbild.
+    func walk(distance: Double, phase: Double) {
+        guard hasFrames, !holdsFrame else { return }
+        let index = FxMath.walkFrame(distance: distance, phase: phase,
+                                     stride: FxStyle.frameStride, frames: walkFrames.count)
+        guard index != walkIndex else { return }
+        walkIndex = index
+        setTexture(walkFrames[index])
+    }
+
+    /// Treffer oder Sturz: zeigt ein Bild der Folge und hält es gegen den Lauf.
+    func hold(_ texture: SKTexture) {
+        holdsFrame = true
+        setTexture(texture)
+    }
+
+    /// Zurück zum Lauf, beim nächsten Bild der Szene.
+    func release() {
+        holdsFrame = false
+        if hasFrames { setTexture(walkFrames[walkIndex]) }
+    }
+
+    private func setTexture(_ texture: SKTexture) {
+        (body as? SKSpriteNode)?.texture = texture
+        flash?.texture = texture
     }
 
     var isSlowed: Bool { (body as? SKSpriteNode)?.colorBlendFactor ?? 0 > 0 }

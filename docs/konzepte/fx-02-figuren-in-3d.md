@@ -1,6 +1,6 @@
 # Konzept: Figuren mit echten Gliedmaßen (FX 02)
 
-Status: **[VORSCHLAG]** · Stand 26.10.2026 · Thread „Animationen und Effekte
+Status: **Weg A entschieden** (Steffen, 26.10.2026), Plünderer in Arbeit · Stand 26.10.2026 · Thread „Animationen und Effekte
 hochwertig machen", zusammen mit dem Grafik-Thread
 Grundlage: D-051 (3D-Modelle zu Sprite-Blättern), D-016 (Stylized 3D),
 [FX 01](fx-01-bewegung-und-effekte.md#stufe-2-echte-gliedmaßen-entschieden-3d-zu-sprite-blättern-d-051),
@@ -151,6 +151,36 @@ Mission 1 läuft überwiegend seitlich, darum erst eine Richtung, gespiegelt.
   55 fps (heute 59,7), längstes Bild unter 50 ms.
 - Sichtprüfung vor jeder Auslieferung: Bildschirmfotos aus dem Probelauf neben
   den gemalten Figuren.
+
+## Umsetzung Plünderer (26.10.2026)
+
+Steffen hat Weg A gewählt und den Einbau freigegeben, **ausgeliefert wird aber
+erst, wenn der Look an das Gemälde heranreicht** (Steffen, 26.10.2026, 19:57).
+
+- **Modell und Bilder:** `trellis.py` → `modell.glb` und je ein Modell für Keule
+  und Sack; `figur.py` mit `rig.json` (Gelenke, Grundhaltung, Licht, Kamera 25°
+  statt 35°, weil sonst die Kapuze das Gesicht verdeckt, Comic-Look `stil`);
+  `angleichen.py`; `folge.py` legt die Bilder mit **einem** Maßstab für alle 17
+  in den Atlas (`enemy_raider_walk_00` …). `check_assets.py` prüft Lücken,
+  Größe und den Fuß im ersten Bild jeder Folge.
+- **Darstellung** (Datenfluss wie FX 01, Simulation unberührt):
+
+| Baustein | Darf | Darf nicht |
+|---|---|---|
+| `FxMath.walkFrame` / `onceFrame` (rein) | Bildnummer aus Strecke bzw. Anteil | Uhr oder Zufall |
+| `BattleSprites.frames` | Folge aus dem Katalog laden, einmal je Name | aus dem Netz laden |
+| `EnemyNode.walk/hold/release` | Bild wechseln; während Treffer oder Sturz hält der Director das Bild | Zustand anfassen |
+| `BattleScene` | `framedGait` statt Hüpfen, sobald eine Folge da ist | |
+| `FxDirector` | Zucken (`flinches`) und Sturz (`falls`) als Folge; ohne Folge wie bisher | |
+
+- **Bedienung:** keine; nur Darstellung. Laufschritt 0,24 Felder (an der
+  Figur gemessen), Hüpfen auf ein Viertel, kein Vorneigen, weil die Figur
+  selbst vorgebeugt ist.
+- **Sicherheit:** Bilder liegen im App-Katalog, nichts wird geladen.
+- **Tests:** `FxMathTests` (Strecke, Bildrate, Takt, Ende), `BattleSpritesTests`
+  (Folgen da, gleich groß wie das Standbild, andere Gegner ohne),
+  `FxDirectorTests` (alle Laufbilder, Pause, Zucken und zurück, Sturz und weg),
+  E2E `EffectsE2ETests` (`flinches`, `falls`), `test_art.py` (Folge lückenlos).
 
 ## Offene Punkte
 

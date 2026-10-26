@@ -56,3 +56,8 @@ wesentlich besser aus"): `stil` in `rig.json` macht die Texturfarbe satter und
 heller, lässt einen Teil selbst leuchten (flächige Schatten), zeichnet mit einer
 dunklen Hülle Umriss und Innenkonturen, dazu Randlicht von hinten. Ergebnis:
 `art/fx-02/raider-comic-render.jpg`.
+
+**Bildfolgen im Atlas** (`enemy_raider_walk`, `enemy_raider_hit`,
+`enemy_raider_die`): `figur.py` mit 512 Pixeln, `angleichen.py` (Stärke 0,5) gegen
+`art/spielfeld/enemy_raider-frei.png`, dann `tools/figuren-3d/folge.py` (ein
+Maßstab für alle 17 Bilder, Fuß von `walk_00` auf dem Anker 0,1).

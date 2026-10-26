@@ -63,4 +63,21 @@ final class BattleSpritesTests: XCTestCase {
         }
         XCTAssertEqual(lines, 0)
     }
+
+    /// FX 02: Der Plünderer hat Laufen, Zucken und Sturz als Bildfolge, gleich
+    /// groß wie sein Standbild; die anderen Gegner bleiben beim Standbild.
+    func testRaiderHasFramesOthersKeepTheirPicture() throws {
+        XCTAssertEqual(BattleSprites.frames(.raider, .walk).count, 8)
+        XCTAssertEqual(BattleSprites.frames(.raider, .hit).count, 3)
+        XCTAssertEqual(BattleSprites.frames(.raider, .die).count, 6)
+        let still = try XCTUnwrap(BattleSprites.texture(named: BattleSprites.enemyName(.raider)))
+        for motion in EnemyMotion.allCases {
+            for texture in BattleSprites.frames(.raider, motion) {
+                XCTAssertEqual(texture.size(), still.size(), "\(motion)")
+            }
+        }
+        for kind in EnemyKind.allCases where kind != .raider {
+            XCTAssertTrue(BattleSprites.frames(kind, .walk).isEmpty, "\(kind)")
+        }
+    }
 }

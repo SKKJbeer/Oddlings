@@ -110,6 +110,25 @@ class AtlasPruefung(unittest.TestCase):
         open(os.path.join(self.w, "art/ENTSTEHUNG.md"), "a").write(" FLUX.1-dev")
         self.assertTrue(any("nicht-kommerziell" in z for z in self.fehler()))
 
+    def folge(self, anzahl):
+        v = dict(VERTRAG, assets=dict(VERTRAG["assets"], tower_x_walk={"folge": 3, "seiteZellen": 2, "anker": 0.0, "alpha": True}))
+        json.dump(v, open(os.path.join(self.w, "art/asset-vertrag.json"), "w"))
+        open(os.path.join(self.w, "art/ENTSTEHUNG.md"), "a").write(" `tower_x_walk`")
+        for i in anzahl:
+            self.lege(f"tower_x_walk_{i:02d}", lambda f: self.figur(20 * f))
+
+    def test_bildfolge_vollstaendig(self):
+        self.folge([0, 1, 2])
+        self.assertEqual(self.fehler(), [])
+
+    def test_bildfolge_mit_luecke(self):
+        self.folge([0, 2])
+        self.assertTrue(any("Folge verlangt" in z for z in self.fehler()), self.fehler())
+
+    def test_bildfolge_zu_lang(self):
+        self.folge([0, 1, 2, 3])
+        self.assertTrue(any("Folge verlangt" in z for z in self.fehler()), self.fehler())
+
     def test_zu_gross(self):
         import random
         r = random.Random(1)

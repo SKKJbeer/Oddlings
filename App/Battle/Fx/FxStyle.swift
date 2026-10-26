@@ -22,6 +22,25 @@ enum FxStyle {
         }
     }
 
+    /// Gangart mit Bildfolge (FX 02): Die Beine machen den Schritt, darum nur
+    /// noch ein Rest an Hüpfen und Wiegen, sonst hüpft die Figur doppelt.
+    static func framedGait(_ kind: EnemyKind) -> Gait {
+        var gait = gait(kind)
+        gait.stride = frameStride
+        gait.hop *= 0.25
+        gait.squash *= 0.3
+        gait.sway *= 0.3
+        gait.lean = 0
+        return gait
+    }
+
+    /// Strecke je Schritt in der Bildfolge, in Feldern. Gemessen an der
+    /// gerenderten Figur: Schrittweite des Beins bei 0,9 Feldern Größe.
+    static let frameStride: Double = 0.24
+    /// Dauer der Treffer- und der Sturzfolge.
+    static let hitFramesLife: TimeInterval = 0.24
+    static let deathFramesLife: TimeInterval = 0.5
+
     static let shadowAlpha: CGFloat = 0.45
     /// Blickrichtung: so weit voraus auf dem Weg nachsehen, und erst ab
     /// diesem Versatz umdrehen (Felder).

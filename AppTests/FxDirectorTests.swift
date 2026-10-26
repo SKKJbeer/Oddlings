@@ -273,4 +273,72 @@ final class FxDirectorTests: XCTestCase {
         XCTAssertNil(wall.parent, "danach weg")
     }
 
+    // MARK: Bildfolgen (FX 02)
+
+    /// Wartet, bis ein Plünderer läuft, und gibt ihn zurück.
+    private func walkingRaider(_ scene: BattleScene) throws -> EnemyNode {
+        scene.model.enqueue(.callNextWave)
+        for _ in 0..<5_000 {
+            scene.frame(after: frameTime)
+            if let raider = scene.enemyNodes.values.first(where: { $0.kind == .raider }) { return raider }
+        }
+        throw XCTSkip("keine Plünderer in der ersten Welle")
+    }
+
+    /// Der Plünderer setzt beim Laufen die Beine: Das Bild wechselt mit der
+    /// Strecke und läuft durch alle acht Bilder der Folge.
+    func testRaiderStepsThroughHisWalkFrames() throws {
+        let scene = scene(autoplay: false)
+        let raider = try walkingRaider(scene)
+        XCTAssertTrue(raider.hasFrames)
+        var seen = Set<Int>()
+        for _ in 0..<600 where raider.parent != nil {
+            scene.frame(after: frameTime)
+            seen.insert(raider.walkIndex)
+        }
+        XCTAssertEqual(seen, Set(0..<8), "alle Laufbilder")
+        let body = try XCTUnwrap(raider.body as? SKSpriteNode)
+        XCTAssertTrue(body.texture === raider.walkFrames[raider.walkIndex] || raider.holdsFrame)
+    }
+
+    /// Steht die Simulation (Pause), bleibt auch das Laufbild stehen.
+    func testRaiderFrameStandsStillWhenPaused() throws {
+        let scene = scene(autoplay: false)
+        let raider = try walkingRaider(scene)
+        scene.model.paused = true
+        let index = raider.walkIndex
+        run(scene, seconds: 1)
+        XCTAssertEqual(raider.walkIndex, index)
+    }
+
+    /// Ein Treffer spielt das Zucken und gibt das Bild danach an den Lauf zurück.
+    func testHitPlaysFlinchAndReturnsToWalking() throws {
+        let scene = scene(autoplay: false)
+        let raider = try walkingRaider(scene)
+        scene.fx.hit(raider)
+        scene.frame(after: frameTime)
+        XCTAssertTrue(raider.holdsFrame, "Zucken hält das Bild")
+        let body = try XCTUnwrap(raider.body as? SKSpriteNode)
+        XCTAssertTrue(raider.hitFrames.contains { $0 === body.texture })
+        XCTAssertEqual(scene.fx.stats.flinches, 1)
+        run(scene, seconds: FxStyle.hitFramesLife + 0.1)
+        XCTAssertFalse(raider.holdsFrame, "zurück zum Lauf")
+    }
+
+    /// Beim Tod kippt der Plünderer um (letztes Sturzbild), statt zu
+    /// zerplatzen, und verschwindet danach ganz.
+    func testDeathPlaysFallAndRemovesTheRaider() throws {
+        let scene = scene(autoplay: false)
+        let raider = try walkingRaider(scene)
+        raider.removeFromParent()
+        scene.effectLayer.addChild(raider)
+        scene.fx.death(raider, reward: 1)
+        run(scene, seconds: FxStyle.deathFramesLife * 0.95)
+        let body = try XCTUnwrap(raider.body as? SKSpriteNode)
+        XCTAssertTrue(body.texture === raider.dieFrames.last, "liegt am Ende")
+        XCTAssertEqual(raider.reaction.xScale, 1, accuracy: 0.001, "kein Stauchen")
+        XCTAssertEqual(scene.fx.stats.falls, 1)
+        run(scene, seconds: FxStyle.deathLife + 0.2)
+        XCTAssertNil(raider.parent, "danach weg")
+    }
 }
