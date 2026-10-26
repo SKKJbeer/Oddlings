@@ -42,7 +42,7 @@ struct StartView: View {
         case .map:
             CampaignMapView(flow: flow)
         case .battle(let node):
-            if let mission = flow.mission(for: node) {
+            if let mission = flow.battleMission(for: node) {
                 BattleView(mission: mission, mode: .play, onClose: { flow.showMap() }) { outcome, lives in
                     flow.finish(node, outcome: outcome, livesLeft: lives)
                 }

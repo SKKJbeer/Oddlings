@@ -123,6 +123,8 @@ final class BattleController {
     var abilityReady: Bool { hasAbility && abilityCharge >= 1 && !isFinished }
     var aiming: Bool { selection == .aiming }
     var abilityRadius: Double { model.sim.config.ability?.radius ?? 0 }
+    /// Welche Fähigkeit der Knopf trägt; das Volk bestimmt sie (R-4).
+    var abilityKind: AbilityKind { model.sim.config.ability?.kind ?? .stoneRain }
 
     /// Wohin ein Wurf auf `point` fiele, oder nil, wenn er zu weit neben dem
     /// Weg läge. Dieselbe Rechnung wie die Simulation, damit die Vorschau nie

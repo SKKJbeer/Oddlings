@@ -33,6 +33,27 @@ final class AppFlowTests: XCTestCase {
     }
 
     @MainActor
+    func testRaceIsSavedAndShapesTheBattle() throws {
+        let flow = try makeFlow()
+        let mission = try XCTUnwrap(flow.mission(for: "m1"))
+        XCTAssertNil(flow.race, "keine Vorauswahl")
+        XCTAssertTrue(flow.canChooseRace, "beide Völker von Anfang an (D-061)")
+        XCTAssertEqual(flow.battleMission(for: "m1"), mission, "ohne Volk die Missionsdatei")
+
+        flow.choose(.elves)
+        let elves = try XCTUnwrap(RaceTable.bundled()[.elves])
+        XCTAssertEqual(flow.race, .elves)
+        XCTAssertEqual(flow.battleMission(for: "m1"), mission.applying(elves))
+        XCTAssertEqual(flow.battleMission(for: "m1")?.ability?.kind, .moonMark)
+
+        let reopened = try makeFlow()
+        XCTAssertEqual(reopened.race, .elves, "das Volk steht in der Datei")
+        reopened.choose(.dwarves)
+        XCTAssertEqual(reopened.battleMission(for: "m1")?.ability?.kind, .bulwark)
+        XCTAssertEqual(try makeFlow().race, .dwarves)
+    }
+
+    @MainActor
     func testLossAndWeakerWinChangeNothing() throws {
         let flow = try makeFlow()
         flow.finish("m1", outcome: .won, livesLeft: try fullLives())

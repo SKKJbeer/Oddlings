@@ -61,6 +61,24 @@ enum BattleStyle {
     static let strikeShadow = SKColor(white: 0, alpha: 0.35)
     static let strikeDust = SKColor(red: 0.62, green: 0.55, blue: 0.45, alpha: 0.6)
     static let impactLife: TimeInterval = 0.5
+    /// Mondmal und Bollwerk (R-4), ebenso Platzhalter.
+    static let moonShadow = SKColor(red: 0.45, green: 0.50, blue: 0.95, alpha: 0.30)
+    static let moonGlow = SKColor(red: 0.70, green: 0.75, blue: 1.00, alpha: 0.55)
+    static let markTint = SKColor(red: 0.70, green: 0.75, blue: 1.00, alpha: 1)
+    static let wall = SKColor(red: 0.55, green: 0.42, blue: 0.30, alpha: 1)
+    static let wallEdge = SKColor(red: 0.25, green: 0.18, blue: 0.12, alpha: 1)
+    /// Mauer in Feldern: quer zum Weg so breit wie der Weg, dazu die Dicke.
+    static let wallLength: CGFloat = 1.1
+    static let wallThickness: CGFloat = 0.28
+    /// So weit vor und hinter der Mauer wird die Wegrichtung abgelesen.
+    static let wallProbe: Double = 0.05
+    static func abilitySymbol(_ kind: AbilityKind) -> String {
+        switch kind {
+        case .stoneRain: "circle.hexagongrid.circle.fill"
+        case .bulwark: "shield.lefthalf.filled"
+        case .moonMark: "moon.stars.fill"
+        }
+    }
     static let hitFlash: TimeInterval = 0.06
     static let deathLife: TimeInterval = 0.30
     static let floatLife: TimeInterval = 0.70

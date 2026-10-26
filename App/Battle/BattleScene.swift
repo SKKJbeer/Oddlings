@@ -272,10 +272,19 @@ final class BattleScene: SKScene {
             guard let position = towerNodes[id]?.position else { return }
             float("+\(refund)", at: position, color: BattleStyle.gold)
         case .abilityCast(let center, let impactTick):
+            // Das Bollwerk steht sofort; es zeigt sich mit `barrierRaised`.
+            guard let ability = model.sim.config.ability, ability.kind != .bulwark else { return }
             let seconds = Double(impactTick - model.state.tick) / Double(model.sim.config.simulation.ticksPerSecond)
-            strikeShadow(at: toScene(center), radius: model.sim.config.ability?.radius ?? 0, until: seconds)
+            strikeShadow(at: toScene(center), radius: ability.radius ?? 0, until: seconds,
+                         color: ability.kind == .moonMark ? BattleStyle.moonShadow : BattleStyle.strikeShadow)
         case .abilityImpact(let center, _):
-            strikeDust(at: toScene(center), radius: model.sim.config.ability?.radius ?? 0)
+            guard let ability = model.sim.config.ability else { return }
+            strikeDust(at: toScene(center), radius: ability.radius ?? 0,
+                       color: ability.kind == .moonMark ? BattleStyle.moonGlow : BattleStyle.strikeDust)
+        case .barrierRaised(let distance, _):
+            raiseWall(at: distance)
+        case .barrierFell:
+            effectLayer.childNode(withName: Self.wallName)?.removeFromParent()
         case .towerBuilt, .enemySpawned, .enemySlowed:
             // Bauen zeigt sich über den Zustand (Aufbau-Animation in `sync`),
             // Verlangsamung als Markierung am Gegner.
@@ -334,9 +343,9 @@ final class BattleScene: SKScene {
     }
 
     /// Der Schatten wächst bis zum Einschlag: Er sagt, wo und wann es trifft.
-    private func strikeShadow(at center: CGPoint, radius: Double, until seconds: TimeInterval) {
+    private func strikeShadow(at center: CGPoint, radius: Double, until seconds: TimeInterval, color: SKColor) {
         let node = SKShapeNode(circleOfRadius: CGFloat(radius) * field)
-        node.fillColor = BattleStyle.strikeShadow
+        node.fillColor = color
         node.strokeColor = .clear
         node.position = center
         node.setScale(0.2)
@@ -344,13 +353,36 @@ final class BattleScene: SKScene {
         node.run(.sequence([.scale(to: 1, duration: max(seconds, 0)), .removeFromParent()]))
     }
 
-    private func strikeDust(at center: CGPoint, radius: Double) {
+    private func strikeDust(at center: CGPoint, radius: Double, color: SKColor) {
         let node = SKShapeNode(circleOfRadius: CGFloat(radius) * field)
-        node.fillColor = BattleStyle.strikeDust
+        node.fillColor = color
         node.strokeColor = .clear
         node.position = center
         node.run(.scale(to: 1.3, duration: BattleStyle.impactLife))
         fade(node, after: BattleStyle.impactLife)
+    }
+
+    static let wallName = "barrier"
+
+    /// Mauer quer zum Weg. Die Richtung kommt aus zwei Punkten kurz davor und
+    /// dahinter, damit sie auch an einer Kurve stimmt. Eine zur Zeit (Regel).
+    private func raiseWall(at distance: Double) {
+        effectLayer.childNode(withName: Self.wallName)?.removeFromParent()
+        let path = model.sim.map.path
+        let before = toScene(path.position(at: distance - BattleStyle.wallProbe))
+        let after = toScene(path.position(at: distance + BattleStyle.wallProbe))
+        let node = SKShapeNode(rectOf: CGSize(width: BattleStyle.wallThickness * field,
+                                              height: BattleStyle.wallLength * field),
+                               cornerRadius: field * 0.05)
+        node.name = Self.wallName
+        node.fillColor = BattleStyle.wall
+        node.strokeColor = BattleStyle.wallEdge
+        node.lineWidth = max(1.5, field * 0.04)
+        node.position = toScene(path.position(at: distance))
+        node.zRotation = atan2(after.y - before.y, after.x - before.x)
+        node.setScale(0.3)
+        effectLayer.addChild(node)
+        node.run(.scale(to: 1, duration: BattleStyle.pulseLife))
     }
 
     private func pop(at position: CGPoint) {

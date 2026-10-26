@@ -2,11 +2,11 @@ import Foundation
 
 /// Eine verletzte Regel, mit dem Ort in der Datei. Der Ort ist der Sinn der
 /// Sache: Wer Balancewerte ändert, soll nicht raten müssen, welche Zahl es war.
-public struct ConfigIssue: Equatable, Sendable, CustomStringConvertible {
+public struct ConfigIssue: Hashable, Sendable, CustomStringConvertible {
     public var field: String
     public var rule: Rule
 
-    public enum Rule: Equatable, Sendable {
+    public enum Rule: Hashable, Sendable {
         case mustBePositive
         case mustNotBeNegative
         case mustBeFraction            // in (0, 1]
@@ -20,6 +20,10 @@ public struct ConfigIssue: Equatable, Sendable, CustomStringConvertible {
         case emptyWave
         case starsOutOfOrder           // 0 < two ≤ three ≤ fortressLives
         case delayNotBelowCooldown
+        case durationAboveCooldown
+        case mustBeAboveOne
+        case missingAbilityValue
+        case missingRace
     }
 
     public init(field: String, rule: Rule) {
@@ -41,8 +45,54 @@ public struct ConfigIssue: Equatable, Sendable, CustomStringConvertible {
         case .noWaves: "\(field) braucht mindestens eine Welle"
         case .emptyWave: "\(field) braucht mindestens eine Gruppe"
         case .delayNotBelowCooldown: "\(field) muss kleiner als cooldown sein"
+        case .durationAboveCooldown: "\(field) darf nicht länger als cooldown sein"
+        case .mustBeAboveOne: "\(field) muss größer als 1 sein"
+        case .missingAbilityValue: "\(field) fehlt, die Art der Fähigkeit braucht es"
+        case .missingRace: "\(field) fehlt"
         case .starsOutOfOrder: "\(field) braucht 0 < two ≤ three ≤ fortressLives"
         }
+    }
+}
+
+extension AbilityConfig {
+    /// Die Felder, die `kind` braucht, und keine Grenze mehr: Ein überzähliges
+    /// Feld schadet nicht, ein fehlendes hielte die Simulation an einer Stelle an,
+    /// die niemand sucht.
+    public func issues(field prefix: String) -> [ConfigIssue] {
+        var found: [ConfigIssue] = []
+        func required(_ value: Double?, _ name: String, _ check: (Double) -> ConfigIssue.Rule?) {
+            let field = "\(prefix).\(name)"
+            guard let value else { return found.append(.init(field: field, rule: .missingAbilityValue)) }
+            if let rule = check(value) { found.append(.init(field: field, rule: rule)) }
+        }
+        let positive: (Double) -> ConfigIssue.Rule? = { $0 > 0 ? nil : .mustBePositive }
+        let nonNegative: (Double) -> ConfigIssue.Rule? = { $0 >= 0 ? nil : .mustNotBeNegative }
+        // Sonst läge die Wirkung nach der nächsten Bereitschaft, und ein zweiter
+        // Wurf überschriebe den ersten, bevor er trifft.
+        let beforeCooldown: (Double) -> ConfigIssue.Rule? = { [cooldown] value in
+            !(value >= 0) ? .mustNotBeNegative : (value < cooldown ? nil : .delayNotBelowCooldown)
+        }
+
+        if !(cooldown > 0) { found.append(.init(field: "\(prefix).cooldown", rule: .mustBePositive)) }
+        if !(snapDistance >= 0) { found.append(.init(field: "\(prefix).snapDistance", rule: .mustNotBeNegative)) }
+        switch kind {
+        case .stoneRain:
+            required(radius, "radius", positive)
+            required(damage, "damage", nonNegative)
+            required(delay, "delay", beforeCooldown)
+            required(stunDuration, "stunDuration", nonNegative)
+        case .bulwark:
+            // Eine Mauer zur Zeit: Die nächste darf erst stehen, wenn die alte fällt.
+            required(duration, "duration") { [cooldown] value in
+                !(value > 0) ? .mustBePositive : (value <= cooldown ? nil : .durationAboveCooldown)
+            }
+        case .moonMark:
+            required(radius, "radius", positive)
+            required(delay, "delay", beforeCooldown)
+            required(duration, "duration", positive)
+            required(damageFactor, "damageFactor") { $0 > 1 ? nil : .mustBeAboveOne }
+        }
+        return found
     }
 }
 
@@ -134,19 +184,7 @@ extension BalanceConfig {
             positive(Double(enemy.leakDamage), "\(field).leakDamage")
         }
 
-        if let ability {
-            positive(ability.radius, "ability.radius")
-            nonNegative(ability.damage, "ability.damage")
-            nonNegative(ability.delay, "ability.delay")
-            nonNegative(ability.stunDuration, "ability.stunDuration")
-            positive(ability.cooldown, "ability.cooldown")
-            nonNegative(ability.snapDistance, "ability.snapDistance")
-            // Sonst läge der Einschlag nach der nächsten Bereitschaft, und ein
-            // zweiter Wurf überschriebe den ersten, bevor er trifft.
-            if !(ability.delay < ability.cooldown) {
-                found.append(.init(field: "ability.delay", rule: .delayNotBelowCooldown))
-            }
-        }
+        if let ability { found += ability.issues(field: "ability") }
 
         if waves.isEmpty { found.append(.init(field: "waves", rule: .noWaves)) }
         for (w, wave) in waves.enumerated() {

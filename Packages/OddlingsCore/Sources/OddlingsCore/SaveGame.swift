@@ -1,8 +1,8 @@
 import Foundation
 
-/// Startvölker (03). Im Speicherstand schon vorgesehen, damit R-4 kein neues
-/// Schema braucht; wirken tun sie erst mit R-4.
-public enum Race: String, Codable, CaseIterable, Sendable {
+/// Startvölker (03). Seit 0.7.0 im Speicherstand, seit R-4 wirksam; ihre Werte
+/// stehen in `races.json` (`RaceTable`).
+public enum Race: String, Codable, CaseIterable, CodingKeyRepresentable, Sendable {
     case dwarves, elves
 }
 

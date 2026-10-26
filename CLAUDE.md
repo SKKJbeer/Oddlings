@@ -15,7 +15,7 @@ Sieg, Determinismus, Balancetests). Die App zeigt die Simulation
 Tippen, Kopfleiste, Ergebnis und Neustart). UI-01 (0.6.0) bringt die Oberfläche
 nach Entwurf: Kreismenü, Tafeln, Haptik, Schriften (D-031, D-032). Spielrahmen vorgezogen
 (D-060): 0.7.0 bringt Kampagnenkarte Region 1, Sterne, Speicherstand und Einstellungen
-([Konzept](docs/konzepte/r-spielrahmen.md)); 0.8.0 bringt die Festungsfähigkeit Steinregen ([Konzept](docs/konzepte/r-3-steinregen.md)); danach R-4 Völker. Als Nächstes WP-15 (erster Spieltest). Version und Bauten: [CHANGELOG.md](CHANGELOG.md).
+([Konzept](docs/konzepte/r-spielrahmen.md)); 0.8.0 bringt die Festungsfähigkeit Steinregen ([Konzept](docs/konzepte/r-3-steinregen.md)), 0.9.0 die Völkerwahl Zwerge/Elfen mit Bollwerk und Mondmal ([Konzept](docs/konzepte/r-4-voelker.md)); damit ist der vorgezogene Spielrahmen R-1 bis R-4 da. Als Nächstes WP-15 (erster Spieltest). Version und Bauten: [CHANGELOG.md](CHANGELOG.md).
 Projekt erzeugen: `xcodegen generate` (Xcode-Projekt ist nicht eingecheckt).
 Aufs Gerät: `.github/workflows/testflight.yml` (bei App-Änderungen auf main automatisch),
 Hilfsskript `scripts/apple.py`. Ein Bau ist erst verfügbar, wenn Apple ihn als VALID meldet.
