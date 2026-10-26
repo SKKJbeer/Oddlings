@@ -61,7 +61,7 @@ Ein Rollenspiel fühlt sich durch drei Dinge so an: eine eigene Figur, sichtbare
 Wachsen und Entscheidungen, die die Figur prägen. Die Leitplanke aus
 [05](../game-design/05-campaign-and-progression.md#fortschritt) („keine dauerhaften
 Werteboni, keine Erfahrungspunkte“) steht dem dritten Punkt im Weg, wenn Wachsen
-Stärke heißt. Drei Möglichkeiten **[OFFEN, Entscheidungskarte 3]**:
+Stärke heißt. Drei Möglichkeiten; **[ENTSCHIEDEN]** Steffen, 26.10.2026: B, Rang mit Talentwahl ohne Mehrkraft.
 
 | | Was der Spieler erlebt | Balance | Aufwand |
 |---|---|---|---|
@@ -122,5 +122,5 @@ PR legt nur Volk und Name an, das Speicherformat lässt Platz für Rang und Tale
 1. ~~Was gehört zum Aufbau~~ **[ENTSCHIEDEN]** Steffen, 26.10.2026: Volk, Name und Porträt.
 2. Wechsel, solange es keine Währung gibt: gar nicht (Empfehlung, wie gewünscht
    „erstmal gesetzt“), oder kostenlos in den Einstellungen für die Testphase.
-3. Wie rollenspielartig: Rang und Kosmetik, Rang mit Talentwahl ohne Mehrkraft
-   (Empfehlung) oder Stufen mit Werteboni (siehe [RPG-Anmutung](#rpg-anmutung)).
+3. ~~Wie rollenspielartig~~ **[ENTSCHIEDEN]** Steffen, 26.10.2026: Rang mit
+   Talentwahl ohne Mehrkraft (siehe [RPG-Anmutung](#rpg-anmutung)), als Paket R-6.
