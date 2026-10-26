@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.9.0 – 26.10.2026 (Völkerwahl Zwerge und Elfen, R-4)
+## 0.9.0 – 26.10.2026 (Völkerwahl Zwerge und Elfen, R-4), Bau 25 (VALID)
 
 **Neu**
 - Auf der Missionstafel der Karte stehen Zwerge und Elfen über „Starten“. Ohne

@@ -5,7 +5,7 @@ ergänzt). Die Reihenfolge und Abhängigkeiten stehen in der
 [Roadmap](roadmap.md), die Pakete im [Backlog](backlog.md), offene Fragen im
 [Register](offene-fragen.md).
 
-**Stand: 25.10.2026, 18:35** · Phase 1: neue Oberfläche wird eingebaut, danach Spieltest. Hauptmenü, Weltkarte und Völker vorgezogen (D-060)
+**Stand: 26.10.2026, 04:45** · Phase 1 mit vorgezogenem Spielrahmen (D-060) fertig: Hauptmenü, Kampagnenkarte, Steinregen und Völkerwahl sind in TestFlight. Als Nächstes der Spieltest
 
 ## Fertig
 
@@ -27,12 +27,16 @@ ergänzt). Die Reihenfolge und Abhängigkeiten stehen in der
   Festungsfähigkeit und Völker (D-025), Zwergenbank für alle (D-026), Region 1 mit
   sieben Haupt- und zwei Nebenmissionen (D-027). Balance-Labor eingeplant (D-028).
 - Bauen bei laufender Mission entschieden (D-019).
+- **Spielrahmen (D-060) in TestFlight**: Hauptmenü, Kampagnenkarte Region 1, Sterne,
+  Speicherstand und Einstellungen (0.7.0, R-1/R-2), Festungsfähigkeit Steinregen
+  (0.8.0, R-3, Bau 24), Völkerwahl Zwerge mit Bollwerk und Elfen mit Mondmal
+  (0.9.0, R-4, **Bau 25 VALID**). Spielbar bleibt nur Mission 1 (D-061).
 
 ## Läuft
 
 | Thread | Woran | Nächster Schritt |
 |---|---|---|
-| Designstand und MVP-Plan (Code) | Neue Oberfläche für Mission 1, dann Hauptmenü und Speicherstand (R-1) | Bau mit neuer Oberfläche für den Spieltest |
+| Designstand und MVP-Plan (Code) | Spielrahmen R-1 bis R-4 ist ausgeliefert | Spieltest WP-15 begleiten, danach Phase 2 |
 | Spieloberfläche und Menüs | Einbau der Oberfläche für Mission 1; Entwürfe für Hauptmenü, Kampagnenkarte, Völkerwahl | Entwürfe vor R-1, R-2, R-4 |
 | AAA-Grafik | Erste Grafik ist im Spiel (0.5.2) | Menühintergrund, Karte Flüsterwald, Wappen und Porträts |
 | Animationen und Effekte | Effekt-Uhr (D-050), Ansatz für Laufzyklen (D-051, liegt dir vor) | Steinregen, Volksfähigkeiten, Kartenübergänge |
@@ -44,10 +48,7 @@ ergänzt). Die Reihenfolge und Abhängigkeiten stehen in der
 2. **Spieltest mit drei Personen** (WP-15) auf diesem Bau, mit dem
    [Beobachtungsbogen](playtests/beobachtungsbogen.md). Er prüft Mission 1 und wartet
    nicht auf Menü und Karte.
-3. **Spielrahmen** ([Roadmap](roadmap.md#vorgezogen-spielrahmen-d-060)): Hauptmenü mit
-   Speicherstand (R-1) und Steinregen (R-3) parallel, dann die Kampagnenkarte
-   Region 1 (R-2), dann die Völkerwahl (R-4).
-4. Danach der Rest von Phase 2: Zwergenbank, Aufwertungen, Ton.
+3. Danach der Rest von Phase 2: Zwergenbank, Aufwertungen, Ton.
 
 ## Wartet auf Steffen
 
@@ -55,4 +56,5 @@ ergänzt). Die Reihenfolge und Abhängigkeiten stehen in der
 |---|---|
 | Spieltest durchführen, sobald der Bau mit neuer Oberfläche da ist | WP-15 |
 | Ansatz für echte Laufzyklen (D-051) | Animationen und Effekte |
+| Passiver Zug der Zwerge ohne Bank (umgesetzt: vorerst keiner) | R-4 |
 | Ohne Eile: Messung des Spikes auf dem iPhone | WP-01 |
