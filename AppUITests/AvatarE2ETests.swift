@@ -56,7 +56,10 @@ final class AvatarE2ETests: XCTestCase {
         e2e.app.terminate()
         let again = try E2EApp(storage: "avatar", fresh: false)
         let badge = again.app.descendants(matching: .any)["menu.avatar"]
-        XCTAssertTrue(badge.waitForExistence(timeout: 15), "Avatarschild im Hauptmenü")
+        XCTAssertTrue(again.app.buttons["menu.play"].waitForExistence(timeout: 15))
+        again.screenshot("7-hauptmenue-avatar", in: self)
+        if !badge.waitForExistence(timeout: 5) { print(again.app.debugDescription) }
+        XCTAssertTrue(badge.exists, "Avatarschild im Hauptmenü")
         XCTAssertEqual(badge.label, "Lyra, Elfen")
         tapPlay(again)
         XCTAssertTrue(again.mapStart.waitForExistence(timeout: 5), "kein zweiter Aufbau")
