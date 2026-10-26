@@ -11,6 +11,18 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.10.3 – 26.10.2026 (Wackliger Fähigkeitstest behoben)
+
+**Behoben**
+- `AbilityE2ETests.testCastOnPathChargesAndComesBack` schlug auf PR #42 und #43 je
+  einmal fehl. Ursache: Der Test lief im zehnfachen Tempo, „lädt“ hielt damit nur
+  3,5 s. Im fehlgeschlagenen Lauf brauchte der Test 52 statt 17 s, XCTest wartete
+  nach einem Tippen lange auf Ruhe in der App, und als er ablas, war der Knopf
+  schon wieder „bereit“. Neuer Testschalter `--e2e-abklingzeit` (nur DEBUG): Der
+  Test wirkt bei langer Abklingzeit und ohne Welle. Dass die Fähigkeit wiederkommt,
+  prüft `BattleControllerTests` ohne Uhr. Die Völkerprobe nutzt den Schalter auch.
+- Die CI legt das ganze Testprotokoll mit Zeitstempeln ins Artefakt `simulator-probe`.
+
 ## 0.10.2 – 26.10.2026 (Grafik 04: gemalte Kampagnenkarte), Bau 29 (VALID)
 
 **Neu**

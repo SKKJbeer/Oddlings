@@ -32,6 +32,7 @@ struct BattleView: View {
         var config = config
         #if DEBUG
         if let delay = Self.testFirstWaveDelay { config.mission.firstWaveDelay = delay }
+        if let cooldown = Self.testCooldown { config.ability?.cooldown = cooldown }
         #endif
         let model = BattleModel(config: config, seed: 1, autoplay: autoplay)
         #if DEBUG
@@ -99,6 +100,12 @@ struct BattleView: View {
     /// schneller ist als die Wartezeit der Mission (Beute wäre Gold, ein Leck
     /// eine Niederlage).
     private static var testFirstWaveDelay: Double? { positiveArgument(after: "--e2e-erste-welle") }
+
+    /// `--e2e-abklingzeit N`: Der Zustand „lädt" dauert sonst nur die
+    /// Abklingzeit lang. Wartet XCTest nach einem Tippen auf Ruhe in der App,
+    /// kann er auf einem langsamen Läufer vorbei sein, bevor der Test ihn
+    /// abliest (so auf PR #42 und #43 gesehen: der Test brauchte 52 statt 17 s).
+    private static var testCooldown: Double? { positiveArgument(after: "--e2e-abklingzeit") }
 
     private static func positiveArgument(after flag: String) -> Double? {
         let arguments = ProcessInfo.processInfo.arguments

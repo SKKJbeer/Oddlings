@@ -25,6 +25,11 @@ struct E2EApp {
     /// Für `--e2e-erste-welle`: weit länger, als ein Test dauert.
     static let wavesOnHold = "600"
 
+    /// Für `--e2e-abklingzeit`: Nach dem Wirken bleibt die Fähigkeit länger
+    /// „lädt", als ein Test dauert. Dass sie wiederkommt, prüft
+    /// `BattleControllerTests` ohne Uhr.
+    static let abilityOnHold = "600"
+
     /// Jeder Test spielt mit eigenem Spielstand im temporären Ordner, damit ein
     /// Sieg aus einem Test den nächsten nicht verändert. `fresh: false` startet
     /// auf dem Stand, den ein früherer Start mit derselben `storage` schrieb.

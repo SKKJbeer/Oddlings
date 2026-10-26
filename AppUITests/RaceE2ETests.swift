@@ -32,7 +32,8 @@ final class RaceE2ETests: XCTestCase {
         XCTAssertEqual(e2e.ability.label, "Mondmal")
 
         e2e.app.terminate()
-        let again = try E2EApp(["--e2e-erste-welle", E2EApp.wavesOnHold], storage: "volk", fresh: false)
+        let again = try E2EApp(["--e2e-erste-welle", E2EApp.wavesOnHold, "--e2e-abklingzeit", E2EApp.abilityOnHold],
+                               storage: "volk", fresh: false)
         openMap(again)
         XCTAssertTrue(again.race(.elves).isSelected, "die Wahl steht im Spielstand")
         again.race(.dwarves).tap()
