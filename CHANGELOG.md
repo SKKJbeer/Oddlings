@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.10.0 – 26.10.2026 (Bewegung und Effekte, FX 01)
+## 0.10.0 – 26.10.2026 (Bewegung und Effekte, FX 01), Bau 27 (VALID)
 
 **Neu**
 - Gegner laufen: Hüpfen im Schritttakt je Gegnerart, Stauchen beim Aufsetzen,
@@ -42,10 +42,9 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   2×: Obergrenze, keine `SKShapeNode`, Rechenzeit je Bild).
 - `AppUITests/EffectsE2ETests`: alle Effektarten laufen in der echten App.
 - CI-Probelauf misst die Bildrate im Simulator und wird unter 30 Bildern je
-  Sekunde rot. Gemessen: 49 Bilder je Sekunde im Mittel (Simulator ohne
-  Grafikkarte). Ein einzelner Haker von 842 ms kam vermutlich vom ersten Zeichnen einer
-  Textur (nicht belegt); die Effekttexturen werden jetzt beim Anlegen der Szene
-  vorab gezeichnet, der nächste Probelauf zeigt, ob es reicht.
+  Sekunde rot. Gemessen im Simulator ohne Grafikkarte: zuerst 49 Bilder je Sekunde
+  mit einem Haker von 842 ms; seit die Effekttexturen beim Anlegen der Szene vorab
+  gezeichnet werden, 59,7 Bilder je Sekunde, längstes Bild 37,9 ms.
 
 ## 0.9.1 – 26.10.2026 (Grafik 03: Titelbild und Oberflächensymbole)
 

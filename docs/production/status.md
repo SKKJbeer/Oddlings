@@ -39,7 +39,7 @@ ergänzt). Die Reihenfolge und Abhängigkeiten stehen in der
 | Designstand und MVP-Plan (Code) | Spielrahmen R-1 bis R-4 ist ausgeliefert | Spieltest WP-15 begleiten, danach Phase 2 |
 | Spieloberfläche und Menüs | Einbau der Oberfläche für Mission 1; Entwürfe für Hauptmenü, Kampagnenkarte, Völkerwahl | Entwürfe vor R-1, R-2, R-4 |
 | AAA-Grafik | Erste Grafik ist im Spiel (0.5.2) | Menühintergrund, Karte Flüsterwald, Wappen und Porträts |
-| Animationen und Effekte | Effekt-Uhr (D-050), Ansatz für Laufzyklen (D-051, liegt dir vor) | Steinregen, Volksfähigkeiten, Kartenübergänge |
+| Animationen und Effekte | FX 01 in TestFlight (0.10.0, Bau 27): Laufen, Treffer, Tod, Turmangriffe, Fähigkeiten | FX 02: Gegner als 3D-Figuren mit Gliedmaßen (D-051), [Konzept](../konzepte/fx-02-figuren-in-3d.md) |
 | Projektplanung | Roadmap, Register, dieses Dokument | Phase 2 schneiden, sobald der Spieltest ausgewertet ist |
 
 ## Als Nächstes
@@ -55,6 +55,6 @@ ergänzt). Die Reihenfolge und Abhängigkeiten stehen in der
 | Frage | Woher |
 |---|---|
 | Spieltest durchführen, sobald der Bau mit neuer Oberfläche da ist | WP-15 |
-| Ansatz für echte Laufzyklen (D-051) | Animationen und Effekte |
+| Herkunft der 3D-Modelle für FX 02 (Entscheidungskarte) | Animationen und Effekte |
 | Passiver Zug der Zwerge ohne Bank (umgesetzt: vorerst keiner) | R-4 |
 | Ohne Eile: Messung des Spikes auf dem iPhone | WP-01 |
