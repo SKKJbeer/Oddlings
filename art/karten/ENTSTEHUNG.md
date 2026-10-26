@@ -15,3 +15,26 @@ Der Weg ist nicht frei gemalt, sondern liegt auf der Geometrie aus
 **Verworfen:** `verworfen-frei-gemalt.png`, Bild-zu-Bild mit Stärke 0,7 direkt
 auf `mission01-vorlage.png` (`kartenvorlage.py`): Der Weg wurde zur
 Schlangenlinie und bekam Steine, die Oberfläche wirkte flach.
+
+## `map_region01` (Kampagnenkarte Region 1, Flüsterwald)
+
+Collage aus gemalten Einzelteilen, nicht als Ganzes gemalt. Die App setzt die
+Knoten an feste Anteile der Fläche (`region-01.json`), und Bild-zu-Bild über
+eine Vorlage hat die Lichtungen nie unter die Knoten gelegt (gemessen 26.10.2026:
+Stärke 0,3 bis 0,6, 4 bis 16 Schritte, mehrere leichte Durchgänge). Hier liegen
+Lichtungen, Wege, Sumpf, Ruinen und die Bosshöhle pixelgenau, nur die Teile sind
+gemalt. Alle Bilder FLUX.1-schnell (Apache 2.0), euler, 4 Schritte, unter
+`region01/`.
+
+1. **Teile** (Stil-Teil `stylized 3D cartoon game asset, hand-painted textures, soft warm sunlight from top left, seen from directly above, top-down view`):
+   - `blatt-baeume.jpg`, Seed 21, 768 × 768: `sprite sheet of six separate round fantasy forest tree canopies, lush deep green leaves with golden sunlit highlights, each tree isolated and evenly spaced on a plain white background, <Stil>, no ground, no text`. Zerlegt mit `zerlegen.py` (9 Bäume), dann je Baum Farbton im Bereich 25–75 (HSV, 0–255) um +14 Richtung Grün, Helligkeit × 0,82, Sättigung × 0,85.
+   - `blatt-ruinen.jpg`, Seed 24, 768 × 768: `sprite sheet of six separate crumbling grey stone ruin pieces, broken walls, fallen pillars, mossy blocks, each isolated on a plain white background, <Stil>, no text`. Zerlegt (7 Teile).
+   - `hoehle-rohbild.jpg`, Seed 25, 512 × 512: `a dark jagged rocky goblin lair entrance with spikes, bones and two burning torches, isolated on a plain white background, <Stil>, no text`. `freistellen.py … isnet-general-use 0`.
+   - `textur-gras-rohbild.jpg`, Seed 22, 512: `seamless ground texture of a lush fairy forest meadow, short grass with tiny flowers and clover, <Stil>, uniform pattern filling the whole image, no objects, no paths`. Ausschnitt (170, 170, 512, 512), oben links liegt ein Lichtschein.
+   - `textur-weg-rohbild.jpg`, Seed 23, 512: `seamless ground texture of a packed brown dirt forest path with small pebbles, <Stil>, uniform pattern filling the whole image, no objects`. Ausschnitt (120, 40, 380, 470) ohne die Pflanzen am Rand.
+   - Teich: aus `teich-quelle-verworfene-karte.jpg` (Seed 11, Stärke 0,5 über die Vorlage von `regionsvorlage.py`, Stand 0.9.1), freigestellt mit isnet ohne Kontur. Der einzige Teil aus dem verworfenen Weg; er wird in der Karte gedreht und skaliert.
+2. **Zusammensetzen:** `regionscollage.py region-01.json <teile> aus.png 2400` (Zufall mit festem Seed 5), dann `atlas.py aus.png map_region01 2400x1500px voll _ App/Assets.xcassets/Maps`.
+
+**Verworfen:** `verworfen-blatt-teiche.jpg` (Seed 26): eckige Kästen mit
+Plastikrand, auf der Karte wie Schachteln. Blätter in 1024 × 1024 liefen auf dem
+Container über den Speicher (sd-cli, 14 GB), deshalb 768.
