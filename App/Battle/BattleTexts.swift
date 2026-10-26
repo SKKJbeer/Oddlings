@@ -26,7 +26,13 @@ enum BattleTexts {
     }
 
     static let build = "Bauen"
-    static let ability = "Steinregen"
+    static func ability(_ kind: AbilityKind) -> String {
+        switch kind {
+        case .stoneRain: "Steinregen"
+        case .bulwark: "Bollwerk"
+        case .moonMark: "Mondmal"
+        }
+    }
 
     /// Für VoiceOver und die Oberflächentests: Der Knopf sagt, was er gerade kann.
     static func abilityState(ready: Bool, aiming: Bool, charge: Double) -> String {

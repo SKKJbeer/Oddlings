@@ -338,6 +338,20 @@ final class BattleControllerTests: XCTestCase {
         XCTAssertNil(controller.snappedTarget(for: offPath))
     }
 
+    /// Der Knopf trägt die Fähigkeit des Volks (R-4), ohne Volk den Steinregen.
+    func testAbilityKindFollowsTheRace() throws {
+        XCTAssertEqual(controller.abilityKind, .stoneRain)
+        XCTAssertEqual(BattleTexts.ability(controller.abilityKind), "Steinregen")
+        let races = try RaceTable.bundled()
+        for (race, kind, name) in [(Race.dwarves, AbilityKind.bulwark, "Bollwerk"), (.elves, .moonMark, "Mondmal")] {
+            let raced = BattleModel(config: config.applying(try XCTUnwrap(races[race])), seed: 1, autoplay: false)
+            let control = BattleController(model: raced, interactive: true)
+            XCTAssertEqual(control.abilityKind, kind)
+            XCTAssertEqual(BattleTexts.ability(control.abilityKind), name)
+            XCTAssertTrue(control.abilityReady, "\(race): bereit ab Beginn")
+        }
+    }
+
     func testWatchModeHasNoAbility() {
         let watch = BattleController(model: model, interactive: false)
         XCTAssertFalse(watch.hasAbility)

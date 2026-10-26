@@ -54,18 +54,57 @@ public struct Enemy: Codable, Equatable, Sendable {
     public var slow: SlowEffect? = nil
     /// Erster Tick, in dem der Gegner nach Steinregen wieder läuft.
     public var stunUntilTick: Int? = nil
+    /// Mondmal: nimmt mehr Schaden; nil, sobald es abgelaufen ist.
+    public var vulnerable: VulnerableEffect? = nil
+
+    /// Öffentlich für die Darstellungstests der App; die Simulation legt
+    /// Gegner sonst selbst an.
+    public init(id: Int, kind: EnemyKind, hp: Double, maxHP: Double, distance: Double,
+                slow: SlowEffect? = nil, stunUntilTick: Int? = nil, vulnerable: VulnerableEffect? = nil) {
+        self.id = id
+        self.kind = kind
+        self.hp = hp
+        self.maxHP = maxHP
+        self.distance = distance
+        self.slow = slow
+        self.stunUntilTick = stunUntilTick
+        self.vulnerable = vulnerable
+    }
+}
+
+/// Verwundbar durch Mondmal. Wie die Verlangsamung: kein Stapeln, es gilt der
+/// stärkste aktive Faktor. `untilTick` ist der erste Tick ohne Wirkung.
+public struct VulnerableEffect: Codable, Equatable, Sendable {
+    public var factor: Double
+    public var untilTick: Int
+
+    public init(factor: Double, untilTick: Int) {
+        self.factor = factor
+        self.untilTick = untilTick
+    }
+}
+
+/// Bollwerk: eine Mauer an einer Stelle des Wegs, gemessen als Wegstrecke. Wer
+/// sie von vorn erreicht, bleibt dort, bis sie fällt.
+public struct Barrier: Codable, Equatable, Sendable {
+    public var distance: Double
+    /// Erster Tick ohne Mauer.
+    public var untilTick: Int
 }
 
 /// Stand der Festungsfähigkeit. Bereit ab Tick 0 (03).
 public struct AbilityState: Codable, Equatable, Sendable {
     /// Erster Tick, in dem wieder geworfen werden darf.
     public var readyTick = 0
-    /// Geworfen, noch nicht eingeschlagen.
+    /// Geworfen, noch nicht eingeschlagen (Steinregen, Mondmal).
     public var strike: Strike?
+    /// Stehende Mauer (Bollwerk). Eine zur Zeit.
+    public var barrier: Barrier?
 
-    public init(readyTick: Int = 0, strike: Strike? = nil) {
+    public init(readyTick: Int = 0, strike: Strike? = nil, barrier: Barrier? = nil) {
         self.readyTick = readyTick
         self.strike = strike
+        self.barrier = barrier
     }
 }
 
@@ -118,5 +157,9 @@ public enum Event: Equatable, Sendable {
     case missionEnded(won: Bool)
     /// Geworfen: Der Schatten liegt ab jetzt bei `center`, der Einschlag kommt in `impactTick`.
     case abilityCast(center: Point, impactTick: Int)
+    /// Steinregen oder Mondmal schlägt ein; `hits` in Zustandsreihenfolge.
     case abilityImpact(center: Point, hits: [Int])
+    /// Bollwerk steht an `distance` (Wegstrecke) bis `untilTick`.
+    case barrierRaised(distance: Double, untilTick: Int)
+    case barrierFell
 }

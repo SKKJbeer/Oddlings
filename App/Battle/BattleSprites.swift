@@ -93,6 +93,7 @@ final class EnemyNode: SKNode {
     private let health = SKSpriteNode()
     private let healthFill = SKSpriteNode()
     private let slowMark = SKShapeNode()
+    private let moonMark = SKShapeNode()
     private let healthWidth: CGFloat
 
     init(enemy: Enemy, field: CGFloat) {
@@ -127,6 +128,13 @@ final class EnemyNode: SKNode {
         slowMark.lineWidth = 2
         slowMark.isHidden = true
         addChild(slowMark)
+
+        moonMark.path = CGPath(ellipseIn: CGRect(x: -height * 0.12, y: height * 1.35,
+                                                 width: height * 0.24, height: height * 0.24), transform: nil)
+        moonMark.fillColor = BattleStyle.markTint
+        moonMark.strokeColor = BattleStyle.wallEdge
+        moonMark.isHidden = true
+        addChild(moonMark)
     }
 
     @available(*, unavailable)
@@ -137,7 +145,11 @@ final class EnemyNode: SKNode {
         health.isHidden = fraction >= 1
         healthFill.size.width = healthWidth * CGFloat(fraction)
         slowMark.isHidden = enemy.slow == nil
+        moonMark.isHidden = enemy.vulnerable == nil
     }
+
+    /// Für die Darstellungstests: ob das Mondmal gerade zu sehen ist.
+    var showsMoonMark: Bool { !moonMark.isHidden }
 
     func flash() {
         body.removeAction(forKey: "flash")

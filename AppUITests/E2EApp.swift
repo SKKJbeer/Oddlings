@@ -60,6 +60,8 @@ struct E2EApp {
     var mapStart: XCUIElement { app.buttons["map.start"] }
     var mapBack: XCUIElement { app.buttons["map.back"] }
     func node(_ id: String) -> XCUIElement { app.buttons["map.node.\(id)"] }
+    func race(_ race: Race) -> XCUIElement { app.buttons["map.race.\(race.rawValue)"] }
+    var raceDetail: String { app.staticTexts["map.race.detail"].label }
     /// Was ein Knoten zeigt, in Worten (CampaignTexts.accessibilityValue).
     func nodeState(_ id: String) -> String { node(id).value as? String ?? "" }
     /// Wert einer Kachel der Ergebnistafel, z. B. `result.lives`. Vorgelesen

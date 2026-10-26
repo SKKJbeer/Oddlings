@@ -11,7 +11,43 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.8.0 – 25.10.2026 (Festungsfähigkeit Steinregen, R-3)
+## 0.9.0 – 26.10.2026 (Völkerwahl Zwerge und Elfen, R-4), Bau 25 (VALID)
+
+**Neu**
+- Auf der Missionstafel der Karte stehen Zwerge und Elfen über „Starten“. Ohne
+  Wahl gilt der Steinregen. Die Wahl steht im Spielstand. Beide Völker sind
+  sofort wählbar, solange nur Mission 1 spielbar ist (D-061).
+- Zwerge: Bollwerk. Eine Mauer quer zum Weg, sofort und 4 s lang. Wer sie von
+  vorn erreicht, bleibt dort stehen.
+- Elfen: Mondmal. Nach 0,5 s nehmen Gegner im Kreis 4 s lang jeden Treffer
+  ×1,5. Dazu reichen Sporentürme 10 % weiter.
+- Knopf unten rechts mit Bild und Namen je Volk. Mauer, Mal und Effekte sind
+  Platzhalter.
+- Werte stehen in `Balance/races.json` und gelten als **[HYPOTHESE]**. Beim
+  Laden wird die Datei geprüft wie die Missionsdatei.
+- Ein passiver Zug der Zwerge fehlt, bis die Zwergenbank kommt. Die Frage an
+  Steffen ist offen.
+- Konzept: [r-4-voelker](docs/konzepte/r-4-voelker.md).
+
+**Balance**
+- Je Volk höchstens +0,1 Reserve, zwischen den Völkern höchstens 0,05. Gemessen:
+  Zwerge +0,05, Elfen +0,07
+  ([04](docs/game-design/04-economy-and-balance.md#völker-zwerge-und-elfen-r-4-26102026-hypothese)).
+
+**Tests**
+- Kern: `BulwarkTests` (5), `MoonMarkTests` (6) und `RaceTests` (6). Dazu
+  Wiederholung je Volk, Prüfsumme mit Mauer und Mal und die Völkergrenze in
+  `BalanceTests`. Jeder neue Test wurde einmal rot gesehen. Die feste
+  Prüfsumme ist neu, weil sie Mauer und Mal mitzählt.
+- App: Wahl und Spielstand in `AppFlowTests`, Fähigkeit je Volk in
+  `BattleControllerTests`, Mauer und Mal in `BattleSceneTests`, Haptik.
+- E2E: `RaceE2ETests`. Dort wird ein Volk gewählt und die Mission gestartet,
+  dann die App neu gestartet und ein Bollwerk gesetzt. Ein zweiter Test prüft,
+  dass die Tafel mit der Wahl ins Bild passt.
+- Zwei ältere E2E-Tests liefen gegen die Uhr der Mission. Sie halten die erste
+  Welle jetzt mit `--e2e-erste-welle` zurück (nur im Debug-Bau).
+
+## 0.8.0 – 25.10.2026 (Festungsfähigkeit Steinregen, R-3), Bau 24 (VALID)
 
 **Neu**
 - Steinregen (D-025, D-060): Knopf unten rechts, dann auf den Weg tippen. Der

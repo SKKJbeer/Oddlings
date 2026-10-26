@@ -105,7 +105,7 @@ struct BattleView: View {
     #endif
 }
 
-/// Steinregen unten rechts (D-033). Schlichter Platzhalter, bis die Oberfläche
+/// Festungsfähigkeit unten rechts (D-033), Bild je Volk (07). Schlichter Platzhalter, bis die Oberfläche
 /// den Knopf mit Ladering und Zielansicht nach 07 liefert; die Kennung bleibt.
 private struct AbilityButton: View {
     let controller: BattleController
@@ -113,14 +113,14 @@ private struct AbilityButton: View {
     var body: some View {
         Button(action: controller.toggleAim) {
             RingButtonFace(highlighted: controller.aiming, tint: UITheme.parchment, size: BattleStyle.tapTarget) {
-                Image(systemName: "circle.hexagongrid.circle.fill")
+                Image(systemName: BattleStyle.abilitySymbol(controller.abilityKind))
                     .font(.system(size: 20, weight: .black))
                     .foregroundStyle(UITheme.cream)
                     .opacity(controller.abilityReady ? 1 : 0.35 + 0.65 * controller.abilityCharge)
             }
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(BattleTexts.ability)
+        .accessibilityLabel(BattleTexts.ability(controller.abilityKind))
         .accessibilityValue(BattleTexts.abilityState(ready: controller.abilityReady, aiming: controller.aiming,
                                                      charge: controller.abilityCharge))
         .accessibilityIdentifier("ability")

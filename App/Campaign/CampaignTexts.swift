@@ -9,6 +9,24 @@ enum CampaignTexts {
     static let start = "Starten"
     static let again = "Nochmal spielen"
     static let back = "Menü"
+    static let raceLabel = "Volk"
+
+    static func race(_ race: Race) -> String {
+        switch race {
+        case .dwarves: "Zwerge"
+        case .elves: "Elfen"
+        }
+    }
+
+    /// Eine Zeile, was das Volk tut (r-4-voelker.md, Bedienung). Ohne Zahlen:
+    /// Die stehen in races.json und ändern sich mit dem Spieltest.
+    static func raceDetail(_ race: Race?) -> String {
+        switch race {
+        case .dwarves: "Bollwerk: eine Mauer hält die Gegner auf."
+        case .elves: "Mondmal: Markierte nehmen mehr Schaden. Sporentürme reichen weiter."
+        case nil: "Ohne Volk wirfst du den Steinregen."
+        }
+    }
 
     static func name(_ id: String) -> String {
         switch id {
