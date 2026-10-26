@@ -18,9 +18,14 @@ enum Strategies {
 struct BalanceBot {
     let sim: Simulation
     var order: [TowerKind]
-    /// Wirft den Steinregen, sobald er bereit ist und mindestens zwei Gegner
-    /// zusammenstehen (03: „Bot wirft auf die dichteste Stelle").
+    /// Setzt die Fähigkeit, sobald sie bereit ist und mindestens zwei Gegner
+    /// zusammenstehen (03: „Bot wirft auf die dichteste Stelle"). Das Bollwerk
+    /// setzt er dorthin, wo die meisten Türme hinreichen und eine Traube
+    /// darauf zuläuft: Eine Mauer wirkt durch die Türme davor, nicht selbst.
     var castsAbility = false
+    /// Testwert: so weit vor der Mauer zählt der Bot die Traube.
+    static let wallApproach = 3.0
+    static let sampleStep = 0.25
     private let candidates: [Cell]
     private let samples: [Point]
 
@@ -32,7 +37,7 @@ struct BalanceBot {
         var d = 0.0
         while d < sim.map.path.length {
             points.append(sim.map.path.position(at: d))
-            d += 0.25
+            d += Self.sampleStep
         }
         samples = points
     }
@@ -48,18 +53,45 @@ struct BalanceBot {
             placed.append((kind, cell))
             commands.append(.build(kind, cell))
         }
-        if castsAbility, let target = densestPoint(in: state) { commands.append(.useAbility(target)) }
+        if castsAbility, let target = abilityTarget(in: state) { commands.append(.useAbility(target)) }
         return commands
+    }
+
+    private func abilityTarget(in state: GameState) -> Point? {
+        guard let ability = sim.config.ability, state.tick >= state.ability.readyTick else { return nil }
+        switch ability.kind {
+        case .stoneRain, .moonMark: return densestPoint(in: state, radius: ability.radius ?? 0)
+        case .bulwark: return wallPoint(in: state)
+        }
+    }
+
+    /// Der Wegpunkt mit den meisten Türmen in Reichweite, vor dem mindestens
+    /// zwei Gegner auf `wallApproach` Feldern heranlaufen. Bei Gleichstand der
+    /// frühere Punkt.
+    private func wallPoint(in state: GameState) -> Point? {
+        let distances = state.enemies.filter { $0.hp > 0 }.map(\.distance)
+        var best: Point?, bestCover = 0
+        for (index, p) in samples.enumerated() {
+            let d = Double(index) * Self.sampleStep
+            guard distances.filter({ $0 <= d && $0 > d - Self.wallApproach }).count >= 2 else { continue }
+            let cover = state.towers.filter { tower in
+                tower.kind != .spore && p.distance(to: tower.cell.center) <= sim.config.towers[tower.kind]!.range
+            }.count
+            if cover > bestCover {
+                best = p
+                bestCover = cover
+            }
+        }
+        return best
     }
 
     /// Die Gegnerposition mit den meisten Nachbarn im Wirkkreis, ohne
     /// vorauszuzielen: Der Bot soll eine Untergrenze messen, keinen Meister.
-    private func densestPoint(in state: GameState) -> Point? {
-        guard let ability = sim.config.ability, state.tick >= state.ability.readyTick else { return nil }
+    private func densestPoint(in state: GameState, radius: Double) -> Point? {
         let points = state.enemies.filter { $0.hp > 0 }.map { sim.map.path.position(at: $0.distance) }
         var best: Point?, bestCount = 1
         for p in points {
-            let count = points.filter { $0.distance(to: p) <= ability.radius }.count
+            let count = points.filter { $0.distance(to: p) <= radius }.count
             if count > bestCount {
                 best = p
                 bestCount = count
