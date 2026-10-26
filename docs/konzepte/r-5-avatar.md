@@ -7,8 +7,8 @@ man das wechseln"
 
 ## Ziel
 
-Der Spieler baut beim ersten Spielen einmal seinen Avatar auf: Er wählt sein Volk
-und gibt ihm einen Namen. Danach ist das Volk gesetzt und gilt für jede Mission.
+Der Spieler baut beim ersten Spielen einmal seinen Avatar auf: Er wählt sein Volk,
+ein Porträt und gibt ihm einen Namen (Steffen, 26.10.2026: „Volk, Name und Porträt“). Danach ist das Volk gesetzt und gilt für jede Mission.
 Die Wahl auf der Missionstafel (R-4, 0.9.0) entfällt. Das Volk wird Teil der
 Identität des Spielers und hört auf, ein Schalter vor jeder Mission zu sein.
 Das passt zu [03](../game-design/03-races-and-avatar.md#avatar-entschieden)
@@ -35,11 +35,19 @@ Reichweite, Preis), die Balance-Regeln und `BalanceConfig.applying(_:)`.
    Bild, Fähigkeit und Vorteil in einem Satz; rechts Name und „Los geht's“.
    Der Knopf ist erst aktiv, wenn ein Volk gewählt und ein Name eingetragen ist.
    Ein Vorschlag steht schon im Feld (je Volk ein zufälliger Name aus einer festen
-   Liste), damit niemand an der Tastatur hängen bleibt.
+   Liste), damit niemand an der Tastatur hängen bleibt. Unter dem gewählten Volk
+   eine Reihe Porträts dieses Volks (zunächst drei je Volk); das erste ist
+   vorgewählt. Wechselt das Volk, springt die Auswahl auf dessen erstes Porträt.
 3. Nach „Los geht's“: Kampagnenkarte. Die Missionstafel zeigt das Volk nur noch
    an, als Wappen und Fähigkeitsname, ohne Wahl.
-4. Hauptmenü und Karte zeigen oben links das Avatarschild: Wappen des Volks und
-   Name.
+4. Hauptmenü und Karte zeigen oben links das Avatarschild: Porträt, Name und
+   Wappen des Volks.
+
+**Porträts:** Gemalte Brustbilder im Stil der Figuren (D-016), je Volk drei,
+quadratisch. Die Bilder kommen aus dem Grafik-Thread. Bis sie da sind, zeigt die
+App das Wappen des Volks in drei Farbstellungen als Platzhalter; der Katalog
+(`App/Avatar/Portraits.swift`, Kennung → Volk → Bildname) bleibt derselbe, nur
+die Bilder werden getauscht.
 
 **Wechseln:** vorerst gar nicht (Entscheidungskarte 2). Später über eine
 Spielwährung. Die gibt es noch nicht, und 05 schließt eine zweite Währung bisher
@@ -70,16 +78,19 @@ PR legt nur Volk und Name an, das Speicherformat lässt Platz für Rang und Tale
 ## Architektur
 
 - **Kern (OddlingsCore):** `SaveGame` bekommt `avatar: Avatar?` mit
-  `Avatar { race: Race, name: String }`. Das Schema wird 2. `SaveGameCodec.migrate`
+  `Avatar { race: Race, name: String, portrait: String }`. Das Schema wird 2. `SaveGameCodec.migrate`
   macht aus Schema 1 mit `race` einen Avatar ohne Namen nicht automatisch, sondern
   lässt `avatar` leer: Wer schon getestet hat, baut seinen Avatar einmal neu auf.
   Die alte Wahl wird als Vorauswahl übernommen.
 - **Prüfung beim Laden** (Sicherheitsregel „was von außen kommt“): Der Name wird
-  getrimmt, ist 1 bis 16 Zeichen lang und enthält keine Steuerzeichen. Ein
+  getrimmt, ist 1 bis 16 Zeichen lang und enthält keine Steuerzeichen. Die
+  Porträtkennung besteht nur aus Kleinbuchstaben, Ziffern und Bindestrich
+  (höchstens 32 Zeichen); eine unbekannte Kennung zeigt das erste Porträt des
+  Volks, statt den Avatar zu verwerfen. Ein
   ungültiger Name aus der Datei macht den Avatar leer, nicht die ganze Datei
   ungültig. Den Fortschritt verliert dadurch niemand.
 - **App:** `AppFlow` hält `avatar` statt `race`. `choose(_:)` entfällt und wird
-  durch `createAvatar(race:name:)` ersetzt. Das geht nur, solange kein Avatar
+  durch `createAvatar(race:name:portrait:)` ersetzt. Das geht nur, solange kein Avatar
   existiert. `battleMission(for:)` nimmt das Volk des Avatars. Eine neue Ansicht
   `AvatarSetupView` übernimmt den Aufbau, `StartView` leitet bei fehlendem Avatar
   dorthin.
@@ -108,8 +119,7 @@ PR legt nur Volk und Name an, das Speicherformat lässt Platz für Rang und Tale
 
 ## Offen (Entscheidungskarten)
 
-1. Was gehört zum Aufbau: Volk und Name (Empfehlung), nur Volk, oder dazu ein
-   wählbares Porträt.
+1. ~~Was gehört zum Aufbau~~ **[ENTSCHIEDEN]** Steffen, 26.10.2026: Volk, Name und Porträt.
 2. Wechsel, solange es keine Währung gibt: gar nicht (Empfehlung, wie gewünscht
    „erstmal gesetzt“), oder kostenlos in den Einstellungen für die Testphase.
 3. Wie rollenspielartig: Rang und Kosmetik, Rang mit Talentwahl ohne Mehrkraft
