@@ -196,8 +196,22 @@ nicht von selbst (5 s war schwächer als 4 s), weil sich dahinter eine Traube
 sammelt, die nach dem Fall auf einmal durchläuft. Und eine Mauer an der
 dichtesten Traube statt vor den Türmen half gar nicht (erster Bot, 1,31 bis
 1,36); das Bollwerk lohnt sich nur vor der eigenen Feuerlinie, das muss die
-Oberfläche beim Zielen zeigen. Der passive Zug der Zwerge fehlt, solange es keine
-Zwergenbank gibt (Frage an Steffen offen, [r-4-voelker](../konzepte/r-4-voelker.md)).
+Oberfläche beim Zielen zeigen.
+
+**Wachturm der Zwerge (D-062, 26.10.2026).** Die Zwerge zahlen für den Wachturm
+10 % weniger (50 → 45 Gold). Nachgemessen mit derselben Rechnung:
+
+| Bauweise | ohne Fähigkeit | Zwerge vorher | Zwerge mit 45 Gold | Elfen |
+|---|---|---|---|---|
+| Mischung | 1,35 | 1,40 | 1,40 | 1,42 |
+| Nur Wachtürme | 1,18 | 1,10 | 1,31 | 1,18 |
+
+In der Mischung ändert sich fast nichts, Zwerge und Elfen liegen 0,01 auseinander.
+Die reine Wachturm-Bauweise gewinnt dagegen deutlich (+0,13 gegenüber ohne
+Fähigkeit), weil jeder Turm früher steht. Sie bleibt aber hinter der Mischung
+zurück (1,31 gegen 1,40). `BalanceTests.racesKeepMixAhead` hält fest, dass die
+Mischung mit jedem Volk mindestens 0,05 vor der Monokultur liegt. Ob Zwerge im
+Spieltest zum Wachturm-Spam verleiten, ist eine Frage für WP-15.
 
 ### Grenzen der Rechnung
 

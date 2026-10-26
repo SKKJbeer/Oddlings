@@ -71,4 +71,16 @@ struct BalanceTests {
         let dwarves = try #require(reserves[.dwarves]), elves = try #require(reserves[.elves])
         #expect(abs(dwarves - elves) <= 0.05, "kein Volk ist Pflicht")
     }
+
+    // Der billigere Wachturm der Zwerge (D-062) stärkt gerade die Monokultur;
+    // die Säule „Kombination statt Masse" muss trotzdem für jedes Volk halten.
+    @Test("Auch mit Volk liegt die Mischung vor der Monokultur aus Wachtürmen")
+    func racesKeepMixAhead() throws {
+        let mix = try order("Mix"), watchOnly = try order("Nur Wachtürme")
+        let table = try RaceTable.bundled()
+        for race in Race.allCases {
+            let raced = Simulation(config: sim.config.applying(try #require(table[race])))
+            #expect(raced.reserve(mix, castsAbility: true) > raced.reserve(watchOnly, castsAbility: true) + 0.05, "\(race)")
+        }
+    }
 }
