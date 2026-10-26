@@ -1,0 +1,21 @@
+{
+  "_zweck": "Probe der Werkzeugkette mit Kenneys Ork (CC0), nicht fürs Spiel",
+  "weglassen": ["Icosphere"],
+  "blick": 45,
+  "bildHoehe": 1.4,
+  "knochen": {
+    "becken": {"von": [0, 0, 0.30], "bis": [0, 0, 0.42]},
+    "rumpf": {"von": [0, 0, 0.42], "bis": [0, 0, 0.58], "eltern": "becken"},
+    "kopf": {"von": [0, 0, 0.58], "bis": [0, 0, 1.0], "eltern": "rumpf"},
+    "bein_l": {"von": [-0.12, 0, 0.30], "bis": [-0.12, 0, 0.0], "eltern": "becken"},
+    "bein_r": {"von": [0.12, 0, 0.30], "bis": [0.12, 0, 0.0], "eltern": "becken"},
+    "arm_l": {"von": [-0.28, 0, 0.52], "bis": [-0.42, 0, 0.30], "eltern": "rumpf"},
+    "arm_r": {"von": [0.28, 0, 0.52], "bis": [0.42, 0, 0.30], "eltern": "rumpf"}
+  },
+  "folgen": {
+    "walk": {"bilder": 8, "hub": 0.03,
+      "schwingen": {"bein_l": ["x", 30, 0], "bein_r": ["x", 30, 0.5], "arm_l": ["x", 35, 0.5], "arm_r": ["x", 35, 0], "rumpf": ["z", 6, 0], "kopf": ["y", 4, 0.25]}},
+    "hit": {"bilder": 3, "verlauf": {"rumpf": ["x", -18], "kopf": ["x", -12]}},
+    "die": {"bilder": 6, "verlauf": {"becken": ["x", -80], "arm_l": ["y", 60], "arm_r": ["y", -60], "kopf": ["x", -20]}}
+  }
+}
