@@ -1,31 +1,91 @@
 # Roadmap
 
-Reihenfolge von Zielen, **keine Zeitplanung**. Eine Phase ist fertig, wenn ihre
-Abnahme erfüllt ist, nicht wenn Code existiert.
+Die gemeinsame Arbeitsliste von Steffen und Claude. Reihenfolge von Zielen, **keine
+Zeitplanung**. Eine Phase ist fertig, wenn ihre Abnahme erfüllt ist, nicht wenn Code
+existiert.
 
-| Phase | Ziel | Abnahme | Arbeitspakete |
+**So arbeiten wir damit.** Claude arbeitet „Als Nächstes“ von oben nach unten ab,
+ein Paket je PR, und trägt den Stand nach jeder Auslieferung hier ein (D-067).
+Steffen steuert, indem er eine Nummer nennt („erst P2-3“, „R-7 später“) oder eine
+Entscheidungskarte beantwortet. Alles, was auf ihn wartet, steht unter
+[Wartet auf Steffen](#wartet-auf-steffen); jede neue Karte meldet der Coordinator
+zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzelnen:
+[backlog.md](backlog.md), offene Fragen: [offene-fragen.md](offene-fragen.md).
+
+**Stand: 27.10.2026** · neueste Version 0.12.0 (Bau läuft), neuester VALID-Bau 32 (0.11.1)
+
+## Phasen
+
+| Phase | Ziel | Abnahme | Stand |
 |---|---|---|---|
-| **0 – Design und Planung** | Konsistenter Designstand, MVP abgegrenzt, Backlog | Steffen gibt Dokumente und offene Entscheidungen B1–B4 frei | WP-00 |
-| **1 – Spielbarer Kampfprototyp** | Eine Karte, ein Weg, drei Türme, zwei bis drei Gegner, Gold, Wellen, Sieg/Niederlage, Neustart, Tests | Mission 1 ist auf einem echten iPhone von Anfang bis Ende spielbar, ohne Absturz; Regeltests grün; mindestens drei Personen haben gespielt, Protokoll liegt vor | WP-01 … WP-15 |
-| **2 – Vertical Slice** | Zwergenbank, spürbare Synergie, Ton, Animation, Grafikstil, Menüs, Fortsetzen nach App-Ende | Eine Mission wirkt wie das fertige Spiel; Spieltest bestätigt, dass Spieler die Synergie ohne Erklärung finden | wird nach Phase 1 geschnitten |
-| **3 – Kleine Kampagne** | Kampagnenkarte, 6–8 Missionen, Gabelung, zwei Völker, erste Freischaltungen | Spieler wollen nach Mission 1 weiterspielen (gemessen, nicht vermutet) | – |
-| **4 – Qualität und Balancing** | Echte Geräte, Leistung, Bedienung, externe Spieltests | Absturzfrei, 60 Bilder/s auf dem ältesten Zielgerät, Balancetests und Spieltests stimmen überein | – |
+| **0 – Design und Planung** | Konsistenter Designstand, MVP abgegrenzt, Backlog | Steffen gibt Dokumente und offene Entscheidungen frei | ✓ 25.10.2026 |
+| **1 – Spielbarer Kampfprototyp** | Eine Karte, ein Weg, drei Türme, Gegner, Gold, Wellen, Sieg/Niederlage, Neustart, Tests | Mission 1 auf dem iPhone spielbar, Regeltests grün, drei Personen haben gespielt | Technik ✓, **Spieltest WP-15 offen** |
+| **Spielrahmen (vorgezogen, D-060)** | Hauptmenü, Kampagnenkarte, Festungsfähigkeit, Völker, Avatar | Pakete R-1 bis R-6 in TestFlight | ✓ bis R-6 (0.12.0), R-7 Ausrüstung folgt |
+| **2 – Vertical Slice** | Zwergenbank, spürbare Synergie, Ton, Animation, Grafik, Fortsetzen | Eine Mission wirkt wie das fertige Spiel; Spieler finden die Synergie ohne Erklärung | Grafik und Effekte laufen, Rest wartet auf den Schnitt nach WP-15 |
+| **3 – Kleine Kampagne** | Region 1 mit sieben Haupt- und zwei Nebenmissionen, Boss | Spieler wollen nach Mission 1 weiterspielen (gemessen) | Karte steht, Missionen 2 bis 7 fehlen |
+| **4 – Qualität und Balancing** | Echte Geräte, Leistung, externe Spieltests, Balance-Labor | Absturzfrei, 60 Bilder/s auf dem ältesten Zielgerät | – |
 | **5 – Produktentscheidung** | Weiter investieren? Monetarisierung? Koop? | Entscheidung mit Daten aus Phase 4 | – |
 
-Erst nach Phase 1 wird Phase 2 endgültig in Arbeitspakete zerlegt. Was Phase 1
-lehrt, verändert Phase 2 sicher. Der Entwurf unten zeigt die Reihenfolge, damit
-die Threads wissen, was nach ihnen kommt; er ist kein Auftrag.
+## Wartet auf Steffen
 
-Stand für Steffen in Kurzform: [status.md](status.md). Offene Fragen:
-[offene-fragen.md](offene-fragen.md). Konzepte für Phase 2 und 3:
-[konzepte/phase-2-3.md](../konzepte/phase-2-3.md).
+| # | Was | Wo | Blockiert | Empfehlung |
+|---|---|---|---|---|
+| S1 | **Darf der neue 3D-Plünderer ins Spiel?** (Entscheidungskarte seit 26.10.) | Thread „Plünderer-3D-Modell mit Token erzeugen“ | FX 02 komplett | Ja, einbauen |
+| S2 | Volk wechseln, bevor es eine Spielwährung gibt (Entscheidungskarte seit 26.10.) | Thread „Oddlings-Designstand und MVP-Plan aufsetzen“ | nichts, die Empfehlung gilt bis zur Antwort | Gar nicht |
+| S3 | **Spieltest mit drei Personen** auf dem neuesten Bau, [Beobachtungsbogen](playtests/beobachtungsbogen.md) | WP-15 | Abschluss Phase 1, Schnitt Phase 2, D-030, Werte D-007 | so bald wie möglich |
+| S4 | Leistung des Spikes auf dem iPhone messen | WP-01 | nichts Akutes; D-002 gilt bis dahin | ohne Eile |
+| S5 | Kommt mit R-7: Herkunft der Ausrüstung und Obergrenze der Boni (Karten folgen) | Haupt-Thread | R-7 Umsetzung | – |
 
-## Gilt für jedes Paket ab jetzt
+## Als Nächstes
 
-- **Ende-zu-Ende-Test** für jeden neuen Ablauf mit Bedienung, in der CI grün vor
-  dem Zusammenführen (D-029, [Teststrategie](../technical/testing-strategy.md#ende-zu-ende-tests-d-029)).
+Reihenfolge **[VORSCHLAG]**; was davor steht, wird zuerst gebaut. Steffen kann
+umsortieren.
+
+| # | Paket | Thread | Abh. | Stand |
+|---|---|---|---|---|
+| 1 | 0.12.0 Bau in TestFlight, Baunummer eintragen | Haupt-Thread | – | läuft |
+| 2 | **FX 02 Plünderer mit Gliedmaßen** einbauen ([Konzept](../konzepte/fx-02-figuren-in-3d.md)) | Plünderer-3D-Modell | S1 | fertig bis auf die Freigabe |
+| 3 | **R-7 Ausrüstung** im Avatar-Menü (D-066): Konzept, Karten, Umsetzung | Haupt-Thread | R-6, S5 | Konzept als Nächstes |
+| 4 | **WP-15 Spieltest**, danach Phase 2 schneiden | Steffen | S3 | wartet |
+| 5 | P2-5 **Mission 2 mit Zwergenbank** (Knoten M2 der Karte); erster Talentrang wird erreichbar | – | WP-15 (Balance) | Konzept K3 steht |
+| 6 | P2-3 **Ton und Musik** (K9) | neuer Thread | – | Weg offen |
+| 7 | FX 02 Flitzer und Panzerbestie | Plünderer-3D-Modell | 2 und Steffens Urteil am Bild | – |
+| 8 | P2-6 Mission 3 mit Aufwertungen, P2-6b Balance-Labor, P2-2 Fortsetzen, P2-8 Synergie sichtbar, P2-9 Abstimmung | – | 5 | Konzepte K1, K6, K8, K11 |
+
+## Ausgeliefert
+
+Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
+
+| Paket | Version | Bau | Konzept |
+|---|---|---|---|
+| WP-02 … WP-10 Regeln von Mission 1 (M1.1) | 0.2.0 – 0.3.1 | – | [Backlog](backlog.md) |
+| WP-11 Szene zeigt die Simulation (M1.2) | 0.4.0 | – | [Backlog](backlog.md) |
+| WP-12 … WP-14 Mission spielbar (M1.3) | 0.5.0 | 19 | [Konzept](../konzepte/wp-12-14-spielbare-mission.md) |
+| E2E-Grundlage (D-029) | 0.5.1 | 20 | [Konzept](../konzepte/e2e-tests.md) |
+| Grafik 01: gemalte Figuren und Karte | 0.5.2 | 21 | [Konzept](../konzepte/grafik-01-spielfeld.md) |
+| UI 01: Kreismenü, Tafeln, Haptik, Schriften | 0.6.0 | 22 | [Konzept](../konzepte/ui-01-hud-und-tafeln.md) |
+| R-1/R-2: Hauptmenü, Einstellungen, Spielstand, Kampagnenkarte, Sterne | 0.7.0 | 23 | [Konzept](../konzepte/r-spielrahmen.md) |
+| R-3: Steinregen | 0.8.0 | 24 | [Konzept](../konzepte/r-3-steinregen.md) |
+| R-4: Zwerge (Bollwerk) und Elfen (Mondmal) | 0.9.0 | 25 | [Konzept](../konzepte/r-4-voelker.md) |
+| Grafik 03: Titelbild, Turm- und HUD-Symbole | 0.9.1 | 26 | [Konzept](../konzepte/grafik-02-phase-2.md) |
+| FX 01: Bewegung und Effekte (D-050) | 0.10.0 | 27 | [Konzept](../konzepte/fx-01-bewegung-und-effekte.md) |
+| Zwerge bauen Wachtürme 10 % billiger (D-062) | 0.10.1 | 28 | [03](../game-design/03-races-and-avatar.md#wie-ein-volk-wirkt-phase-3) |
+| Grafik 04: gemalte Kampagnenkarte | 0.10.2 | 29 | [Konzept](../konzepte/grafik-02-phase-2.md) |
+| Fähigkeitstest unabhängig vom Läufer | 0.10.3 | 30 | – |
+| R-5: Avatar einmal am Anfang (D-063) | 0.11.0 | 31 | [Konzept](../konzepte/r-5-avatar.md) |
+| Grafik 05: Kampfplatz als Lichtung, Zwergenfeste, Porträts | 0.11.1 | 32 | [Konzept](../konzepte/grafik-05-kampfplatz.md) |
+| R-6: Avatarrang, Talente, Avatar-Menü (D-064, D-065) | 0.12.0 | läuft | [Konzept](../konzepte/r-6-avatarrang.md) |
+
+## Gilt für jedes Paket
+
+- Konzept vor der Umsetzung (D-017), Tests auf jeder Ebene, Ende-zu-Ende-Test für
+  jeden neuen Ablauf mit Bedienung (D-029), Eintrag im CHANGELOG.
+- **Doku im selben PR (D-067):** Architektur, Datenmodelle, Teststrategie,
+  Design- und Art-Dokumente, diese Roadmap und [status.md](status.md). Die CI prüft
+  den Stand mit.
+- **Entscheidungskarten** sofort an den Coordinator melden und hier unter
+  „Wartet auf Steffen“ eintragen; beantwortet: ins Entscheidungsprotokoll.
 - **Balance-Bericht** für jede Wertänderung, sobald das Balance-Labor steht (D-028).
-- Konzept vor der Umsetzung (D-017), Tests, Eintrag im CHANGELOG.
 
 ## Meilensteine Phase 1
 
@@ -33,37 +93,33 @@ Stand für Steffen in Kurzform: [status.md](status.md). Offene Fragen:
 |---|---|---|---|
 | M1.1 | Regeln von Mission 1 vollständig und getestet | WP-02 … WP-10 | ✓ 25.10.2026 |
 | M1.2 | Die App zeigt die laufende Simulation | WP-01, WP-11 | ✓ 25.10.2026 (0.4.0) |
-| M1.3 | **Ein Mensch spielt Mission 1 auf dem iPhone** | WP-12, WP-13, WP-14 | ✓ 25.10.2026 (0.5.0, ein PR nach D-018), Bau 19 VALID |
-| M1.4 | Spieltest mit drei Personen, Leistung auf dem Gerät gemessen; Ende-zu-Ende-Tests decken Mission 1 vollständig ab (Bauen, Verkaufen, Pause, Tempo, Sieg, Niederlage, Neustart) | Neue Oberfläche (P2-4 für Mission 1 vorgezogen), WP-15, Messung WP-01, E2E-Grundlage | E2E ✓ (0.5.1); erste Grafik im Spiel (0.5.2, Bau 21 VALID); **neue Oberfläche läuft, danach Spieltest** |
-
-Kritischer Pfad: neue Oberfläche für Mission 1 (Kreismenü D-031, Schriften D-032) →
-Bau in TestFlight → WP-15 (Spieltest mit drei Personen) → Phase 2 schneiden. Steffen,
-25.10.2026: die Oberfläche kommt vor dem Spieltest. Alles andere läuft daneben und
-darf diesen Pfad nicht aufhalten. Steffens Vorgabe
-(25.10.2026): erst spielbar in TestFlight, dann Grafik einbauen.
+| M1.3 | **Ein Mensch spielt Mission 1 auf dem iPhone** | WP-12, WP-13, WP-14 | ✓ 25.10.2026 (0.5.0, Bau 19) |
+| M1.4 | Spieltest mit drei Personen, Leistung gemessen, E2E deckt Mission 1 ab | UI 01, WP-15, Messung WP-01, E2E | E2E ✓ (0.5.1), Oberfläche ✓ (0.6.0); **Spieltest und Messung offen (S3, S4)** |
 
 ## Vorgezogen: Spielrahmen (D-060)
 
-Steffen, 25.10.2026: Hauptmenü, Weltkarte und Völker wie im Konzept sollen jetzt
-kommen, nicht erst in Phase 3. Damit ist die MVP-Grenze für diese drei Stücke
-aufgehoben (D-060). Der Rest von Phase 2 und 3 bleibt, wie er ist.
+Steffen, 25.10.2026: Hauptmenü, Weltkarte und Völker sollen jetzt kommen, nicht
+erst in Phase 3. Damit ist die MVP-Grenze für diese Stücke aufgehoben (D-060). Der
+Spieltest WP-15 wartet nicht darauf.
 
-| # | Paket | Abh. | Code | Oberfläche | Grafik | Animation |
-|---|---|---|---|---|---|---|
-| R-1 | **Hauptmenü, Einstellungen, Speicherstand** | neue Oberfläche für Mission 1 | Schirmfolge, Speicherstand nach D-022 | [Hauptmenü](../game-design/07-ui-ux.md#hauptmenü) im Stil | Menühintergrund, Arbeitstitel-Schriftzug | Übergänge zwischen Schirmen |
-| R-2 | **Kampagnenkarte Region 1** „Flüsterwald“ nach [05](../game-design/05-campaign-and-progression.md#region-1-und-die-vollversion): Knotenkarte M1 bis M7, N1, N2; M1 spielbar, die übrigen sichtbar und gesperrt; Sterne aus M1 | R-1 (Speicherstand) | Kartendaten, Fortschritt, Sterne | [Kampagnenkarte](../game-design/07-ui-ux.md#kampagnenkarte-phase-3-richtung) | gemalte Karte der Region | Weg zum nächsten Knoten, Freischalten |
-| R-3 | **Festungsfähigkeit Steinregen** (P2-7 vorgezogen) | neue Oberfläche (Knopf, D-033) | Befehl `useAbility`, Abklingzeit | [Fähigkeitsknopf](../game-design/07-ui-ux.md#festungsfähigkeit-steinregen) | Symbol | Steinregen-Effekt |
-| R-4 | **Völkerwahl** Zwerge und Elfen nach [03](../game-design/03-races-and-avatar.md#wie-ein-volk-wirkt-phase-3): wählbar vor jeder Mission, Volk bestimmt die Fähigkeit (Bollwerk, Mondmal) und einen kleinen Zug | R-1, R-3 | Volk im Speicherstand und in der Missionsdatei, zwei Fähigkeiten | Wahl im Avatar oder vor der Mission | Wappen, Porträts | Effekte beider Fähigkeiten |
+| # | Paket | Abh. | Stand |
+|---|---|---|---|
+| R-1 | Hauptmenü, Einstellungen, Speicherstand (D-022) | UI 01 | ✓ 0.7.0 |
+| R-2 | Kampagnenkarte Region 1 „Flüsterwald“, M1 spielbar, Sterne | R-1 | ✓ 0.7.0, gemalt 0.10.2 |
+| R-3 | Festungsfähigkeit Steinregen (P2-7 vorgezogen, D-033) | UI 01 | ✓ 0.8.0 |
+| R-4 | Völker Zwerge (Bollwerk, Wachtürme billiger D-062) und Elfen (Mondmal) | R-1, R-3 | ✓ 0.9.0, 0.10.1 |
+| R-5 | Avatar einmal am Anfang: Volk, Porträt, Name (D-063) | R-4 | ✓ 0.11.0, Porträts 0.11.1 |
+| R-6 | Avatarrang mit Talentwahl, eigenes Avatar-Menü (D-064, D-065) | R-5 | ✓ 0.12.0 |
+| R-7 | **Ausrüstung mit kleinen Boni** im Avatar-Menü (D-066) | R-6, S5 | Konzept als Nächstes |
 
-| R-5 | **Avatar** nach [Konzept](../konzepte/r-5-avatar.md): Volk, Porträt und Name einmal am Anfang, danach gesetzt (D-063) | R-4 | Speicherstand Schema 2, Prüfung beim Laden | Avatar-Aufbau, Avatarschild | Porträts je Volk | – |
-| R-6 | **Avatarrang mit Talentwahl** ohne Mehrkraft (D-064) | R-5 | Rang aus Sternen, Spielarten der Fähigkeiten als Konfiguration | Rang und Talentwahl | Rangabzeichen | Spielarten der Fähigkeiten |
+## Parallel: Grafik und Bewegung
 
-**[ENTSCHIEDEN D-063]** ersetzt D-061: Das Volk wird einmal beim Avatar-Aufbau
-gewählt, beide Völker stehen von Anfang an zur Wahl.
-
-**Reihenfolge.** R-1 und R-3 können parallel laufen, R-2 braucht R-1, R-4 braucht
-beide. Der Spieltest WP-15 wartet nicht darauf: Er prüft Mission 1 mit der neuen
-Oberfläche, wie entschieden. Jedes Paket bringt seine Ende-zu-Ende-Abläufe mit (D-029).
+| Paket | Stand |
+|---|---|
+| Grafik 01 bis 05 (Figuren, Symbole, Titelbild, Kampagnenkarte, Kampfplatz, Festung, Porträts) | ✓ 0.5.2 bis 0.11.1 |
+| FX 01 Bewegung und Effekte an Ereignissen (D-050) | ✓ 0.10.0 |
+| FX 02 Gegner mit Gliedmaßen aus 3D (D-051): Plünderer | fertig, wartet auf S1 |
+| FX 02 Flitzer, Panzerbestie | nach dem Plünderer, Freigabe am Bild |
 
 ## Entwurf Phase 2 [VORSCHLAG]
 
@@ -73,10 +129,10 @@ Phase wie oben: Eine Mission wirkt wie das fertige Spiel.
 
 | # | Paket | Abh. | Konzept | Entscheidung |
 |---|---|---|---|---|
-| P2-1 | Grafik einbauen: Atlas (Standbilder ✓ in 0.5.2), Laufzyklen, Treffereffekte nach Rückmeldeliste (E1, E3) | M1.3, Atlas aus dem Grafik-Thread | Art-Direction | D-016 |
+| P2-1 | Grafik einbauen: Atlas ✓ 0.5.2, Effekte ✓ 0.10.0 (FX 01), Laufzyklen aus 3D in Arbeit (FX 02) | M1.3, Atlas aus dem Grafik-Thread | Art-Direction | D-016 |
 | P2-2 | Fortsetzen einer laufenden Mission nach App-Ende (Speicherstand selbst kommt mit R-1) | R-1 | K6 | D-022 |
 | P2-3 | Ton und Haptik | P2-1 (Rückmeldeliste) | K9 | Weg offen, neuer Thread |
-| P2-4 | Menüs, Pause, Einstellungen, Ergebnis im Stil (Teil für Mission 1 vorgezogen vor WP-15) | M1.3, Oberflächen-Thread | [07](../game-design/07-ui-ux.md) | D-031, D-032 |
+| P2-4 | Menüs, Pause, Einstellungen, Ergebnis im Stil: ✓ 0.6.0 und 0.7.0 | M1.3, Oberflächen-Thread | [07](../game-design/07-ui-ux.md) | D-031, D-032 |
 | P2-5 | Zwergenbank und Bonus für frühes Rufen | M1.4 (Balance aus dem Spieltest) | K3 | D-026 |
 | P2-6 | Aufwertungen mit Gabelung, Zielwahl | P2-5 (gleiche Wirtschaftsrechnung) | K1 | D-024 |
 | P2-6b | **Balance-Labor, Grundstock:** Lauf-Werkzeug, Zufalls- und Menschenbot, Zielwerte, PR-Stufe in der CI | P2-5, P2-6 | K11 | D-028 |
@@ -91,7 +147,7 @@ Missionsdatei schon bereit.
 
 Region 1 „Flüsterwald" nach [05](../game-design/05-campaign-and-progression.md#region-1-und-die-vollversion) (D-027):
 die Missionen M2 bis M7, N1 und N2 auf der schon stehenden Karte (R-2), Boss,
-Eisern-Modus, Freischaltung der Völker (R-4), Fortschritt (K5),
+Eisern-Modus, Fortschritt (K5); die Völker sind seit D-063 von Anfang an wählbar,
 Kartenwerkzeug. Jede Mission läuft vor der Auslieferung durch den großen
 Balance-Lauf (K11). Richtung entschieden (D-025, D-027). Name und Marke werden hier
 entschieden (K10).
@@ -104,20 +160,17 @@ entschieden (K10).
 | M4.2 | Leistung auf dem ältesten Zielgerät, absturzfrei | E4, WP-01 |
 | M4.3 | Externe Spieltests, Werte und Spieltest stimmen überein | Abnahme Phase 4 |
 
-## Abhängigkeiten zwischen den Threads
+## Wer woran arbeitet
 
-| Liefert | an | Was | Wann gebraucht |
-|---|---|---|---|
-| Grafik | Code | Atlas nach Asset-Vertrag (`docs/art/asset-vertrag.md`) | P2-1, darf M1.3 nicht aufhalten |
-| Oberfläche | Code | HUD-Layout, Baumenü, Turmmenü, Ergebnis | WP-12/WP-13 nutzen Platzhalter, Stil folgt in P2-4 |
-| Grafik ↔ Oberfläche | beide | Farben, Symbole, Schrift (D-016) | vor P2-4 |
-| Projektplanung | Grafik | Konzepte für Zwergenbank, Völker, Spezialisierungen, Boss (K1–K3, K7) | entschieden (D-024 bis D-026), Assets ab jetzt möglich |
-| Projektplanung | Oberfläche | Turmmenü mit Aufwerten und Zielwahl (K1), Fähigkeitsknopf (K2a), Kampagnenkarte (K4) | Entwürfe ab jetzt, Umsetzung Phase 2/3 |
-| Code | alle | Ereignisliste der Simulation | steht (WP-11) |
-| Oberfläche | Code | Hauptmenü, Kampagnenkarte, Völkerwahl als Entwurf | vor R-1, R-2, R-4 |
-| Grafik | Code | Menühintergrund, Karte Flüsterwald, Wappen und Porträts | R-1, R-2, R-4; Platzhalter erlaubt, damit Code nicht wartet |
-| Animation | Code | Effekt-Uhr (D-050), Steinregen, Mondmal, Bollwerk, Kartenübergänge | R-3, R-4, R-2 |
-| Code | Animation | Ereignisse für Fähigkeiten und Kartenfortschritt | mit R-2, R-3 |
+| Thread | Aufgabe | Liefert an |
+|---|---|---|
+| Oddlings-Designstand und MVP-Plan (Haupt-Thread) | Kern, App, E2E, Pakete R-x und P2-x | alle: Ereignisse, Testschalter, Bauten |
+| Plünderer-3D-Modell mit Token erzeugen | FX 02: Modelle, Bildfolgen, Einbau | Haupt-Thread: Atlas mit Bildfolgen nach [Asset-Vertrag](../art/asset-vertrag.md) |
+| Architektur, Doku und Roadmap nachziehen | Doku-Stand, diese Roadmap, Regel D-067 | alle |
+
+Grafik-, Oberflächen- und Effekt-Threads sind abgeschlossen; neue Grafik entsteht
+mit dem Skill `spielgrafik` im Thread des jeweiligen Pakets, ein eigener Thread nur
+bei großen Arbeiten (z. B. Ton und Musik, P2-3).
 
 ## Kandidaten aus der Marktanalyse [VORSCHLAG]
 

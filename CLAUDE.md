@@ -6,17 +6,15 @@
 
 ## Stand
 
-**Phase 1 läuft.** Phase 0 ist abgeschlossen (PR #1). WP-01, der Technik-Spike
-(`App/Spike/`, Wegwerfcode), ist in TestFlight; die Messung auf dem iPhone steht aus.
-Simulationspaket `Packages/OddlingsCore`: Regeln von Mission 1 vollständig
-(WP-02 bis WP-10: Konfiguration, Weg, Wellen, Bauen/Verkaufen, alle drei Türme,
-Sieg, Determinismus, Balancetests). Die App zeigt die Simulation
-(WP-11, mit Mitspieler) und ist spielbar (WP-12 bis WP-14: bauen und verkaufen per
-Tippen, Kopfleiste, Ergebnis und Neustart). UI-01 (0.6.0) bringt die Oberfläche
-nach Entwurf: Kreismenü, Tafeln, Haptik, Schriften (D-031, D-032). Spielrahmen vorgezogen
-(D-060): 0.7.0 bringt Kampagnenkarte Region 1, Sterne, Speicherstand und Einstellungen
-([Konzept](docs/konzepte/r-spielrahmen.md)); 0.8.0 bringt die Festungsfähigkeit Steinregen ([Konzept](docs/konzepte/r-3-steinregen.md)), 0.9.0 die Völkerwahl Zwerge/Elfen mit Bollwerk und Mondmal ([Konzept](docs/konzepte/r-4-voelker.md)); damit ist der vorgezogene Spielrahmen R-1 bis R-4 da. Bewegung und Effekte hängen an
-Ereignissen über `App/Battle/Fx/FxDirector` (FX 01, D-050, 0.10.0). Als Nächstes WP-15 (erster Spieltest). Version und Bauten: [CHANGELOG.md](CHANGELOG.md).
+**Phase 1 technisch fertig, Spieltest WP-15 offen.** Mission 1 ist spielbar
+(WP-02 bis WP-14, UI-01). Vorgezogener Spielrahmen (D-060) steht bis R-6: Hauptmenü,
+Kampagnenkarte Region 1 mit Sternen, Steinregen, Völker Zwerge/Elfen, Avatar einmal am
+Anfang (0.11.0), Avatarrang mit Talenten und eigenem Avatar-Menü (0.12.0). Grafik 01
+bis 05 (zuletzt Kampfplatz und Zwergenfeste, 0.11.1), Effekte an Ereignissen über
+`App/Battle/Fx/FxDirector` (FX 01, D-050). In Arbeit: FX 02 (Gegner mit Gliedmaßen aus
+3D, wartet auf Steffens Freigabe), danach R-7 Ausrüstung (D-066). Reihenfolge und was
+auf Steffen wartet: [Roadmap](docs/production/roadmap.md), Kurzstand:
+[status.md](docs/production/status.md), Versionen: [CHANGELOG.md](CHANGELOG.md).
 Projekt erzeugen: `xcodegen generate` (Xcode-Projekt ist nicht eingecheckt).
 Aufs Gerät: `.github/workflows/testflight.yml` (bei App-Änderungen auf main automatisch),
 Hilfsskript `scripts/apple.py`. Ein Bau ist erst verfügbar, wenn Apple ihn als VALID meldet.
@@ -43,7 +41,8 @@ Plünderer, Flitzer (Panzerbestie optional), Gold, Wellen, Festungsleben, Sieg,
 Niederlage, Neustart, Verkaufen, Tests.
 
 **Vorgezogen (D-060, Steffen 25.10.2026):** Hauptmenü, Kampagnenkarte Region 1,
-Festungsfähigkeit und Völkerwahl, Pakete R-1 bis R-4 in der [Roadmap](docs/production/roadmap.md#vorgezogen-spielrahmen-d-060).
+Festungsfähigkeit, Völkerwahl, Avatar mit Rang, Talenten und Ausrüstung (D-063 bis
+D-066), Pakete R-1 bis R-7 in der [Roadmap](docs/production/roadmap.md#vorgezogen-spielrahmen-d-060).
 
 **Nicht drin:** Zwergenbank (Phase 2), Upgrades, Multiplayer, PvP, weitere
 Missionen der Kampagne, Echtgeld, Backend, Meta-Progression, 3D, steuerbarer Held.
@@ -70,10 +69,11 @@ und fragt. Das gilt besonders für Netzcode, Monetarisierung und Völker.
 | Kampagne, Fortschritt | [docs/game-design/05-campaign-and-progression.md](docs/game-design/05-campaign-and-progression.md) |
 | Monetarisierung | [docs/game-design/06-monetization.md](docs/game-design/06-monetization.md) |
 | Oberfläche, HUD, Menüs | [docs/game-design/07-ui-ux.md](docs/game-design/07-ui-ux.md) |
-| Architektur | [docs/technical/architecture.md](docs/technical/architecture.md) |
+| Architektur, Module, Datenfluss | [docs/technical/architecture.md](docs/technical/architecture.md) |
+| Grafikstil, Asset-Vertrag, Figuren | [docs/art/](docs/art/art-direction.md) |
 | Datenmodelle | [docs/technical/data-models.md](docs/technical/data-models.md) |
 | Tests | [docs/technical/testing-strategy.md](docs/technical/testing-strategy.md) |
-| Phasen, Meilensteine, Abhängigkeiten | [docs/production/roadmap.md](docs/production/roadmap.md) |
+| **Gemeinsame Arbeitsliste**: Phasen, Als Nächstes, Wartet auf Steffen | [docs/production/roadmap.md](docs/production/roadmap.md) |
 | Stand für Steffen (Fertig / Läuft / Als Nächstes) | [docs/production/status.md](docs/production/status.md) |
 | Offene Fragen, wer entscheidet | [docs/production/offene-fragen.md](docs/production/offene-fragen.md) |
 | Konzepte, die auf Entscheidung warten | [docs/konzepte/phase-2-3.md](docs/konzepte/phase-2-3.md) |
@@ -118,6 +118,19 @@ vorlegen.
 eines Arbeitspakets liegt `docs/konzepte/<wp>-<name>.md` mit Ziel, Umfang,
 Architektur (Datenfluss, wer was darf), Bedienentscheidungen, Sicherheit und
 Testplan. Kleine Korrekturen brauchen keins. Das Konzept geht im selben PR mit.
+
+**Doku wächst mit jeder Auslieferung (D-067, Steffen 27.10.2026).** Wer Verhalten,
+Daten, Schirme oder Abläufe ändert, zieht im selben PR nach: Architektur
+(`architecture.md`, `data-models.md`, `testing-strategy.md`), Design
+(`docs/game-design/`, `docs/art/`), Konzept, Roadmap, `status.md`, „Stand“ oben und
+CHANGELOG. Ein PR ohne passende Doku ist nicht fertig. Die CI prüft den prüfbaren
+Teil (`scripts/regeln-pruefen.sh`). Welche Änderung welches Dokument berührt:
+Skill [`arbeitspaket-ausliefern`](.claude/skills/arbeitspaket-ausliefern/SKILL.md), Abschnitt 4.
+
+**Nichts blockiert unbemerkt (D-067).** Jede Entscheidungskarte für Steffen meldet
+der Thread im selben Zug dem Coordinator (`message_coordinator`), der sie im
+Projektchat mit Link zeigt, und trägt sie in der Roadmap unter „Wartet auf Steffen“
+ein. Beantwortet: ins Entscheidungsprotokoll, Zeile aus der Roadmap streichen.
 
 Ein Arbeitspaket = ein Pull Request. Nach Steffens Wahl vom 25.10.2026 kommt
 Arbeit per PR, nicht direkt auf `main`.

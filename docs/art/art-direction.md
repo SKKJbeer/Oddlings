@@ -66,9 +66,15 @@ Pilzhut.
 
 ## Bewegung
 
-Gemalte Einzelbilder, bewegt von der Szene: Hüpfen und Squash-and-Stretch im
-Lauftakt, Kippen in Kurven, Aufbau-Effekt beim Bauen, Aufblitzen bei Treffern.
-Begründung und Grenzen in [asset-vertrag.md](asset-vertrag.md#bewegung).
+Stufe 1 (im Spiel seit 0.10.0, FX 01, D-050): gemalte Einzelbilder, bewegt von der
+Szene: Hüpfen und Squash-and-Stretch im Lauftakt, Kippen in Kurven, Aufbau-Effekt
+beim Bauen, Aufblitzen bei Treffern. Begründung und Grenzen in
+[asset-vertrag.md](asset-vertrag.md#bewegung).
+
+Stufe 2 (in Arbeit, FX 02, D-051): echte Gliedmaßen über 3D-Modelle, die aus unseren
+Gemälden entstehen und zu Bildfolgen (Gehen, Treffer, Sturz) gerendert werden.
+Zuerst der Plünderer; ob Flitzer und Panzerbestie folgen, entscheidet Steffen am
+Bild. Weg und Werkzeuge: [FX 02](../konzepte/fx-02-figuren-in-3d.md).
 
 ## Werkzeug
 
@@ -84,6 +90,12 @@ hochrechnen → freistellen → in den Atlas legen (`atlas.py`) → Prüfung
 Die Karte entsteht anders: `kartenvorlage.py` zeichnet aus der Weggeometrie
 eine grobe Vorlage, die dann übermalt wird. So deckt sich der gemalte Weg mit
 dem gerechneten.
+
+Kampagnenkarte und Kampfplatz teilen sich dieselben gemalten Teile (Bäume,
+Ruinen, Höhle, Boden): `karte_zusammensetzen.py` und `regionscollage.py` für die
+Karte (0.10.2), `kampfplatz.py` für die Lichtung um den Weg (0.11.1,
+[Grafik 05](../konzepte/grafik-05-kampfplatz.md)). So sehen Karte und Mission wie
+ein Ort aus. Avatar-Porträts: `art/avatar/ENTSTEHUNG.md`.
 
 ## Grenzen
 

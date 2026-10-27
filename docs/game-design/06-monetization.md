@@ -10,6 +10,8 @@
   Effekte, Festungsvarianten, Avatar-Kosmetik, Embleme, Banner, Titel) kommt als
   Zugabe, nicht als Grundlage. Endgültig entschieden wird in Phase 5 mit Daten.
 - Keine Helden oder Türme gegen Geld ([Marktanalyse](market-analysis.md) E13).
+  Das gilt ebenso für Ausrüstung mit Boni (D-066): nie gegen Echtgeld, sonst
+  wäre sie Pay-to-win. Woher sie im Spiel kommt, ist offen (03).
 - Ausgeschlossen: Pay-to-win, kaufbares Gold, Energie- und Wartesperren,
   Lootboxen zum Start, aufdringliche Werbung im ersten Release.
 - Reihenfolge: Spaß nachweisen → Vertical Slice → echte Spieler → Wiederkehr

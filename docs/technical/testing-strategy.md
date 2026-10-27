@@ -1,6 +1,6 @@
 # Teststrategie
 
-Status: **[VORSCHLAG]**, Ende-zu-Ende-Tests **[ENTSCHIEDEN D-029]**
+Status: **gilt**, umgesetzt bis 0.12.0; Ende-zu-Ende-Tests **[ENTSCHIEDEN D-029]**
 
 ## Ebenen
 
@@ -44,6 +44,11 @@ Status: **[VORSCHLAG]**, Ende-zu-Ende-Tests **[ENTSCHIEDEN D-029]**
   (Startup-Haken, gemessen am 25.10.2026: läuft, 46 Tests in unter einer
   Sekunde). Das deckt nur das Paket ab; App und Oberfläche baut allein die
   macOS-CI.
+- **CI-Jobs heute** (`.github/workflows/ci.yml`): `regeln` (`scripts/regeln-pruefen.sh`:
+  Architektur, Sicherheit, Verweise, Doku-Stand nach D-067), `art` (`tools/art-check`),
+  `core-linux` (Paket unter Linux), `iphone` (Paket im Release-Bau, App-Bau,
+  `AppTests`, `AppUITests`, Probelauf im Simulator mit Bildschirmfotos und
+  Spielstand im Artefakt `simulator-probe`). Zusammengeführt wird nur, wenn alle grün sind.
 - Seit WP-10 decken die Swift-Tests Determinismus (`DeterminismTests`: Replay
   mit Prüfsumme, 1× = 2×, Speichern/Laden mitten in der Welle, feste Prüfsumme
   einer kleinen Mission, die Linux und macOS gleich liefern müssen) und Balance
@@ -54,8 +59,27 @@ Status: **[VORSCHLAG]**, Ende-zu-Ende-Tests **[ENTSCHIEDEN D-029]**
 Steffen, 25.10.2026: Allgemeine Ende-zu-Ende-Tests sollen mit allen möglichen
 Tests prüfen, dass die App genau so funktioniert wie gedacht. **[ENTSCHIEDEN]**
 
-Umgesetzt ab Version 0.5.1 (13 Fälle unter `AppUITests/`); Aufbau, Startargumente und
-Abdeckung im Einzelnen: [e2e-tests.md](../konzepte/e2e-tests.md).
+Umgesetzt ab Version 0.5.1; Aufbau und Grundsätze: [e2e-tests.md](../konzepte/e2e-tests.md).
+
+**Stand 0.12.0: 27 Fälle** in `AppUITests/`:
+
+| Datei | Fälle | Ablauf |
+|---|---|---|
+| `NavigationE2ETests` | 4 | Menü → Karte → Mission → zurück, Vorführung, Hintergrund pausiert, Einstellung übersteht Neustart |
+| `CampaignE2ETests` | 2 | Sterne nach Sieg überstehen Neustart, gesperrte Missionen nennen den Grund |
+| `AvatarE2ETests` | 4 | Avatar einmal aufbauen (R-5), Zwerge mit Preis und Fähigkeit, Rang schaltet Talent frei (R-6), Aufbau und Menü passen auf den Schirm |
+| `BuildAndSellE2ETests` | 4 | Kreismenü, Vorschau, bauen, verkaufen, „fehlt N“, Schließen |
+| `HUDE2ETests` | 4 | Startwerte, Welle rufen, Pause hält Countdown, Tempo |
+| `TablesE2ETests` | 4 | Pausetafel (weiter, neu starten), Aufgeben, Bildschirmfotos zum Abgleich |
+| `MissionE2ETests` | 2 | Niederlage und Nochmal setzt alles zurück, Sieg und zurück ins Menü |
+| `AbilityE2ETests` | 2 | Fähigkeit auf den Weg, Abklingzeit, Knopf verschwindet am Missionsende |
+| `EffectsE2ETests` | 1 | Vorführung spielt jede Effektart (FX 01) |
+
+**Testschalter** (nur Debug-Bau, ändern keine Regel): `--play` (Mission direkt),
+`--demo`, `--e2e-frisch` (leerer Speicher), `--e2e-speicher`, `--e2e-avatar <volk>`
+(fertiger Avatar), `--e2e-volle-sterne`, `--e2e-erste-welle` (erste Welle gehalten),
+`--e2e-zeitraffer N`, `--e2e-abklingzeit`, `--e2e-mitspieler`, `--e2e-fx`,
+`--fx-messung`. Ein neuer Schalter kommt hier in die Liste.
 
 **Was sie prüfen.** Nicht einzelne Regeln (das tun die Paket-Tests), sondern dass
 ein Mensch mit Fingern durch die fertige App kommt:
@@ -87,5 +111,5 @@ ein Mensch mit Fingern durch die fertige App kommt:
 6. Gegenprobe wie überall: jeder Ablauf einmal rot gesehen.
 
 **Wer baut sie.** Der Code-Thread legt die Grundlage mit XCUITest in der CI an
-(Stand: `AppUITests/BuildAndSellUITests.swift` aus WP-12). Die Abdeckungsliste
-oben ist die Messlatte; die Roadmap führt sie als Querschnittsaufgabe.
+(Stand: Tabelle oben). Die Abdeckungsliste oben ist die Messlatte; jedes Paket
+mit Bedienung ergänzt die Tabelle im selben PR (D-067).

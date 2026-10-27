@@ -188,6 +188,12 @@ Abkürzungen: **Abh.** = Abhängigkeiten.
 
 ---
 
+## Spielrahmen, Grafik und Effekte (außerhalb dieser Liste)
+
+Die vorgezogenen Pakete R-1 bis R-7 (D-060), Grafik 01 bis 05 und FX 01/02 stehen
+mit Stand und Version in der [Roadmap](roadmap.md#ausgeliefert), ihre Abnahme im
+jeweiligen Konzept unter `docs/konzepte/`. Hier stehen sie nicht doppelt.
+
 ## Danach (Phase 2, noch nicht geschnitten)
 
 Reihenfolge und Abhängigkeiten als Entwurf in der
