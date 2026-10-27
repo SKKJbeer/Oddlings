@@ -75,13 +75,15 @@ struct TalentTests {
         #expect(other.issues().contains { $0.field == "races.dwarves.talents.0.a.radius" && $0.rule == .fieldNotInAbility })
     }
 
-    @Test("Die ausgelieferten Völker haben zwei Reihen und bestehen die Prüfung")
+    @Test("Fünf Ränge, alle sechs Sterne einer, und je Rang eine Reihe (D-065)")
     func bundled() throws {
         let table = try RaceTable.bundled()
-        #expect(table.rankStars?.count == 2)
+        #expect(table.rankStars == [6, 12, 18, 24])
+        #expect(table.rank(stars: 5) == 1)
+        #expect(table.rank(stars: 24) == 5)
         for race in Race.allCases {
-            #expect(try #require(table[race]).talents?.count == 2, "\(race)")
-            #expect(try #require(table[race]).allTalentChoices().count == 7, "\(race)")
+            #expect(try #require(table[race]).talents?.count == 4, "\(race)")
+            #expect(try #require(table[race]).allTalentChoices().count == 31, "\(race)")
         }
     }
 

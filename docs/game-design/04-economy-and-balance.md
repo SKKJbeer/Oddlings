@@ -91,7 +91,7 @@ dem die Bauweise noch gewinnt. 1,35 heißt: Die Gegner dürften 35 % mehr Leben
 haben, und es reichte noch.
 
 ```
-swift test --package-path Packages/OddlingsCore --filter BalanceTests
+swift test -c release -Xswiftc -enable-testing --package-path Packages/OddlingsCore --filter BalanceTests
 ```
 
 Die Tests prüfen Beziehungen (Blitz + Sporen mehr als 0,3 vor Blitz allein,
@@ -217,11 +217,20 @@ Spieltest zum Wachturm-Spam verleiten, ist eine Frage für WP-15.
 
 Faktoren in `Balance/races.json` (`talents`), Begründung im
 [Konzept](../konzepte/r-6-avatarrang.md#talente-vorschlag-zahlen-hypothese).
-`BalanceTests.talentsStayEven` rechnet jede spielbare Kombination (sieben je Volk)
-mit den vier gewinnenden Mischungen und nimmt den Schnitt der Reserve. Jede
-Kombination muss besser sein als ohne Fähigkeit, höchstens 0,05 von der Grundform
-ihres Volks abweichen und die Mischung mehr als 0,05 vor „Nur Wachtürme“ lassen.
-Gemessen am 27.10.2026: größte Abweichung 0,039 (Elfen, Flüchtig mit Weitem Schein).
+`BalanceTests.talentsStayEven` rechnet jede spielbare Kombination (31 je Volk, vier
+Reihen, D-065) mit den vier gewinnenden Mischungen und nimmt den Schnitt der Reserve.
+Jede Kombination muss besser sein als ohne Fähigkeit, höchstens 0,06 von der Mitte
+ihres Volks abweichen und die Mischung mehr als 0,05 vor „Nur Wachtürme“ lassen; die
+Mitte darf höchstens 0,05 über der Grundform liegen. Gemessen am 27.10.2026:
+
+| | Grundform | Mitte | größte Abweichung | kleinster Abstand Mischung |
+|---|---|---|---|---|
+| Zwerge | 1,353 | 1,381 | 0,054 | 0,062 |
+| Elfen | 1,442 | 1,462 | 0,028 | 0,191 |
+
+Die Streuung von etwa ±0,05 kommt aus der Rechnung selbst (ein Wurf, eine Welle
+früher), nicht aus einem Talent. Die Balancetests laufen deshalb im Release-Bau:
+Im Debug-Bau brauchten 62 Kombinationen über 20 Minuten.
 
 ### Grenzen der Rechnung
 

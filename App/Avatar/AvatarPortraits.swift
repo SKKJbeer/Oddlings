@@ -62,7 +62,7 @@ struct AvatarBadge: View {
     let avatar: Avatar
     var rank = 1
     var size: CGFloat = 44
-    /// Ein neuer Rang hat ein Talent freigegeben, die Tafel war noch nicht offen.
+    /// Ein neuer Rang hat ein Talent freigegeben, das Avatar-Menü war noch nicht offen.
     var newTalent = false
 
     var body: some View {

@@ -100,12 +100,14 @@ final class AvatarE2ETests: XCTestCase {
         waitForExpectations(timeout: 5)
     }
 
-    /// R-6: Ein Sieg mit drei Sternen hebt auf Rang II. Das Schild meldet das
-    /// neue Talent, die Tafel zeigt die freie und die gesperrte Reihe, die Wahl
-    /// übersteht den Neustart, und nichts auf der Tafel liegt übereinander.
+    /// R-6: Drei Sterne liegen schon (Testschalter), ein Sieg mit drei weiteren
+    /// hebt auf Rang II. Das Schild meldet das neue Talent, das Avatar-Menü zeigt
+    /// die freie und die gesperrten Reihen, die Wahl übersteht den Neustart, und
+    /// nichts im Menü liegt übereinander.
     @MainActor
     func testRankUnlocksATalentThatSurvivesRelaunch() throws {
-        let e2e = try E2EApp(["--e2e-zeitraffer", E2EApp.fastForward, "--e2e-mitspieler"], storage: "rang", avatar: .elves)
+        let e2e = try E2EApp(["--e2e-zeitraffer", E2EApp.fastForward, "--e2e-mitspieler", "--e2e-volle-sterne", "m2"],
+                             storage: "rang", avatar: .elves)
         let resume = e2e.app.buttons["menu.continue"]
         XCTAssertTrue(resume.waitForExistence(timeout: 15))
         XCTAssertEqual(e2e.app.buttons["menu.avatar"].label, "Test, Elfen, Rang I")
@@ -124,24 +126,27 @@ final class AvatarE2ETests: XCTestCase {
         XCTAssertEqual(e2e.mapAvatar.value as? String, "Neues Talent")
 
         e2e.mapAvatar.tap()
-        let panel = e2e.app.otherElements["avatar.panel"]
-        XCTAssertTrue(panel.waitForExistence(timeout: 5))
+        let screen = e2e.app.otherElements["avatar.screen"]
+        XCTAssertTrue(screen.waitForExistence(timeout: 5))
         XCTAssertEqual(e2e.app.staticTexts["avatar.rank"].label, "Elfen · Rang II")
-        XCTAssertEqual(e2e.app.staticTexts["avatar.progress"].label, "3 von 12 Sternen bis Rang III")
+        XCTAssertEqual(e2e.app.staticTexts["avatar.progress"].label, "6 von 12 Sternen bis Rang III")
         let first = e2e.app.buttons["talent.0.a"], second = e2e.app.buttons["talent.0.b"]
         XCTAssertTrue(first.isSelected, "eine neue Reihe steht auf A")
         XCTAssertFalse(second.isSelected)
-        XCTAssertTrue(e2e.app.descendants(matching: .any)["talent.1.locked"].exists, "Reihe 2 braucht Rang III")
+        for row in 1...3 {
+            XCTAssertTrue(e2e.app.descendants(matching: .any)["talent.\(row).locked"].exists, "Reihe \(row + 1) ist gesperrt")
+        }
         XCTAssertFalse(e2e.app.buttons["talent.1.a"].isEnabled)
-        e2e.screenshot("8-avatartafel", in: self)
-        assertFits([e2e.app.staticTexts["avatar.rank"], e2e.app.staticTexts["avatar.progress"], first, second,
-                    e2e.app.buttons["talent.1.a"], e2e.app.buttons["talent.1.b"], e2e.app.buttons["avatar.panel.done"]],
+        e2e.screenshot("8-avatarmenue", in: self)
+        assertFits([e2e.app.buttons["avatar.back"], e2e.app.staticTexts["avatar.rank"],
+                    e2e.app.staticTexts["avatar.progress"], first, second,
+                    e2e.app.buttons["talent.1.a"], e2e.app.buttons["talent.1.b"]],
                    in: e2e, hittable: false)
         second.tap()
         XCTAssertTrue(second.isSelected)
         XCTAssertFalse(first.isSelected)
-        e2e.app.buttons["avatar.panel.done"].tap()
-        XCTAssertFalse(panel.waitForExistence(timeout: 1))
+        e2e.app.buttons["avatar.back"].tap()
+        XCTAssertTrue(e2e.mapStart.waitForExistence(timeout: 5), "zurück zur Karte")
         XCTAssertNotEqual(e2e.mapAvatar.value as? String, "Neues Talent", "einmal angesehen, kein Hinweis mehr")
 
         e2e.app.terminate()
@@ -150,8 +155,10 @@ final class AvatarE2ETests: XCTestCase {
         XCTAssertTrue(badge.waitForExistence(timeout: 15))
         XCTAssertEqual(badge.label, "Test, Elfen, Rang II")
         badge.tap()
-        XCTAssertTrue(again.app.otherElements["avatar.panel"].waitForExistence(timeout: 5))
+        XCTAssertTrue(again.app.otherElements["avatar.screen"].waitForExistence(timeout: 5))
         XCTAssertTrue(again.app.buttons["talent.0.b"].isSelected, "die Wahl steht im Spielstand")
+        again.app.buttons["avatar.back"].tap()
+        XCTAssertTrue(badge.waitForExistence(timeout: 5), "zurück ins Hauptmenü")
     }
 
     /// Im Querformat ist wenig Platz: Im Aufbau und auf der Tafel mit Avatar darf

@@ -18,7 +18,7 @@ struct MainMenuView: View {
     var avatar: Avatar?
     var rank = 1
     var newTalent = false
-    /// Das Schild öffnet die Avatartafel (R-6).
+    /// Das Schild öffnet das Avatar-Menü (R-6).
     var onAvatar: () -> Void = {}
 
     var body: some View {

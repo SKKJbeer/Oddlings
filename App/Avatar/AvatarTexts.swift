@@ -18,7 +18,7 @@ enum AvatarTexts {
 
     static let talents = "Talente"
     static let newTalent = "Neues Talent"
-    static let done = "Fertig"
+    static let back = "Zurück"
     static let switchHint = "Umstellen kostet nichts und gilt ab der nächsten Mission."
 
     static func roman(_ number: Int) -> String {
@@ -39,6 +39,10 @@ enum AvatarTexts {
         switch id {
         case "reachOrForce": "Reichweite oder Wucht"
         case "pace": "Takt oder Dauer"
+        case "throwOrBeat": "Wurf oder Takt"
+        case "mightOrSpeed": "Festung oder Feld"
+        case "fireOrVeil": "Glut oder Schleier"
+        case "widthOrBeat": "Weite oder Takt"
         default: id
         }
     }
@@ -53,6 +57,14 @@ enum AvatarTexts {
         case "sharpMark": "Scharfes Mal"
         case "fleeting": "Flüchtig"
         case "deep": "Tief"
+        case "longArm": "Langer Arm"
+        case "steadyHand": "Ruhige Hand"
+        case "fortressWall": "Festungswall"
+        case "fieldWall": "Feldmauer"
+        case "ember": "Glut"
+        case "veil": "Schleier"
+        case "moonWide": "Mondweite"
+        case "crescent": "Mondsichel"
         default: id
         }
     }

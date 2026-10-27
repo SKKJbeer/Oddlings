@@ -1,7 +1,8 @@
 # R-6 Avatarrang mit Talentwahl
 
 **Stand:** 27.10.2026 · Grundlage D-064 (Steffen, 26.10.2026: „Rang mit Talentwahl“
-ohne Mehrkraft), Vorgänger [R-5](r-5-avatar.md).
+ohne Mehrkraft) und D-065 (Steffen, 27.10.2026: fünf Ränge, eigenes Avatar-Menü),
+Vorgänger [R-5](r-5-avatar.md).
 
 ## Ziel
 
@@ -15,29 +16,45 @@ umstellen.
 ## Was der Spieler erlebt
 
 1. Das Avatarschild im Hauptmenü und auf der Karte zeigt den Rang (römische Ziffer am
-   Porträt) und den Fortschritt zum nächsten Rang („4 von 12 Sternen“).
-2. Ein Tippen auf das Schild öffnet die **Avatartafel**: Porträt, Name, Volk, Rang,
-   die Fähigkeit mit ihren Werten und darunter die Talentreihen.
+   Porträt).
+2. Ein Tippen auf das Schild öffnet das **Avatar-Menü**, einen eigenen Schirm: links
+   der Charakter mit großem Porträt, Name, Volk, Rang und einem Sternbalken zum
+   nächsten Rang („6 von 12 Sternen bis Rang III“), rechts die Talentreihen.
+   „Zurück“ führt dorthin, wo es geöffnet wurde.
 3. Jede Talentreihe hat zwei Karten nebeneinander. Gesperrte Reihen zeigen, ab
    welchem Rang sie frei werden. In einer freien Reihe ist eine Karte gewählt; ein
    Tippen auf die andere stellt um. Umstellen kostet nichts und gilt ab der nächsten
    Mission.
 4. Erreicht der Spieler mit einem Sieg einen neuen Rang, trägt das Avatarschild auf
-   Karte und Hauptmenü „Neues Talent“, bis die Tafel einmal offen war. Die
+   Karte und Hauptmenü „Neues Talent“, bis das Avatar-Menü einmal offen war. Die
    Ergebnistafel bleibt unverändert: Dort zählt der Sieg, und das Schild ist der
    erste Blick danach.
 
-## Ränge **[VORSCHLAG]**
+## Avatar-Menü zum Ausbauen (D-065)
+
+Steffen will ein eigenes Avatar-Menü, in dem man sich über die Zeit einen coolen und
+wertvollen Charakter aufbaut. Deshalb ist es ein Schirm und keine Tafel: Links steht
+immer der Charakter, rechts seine Abschnitte. Heute gibt es einen, die Talente. Was
+später dazukommt, bekommt einen eigenen Abschnitt daneben (Reiter über der rechten
+Spalte), ohne den Charakter zu verdrängen. **[OFFEN, Entscheidungskarte]** Was das
+Ausbauen außer Talenten bringt: Empfehlung Aussehen und Titel freispielen (Rahmen,
+Banner, Rüstungsfarben, Titel über Sterne und Erfolge), weil der Charakter so
+sichtbar wertvoll wird, ohne die Leitplanke „anders, nicht stärker“ aufzugeben.
+Gebaut wird davon nichts vor der Entscheidung (Scope-Verbot).
+
+## Ränge **[ENTSCHIEDEN, D-065]**
 
 | Rang | ab Sternen | frei wird |
 |---|---|---|
 | I | 0 | Grundform der Fähigkeit |
-| II | 3 | Talentreihe 1: **Reichweite oder Wucht** |
-| III | 12 | Talentreihe 2: **Takt oder Dauer** |
+| II | 6 | Talentreihe 1 |
+| III | 12 | Talentreihe 2 |
+| IV | 18 | Talentreihe 3 |
+| V | 24 | Talentreihe 4 |
 
-Drei Sterne sind Mission 1 mit voller Wertung: Wer heute spielt, erreicht Rang II
-und erlebt die erste Wahl. Rang III braucht mehrere Missionen und kommt mit dem Ausbau
-von Region 1 (27 Sterne in den Hauptmissionen). Gezählt werden die besten Sterne je
+Region 1 bringt 27 Sterne (sieben Haupt- und zwei Nebenmissionen), Rang V ist also
+erst kurz vor ihrem Ende erreicht. Heute ist nur Mission 1 spielbar (3 Sterne): Die
+erste Wahl wartet auf Mission 2, das Avatar-Menü zeigt bis dahin den Weg. Gezählt werden die besten Sterne je
 Mission aus dem Spielstand (`CampaignProgress`), nicht eine eigene Erfahrung: Ein
 Rang lässt sich so nie verlieren und nie doppelt verdienen.
 
@@ -55,6 +72,8 @@ die Tabelle nennt den Stand nach der ersten Messung.
 |---|---|---|
 | 1 Reichweite oder Wucht | **Fernwurf:** Fangweite ×1,6, steht ×0,9 | **Granit:** steht ×1,2, Fangweite ×0,8 |
 | 2 Takt oder Dauer | **Schnell gemauert:** Abklingzeit ×0,8, steht ×0,7 | **Bergfest:** Abklingzeit ×1,3, steht ×1,2 |
+| 3 Wurf oder Takt | **Langer Arm:** Fangweite ×1,4, Abklingzeit ×1,15 | **Ruhige Hand:** Abklingzeit ×0,88, Fangweite ×0,85 |
+| 4 Festung oder Feld | **Festungswall:** Fangweite ×1,2, steht ×1,1, Abklingzeit ×1,15 | **Feldmauer:** Fangweite ×0,9, steht ×0,9, Abklingzeit ×0,9 |
 
 **Elfen, Mondmal** (Getroffene nehmen mehr Schaden; Grundform Radius 1,5, ×1,5, 4 s, 35 s)
 
@@ -62,14 +81,20 @@ die Tabelle nennt den Stand nach der ersten Messung.
 |---|---|---|
 | 1 Reichweite oder Wucht | **Weiter Schein:** Radius ×1,3, Schadensfaktor ×0,9 | **Scharfes Mal:** Radius ×0,8, Schadensfaktor ×1,07 |
 | 2 Takt oder Dauer | **Flüchtig:** Abklingzeit ×0,8, hält ×0,7 | **Tief:** Abklingzeit ×1,25, hält ×1,15 |
+| 3 Glut oder Schleier | **Glut:** Schadensfaktor ×1,05, hält ×0,8 | **Schleier:** hält ×1,25, Schadensfaktor ×0,95 |
+| 4 Weite oder Takt | **Mondweite:** Radius ×1,2, Abklingzeit ×1,15 | **Mondsichel:** Abklingzeit ×0,85, Radius ×0,85 |
 
 „Gleich stark“ heißt messbar gleich: Die Balancetests rechnen jede spielbare
-Kombination (Grundform, eine Reihe, beide Reihen: sieben je Volk) mit den vier
-gewinnenden Mischungen aus `simStrategies`. Ein einzelner Lauf springt schon, wenn ein
-Wurf eine Welle früher fällt; deshalb zählt der Schnitt. Jede Kombination muss helfen,
-darf höchstens 0,05 Reserve von der Grundform ihres Volks abweichen und muss die
-Mischung vor der Monokultur lassen. Gemessen am 27.10.2026: größte Abweichung 0,039
-(Elfen, Flüchtig mit Weitem Schein).
+Kombination (Grundform und jede Wahl über eine bis vier freie Reihen: 31 je Volk)
+mit den vier gewinnenden Mischungen aus `simStrategies` und nehmen den Schnitt. Ein
+einzelner Lauf springt schon, wenn ein Wurf eine Welle früher fällt; über die 31
+Kombinationen eines Volks streut der Schnitt um etwa ±0,05. Deshalb wird jede
+Kombination mit der **Mitte** ihres Volks verglichen (höchstens 0,06 daneben), und die
+Mitte darf höchstens 0,05 über der Grundform liegen: Im Schnitt macht ein Rang nicht
+stärker. Dazu muss jede Kombination helfen und die Mischung mehr als 0,05 vor „Nur
+Wachtürme“ lassen. Gemessen am 27.10.2026: Mitte über der Grundform bei Zwergen 0,028,
+bei Elfen 0,020; größte Abweichung von der Mitte 0,054 (Zwerge) und 0,028 (Elfen);
+kleinster Abstand der Mischung zur Monokultur 0,062.
 
 ## Architektur
 
@@ -92,7 +117,8 @@ Mischung vor der Monokultur lassen. Gemessen am 27.10.2026: größte Abweichung 
   Reihen) verwirft nur die Wahl.
 - **App:** `AppFlow.chooseTalent(row:side:)` speichert sofort, `battleMission` reicht
   die Wahl an `applying`. Neue `AvatarPanel` (Tafel nach UI-01), geöffnet über das
-  Schild. Das Schild meldet einen neuen Rang.
+  Schild. Das Schild meldet einen neuen Rang. Das Avatar-Menü ist ein eigener
+  Schirm (`AppFlow.Screen.avatar`), „Zurück“ führt zum Schirm, von dem es kam.
 
 ## Bedienentscheidungen
 
@@ -117,12 +143,13 @@ bevor sie eine Konfiguration erreicht. Kein Netz, keine neue Abhängigkeit.
   beide Völker.
 - **App:** `chooseTalent` speichert, gesperrte Reihe lässt sich nicht wählen, die
   Mission trägt die Spielart.
-- **E2E:** Spielstand mit 3 Sternen → Schild zeigt Rang II → Tafel → Seite B der ersten
-  Reihe → Mission zeigt die geänderte Fähigkeit; nach Neustart bleibt die Wahl. Dazu
-  eine Überlappungsprobe der Tafel auf dem kleinsten iPhone.
+- **E2E:** Testschalter legt drei Sterne auf Mission 2, Sieg in Mission 1 → Schild
+  zeigt Rang II und „Neues Talent“ → Avatar-Menü → Seite B der ersten Reihe, drei
+  Reihen gesperrt → Zurück zur Karte; nach Neustart bleibt die Wahl. Dazu eine
+  Überlappungsprobe des Menüs.
 - Jeder neue Test wird einmal rot gesehen.
 
 ## Offen
 
-1. Ränge und Reihen wie oben (Empfehlung) oder anders gestuft: Entscheidungskarte.
+1. Was das Avatar-Menü außer Talenten bringt: Entscheidungskarte (siehe oben).
 2. Rangabzeichen und Talentbilder kommen aus dem Grafik-Thread; bis dahin Symbole.

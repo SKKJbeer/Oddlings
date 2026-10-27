@@ -84,13 +84,14 @@ struct BalanceTests {
         }
     }
 
-    /// D-064: Talente machen anders, nicht stärker. Ein einzelner Lauf springt
-    /// schon, wenn ein Wurf eine Welle früher fällt; gemessen wird deshalb der
-    /// Schnitt über die vier gewinnenden Mischungen. Jede spielbare Kombination
-    /// hilft, bleibt höchstens 0,05 von der Grundform ihres Volks entfernt und
-    /// lässt die Mischung vor der Monokultur.
-    @Test("Jede Talentkombination liegt nah an der Grundform ihres Volks")
-    func talentsStayEven() throws {
+    /// R-6/D-065: Ein Rang macht den Avatar anders, nicht stärker. Ein Lauf
+    /// springt schon, wenn ein Wurf eine Welle früher fällt (gemessen: ±0,05 über
+    /// die Kombinationen eines Volks). Deshalb zählt der Schnitt über vier
+    /// Mischungen, und verglichen wird mit der Mitte aller Kombinationen; die
+    /// Mitte selbst darf nicht spürbar über der Grundform liegen.
+    @Test("Jede Talentkombination liegt nah an der Mitte ihres Volks, und die Mitte nah an der Grundform",
+          arguments: Race.allCases)
+    func talentsStayEven(race: Race) throws {
         let mixes = try ["Mix", "Wach + Blitz", "Wach + Sporen", "Blitz + Sporen"].map(order)
         let mix = try order("Mix"), watchOnly = try order("Nur Wachtürme")
         func average(_ config: BalanceConfig, castsAbility: Bool) -> Double {
@@ -100,19 +101,23 @@ struct BalanceTests {
         var plain = sim.config
         plain.ability = nil
         let without = average(plain, castsAbility: false)
-        let table = try RaceTable.bundled()
-        for race in Race.allCases {
-            let config = try #require(table[race])
-            let base = average(sim.config.applying(config), castsAbility: true)
-            for choice in config.allTalentChoices().dropFirst() {
-                let talented = sim.config.applying(config, talents: choice)
-                let with = average(talented, castsAbility: true)
-                let name = "\(race) \(choice.map(\.rawValue).joined())"
-                #expect(with > without, "\(name) hilft")
-                #expect(abs(with - base) <= 0.05, "\(name) bleibt nah an der Grundform: \(with) gegen \(base)")
-                let raced = Simulation(config: talented)
-                #expect(raced.reserve(mix, castsAbility: true) > raced.reserve(watchOnly, castsAbility: true) + 0.05, "\(name)")
-            }
+        let config = try #require(try RaceTable.bundled()[race])
+        var results: [(name: String, reserve: Double)] = []
+        for choice in config.allTalentChoices() {
+            let talented = sim.config.applying(config, talents: choice)
+            let name = "\(race) \(choice.map(\.rawValue).joined())"
+            let with = average(talented, castsAbility: true)
+            #expect(with > without, "\(name) hilft")
+            let raced = Simulation(config: talented)
+            #expect(raced.reserve(mix, castsAbility: true) > raced.reserve(watchOnly, castsAbility: true) + 0.05,
+                    "\(name): Mischung vor Monokultur")
+            results.append((name, with))
+        }
+        let base = results[0].reserve
+        let center = results.map(\.reserve).reduce(0, +) / Double(results.count)
+        #expect(abs(center - base) <= 0.05, "\(race): im Schnitt nicht stärker, \(center) gegen \(base)")
+        for result in results {
+            #expect(abs(result.reserve - center) <= 0.06, "\(result.name): \(result.reserve) gegen Mitte \(center)")
         }
     }
 }

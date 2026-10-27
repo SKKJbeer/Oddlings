@@ -105,11 +105,13 @@ final class AppFlowTests: XCTestCase {
         XCTAssertEqual(flow.selectedNode, "m1")
     }
 
-    /// R-6: Drei Sterne heben auf Rang II. Die erste Reihe wird frei, steht auf
-    /// A, lässt sich umstellen, steht in der Datei und prägt die Mission. Die
-    /// zweite Reihe bleibt gesperrt.
+    /// R-6: Alle sechs Sterne ein Rang. Ein Sieg, der die Summe auf sechs hebt,
+    /// gibt Rang II und damit die erste Reihe; die zweite bleibt gesperrt.
     @MainActor
     func testRankUnlocksATalentThatShapesTheBattle() throws {
+        // Drei Sterne aus einer Mission, die es noch nicht zu spielen gibt.
+        try SaveStore(directory: directory).save(
+            SaveGame(progress: CampaignProgress(records: [MissionRecord(mission: "m2", bestStars: 3)])), allowed: true)
         let flow = try makeFlow()
         flow.showMap()
         XCTAssertTrue(flow.createAvatar(race: .elves, name: "Lyra", portrait: "elf-1"))
@@ -117,31 +119,38 @@ final class AppFlowTests: XCTestCase {
         let elves = try XCTUnwrap(races[.elves])
         let mission = try XCTUnwrap(flow.mission(for: "m1"))
         XCTAssertEqual(flow.rank, 1)
+        XCTAssertEqual(flow.nextRankStars, 6)
         XCTAssertEqual(flow.talents, [])
         XCTAssertFalse(flow.chooseTalent(row: 0, side: .b), "auf Rang I ist keine Reihe frei")
         XCTAssertEqual(flow.battleMission(for: "m1"), mission.applying(elves))
 
         flow.finish("m1", outcome: .won, livesLeft: try fullLives())
         XCTAssertEqual(flow.rank, 2)
+        XCTAssertEqual(flow.rankFloorStars, 6)
+        XCTAssertEqual(flow.nextRankStars, 12)
         XCTAssertTrue(flow.newTalentWaiting, "das Schild weist auf das neue Talent hin")
         XCTAssertEqual(flow.talents, [.a])
         XCTAssertEqual(flow.battleMission(for: "m1"), mission.applying(elves, talents: [.a]))
-        flow.openAvatarPanel()
+        flow.openAvatar()
+        XCTAssertEqual(flow.screen, .avatar)
         XCTAssertFalse(flow.newTalentWaiting)
-        XCTAssertTrue(flow.showsAvatarPanel)
 
         XCTAssertTrue(flow.chooseTalent(row: 0, side: .b))
         XCTAssertFalse(flow.chooseTalent(row: 1, side: .b), "Reihe 2 braucht Rang III")
         XCTAssertEqual(flow.talents, [.b])
         XCTAssertEqual(flow.battleMission(for: "m1"), mission.applying(elves, talents: [.b]))
         XCTAssertNotEqual(flow.battleMission(for: "m1"), mission.applying(elves, talents: [.a]))
-        flow.start("m1")
-        XCTAssertFalse(flow.showsAvatarPanel, "die Mission schließt die Tafel")
+        flow.closeAvatar()
+        XCTAssertEqual(flow.screen, .map, "zurück dorthin, wo das Menü geöffnet wurde")
 
         let reopened = try makeFlow()
         XCTAssertEqual(reopened.rank, 2)
         XCTAssertEqual(reopened.talents, [.b], "die Wahl steht in der Datei")
         XCTAssertFalse(reopened.newTalentWaiting)
+        reopened.openAvatar()
+        XCTAssertEqual(reopened.screen, .avatar)
+        reopened.closeAvatar()
+        XCTAssertEqual(reopened.screen, .menu)
     }
 
     @MainActor

@@ -45,7 +45,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Simulation testen
-        run: swift test --package-path Packages/OddlingsCore
+        # Release mit Testzugriff: Die Balancetests rechnen jede Talentkombination
+        # (D-065), im Debug-Bau dauerte das über 20 Minuten.
+        run: swift test -c release -Xswiftc -enable-testing --package-path Packages/OddlingsCore
 
   iphone:
     runs-on: macos-15
@@ -62,7 +64,9 @@ jobs:
           swift --version
 
       - name: Simulation testen
-        run: swift test --package-path Packages/OddlingsCore
+        # Release mit Testzugriff: Die Balancetests rechnen jede Talentkombination
+        # (D-065), im Debug-Bau dauerte das über 20 Minuten.
+        run: swift test -c release -Xswiftc -enable-testing --package-path Packages/OddlingsCore
 
       - name: XcodeGen
         run: brew install xcodegen

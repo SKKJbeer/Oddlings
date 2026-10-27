@@ -30,6 +30,7 @@ struct StartView: View {
         if flow.avatar == nil, let raw = SaveLocation.argument(after: "--e2e-avatar"), let race = Race(rawValue: raw) {
             flow.createAvatar(race: race, name: "Test", portrait: AvatarPortraits.of(race)[0].id)
         }
+        if let node = SaveLocation.argument(after: "--e2e-volle-sterne") { flow.seedStarsForTests(StarRating.maximum, on: node) }
         #endif
         _flow = State(initialValue: flow)
     }
@@ -46,14 +47,14 @@ struct StartView: View {
                 onPlay: { flow.showMap() }, onWatch: { flow.showWatch() }, onSpike: { flow.showSpike() },
                 onSettings: { showsSettings = true },
                 avatar: flow.avatar, rank: flow.rank, newTalent: flow.newTalentWaiting,
-                onAvatar: { flow.openAvatarPanel() })
+                onAvatar: { flow.openAvatar() })
             .overlay { if showsSettings { SettingsCard { showsSettings = false } } }
-            .overlay { if flow.showsAvatarPanel { AvatarPanel(flow: flow) { flow.closeAvatarPanel() } } }
         case .setup:
             AvatarSetupView(flow: flow)
         case .map:
             CampaignMapView(flow: flow)
-                .overlay { if flow.showsAvatarPanel { AvatarPanel(flow: flow) { flow.closeAvatarPanel() } } }
+        case .avatar:
+            AvatarScreen(flow: flow)
         case .battle(let node):
             if let mission = flow.battleMission(for: node) {
                 BattleView(mission: mission, mode: .play, onClose: { flow.showMap() }) { outcome, lives in

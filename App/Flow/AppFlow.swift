@@ -14,6 +14,9 @@ final class AppFlow {
         /// Avatar-Aufbau (R-5), einmal vor der ersten Karte.
         case setup
         case map
+        /// Avatar-Menü (R-6): eigener Schirm, damit es mit weiteren
+        /// Abschnitten wachsen kann, ohne eine Tafel zu überfüllen.
+        case avatar
         case battle(node: String)
         case watch
         case spike
@@ -31,7 +34,7 @@ final class AppFlow {
     /// Das Volk des Avatars bestimmt jede Mission. Ohne Avatar (nur die
     /// Oberflächentests mit `--play`) gilt die Fähigkeit der Missionsdatei.
     var race: Race? { avatar?.race }
-    /// Ein Sieg hat einen neuen Rang gebracht, und die Avatartafel war seitdem
+    /// Ein Sieg hat einen neuen Rang gebracht, und das Avatar-Menü war seitdem
     /// nicht offen. Das Schild weist darauf hin. Gilt nur bis zum Neustart.
     private(set) var newTalentWaiting = false
     /// Werte der Völker. Die Kerntests laden dieselbe Datei und fangen einen
@@ -76,10 +79,7 @@ final class AppFlow {
 
     // MARK: Schirme
 
-    func showMenu() {
-        showsAvatarPanel = false
-        screen = .menu
-    }
+    func showMenu() { screen = .menu }
     func showWatch() { screen = .watch }
     func showSpike() { screen = .spike }
 
@@ -96,7 +96,6 @@ final class AppFlow {
         guard let node = campaign.node(nodeID), state(of: node).isPlayable else { return }
         selectedNode = nodeID
         justImproved = nil
-        showsAvatarPanel = false
         screen = .battle(node: nodeID)
     }
 
@@ -133,6 +132,9 @@ final class AppFlow {
     /// Aus den besten Sternen je Mission: sinkt nie und lässt sich nicht doppelt verdienen.
     var rank: Int { races?.rank(stars: progress.totalStars) ?? 1 }
 
+    /// Sterne, ab denen der jetzige Rang gilt; für den Fortschrittsbalken.
+    var rankFloorStars: Int { races?.rankStars?.last { $0 <= progress.totalStars } ?? 0 }
+
     /// Sterne für den nächsten Rang, `nil` auf dem höchsten.
     var nextRankStars: Int? { races?.rankStars?.first { $0 > progress.totalStars } }
 
@@ -159,17 +161,21 @@ final class AppFlow {
         return true
     }
 
-    /// Die Avatartafel liegt über Hauptmenü oder Karte; welcher Schirm darunter
-    /// liegt, ändert sie nicht.
-    private(set) var showsAvatarPanel = false
+    /// Wohin „Zurück“ im Avatar-Menü führt: dorthin, wo es geöffnet wurde.
+    private(set) var avatarReturn: Screen = .menu
 
-    func openAvatarPanel() {
-        guard avatar != nil else { return }
-        showsAvatarPanel = true
+    /// Öffnet das Avatar-Menü aus Hauptmenü oder Karte.
+    func openAvatar() {
+        guard avatar != nil, screen == .menu || screen == .map else { return }
+        avatarReturn = screen
         newTalentWaiting = false
+        screen = .avatar
     }
 
-    func closeAvatarPanel() { showsAvatarPanel = false }
+    func closeAvatar() {
+        guard screen == .avatar else { return }
+        screen = avatarReturn
+    }
 
     // MARK: Ergebnis
 
@@ -189,6 +195,20 @@ final class AppFlow {
         persist()
         return stars
     }
+
+    #if DEBUG
+    /// Oberflächentests: Sterne auf einem Knoten, den es noch nicht zu spielen
+    /// gibt, damit ein Rang über sechs Sternen prüfbar ist, solange nur
+    /// Mission 1 spielbar ist.
+    func seedStarsForTests(_ stars: Int, on nodeID: String) {
+        guard campaign.node(nodeID) != nil else { return }
+        let next = progress.recording(stars: stars, for: nodeID)
+        guard next != progress else { return }
+        progress = next
+        save.progress = next
+        persist()
+    }
+    #endif
 
     private func persist() {
         guard let store else { return }

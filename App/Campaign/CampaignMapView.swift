@@ -323,7 +323,7 @@ private struct AvatarSummary: View {
                 .font(UITheme.bodyHeavy(12))
                 .tracking(1.5)
                 .foregroundStyle(CampaignStyle.gold)
-            Button { flow.openAvatarPanel() } label: {
+            Button { flow.openAvatar() } label: {
                 AvatarBadge(avatar: avatar, rank: flow.rank, size: 40, newTalent: flow.newTalentWaiting)
             }
             .buttonStyle(.plain)

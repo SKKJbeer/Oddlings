@@ -44,7 +44,7 @@ Korrektur. Grundlage sind die Absprachen in `CLAUDE.md`, Abschnitte
 
 ```bash
 export PATH=/opt/swift/usr/bin:$PATH        # Cloud-Sitzung
-swift test --package-path Packages/OddlingsCore
+swift test -c release -Xswiftc -enable-testing --package-path Packages/OddlingsCore
 scripts/regeln-pruefen.sh
 ```
 
