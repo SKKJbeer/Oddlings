@@ -46,7 +46,7 @@ final class BattleSpritesTests: XCTestCase {
         // iPhone 16 Pro Max und SE quer, iPad Pro 13" und mini quer, je ganz und
         // ohne die Kopfleiste darüber (60 pt): Die Karte bekommt nur, was unter
         // der Leiste bleibt, und wird damit noch breiter als der Bildschirm.
-        // Im Probelauf zu 0.10.4 blieben so links und rechts je 1,3 Zellen leer.
+        // Im Probelauf vom 26.10.2026 blieben so links und rechts je 1,3 Zellen leer.
         for size in [CGSize(width: 956, height: 440), CGSize(width: 667, height: 375),
                      CGSize(width: 1376, height: 1032), CGSize(width: 1133, height: 744),
                      CGSize(width: 956, height: 380), CGSize(width: 874, height: 342),
