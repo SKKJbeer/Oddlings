@@ -311,34 +311,20 @@ struct StarRow: View {
 
 // MARK: - Missionstafel
 
-/// Volkswahl über „Starten" (r-4-voelker.md, Bedienung). Keine Vorauswahl:
-/// Ohne Wahl gilt der Steinregen, und „Starten" fragt nicht nach.
-private struct RacePicker: View {
-    let flow: AppFlow
+/// Der Avatar über „Starten" (R-5): wer spielt und was sein Volk tut. Keine
+/// Wahl mehr; das Volk ist seit dem Aufbau gesetzt (D-063).
+private struct AvatarSummary: View {
+    let avatar: Avatar
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(CampaignTexts.raceLabel.uppercased())
+            Text(AvatarTexts.yourAvatar.uppercased())
                 .font(UITheme.bodyHeavy(12))
                 .tracking(1.5)
                 .foregroundStyle(CampaignStyle.gold)
-            HStack(spacing: 8) {
-                ForEach(Race.allCases, id: \.self) { race in
-                    let chosen = flow.race == race
-                    Button { flow.choose(race) } label: {
-                        Label(CampaignTexts.race(race), systemImage: chosen ? "checkmark.seal.fill" : CampaignStyle.raceSymbol(race))
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(ChunkyButtonStyle(kind: .wood, height: CampaignStyle.raceButtonHeight, fontSize: 17))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: UITheme.buttonRadius, style: .continuous)
-                            .stroke(CampaignStyle.gold, lineWidth: chosen ? CampaignStyle.ring : 0)
-                    }
-                    .accessibilityAddTraits(chosen ? .isSelected : [])
-                    .accessibilityIdentifier("map.race.\(race.rawValue)")
-                }
-            }
-            Text(CampaignTexts.raceDetail(flow.race))
+            AvatarBadge(avatar: avatar, size: 40)
+                .accessibilityIdentifier("map.avatar")
+            Text(CampaignTexts.raceDetail(avatar.race))
                 .font(UITheme.body(13))
                 .foregroundStyle(CampaignStyle.parchment)
                 .lineLimit(2)
@@ -378,7 +364,7 @@ private struct MissionPanel: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
             Spacer(minLength: 4)
-            if flow.canChooseRace { RacePicker(flow: flow) }
+            if let avatar = flow.avatar { AvatarSummary(avatar: avatar) }
             Text(CampaignTexts.status(state, totalStars: flow.progress.totalStars))
                 .font(UITheme.body(14))
                 .foregroundStyle(state.isPlayable ? CampaignStyle.parchment : Color.white.opacity(0.6))

@@ -33,11 +33,14 @@ struct E2EApp {
     /// Jeder Test spielt mit eigenem Spielstand im temporären Ordner, damit ein
     /// Sieg aus einem Test den nächsten nicht verändert. `fresh: false` startet
     /// auf dem Stand, den ein früherer Start mit derselben `storage` schrieb.
-    init(_ arguments: [String] = [], storage: String = "standard", fresh: Bool = true) throws {
+    /// `avatar` legt beim Start einen fertigen Avatar dieses Volks an, falls der
+    /// Stand noch keinen hat: für Tests, die zur Karte wollen, ohne den Aufbau zu prüfen.
+    init(_ arguments: [String] = [], storage: String = "standard", fresh: Bool = true, avatar: Race? = nil) throws {
         config = try BalanceConfig.missionOne()
         sim = Simulation(config: config)
         XCUIDevice.shared.orientation = .landscapeLeft
         app.launchArguments = arguments + ["--e2e-speicher", storage] + (fresh ? ["--e2e-frisch"] : [])
+            + (avatar.map { ["--e2e-avatar", $0.rawValue] } ?? [])
         app.launch()
     }
 
@@ -65,8 +68,13 @@ struct E2EApp {
     var mapStart: XCUIElement { app.buttons["map.start"] }
     var mapBack: XCUIElement { app.buttons["map.back"] }
     func node(_ id: String) -> XCUIElement { app.buttons["map.node.\(id)"] }
-    func race(_ race: Race) -> XCUIElement { app.buttons["map.race.\(race.rawValue)"] }
     var raceDetail: String { app.staticTexts["map.race.detail"].label }
+    var mapAvatar: XCUIElement { app.otherElements["map.avatar"] }
+    var setup: XCUIElement { app.otherElements["setup"] }
+    func setupRace(_ race: Race) -> XCUIElement { app.buttons["setup.race.\(race.rawValue)"] }
+    func setupPortrait(_ id: String) -> XCUIElement { app.buttons["setup.portrait.\(id)"] }
+    var setupName: XCUIElement { app.textFields["setup.name"] }
+    var setupConfirm: XCUIElement { app.buttons["setup.confirm"] }
     /// Was ein Knoten zeigt, in Worten (CampaignTexts.accessibilityValue).
     func nodeState(_ id: String) -> String { node(id).value as? String ?? "" }
     /// Wert einer Kachel der Ergebnistafel, z. B. `result.lives`. Vorgelesen

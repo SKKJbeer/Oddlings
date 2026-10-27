@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.10.4 – 26.10.2026 (Grafik 05: Kampfplatz und Festung), Bau offen
+## 0.11.1 – 27.10.2026 (Grafik 05: Kampfplatz und Festung), Bau offen
 
 **Neu**
 - Der Kampfplatz ist eine Lichtung im Flüsterwald, aus denselben gemalten Teilen
@@ -31,6 +31,28 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   Vertrag 24 × 13 Zellen,
   Weg im Bild auf der Weggeometrie, Waldrand dunkler als das Feld, Collage legt
   keine Bäume auf Bauzellen.
+## 0.11.0 – 26.10.2026 (R-5: Avatar einmal am Anfang), Bau 31 (VALID)
+
+**Neu**
+- Avatar-Aufbau beim ersten „Spielen“ (D-063, [Konzept](docs/konzepte/r-5-avatar.md)):
+  Volk, Porträt und Name. Ein Namensvorschlag steht schon im Feld, der Würfel
+  bringt einen anderen. Danach ist das Volk gesetzt und gilt für jede Mission.
+- Avatarschild mit Porträt, Name und Volk im Hauptmenü und auf der Missionstafel.
+- Porträts: je Volk drei. Bis die gemalten Brustbilder kommen, zeigen Platzhalter
+  das Zeichen des Volks in drei Farben.
+
+**Geändert**
+- Die Volkswahl auf der Missionstafel entfällt (ersetzt D-061).
+- Spielstand Schema 2: `avatar` statt `race`. Ein Stand aus 0.7.0 bis 0.10.x
+  behält seinen Fortschritt, der Avatar wird einmal neu aufgebaut. Name und Porträt
+  werden beim Laden geprüft; ein kaputter Avatar kostet nur den Avatar.
+
+**Tests**
+- Kern: Avatar, Migration von Schema 1, Namens- und Porträtprüfung.
+- App: Aufbau genau einmal, Volk prägt die Mission, Porträtkatalog, Namensvorschläge.
+- E2E: Aufbau bis zur Mission und Neustart ohne zweiten Aufbau, Zwergenpreis und
+  Bollwerk, Überlappungsprobe für Aufbau und Tafel. Neuer Testschalter
+  `--e2e-avatar` (nur DEBUG) für Tests, die zur Karte wollen.
 
 ## 0.10.3 – 26.10.2026 (Wackliger Fähigkeitstest behoben), Bau 30 (VALID)
 

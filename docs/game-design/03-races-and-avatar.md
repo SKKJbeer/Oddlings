@@ -69,9 +69,11 @@ Begründung:
 - Mondmal nutzt denselben Zustand „verwundbar" wie die Spezialisierung Fäulnis
   ([02](02-combat-and-towers.md#aufwertungen-mit-einer-gabelung-je-turm-phase-2)). Eine Regel, zwei Verwendungen.
 
-**Wahl.** Das Volk gehört zum Avatar, lässt sich aber vor jeder Mission
-wechseln. Fortschritt hängt nicht am Volk. So wird keins zur Pflicht, und wer
-ausprobieren will, verliert nichts.
+**Wahl [ENTSCHIEDEN D-063].** Das Volk gehört zum Avatar und wird einmal
+gewählt, beim ersten „Spielen“, zusammen mit Porträt und Name. Danach gilt es
+für jede Mission. Fortschritt hängt nicht am Volk, und beide Völker stehen von
+Anfang an zur Wahl; so wird keins zur Pflicht. Einen Wechsel gibt es erst mit
+einer Spielwährung ([R-5](../konzepte/r-5-avatar.md)).
 
 Ein volkseigener Turm (Möglichkeit 2) bleibt als Inhalt für eine spätere
 Erweiterungsregion denkbar. Goblins und Arkanisten ebenso.
@@ -80,5 +82,10 @@ Die Festungsfähigkeit kommt in Phase 2, die Völker in Phase 3.
 
 ## Avatar [ENTSCHIEDEN]
 
-Identität und Personalisierung: Volk, Name, Aussehen; später Embleme, Banner,
-Titel als Kosmetik. Kein steuerbarer Held im MVP.
+Identität und Personalisierung: Volk, Name, Porträt, einmal am Anfang aufgebaut
+(D-063, [R-5](../konzepte/r-5-avatar.md)); später Embleme, Banner, Titel als
+Kosmetik. Kein steuerbarer Held im MVP.
+
+Rollenspielartig wird der Avatar über einen **Rang mit Talentwahl ohne
+Mehrkraft** (D-064): Sterne heben den Rang, je Rang eine Wahl zwischen zwei gleich
+starken Spielarten der Volksfähigkeit. Der Avatar wird anders, nicht stärker.

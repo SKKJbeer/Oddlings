@@ -128,6 +128,14 @@ Laden geprüft): Fähigkeit, dazu `rangeFactor` und `costFactor` je Turmart
 (Faktor > 0, Preis auf ganzes Gold gerundet). `BalanceConfig.applying(_:)` macht daraus eine zweite
 Konfiguration derselben Mission, deshalb kennt die Simulation keine Völker.
 
+**Avatar (R-5):** `SaveGame.avatar: Avatar?` mit `Avatar { race, name, portrait }`,
+Schema 2. `Avatar` lässt sich nur gültig anlegen und decodieren: Name getrimmt,
+1 bis 16 Zeichen, keine Steuerzeichen; Porträt nur `a-z`, `0-9`, `-`, höchstens
+32 Zeichen. Ein ungültiger Avatar in der Datei kostet nur den Avatar
+(`Dropped.invalidAvatar`). Schema 1 (nur `race`) wird zu Schema 2 ohne Avatar.
+Welche Porträts es gibt, weiß nur die App (`AvatarPortraits`); eine unbekannte
+Kennung zeigt das erste Porträt des Volks.
+
 ## Speicherstand (Phase 2)
 
 `SaveGame { schemaVersion, settings, campaignProgress, suspendedMission: GameState? }`
