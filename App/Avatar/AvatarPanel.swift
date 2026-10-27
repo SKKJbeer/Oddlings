@@ -121,8 +121,9 @@ private struct TalentRowView: View {
             )
         }
         .buttonStyle(.plain)
+        // Der Knopf selbst bleibt das Bedienelement: Ein eigenes
+        // `accessibilityElement` darüber verlöre, dass er gesperrt ist.
         .disabled(!unlocked)
-        .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(AvatarTexts.option(option.id)). \(AvatarTexts.effect(option))")
         .accessibilityAddTraits(selected ? [.isButton, .isSelected] : .isButton)
         .accessibilityIdentifier("talent.\(index).\(side.rawValue)")
