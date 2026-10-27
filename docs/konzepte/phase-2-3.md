@@ -55,7 +55,7 @@ Jedes Konzept wird gegen die fünf [Säulen](../game-design/00-vision-and-pillar
 Architekturregeln; Einspruch jederzeit möglich)
 
 - **Lokal**, eine JSON-Datei im Application-Support-Verzeichnis der App, mit
-  `schemaVersion`. Aufbau wie in [data-models.md](../technical/data-models.md#speicherstand-phase-2).
+  `schemaVersion`. Aufbau wie in [data-models.md](../technical/data-models.md#speicherstand-umgesetzt-r-1-r-5-r-6).
 - **Atomar schreiben** (temporäre Datei, dann ersetzen) und die vorige Fassung
   behalten. Ist die neue beim Laden beschädigt, gilt die vorige.
 - **Beim Laden prüfen**, bevor etwas die Simulation erreicht (Regel aus

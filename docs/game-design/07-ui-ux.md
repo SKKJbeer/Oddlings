@@ -1,6 +1,6 @@
 # 07 – Oberfläche und Bedienung
 
-Status: **[VORSCHLAG]**, soweit nicht anders markiert · Stand 25.10.2026
+Status: **[VORSCHLAG]**, soweit nicht anders markiert · Stand 27.10.2026 (umgesetzt bis 0.12.0)
 
 Klickbare Entwürfe aller Schirme (iPhone 15, Querformat 852 × 393 pt):
 [Oddlings – Spieloberfläche](https://claude.ai/artifact/PKpZrLVV42wje1isSfvB8z).
@@ -68,14 +68,20 @@ den Ausgang schaut, sieht dort, was ein Durchbruch kostet.
 
 ## 3 Schirme und Abläufe
 
+Umgesetzte Schirmfolge (`AppFlow`, Stand 0.12.0):
+
 ```
-Hauptmenü ──Spielen──▶ Schlacht ◀──Weiter── Pause
-   ▲                     │  ▲                  ▲
-   │                     │  └──────────────────┘ (Pause-Knopf)
-   │                     ▼
-   └──────Menü────── Ergebnis (Sieg / Niederlage) ──Nochmal──▶ Schlacht
-Phase 3: Hauptmenü ─▶ Kampagnenkarte ─▶ Schlacht ─▶ Ergebnis ─▶ Karte
+                    (nur beim ersten Mal)
+Hauptmenü ──Spielen──▶ Avatar-Aufbau ──▶ Kampagnenkarte ──Starten──▶ Schlacht ◀──Weiter── Pause
+   │  ▲                                    │   ▲                        │
+   │  │                                    │   └────── Karte ─── Ergebnis (Sieg / Niederlage) ──Nochmal──▶ Schlacht
+   │  └────────────── Zurück ──────────────┤
+   └── Avatarschild ──▶ Avatar-Menü ◀── Avatarschild
+                        (Zurück führt dorthin, wo es geöffnet wurde)
 ```
+
+Ohne Avatar führt jeder Weg zur Karte erst durch den Aufbau (D-063). Pause und
+Ergebnis sind Überlagerungen der Schlacht, keine eigenen Schirme.
 
 ### Hauptmenü
 Gemaltes Bild links, Knöpfe rechts im Daumenbereich: großes „Spielen" (64 pt
@@ -135,7 +141,7 @@ Erscheint als Tafel über der stehenden Karte, ohne Ladezeit.
   einer Sekunde.
 - Sterne kommen erst mit der Kampagne (Phase 3).
 
-### Kampagnenkarte (Phase 3, Richtung)
+### Kampagnenkarte (umgesetzt 0.7.0, gemalt 0.10.2)
 Gemalte Region 1 nach K4 (D-027): sieben Hauptmissionen mit Gabelung nach
 Mission 4 (Sumpfpfad oder Ruinen, beide führen zum Boss), zwei Nebenmissionen
 als Rauten, die sich ab 6 und ab 15 Sternen öffnen (gedimmt bis dahin), Bossknoten.
@@ -143,6 +149,20 @@ Sternsumme der Region oben neben dem Namen. Sterne unter erledigten Knoten. Rech
 Sterne, kurzer Satz, „Neu: Panzerbestie" (eine Neuheit je Mission, wie in 02
 und Marktanalyse 2 „Lehren ohne Text"), Starten unten rechts. Namen im Entwurf
 sind Platzhalter. Umfang und Regeln stehen in [05](05-campaign-and-progression.md).
+Heute spielbar ist nur Mission 1; die übrigen Knoten zeigen „in Vorbereitung“ oder
+den Grund der Sperre.
+
+### Avatar-Aufbau (umgesetzt 0.11.0, R-5)
+Einmal beim ersten „Spielen“: links die beiden Völker mit Fähigkeit und Zug, rechts
+Porträt und Name. Danach ist das Volk gesetzt (D-063). Einzelheiten:
+[R-5](../konzepte/r-5-avatar.md).
+
+### Avatar-Menü (umgesetzt 0.12.0, R-6)
+Eigener Schirm, erreichbar über das Avatarschild im Hauptmenü und auf der Karte.
+Links der Charakter (Porträt, Name, Rang als römische Ziffer, Sternbalken bis zum
+nächsten Rang), rechts die Abschnitte als Reiter; heute nur „Talente“ mit je zwei
+Spielarten je Reihe. Nach einem neuen Rang trägt das Schild „Neues Talent“.
+Nächster Abschnitt: Ausrüstung (D-066). Einzelheiten: [R-6](../konzepte/r-6-avatarrang.md).
 
 ## 4 Architektur
 
@@ -152,10 +172,12 @@ Die Oberfläche **erzeugt nur Befehle** und **liest nur Zustand und Ereignisse**
 (Architekturregeln 2 und 3). Dieser Entwurf baut auf den vorhandenen Bausteinen
 auf und legt keinen zweiten daneben.
 
-**Stand 0.5.0:** Kopfleiste über der Karte (Zellen etwa 38 statt 43 pt, als
-HYPOTHESE markiert), Baumenü an der Zelle mit zwei Tipps, Ergebnistafel. Dieser
-Entwurf führt das weiter zu HUD-Ecken auf voller Kartenhöhe, Kreismenü und den
-gestalteten Tafeln.
+**Stand 0.12.0:** Kreismenü (D-031), Kopfleiste mit Symbolen und Countdown-Ring,
+gestaltete Pause- und Ergebnistafeln, Haptik, Schriften (UI 01, 0.6.0); Hauptmenü,
+Einstellungen und Kampagnenkarte (0.7.0); Fähigkeitsknopf unten rechts (D-033,
+0.8.0); Avatar-Aufbau und Avatar-Menü (0.11.0, 0.12.0). Offen bleiben die HUD-Ecken
+auf voller Kartenhöhe (D-030, nach dem Spieltest). Wo die Bausteine im Code liegen:
+[architecture.md §6](../technical/architecture.md#6-darstellung-und-app).
 
 ```
 BattleView (SwiftUI, ZStack)
@@ -169,11 +191,11 @@ BattleView (SwiftUI, ZStack)
 | Baustein | Stand | Aufgabe | Test |
 |---|---|---|---|
 | `BoardLayout` | vorhanden | Karte einpassen, Zelle ↔ Bildschirmpunkt; eine Rechnung für Szene, Menü und Oberflächentest | vorhanden |
-| `HudLayout` | **neu**, reine Funktion neben `BoardLayout` | Bildschirmgröße + sichere Ränder + `BoardLayout` → Rechtecke der vier Ecken, Lage des Kreismenüs zu einer Zelle (Umklappen an Rändern und Ecken) | Für SE, 13 mini, 15, 16 Pro Max: Tippziele ≥ 44 pt, Knöpfe im sicheren Bereich, Kreismenü vollständig sichtbar, keine Überlappung mit Ecken |
+| `HudLayout` | vorhanden (0.6.0), reine Funktion neben `BoardLayout` | Bildschirmgröße + sichere Ränder + `BoardLayout` → Rechtecke der vier Ecken, Lage des Kreismenüs zu einer Zelle (Umklappen an Rändern und Ecken) | Für SE, 13 mini, 15, 16 Pro Max: Tippziele ≥ 44 pt, Knöpfe im sicheren Bereich, Kreismenü vollständig sichtbar, keine Überlappung mit Ecken |
 | `BattleController` | vorhanden | Auswahl (Zelle, Vorschau, Turm), beobachtete Kopien von Gold, Leben, Welle, Countdown, Ergebnis, Pause, Tempo; setzt nur bei Änderung | vorhanden; neu: zweites Tippen beim Verkaufen |
-| `UITheme` | **neu** | Farben, Schriften, Radien, Kontur an einer Stelle; Farben laut `art-direction.md`. Löst die UI-Farben in `BattleStyle` ab, Szenenfarben bleiben dort | Farben gleich der Art-Direction |
-| `FeedbackPlayer` | **neu** | Haptik und Ton laut Tabelle 5, hängt an Ereignissen und an Controller-Handlungen | Jede Zeile der Tabelle hat einen Eintrag |
-| Hauptmenü, Kampagnenkarte | Hauptmenü vorhanden (Startbildschirm), Karte Phase 3 | Navigation; Ergebnis und Pause bleiben Überlagerungen der Schlacht | Oberflächentest Menü → Schlacht → Ergebnis → Nochmal |
+| `UITheme` | vorhanden (0.6.0) | Farben, Schriften, Radien, Kontur an einer Stelle; Farben laut `art-direction.md`. Löst die UI-Farben in `BattleStyle` ab, Szenenfarben bleiben dort | Farben gleich der Art-Direction |
+| `FeedbackPlayer` | vorhanden (0.6.0, nur Haptik; Ton mit P2-3) | Haptik und Ton laut Tabelle 5, hängt an Ereignissen und an Controller-Handlungen | Jede Zeile der Tabelle hat einen Eintrag |
+| Hauptmenü, Kampagnenkarte, Avatar | vorhanden (`AppFlow`, `MainMenuView`, `CampaignMapView`, `Avatar/`) | Navigation; Ergebnis und Pause bleiben Überlagerungen der Schlacht | E2E `NavigationE2ETests`, `CampaignE2ETests`, `AvatarE2ETests` |
 
 Abgelehnte Befehle (zu wenig Gold, Feld belegt) meldet die Simulation als
 Ereignis; die Oberfläche zeigt sie nur an und prüft Gold nur lesend zum Dimmen.

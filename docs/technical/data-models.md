@@ -1,6 +1,8 @@
 # Datenmodelle
 
-Status: **[VORSCHLAG]**. Namen im Code englisch, Begriffe im Spiel deutsch.
+Status: **gilt**, Stand 0.12.0. Wer ein Feld in Konfiguration, Zustand oder Spielstand
+ändert, zieht dieses Dokument im selben PR nach (D-067). Namen im Code englisch,
+Begriffe im Spiel deutsch.
 
 | Spiel | Code |
 |---|---|
@@ -143,7 +145,31 @@ nur freie Reihen (Rang aus `RaceTable.rankStars` und den besten Sternen), fehlen
 Seite = A. `RaceConfig.talents` hält je Reihe zwei `TalentOption` mit Faktoren auf
 Felder der Fähigkeit; `ConfigValidation` prüft jede Kombination wie ein eigenes Volk.
 
-## Speicherstand (Phase 2)
+## Kampagne (R-2)
+
+`Resources/Campaign/region-01.json` → `CampaignConfig { id, nodes: [CampaignNode] }`.
+Ein Knoten hat `id`, `kind` (`main`/`side`/`boss`), optional `mission` (Datei der
+Mission; fehlt sie, ist der Knoten „in Vorbereitung“), `position`, `requires`
+(oder `requiresAny` an der Gabelung), optional `stars` (Sternschwelle der
+Nebenmissionen) und `novelty` (was die Mission neu einführt). Beim Laden geprüft
+(`CampaignIssue`): doppelte IDs, unbekannte Bedingungen, Kreise, kein Start,
+Lage außerhalb der Karte.
+
+`CampaignProgress { records: [MissionRecord { mission, bestStars }] }` hält nur die
+besten Sterne je Mission, sortiert, ohne Wörterbuch. Daraus rechnet der Kern
+`state(of:)` (`completed`/`open`/`inPreparation`/`locked(Grund)`), `totalStars` und
+den Avatarrang. `StarRating` vergibt 1 bis 3 Sterne aus übrigen Leben.
+
+## Speicherstand (umgesetzt R-1, R-5, R-6)
+
+`SaveGame { schemaVersion = 2, progress: CampaignProgress, avatar: Avatar? }` als
+JSON in Application Support (`SaveLocation`). `SaveStore` schreibt atomar, behält die
+vorige Fassung und prüft beim Laden: Ein kaputter Teil kostet nur diesen Teil
+(Avatar, Talentwahl), nie den Fortschritt. Einstellungen (Klang, Vibration) liegen
+getrennt in `AppSettings`, weil sie dem Gerät gehören. Noch nicht umgesetzt:
+`suspendedMission` (Fortsetzen einer laufenden Mission, P2-2).
+
+### Ursprünglicher Entwurf (Phase 0)
 
 `SaveGame { schemaVersion, settings, campaignProgress, suspendedMission: GameState? }`
 als JSON. `schemaVersion` von Anfang an, damit spätere Migrationen möglich sind.

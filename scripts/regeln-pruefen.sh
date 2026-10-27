@@ -61,6 +61,26 @@ while IFS= read -r schrift; do
   ls "$ordner"/OFL*.txt >/dev/null 2>&1 || melde "$schrift: keine Lizenzdatei (OFL*.txt) daneben"
 done < <(git ls-files -co --exclude-standard -- '*.ttf' '*.otf')
 
+# Doku wächst mit jeder Auslieferung (D-067). Was sich prüfen lässt, prüfen wir:
+# Die neueste Version steht im Stand von CLAUDE.md, in status.md und in der Roadmap,
+# und die Architektur kennt jeden App-Ordner und jede Kerndatei. Sonst beschreiben
+# die Dokumente einen Stand, den es nicht mehr gibt (so geschehen bis 0.12.0).
+version=$(grep -m1 -oE '^## [0-9]+\.[0-9]+\.[0-9]+' CHANGELOG.md | cut -c4-)
+if [ -z "$version" ]; then
+  melde "CHANGELOG.md: keine Version gefunden"
+else
+  for doku in CLAUDE.md docs/production/status.md docs/production/roadmap.md; do
+    grep -qF "$version" "$doku" || melde "$doku: neueste Version $version aus dem CHANGELOG fehlt (D-067)"
+  done
+fi
+ARCH=docs/technical/architecture.md
+while IFS= read -r ordner; do
+  grep -qF "$(basename "$ordner")/" "$ARCH" || melde "$ARCH: Ordner $ordner fehlt (§5/§6, D-067)"
+done < <(git ls-files -co --exclude-standard -- 'App/*.swift' | xargs -n1 dirname | sort -u | grep -v '^App$')
+while IFS= read -r datei; do
+  grep -qF "$(basename "$datei")" "$ARCH" || melde "$ARCH: Kerndatei $datei fehlt (§5, D-067)"
+done < <(git ls-files -co --exclude-standard -- "$CORE/OddlingsCore/*.swift")
+
 # Dokumente verweisen aufeinander statt sich zu wiederholen. Ein toter Verweis
 # macht eine Entscheidung unauffindbar.
 python3 scripts/links-pruefen.py || melde "Tote Verweise oder doppelte Entscheidungsnummern (siehe oben)"

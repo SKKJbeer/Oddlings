@@ -53,14 +53,36 @@ Balance berührt? Ergebnis der `BalanceTests` in
 Die App baut nur auf dem Mac: über die App erst etwas sagen, wenn der CI-Lauf
 `iphone` grün ist.
 
-## 4. Dokumente nachziehen
+## 4. Dokumente nachziehen (Pflicht, D-067)
 
-- **`CHANGELOG.md`**: neuer Eintrag oben, Version in `project.yml`
-  (`MARKETING_VERSION`) hochsetzen. WP = zweite Stelle, Korrektur/Doku = dritte.
-- Backlog: WP abhaken, Abweichungen von den Abnahmekriterien nennen.
-- `CLAUDE.md`, Abschnitt „Stand“.
-- Neue Absprache oder Entscheidung von Steffen: dort festhalten, wo sie
-  hingehört (Entscheidungsprotokoll, `CLAUDE.md`, ein Skill), genau einmal.
+Steffen, 27.10.2026: Architektur und Design werden bei **jeder** Auslieferung
+mitgezogen, damit Struktur und Dokumentation sauber bleiben. Ein PR ohne passende
+Doku ist nicht fertig. Gehe die Tabelle durch und fasse an, was zutrifft:
+
+| Wenn der PR … | dann im selben PR |
+|---|---|
+| eine Version hebt | `CHANGELOG.md` oben, `MARKETING_VERSION` in `project.yml`, `CLAUDE.md` „Stand“, `docs/production/status.md` neu schreiben, Roadmap-Zeile „Ausgeliefert“ (die CI prüft die Version in `CLAUDE.md` und `status.md`) |
+| einen Ordner unter `App/` oder eine Datei im Kern anlegt, umbenennt oder löscht | `docs/technical/architecture.md` §5 (Kern-Tabelle) und §6 (Module) – die CI prüft beides |
+| einen Datenfluss oder eine Schichtgrenze ändert | `architecture.md` §6 Datenfluss, bei Regelbruch Eintrag im Entscheidungsprotokoll |
+| ein Feld in Konfiguration, Zustand, Spielstand, Kampagne ändert | `docs/technical/data-models.md`, Schemaversion und Migration nennen |
+| einen E2E-Fall oder Testschalter hinzufügt | `docs/technical/testing-strategy.md`, Tabelle und Schalterliste |
+| Spielregeln, Werte, Völker, Avatar, Kampagne ändert | das zuständige `docs/game-design/0x-*.md`; Werte nur in der JSON, Messung in 04 |
+| einen Schirm, Ablauf oder ein Bedienelement ändert | `docs/game-design/07-ui-ux.md` (Schirmfolge, Abschnitt des Schirms) |
+| Bilder, Figuren, Effekte, Werkzeuge der Grafik ändert | `docs/art/` (Art-Direction, Asset-Vertrag, Figuren), `ENTSTEHUNG.md` der Bildgruppe |
+| eine Entscheidung von Steffen umsetzt oder bringt | Entscheidungsprotokoll, Fachdokument, Register `offene-fragen.md` |
+| ein Paket abschließt oder ein neues anlegt | `docs/production/roadmap.md` (Als Nächstes, Ausgeliefert), Backlog abhaken |
+| eine neue Absprache oder einen Ablauf bringt | `CLAUDE.md` oder ein Skill unter `.claude/skills/`, genau einmal |
+
+Danach `scripts/regeln-pruefen.sh` (prüft Verweise, Nummern und den Doku-Stand).
+
+### Entscheidungskarten
+
+Jede Karte an Steffen (`request_decision`) im selben Zug dem Coordinator melden
+(`message_coordinator`: Frage, Thread, Empfehlung, was sie blockiert), damit er sie
+im Projektchat mit Link zeigt, und in der Roadmap unter „Wartet auf Steffen“
+eintragen. Ist sie beantwortet: Entscheidungsprotokoll, Fachdokument, Zeile in der
+Roadmap streichen. Eine Karte, die niemand sieht, blockiert still (27.10.2026: zwei
+Karten lagen unbemerkt einen Tag).
 
 ## 5. PR und Zusammenführen
 
@@ -83,7 +105,7 @@ Fertig heißt: Bau VALID in TestFlight, nicht „auf main“.
 2. Rot: fehlgeschlagenen Schritt im Protokoll suchen, beheben, als Korrektur
    ausliefern. (Bauten 6 bis 11 scheiterten unbemerkt, weil niemand nachsah.)
 3. Grün: Laufnummer = Baunummer. Im `CHANGELOG.md` beim Eintrag nachtragen,
-   im nächsten PR mit.
+   dazu Spalte „Bau“ in der Roadmap („Ausgeliefert“) und `status.md`, im nächsten PR mit.
 
 ## 7. Melden
 

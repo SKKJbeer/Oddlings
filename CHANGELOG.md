@@ -11,6 +11,20 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## Dokumente, kein Bau – 27.10.2026 (Architektur, Design und Roadmap nachgezogen, D-067)
+
+- Architektur auf den Stand 0.12.0: Module der App, Kerndateien, Datenfluss beim
+  Missionsstart, Grafikwerkzeuge; Datenmodelle mit Kampagne und Spielstand;
+  Teststrategie mit allen 27 Ende-zu-Ende-Fällen und Testschaltern.
+- Design: Avatar-Menü (D-065) und Ausrüstung (D-066) in 03, 05, 06; Schirmfolge,
+  Avatar-Aufbau und Avatar-Menü in 07; Kampfplatz, Festung, Porträts und 3D-Weg in
+  den Art-Dokumenten.
+- Roadmap als gemeinsame Arbeitsliste: Phasen mit Stand, „Wartet auf Steffen“,
+  „Als Nächstes“, alle Auslieferungen mit Version und Bau. Status und Register neu.
+- Regel D-067: Doku wächst mit jeder Auslieferung, Entscheidungskarten werden sofort
+  gemeldet. `regeln-pruefen.sh` prüft die neueste Version in `CLAUDE.md`, `status.md`
+  und Roadmap sowie jeden App-Ordner und jede Kerndatei in der Architektur (rot gesehen).
+
 ## 0.12.0 – 27.10.2026 (R-6: Avatarrang mit Talentwahl), Bau offen
 
 **Neu**
