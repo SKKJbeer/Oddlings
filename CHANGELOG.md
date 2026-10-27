@@ -20,6 +20,8 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   Goblinhöhle am Wegeingang, warmes Licht und Baumschatten.
 - Neue Festung: Zwergenfeste mit zwei Ecktürmen, Fackeln und Bannern, im Stil
   der Türme. Sie steht im rechten Rand und verdeckt keine Bauzelle.
+- Gemalte Porträts für die Avatarwahl: drei Zwerge, drei Elfen (statt Volkssymbol
+  im Kreis).
 
 **Behoben**
 - Die Festung war unsichtbar: Boden und Festung hatten dieselbe `zPosition`, und
@@ -30,7 +32,8 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   Festung über Boden und Bauzonen, Festung über keiner Bauzelle. Kunstprüfung:
   Vertrag 24 × 13 Zellen,
   Weg im Bild auf der Weggeometrie, Waldrand dunkler als das Feld, Collage legt
-  keine Bäume auf Bauzellen.
+  keine Bäume auf Bauzellen. Jedes Avatar-Porträt ist gemalt und quadratisch.
+
 ## 0.11.0 – 26.10.2026 (R-5: Avatar einmal am Anfang), Bau 31 (VALID)
 
 **Neu**
