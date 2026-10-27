@@ -136,6 +136,13 @@ Schema 2. `Avatar` lässt sich nur gültig anlegen und decodieren: Name getrimmt
 Welche Porträts es gibt, weiß nur die App (`AvatarPortraits`); eine unbekannte
 Kennung zeigt das erste Porträt des Volks.
 
+**Talente (R-6):** `Avatar.talents: [TalentSide]`, eine Seite (`a`/`b`) je Reihe in
+Reihenfolge, höchstens `Avatar.maxTalentRows`. Das Feld ist optional, Schema bleibt 2.
+Eine kaputte Liste verwirft nur die Wahl. Was gilt, rechnet `AvatarRank.effective`:
+nur freie Reihen (Rang aus `RaceTable.rankStars` und den besten Sternen), fehlende
+Seite = A. `RaceConfig.talents` hält je Reihe zwei `TalentOption` mit Faktoren auf
+Felder der Fähigkeit; `ConfigValidation` prüft jede Kombination wie ein eigenes Volk.
+
 ## Speicherstand (Phase 2)
 
 `SaveGame { schemaVersion, settings, campaignProgress, suspendedMission: GameState? }`

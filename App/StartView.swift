@@ -45,12 +45,15 @@ struct StartView: View {
                 onContinue: { if let node = flow.continueNode { flow.start(node.id) } },
                 onPlay: { flow.showMap() }, onWatch: { flow.showWatch() }, onSpike: { flow.showSpike() },
                 onSettings: { showsSettings = true },
-                avatar: flow.avatar)
+                avatar: flow.avatar, rank: flow.rank, newTalent: flow.newTalentWaiting,
+                onAvatar: { flow.openAvatarPanel() })
             .overlay { if showsSettings { SettingsCard { showsSettings = false } } }
+            .overlay { if flow.showsAvatarPanel { AvatarPanel(flow: flow) { flow.closeAvatarPanel() } } }
         case .setup:
             AvatarSetupView(flow: flow)
         case .map:
             CampaignMapView(flow: flow)
+                .overlay { if flow.showsAvatarPanel { AvatarPanel(flow: flow) { flow.closeAvatarPanel() } } }
         case .battle(let node):
             if let mission = flow.battleMission(for: node) {
                 BattleView(mission: mission, mode: .play, onClose: { flow.showMap() }) { outcome, lives in

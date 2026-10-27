@@ -22,9 +22,10 @@ umstellen.
    welchem Rang sie frei werden. In einer freien Reihe ist eine Karte gewählt; ein
    Tippen auf die andere stellt um. Umstellen kostet nichts und gilt ab der nächsten
    Mission.
-4. Erreicht der Spieler mit einem Sieg einen neuen Rang, sagt die Ergebnistafel es
-   („Rang II: neues Talent frei“), und auf der Karte leuchtet das Schild, bis die
-   Tafel einmal offen war.
+4. Erreicht der Spieler mit einem Sieg einen neuen Rang, trägt das Avatarschild auf
+   Karte und Hauptmenü „Neues Talent“, bis die Tafel einmal offen war. Die
+   Ergebnistafel bleibt unverändert: Dort zählt der Sieg, und das Schild ist der
+   erste Blick danach.
 
 ## Ränge **[VORSCHLAG]**
 
@@ -91,7 +92,7 @@ Mischung vor der Monokultur lassen. Gemessen am 27.10.2026: größte Abweichung 
   Reihen) verwirft nur die Wahl.
 - **App:** `AppFlow.chooseTalent(row:side:)` speichert sofort, `battleMission` reicht
   die Wahl an `applying`. Neue `AvatarPanel` (Tafel nach UI-01), geöffnet über das
-  Schild. Ergebnistafel meldet einen neuen Rang.
+  Schild. Das Schild meldet einen neuen Rang.
 
 ## Bedienentscheidungen
 

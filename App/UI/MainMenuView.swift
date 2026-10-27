@@ -16,6 +16,10 @@ struct MainMenuView: View {
     var onSettings: () -> Void = {}
     /// Avatarschild oben links neben den Einstellungen (R-5); fehlt vor dem Aufbau.
     var avatar: Avatar?
+    var rank = 1
+    var newTalent = false
+    /// Das Schild öffnet die Avatartafel (R-6).
+    var onAvatar: () -> Void = {}
 
     var body: some View {
         GeometryReader { geometry in
@@ -49,7 +53,11 @@ struct MainMenuView: View {
                             .accessibilityLabel(MenuTexts.settings)
                             .accessibilityIdentifier("menu.settings")
                             if let avatar {
-                                AvatarBadge(avatar: avatar).accessibilityIdentifier("menu.avatar")
+                                Button(action: onAvatar) {
+                                    AvatarBadge(avatar: avatar, rank: rank, newTalent: newTalent)
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityIdentifier("menu.avatar")
                             }
                         }
                         // Die Spalte darunter ist nur so breit wie „Offline“; das

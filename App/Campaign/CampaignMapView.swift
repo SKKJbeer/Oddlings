@@ -315,6 +315,7 @@ struct StarRow: View {
 /// Wahl mehr; das Volk ist seit dem Aufbau gesetzt (D-063).
 private struct AvatarSummary: View {
     let avatar: Avatar
+    let flow: AppFlow
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -322,8 +323,11 @@ private struct AvatarSummary: View {
                 .font(UITheme.bodyHeavy(12))
                 .tracking(1.5)
                 .foregroundStyle(CampaignStyle.gold)
-            AvatarBadge(avatar: avatar, size: 40)
-                .accessibilityIdentifier("map.avatar")
+            Button { flow.openAvatarPanel() } label: {
+                AvatarBadge(avatar: avatar, rank: flow.rank, size: 40, newTalent: flow.newTalentWaiting)
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("map.avatar")
             Text(CampaignTexts.raceDetail(avatar.race))
                 .font(UITheme.body(13))
                 .foregroundStyle(CampaignStyle.parchment)
@@ -364,7 +368,7 @@ private struct MissionPanel: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
             Spacer(minLength: 4)
-            if let avatar = flow.avatar { AvatarSummary(avatar: avatar) }
+            if let avatar = flow.avatar { AvatarSummary(avatar: avatar, flow: flow) }
             Text(CampaignTexts.status(state, totalStars: flow.progress.totalStars))
                 .font(UITheme.body(14))
                 .foregroundStyle(state.isPlayable ? CampaignStyle.parchment : Color.white.opacity(0.6))

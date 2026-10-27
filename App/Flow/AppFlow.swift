@@ -31,6 +31,9 @@ final class AppFlow {
     /// Das Volk des Avatars bestimmt jede Mission. Ohne Avatar (nur die
     /// Oberflächentests mit `--play`) gilt die Fähigkeit der Missionsdatei.
     var race: Race? { avatar?.race }
+    /// Ein Sieg hat einen neuen Rang gebracht, und die Avatartafel war seitdem
+    /// nicht offen. Das Schild weist darauf hin. Gilt nur bis zum Neustart.
+    private(set) var newTalentWaiting = false
     /// Werte der Völker. Die Kerntests laden dieselbe Datei und fangen einen
     /// Fehler vor der Auslieferung; fehlt sie trotzdem, spielt die Mission ohne Volk.
     let races: RaceTable?
@@ -73,7 +76,10 @@ final class AppFlow {
 
     // MARK: Schirme
 
-    func showMenu() { screen = .menu }
+    func showMenu() {
+        showsAvatarPanel = false
+        screen = .menu
+    }
     func showWatch() { screen = .watch }
     func showSpike() { screen = .spike }
 
@@ -90,6 +96,7 @@ final class AppFlow {
         guard let node = campaign.node(nodeID), state(of: node).isPlayable else { return }
         selectedNode = nodeID
         justImproved = nil
+        showsAvatarPanel = false
         screen = .battle(node: nodeID)
     }
 
@@ -103,7 +110,7 @@ final class AppFlow {
     func battleMission(for nodeID: String) -> BalanceConfig? {
         guard let mission = mission(for: nodeID) else { return nil }
         guard let race, let config = races?[race] else { return mission }
-        return mission.applying(config)
+        return mission.applying(config, talents: talents)
     }
 
     // MARK: Avatar
@@ -121,6 +128,49 @@ final class AppFlow {
         return true
     }
 
+    // MARK: Rang und Talente (R-6, D-064)
+
+    /// Aus den besten Sternen je Mission: sinkt nie und lässt sich nicht doppelt verdienen.
+    var rank: Int { races?.rank(stars: progress.totalStars) ?? 1 }
+
+    /// Sterne für den nächsten Rang, `nil` auf dem höchsten.
+    var nextRankStars: Int? { races?.rankStars?.first { $0 > progress.totalStars } }
+
+    var talentRows: [TalentRow] { race.flatMap { races?[$0]?.talents } ?? [] }
+
+    var unlockedTalentRows: Int { min(AvatarRank.unlockedRows(rank: rank), talentRows.count) }
+
+    /// Die Wahl, die in der Mission gilt.
+    var talents: [TalentSide] {
+        AvatarRank.effective(avatar?.talents ?? [], unlockedRows: unlockedTalentRows, rows: talentRows.count)
+    }
+
+    /// Umstellen kostet nichts (D-064) und gilt ab der nächsten Mission.
+    /// Eine gesperrte Reihe lässt sich nicht wählen.
+    @discardableResult
+    func chooseTalent(row: Int, side: TalentSide) -> Bool {
+        guard var changed = avatar, row >= 0, row < unlockedTalentRows else { return false }
+        var sides = talents
+        sides[row] = side
+        changed.talents = sides
+        avatar = changed
+        save.avatar = changed
+        persist()
+        return true
+    }
+
+    /// Die Avatartafel liegt über Hauptmenü oder Karte; welcher Schirm darunter
+    /// liegt, ändert sie nicht.
+    private(set) var showsAvatarPanel = false
+
+    func openAvatarPanel() {
+        guard avatar != nil else { return }
+        showsAvatarPanel = true
+        newTalentWaiting = false
+    }
+
+    func closeAvatarPanel() { showsAvatarPanel = false }
+
     // MARK: Ergebnis
 
     /// Gespeichert wird hier, beim Ergebnis, nicht beim Verlassen der App: Beendet
@@ -131,7 +181,9 @@ final class AppFlow {
         let stars = StarRating.stars(outcome: outcome, livesLeft: livesLeft, thresholds: thresholds)
         let next = progress.recording(stars: stars, for: nodeID)
         guard next != progress else { return stars }
+        let before = rank
         progress = next
+        if rank > before, unlockedTalentRows > 0 { newTalentWaiting = true }
         justImproved = nodeID
         save.progress = next
         persist()

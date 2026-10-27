@@ -213,6 +213,16 @@ zurück (1,31 gegen 1,40). `BalanceTests.racesKeepMixAhead` hält fest, dass die
 Mischung mit jedem Volk mindestens 0,05 vor der Monokultur liegt. Ob Zwerge im
 Spieltest zum Wachturm-Spam verleiten, ist eine Frage für WP-15.
 
+### Talente (R-6) [HYPOTHESE]
+
+Faktoren in `Balance/races.json` (`talents`), Begründung im
+[Konzept](../konzepte/r-6-avatarrang.md#talente-vorschlag-zahlen-hypothese).
+`BalanceTests.talentsStayEven` rechnet jede spielbare Kombination (sieben je Volk)
+mit den vier gewinnenden Mischungen und nimmt den Schnitt der Reserve. Jede
+Kombination muss besser sein als ohne Fähigkeit, höchstens 0,05 von der Grundform
+ihres Volks abweichen und die Mischung mehr als 0,05 vor „Nur Wachtürme“ lassen.
+Gemessen am 27.10.2026: größte Abweichung 0,039 (Elfen, Flüchtig mit Weitem Schein).
+
 ### Grenzen der Rechnung
 
 - Keine Menschen: perfekte Platzierung, keine Reaktionszeit, kein Verkaufen.

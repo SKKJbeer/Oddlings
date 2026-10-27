@@ -104,4 +104,64 @@ final class AppFlowTests: XCTestCase {
         XCTAssertEqual(flow.continueNode?.id, "m1")
         XCTAssertEqual(flow.selectedNode, "m1")
     }
+
+    /// R-6: Drei Sterne heben auf Rang II. Die erste Reihe wird frei, steht auf
+    /// A, lässt sich umstellen, steht in der Datei und prägt die Mission. Die
+    /// zweite Reihe bleibt gesperrt.
+    @MainActor
+    func testRankUnlocksATalentThatShapesTheBattle() throws {
+        let flow = try makeFlow()
+        flow.showMap()
+        XCTAssertTrue(flow.createAvatar(race: .elves, name: "Lyra", portrait: "elf-1"))
+        let races = try RaceTable.bundled()
+        let elves = try XCTUnwrap(races[.elves])
+        let mission = try XCTUnwrap(flow.mission(for: "m1"))
+        XCTAssertEqual(flow.rank, 1)
+        XCTAssertEqual(flow.talents, [])
+        XCTAssertFalse(flow.chooseTalent(row: 0, side: .b), "auf Rang I ist keine Reihe frei")
+        XCTAssertEqual(flow.battleMission(for: "m1"), mission.applying(elves))
+
+        flow.finish("m1", outcome: .won, livesLeft: try fullLives())
+        XCTAssertEqual(flow.rank, 2)
+        XCTAssertTrue(flow.newTalentWaiting, "das Schild weist auf das neue Talent hin")
+        XCTAssertEqual(flow.talents, [.a])
+        XCTAssertEqual(flow.battleMission(for: "m1"), mission.applying(elves, talents: [.a]))
+        flow.openAvatarPanel()
+        XCTAssertFalse(flow.newTalentWaiting)
+        XCTAssertTrue(flow.showsAvatarPanel)
+
+        XCTAssertTrue(flow.chooseTalent(row: 0, side: .b))
+        XCTAssertFalse(flow.chooseTalent(row: 1, side: .b), "Reihe 2 braucht Rang III")
+        XCTAssertEqual(flow.talents, [.b])
+        XCTAssertEqual(flow.battleMission(for: "m1"), mission.applying(elves, talents: [.b]))
+        XCTAssertNotEqual(flow.battleMission(for: "m1"), mission.applying(elves, talents: [.a]))
+        flow.start("m1")
+        XCTAssertFalse(flow.showsAvatarPanel, "die Mission schließt die Tafel")
+
+        let reopened = try makeFlow()
+        XCTAssertEqual(reopened.rank, 2)
+        XCTAssertEqual(reopened.talents, [.b], "die Wahl steht in der Datei")
+        XCTAssertFalse(reopened.newTalentWaiting)
+    }
+
+    @MainActor
+    func testTalentTextsNameEveryOptionAndItsNumbers() throws {
+        let races = try RaceTable.bundled()
+        for race in Race.allCases {
+            for row in try XCTUnwrap(races[race]?.talents) {
+                XCTAssertNotEqual(AvatarTexts.row(row.id), row.id, "Reihe \(row.id) hat einen Namen")
+                for side in TalentSide.allCases {
+                    let option = row[side]
+                    XCTAssertNotEqual(AvatarTexts.option(option.id), option.id, "\(option.id) hat einen Namen")
+                    XCTAssertFalse(AvatarTexts.effect(option).isEmpty)
+                    XCTAssertFalse(AvatarTexts.effect(option).contains("."), "deutsche Kommazahlen: \(AvatarTexts.effect(option))")
+                }
+            }
+        }
+        XCTAssertEqual(AvatarTexts.factor(1.3), "1,3")
+        XCTAssertEqual(AvatarTexts.factor(0.875), "0,88")
+        XCTAssertEqual(AvatarTexts.factor(2), "2")
+        XCTAssertEqual(AvatarTexts.progress(stars: 3, next: 12, rank: 2), "3 von 12 Sternen bis Rang III")
+        XCTAssertEqual(AvatarTexts.progress(stars: 30, next: nil, rank: 3), "Höchster Rang erreicht")
+    }
 }

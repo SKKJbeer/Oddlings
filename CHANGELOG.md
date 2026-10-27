@@ -11,6 +11,30 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.12.0 – 27.10.2026 (R-6: Avatarrang mit Talentwahl), Bau offen
+
+**Neu**
+- Avatarrang (D-064, [Konzept](docs/konzepte/r-6-avatarrang.md)): Der Rang folgt den
+  besten Sternen je Mission (Rang II ab 3, Rang III ab 12 Sternen) und steht als
+  römische Ziffer am Avatarschild.
+- Avatartafel: ein Tippen auf das Schild im Hauptmenü oder auf der Karte. Sie zeigt
+  Rang, Fortschritt und die Talentreihen. Jeder Rang schaltet eine Reihe mit zwei
+  gleich starken Spielarten der Volksfähigkeit frei; Umstellen kostet nichts.
+- Nach einem neuen Rang trägt das Schild „Neues Talent“, bis die Tafel offen war.
+
+**Geändert**
+- `races.json` bekommt `rankStars` und je Volk zwei Talentreihen (Faktoren auf die
+  Fähigkeit). Der Spielstand merkt sich die Wahl im Avatar; Schema bleibt 2, eine
+  kaputte Wahl kostet nur die Wahl.
+
+**Tests**
+- Kern: `TalentTests` (Rang an den Schwellen, wirksame Wahl, Faktoren, Prüfung,
+  Laden), `BalanceTests.talentsStayEven` (jede Kombination höchstens 0,05 Reserve
+  neben der Grundform, gemessen 0,039).
+- App: Rang schaltet ein Talent frei und prägt die Mission; Texte nennen jede Spielart.
+- E2E: Sieg bringt Rang II, Tafel, Seite B wählen, Neustart behält die Wahl;
+  Überlappungsprobe der Tafel.
+
 ## 0.11.0 – 26.10.2026 (R-5: Avatar einmal am Anfang), Bau 31 (VALID)
 
 **Neu**

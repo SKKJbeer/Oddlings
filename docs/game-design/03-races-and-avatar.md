@@ -88,4 +88,5 @@ Kosmetik. Kein steuerbarer Held im MVP.
 
 Rollenspielartig wird der Avatar über einen **Rang mit Talentwahl ohne
 Mehrkraft** (D-064): Sterne heben den Rang, je Rang eine Wahl zwischen zwei gleich
-starken Spielarten der Volksfähigkeit. Der Avatar wird anders, nicht stärker.
+starken Spielarten der Volksfähigkeit. Der Avatar wird anders, nicht stärker. Umsetzung, Ränge und Talente:
+[R-6](../konzepte/r-6-avatarrang.md).
