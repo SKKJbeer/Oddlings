@@ -1,15 +1,107 @@
 {
-  "_status": "Völker Zwerge und Elfen (D-025, R-4). HYPOTHESE bis zum Spieltest; Messung und Begründung in docs/game-design/04-economy-and-balance.md.",
-  "_einheiten": "Sekunden, Felder; damageFactor, rangeFactor und costFactor sind Faktoren (Preis auf ganzes Gold gerundet).",
+  "_status": "Völker Zwerge und Elfen (D-025, R-4). HYPOTHESE bis zum Spieltest; Messung und Begründung in docs/game-design/04-economy-and-balance.md. Avatarrang und Talente (D-064, R-6): HYPOTHESE, gleiche Stärke halten die Balancetests fest.",
+  "_einheiten": "Sekunden, Felder; damageFactor, rangeFactor und costFactor sind Faktoren (Preis auf ganzes Gold gerundet). rankStars: Sterne je Rang ab II. talents: Faktoren auf Felder der Fähigkeit.",
+  "rankStars": [
+    3,
+    12
+  ],
   "races": {
     "dwarves": {
-      "ability": { "kind": "bulwark", "duration": 4.0, "cooldown": 35, "snapDistance": 1.0 },
-      "costFactor": { "watch": 0.9 }
+      "ability": {
+        "kind": "bulwark",
+        "duration": 4.0,
+        "cooldown": 35,
+        "snapDistance": 1.0
+      },
+      "costFactor": {
+        "watch": 0.9
+      },
+      "talents": [
+        {
+          "id": "reachOrForce",
+          "a": {
+            "id": "farThrow",
+            "scale": {
+              "snapDistance": 1.6,
+              "duration": 0.9
+            }
+          },
+          "b": {
+            "id": "granite",
+            "scale": {
+              "duration": 1.2,
+              "snapDistance": 0.8
+            }
+          }
+        },
+        {
+          "id": "pace",
+          "a": {
+            "id": "quickMason",
+            "scale": {
+              "cooldown": 0.8,
+              "duration": 0.7
+            }
+          },
+          "b": {
+            "id": "mountainFirm",
+            "scale": {
+              "cooldown": 1.3,
+              "duration": 1.2
+            }
+          }
+        }
+      ]
     },
     "elves": {
-      "ability": { "kind": "moonMark", "radius": 1.5, "delay": 0.5, "duration": 4.0, "damageFactor": 1.5,
-                   "cooldown": 35, "snapDistance": 1.0 },
-      "rangeFactor": { "spore": 1.1 }
+      "ability": {
+        "kind": "moonMark",
+        "radius": 1.5,
+        "delay": 0.5,
+        "duration": 4.0,
+        "damageFactor": 1.5,
+        "cooldown": 35,
+        "snapDistance": 1.0
+      },
+      "rangeFactor": {
+        "spore": 1.1
+      },
+      "talents": [
+        {
+          "id": "reachOrForce",
+          "a": {
+            "id": "wideGlow",
+            "scale": {
+              "radius": 1.3,
+              "damageFactor": 0.9
+            }
+          },
+          "b": {
+            "id": "sharpMark",
+            "scale": {
+              "radius": 0.8,
+              "damageFactor": 1.07
+            }
+          }
+        },
+        {
+          "id": "pace",
+          "a": {
+            "id": "fleeting",
+            "scale": {
+              "cooldown": 0.8,
+              "duration": 0.7
+            }
+          },
+          "b": {
+            "id": "deep",
+            "scale": {
+              "cooldown": 1.25,
+              "duration": 1.15
+            }
+          }
+        }
+      ]
     }
   }
 }

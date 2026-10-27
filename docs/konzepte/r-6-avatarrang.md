@@ -45,25 +45,30 @@ Rang lässt sich so nie verlieren und nie doppelt verdienen.
 Jede Reihe verschiebt die Fähigkeit entlang einer Achse, beide Seiten tauschen etwas
 ein. Die Grundform bleibt die Mitte.
 
-**Zwerge, Bollwerk** (Mauer sperrt den Weg)
+Alle Werte sind Faktoren auf die Grundform des Volks und stehen in `races.json`;
+die Tabelle nennt den Stand nach der ersten Messung.
+
+**Zwerge, Bollwerk** (Mauer sperrt den Weg; Grundform 4 s, Abklingzeit 35 s, Fangweite 1,0)
 
 | Reihe | Seite A | Seite B |
 |---|---|---|
-| 1 Reichweite oder Wucht | **Fernwurf:** die Mauer darf weiter neben dem Weg gesetzt werden (Fangweite 1,6 statt 1,0), steht 3,5 s | **Granit:** steht 5 s, Fangweite 1,0 |
-| 2 Takt oder Dauer | **Schnell gemauert:** Abklingzeit 25 s, steht 30 % kürzer | **Bergfest:** Abklingzeit 45 s, steht 30 % länger |
+| 1 Reichweite oder Wucht | **Fernwurf:** Fangweite ×1,6, steht ×0,9 | **Granit:** steht ×1,2, Fangweite ×0,8 |
+| 2 Takt oder Dauer | **Schnell gemauert:** Abklingzeit ×0,8, steht ×0,7 | **Bergfest:** Abklingzeit ×1,3, steht ×1,2 |
 
-**Elfen, Mondmal** (Getroffene nehmen mehr Schaden)
+**Elfen, Mondmal** (Getroffene nehmen mehr Schaden; Grundform Radius 1,5, ×1,5, 4 s, 35 s)
 
 | Reihe | Seite A | Seite B |
 |---|---|---|
-| 1 Reichweite oder Wucht | **Weiter Schein:** Radius 2,0, Faktor 1,35 | **Scharfes Mal:** Radius 1,1, Faktor 1,75 |
-| 2 Takt oder Dauer | **Flüchtig:** Abklingzeit 25 s, hält 3 s | **Tief:** Abklingzeit 45 s, hält 5,5 s |
+| 1 Reichweite oder Wucht | **Weiter Schein:** Radius ×1,3, Schadensfaktor ×0,9 | **Scharfes Mal:** Radius ×0,8, Schadensfaktor ×1,07 |
+| 2 Takt oder Dauer | **Flüchtig:** Abklingzeit ×0,8, hält ×0,7 | **Tief:** Abklingzeit ×1,25, hält ×1,15 |
 
-„Gleich stark“ heißt messbar gleich: Die Balancetests rechnen jede Bauweise aus
-`simStrategies` mit **jeder** Kombination (Grundform, je Reihe A oder B, also neun je
-Volk) und verlangen, dass die Reserve jeder Kombination höchstens um eine feste
-Toleranz von der Grundform abweicht. Die Toleranz steht in der Konfiguration. Was
-die Tests nicht halten, wird nachgestellt, bevor es ausgeliefert wird.
+„Gleich stark“ heißt messbar gleich: Die Balancetests rechnen jede spielbare
+Kombination (Grundform, eine Reihe, beide Reihen: sieben je Volk) mit den vier
+gewinnenden Mischungen aus `simStrategies`. Ein einzelner Lauf springt schon, wenn ein
+Wurf eine Welle früher fällt; deshalb zählt der Schnitt. Jede Kombination muss helfen,
+darf höchstens 0,05 Reserve von der Grundform ihres Volks abweichen und muss die
+Mischung vor der Monokultur lassen. Gemessen am 27.10.2026: größte Abweichung 0,039
+(Elfen, Flüchtig mit Weitem Schein).
 
 ## Architektur
 
@@ -79,9 +84,11 @@ die Tests nicht halten, wird nachgestellt, bevor es ausgeliefert wird.
   (Felder vorhanden, Werte im Rahmen). Eine Talentwahl im Spielstand wird beim Laden
   geprüft: unbekannte Reihe oder Seite, oder eine Reihe über dem Rang, fällt auf die
   Grundform zurück, ohne Avatar oder Fortschritt zu verlieren.
-- **Spielstand:** `Avatar` bekommt `talents: [Int: TalentSide]` als geordnete Liste
-  (`[TalentChoice]`, keine Iteration über ein Dictionary, Regel 6). Schema 3,
-  Migration von 2: keine Wahl, also Grundform beziehungsweise Seite A in freien Reihen.
+- **Spielstand:** `Avatar` bekommt `talents: [TalentSide]`, eine Seite je Reihe in
+  Reihenfolge (keine Iteration über ein Dictionary, Regel 6). Das Feld ist optional
+  und kommt nur dazu, deshalb bleibt Schema 2: Ein alter Stand hat keine Wahl, also
+  Seite A in freien Reihen. Eine kaputte Wahl (unbekannte Seite, mehr als acht
+  Reihen) verwirft nur die Wahl.
 - **App:** `AppFlow.chooseTalent(row:side:)` speichert sofort, `battleMission` reicht
   die Wahl an `applying`. Neue `AvatarPanel` (Tafel nach UI-01), geöffnet über das
   Schild. Ergebnistafel meldet einen neuen Rang.
