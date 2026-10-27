@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.11.0 – 26.10.2026 (R-5: Avatar einmal am Anfang), Bau offen
+## 0.11.0 – 26.10.2026 (R-5: Avatar einmal am Anfang), Bau 31 (VALID)
 
 **Neu**
 - Avatar-Aufbau beim ersten „Spielen“ (D-063, [Konzept](docs/konzepte/r-5-avatar.md)):
