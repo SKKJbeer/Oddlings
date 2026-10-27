@@ -32,25 +32,43 @@ final class AppFlowTests: XCTestCase {
         XCTAssertEqual(reopened.progress.stars(for: "m1"), 3, "der Sieg steht in der Datei")
     }
 
+    /// R-5: Ohne Avatar führt „Spielen" in den Aufbau. Einmal angelegt, ist das
+    /// Volk gesetzt, steht in der Datei und prägt jede Mission.
     @MainActor
-    func testRaceIsSavedAndShapesTheBattle() throws {
+    func testAvatarIsBuiltOnceAndShapesTheBattle() throws {
         let flow = try makeFlow()
         let mission = try XCTUnwrap(flow.mission(for: "m1"))
-        XCTAssertNil(flow.race, "keine Vorauswahl")
-        XCTAssertTrue(flow.canChooseRace, "beide Völker von Anfang an (D-061)")
-        XCTAssertEqual(flow.battleMission(for: "m1"), mission, "ohne Volk die Missionsdatei")
+        XCTAssertNil(flow.avatar)
+        flow.showMap()
+        XCTAssertEqual(flow.screen, .setup, "ohne Avatar erst der Aufbau")
+        flow.start("m1")
+        XCTAssertEqual(flow.screen, .setup, "auch Weiter mit Mission 1 führt nicht vorbei")
 
-        flow.choose(.elves)
-        let elves = try XCTUnwrap(RaceTable.bundled()[.elves])
+        XCTAssertFalse(flow.createAvatar(race: .elves, name: "   ", portrait: "elf-2"), "leerer Name")
+        XCTAssertNil(flow.avatar)
+        XCTAssertTrue(flow.createAvatar(race: .elves, name: " Lyra ", portrait: "elf-2"))
+        XCTAssertEqual(flow.screen, .map, "nach dem Aufbau die Karte")
+        XCTAssertEqual(flow.avatar?.name, "Lyra")
         XCTAssertEqual(flow.race, .elves)
+        let elves = try XCTUnwrap(RaceTable.bundled()[.elves])
         XCTAssertEqual(flow.battleMission(for: "m1"), mission.applying(elves))
         XCTAssertEqual(flow.battleMission(for: "m1")?.ability?.kind, .moonMark)
 
+        XCTAssertFalse(flow.createAvatar(race: .dwarves, name: "Brokk", portrait: "dwarf-1"), "nur einmal")
+        XCTAssertEqual(flow.race, .elves)
+
         let reopened = try makeFlow()
-        XCTAssertEqual(reopened.race, .elves, "das Volk steht in der Datei")
-        reopened.choose(.dwarves)
-        XCTAssertEqual(reopened.battleMission(for: "m1")?.ability?.kind, .bulwark)
-        XCTAssertEqual(try makeFlow().race, .dwarves)
+        XCTAssertEqual(reopened.avatar, flow.avatar, "der Avatar steht in der Datei")
+        reopened.showMap()
+        XCTAssertEqual(reopened.screen, .map, "kein zweiter Aufbau")
+        reopened.start("m1")
+        XCTAssertEqual(reopened.screen, .battle(node: "m1"))
+    }
+
+    @MainActor
+    func testWithoutAvatarTheMissionFileDecides() throws {
+        let flow = try makeFlow()
+        XCTAssertEqual(flow.battleMission(for: "m1"), try XCTUnwrap(flow.mission(for: "m1")))
     }
 
     @MainActor
@@ -67,6 +85,7 @@ final class AppFlowTests: XCTestCase {
     @MainActor
     func testStartOnlyOpensPlayableMissions() throws {
         let flow = try makeFlow()
+        flow.createAvatar(race: .dwarves, name: "Brokk", portrait: "dwarf-1")
         flow.showMap()
         flow.start("m2")
         XCTAssertEqual(flow.screen, .map, "gesperrt: kein Start")
