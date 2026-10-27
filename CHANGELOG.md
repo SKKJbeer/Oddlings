@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.11.1 – 27.10.2026 (Grafik 05: Kampfplatz und Festung), Bau offen
+## 0.11.1 – 27.10.2026 (Grafik 05: Kampfplatz und Festung), Bau 32 (VALID)
 
 **Neu**
 - Der Kampfplatz ist eine Lichtung im Flüsterwald, aus denselben gemalten Teilen

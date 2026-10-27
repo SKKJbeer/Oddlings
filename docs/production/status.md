@@ -42,7 +42,7 @@ ergänzt). Die Reihenfolge und Abhängigkeiten stehen in der
 |---|---|---|
 | Designstand und MVP-Plan (Code) | R-5 Avatar-Aufbau in TestFlight (Bau 31) | R-6 Avatarrang mit Talentwahl, Spieltest WP-15 begleiten |
 | Spieloberfläche und Menüs | Einbau der Oberfläche für Mission 1; Entwürfe für Hauptmenü, Kampagnenkarte, Völkerwahl | Entwürfe vor R-1, R-2, R-4 |
-| AAA-Grafik | Erste Grafik ist im Spiel (0.5.2) | Menühintergrund, Karte Flüsterwald, Wappen und Porträts |
+| AAA-Grafik | Kampfplatz als Waldlichtung, neue Festung, Avatar-Porträts (0.11.1, **Bau 32 VALID**) | Rückmeldung von Steffen zum Kampfplatz; Streifen hinter der Kopfleiste |
 | Animationen und Effekte | FX 01 in TestFlight (0.10.0, Bau 27): Laufen, Treffer, Tod, Turmangriffe, Fähigkeiten | FX 02: Gegner als 3D-Figuren mit Gliedmaßen (D-051), [Konzept](../konzepte/fx-02-figuren-in-3d.md) |
 | Projektplanung | Roadmap, Register, dieses Dokument | Phase 2 schneiden, sobald der Spieltest ausgewertet ist |
 
