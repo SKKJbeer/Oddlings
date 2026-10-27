@@ -12,6 +12,11 @@ enum BattleStyle {
     static let pathWidth: CGFloat = 0.8
     static let buildZone = SKColor(white: 1, alpha: 0.07)
     static let buildZoneInset: CGFloat = 0.06
+    /// So viele Zellen reicht der gemalte Boden links und rechts (`width`) und
+    /// oben und unten (`height`) über das Feld hinaus. Unter der Kopfleiste ist
+    /// die Karte auf dem iPhone bis zu 22,7 Zellen breit, auf dem iPad bis zu
+    /// 11,3 hoch. Steht auch im Asset-Vertrag (`rand`).
+    static let groundMargin = CGSize(width: 4, height: 2)
 
     static func towerColor(_ kind: TowerKind) -> SKColor {
         switch kind {
@@ -37,6 +42,14 @@ enum BattleStyle {
     static let towerSpriteSide: CGFloat = 1.9
     static let fortressSpriteSide: CGFloat = 2.4
     static let fortressAnchorY: CGFloat = 0.15
+    /// Die Festung steht im Rand hinter dem Wegende, nicht im Feld: Dort ist jede
+    /// Zelle neben dem Weg bebaubar. Zellen nach rechts und unten vom Wegende.
+    static let fortressOffset = CGPoint(x: 0.85, y: 0.9)
+    /// Reihenfolge innerhalb der Bodenebene. `ignoresSiblingOrder` zeichnet
+    /// Geschwister mit gleicher zPosition beliebig; bis 0.10.3 lag so die
+    /// Festung unter dem Boden.
+    static let groundZ: CGFloat = -1
+    static let fortressZ: CGFloat = 1
     static func enemyHeight(_ kind: EnemyKind) -> CGFloat { kind == .brute ? 1.2 : 0.9 }
 
     static let healthBack = SKColor(white: 0, alpha: 0.6)

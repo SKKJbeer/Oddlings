@@ -262,5 +262,62 @@ class Kartenvorlage(unittest.TestCase):
             self.assertFalse(sand(bild.getpixel((16, 8 * 32 + 16))))
 
 
+class Kampfplatz(unittest.TestCase):
+    """Einfarbige Teile: Baeume (magenta) stehen nur im Rand, der Weg liegt auf der
+    Weggeometrie der Mission, um den Rand verschoben."""
+
+    def test_baeume_nur_im_rand_und_weg_auf_der_geometrie(self):
+        konf = os.path.join(WURZEL, "Packages/OddlingsCore/Sources/OddlingsCore/Resources/Balance/mvp-mission-01.json")
+        karte = json.load(open(konf))["map"]
+        z, m = 20, 2
+        with tempfile.TemporaryDirectory() as t:
+            Image.new("RGB", (200, 200), (120, 200, 90)).save(os.path.join(t, "gras.png"))
+            Image.new("RGB", (200, 200), (210, 150, 90)).save(os.path.join(t, "weg.png"))
+            baum = Image.new("RGBA", (60, 60), (0, 0, 0, 0))
+            ImageDraw.Draw(baum).ellipse((0, 0, 59, 59), fill=(255, 0, 255, 255))
+            baum.save(os.path.join(t, "baum0.png"))
+            aus = os.path.join(t, "k.png")
+            subprocess.run([sys.executable, os.path.join(WURZEL, ".claude/skills/spielgrafik/scripts/kampfplatz.py"),
+                            konf, t, aus, str(z), str(m)], check=True, capture_output=True)
+            bild = Image.open(aus).convert("RGB")
+            self.assertEqual(bild.size, ((karte["width"] + 2 * m) * z, (karte["height"] + 2 * m) * z))
+            px = lambda x, y: bild.getpixel((int((x + m) * z), int((y + m) * z)))
+            baumig = lambda p: p[0] > p[1] + 40 and p[2] > p[1] + 40
+            # Jede Zellmitte des Feldes ist bebaubar oder Weg: kein Baum darauf.
+            for x in range(karte["width"]):
+                for y in range(karte["height"]):
+                    self.assertFalse(baumig(px(x + 0.5, y + 0.5)), (x, y))
+            # Ecken des Weges liegen auf Weg (rotbraun), nicht auf Gras.
+            for x, y in karte["path"][1:-1]:
+                p = px(x, y)
+                self.assertGreater(p[0], p[1], (x, y))
+            # Im Rand neben dem Feld steht Wald.
+            self.assertTrue(baumig(px(-1, karte["height"] / 2)))
+
+
+class Kampfplatzbild(unittest.TestCase):
+    """Das ausgelieferte Bild: Rand laut Vertrag, Weg dort, wo die Simulation ihn
+    fuehrt, und dunkler Wald im Rand."""
+
+    def test_weg_und_wald_liegen_richtig(self):
+        konf = os.path.join(WURZEL, "Packages/OddlingsCore/Sources/OddlingsCore/Resources/Balance/mvp-mission-01.json")
+        karte = json.load(open(konf))["map"]
+        vertrag = json.load(open(os.path.join(WURZEL, "art/asset-vertrag.json")))
+        regel = vertrag["assets"]["map_mission01_ground"]
+        mx, my = regel["rand"]  # Zellen links/rechts und oben/unten (BattleStyle.groundMargin)
+        self.assertEqual(regel["zellen"], [karte["width"] + 2 * mx, karte["height"] + 2 * my])
+        bild = Image.open(os.path.join(WURZEL, "App/Assets.xcassets/Maps/map_mission01_ground.imageset/map_mission01_ground@3x.jpg")).convert("RGB")
+        z = bild.width / regel["zellen"][0]
+        px = lambda x, y: bild.getpixel((int((x + mx) * z), int((y + my) * z)))
+        for x, y in karte["path"][1:-1]:
+            p = px(x, y)
+            self.assertGreater(p[0], p[1], (x, y))  # Erde, nicht Gras
+        hell = lambda x, y: sum(px(x, y)) / 3
+        feld = sum(hell(x + 0.5, y + 0.5) for x in range(karte["width"]) for y in range(karte["height"])) / (karte["width"] * karte["height"])
+        for x, y in ((-1.5, karte["height"] / 2), (-mx + 0.5, karte["height"] / 2), (karte["width"] + mx - 0.5, 1.5),
+                     (karte["width"] / 2, -1.5), (karte["width"] / 2, karte["height"] + 1.5)):
+            self.assertLess(hell(x, y), feld * 0.8, (x, y))
+
+
 if __name__ == "__main__":
     unittest.main()
