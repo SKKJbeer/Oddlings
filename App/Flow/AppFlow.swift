@@ -174,7 +174,7 @@ final class AppFlow {
 
     func closeAvatar() {
         guard screen == .avatar else { return }
-        screen = avatarReturn
+        screen = .menu // PROBE
     }
 
     // MARK: Ergebnis
