@@ -83,7 +83,7 @@ enum AvatarTexts {
         var text = String(format: "%.2f", value)
         while text.hasSuffix("0") { text.removeLast() }
         if text.hasSuffix(".") { text.removeLast() }
-        return text // PROBE
+        return text.replacingOccurrences(of: ".", with: ",")
     }
 
     static func field(_ field: AbilityField) -> String {
