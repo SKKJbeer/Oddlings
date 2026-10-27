@@ -23,6 +23,22 @@ final class SaveGameTests: XCTestCase {
         XCTAssertEqual(decoded.dropped, [])
     }
 
+    /// R-6: Die Talentwahl übersteht Speichern und Laden; eine kaputte Wahl
+    /// kostet nur die Wahl, nicht den Avatar.
+    func testTalentChoiceSurvivesTheSaveFile() throws {
+        var lyra = try avatar()
+        lyra.talents = [.b, .a]
+        let save = SaveGame(progress: CampaignProgress(), avatar: lyra)
+        XCTAssertEqual(try SaveGameCodec.decode(try SaveGameCodec.encode(save), campaign: campaign).save.avatar?.talents,
+                       [.b, .a])
+        for broken in [#"["b","c"]"#, #""b""#, #"[1]"#] {
+            let decoded = try decode(#"{"schemaVersion":2,"avatar":{"race":"elves","name":"Lyra","portrait":"elf-1","talents":"#
+                                     + broken + "}}")
+            XCTAssertEqual(decoded.save.avatar?.name, "Lyra", broken)
+            XCTAssertEqual(decoded.save.avatar?.talents, [], broken)
+        }
+    }
+
     func testDropsUnknownEntriesOneByOne() throws {
         let decoded = try decode("""
         {"schemaVersion":2,"avatar":{"race":"goblins","name":"Grok","portrait":"elf-1"},"progress":{"records":[

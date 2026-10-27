@@ -28,7 +28,8 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   kaputte Wahl kostet nur die Wahl.
 
 **Tests**
-- Kern: `TalentTests` (Rang an den Schwellen, wirksame Wahl, Faktoren, Prüfung,
+- Kern: `SaveGameTests.testTalentChoiceSurvivesTheSaveFile` (Wahl übersteht die Datei,
+  kaputte Wahl kostet nur die Wahl), `TalentTests` (Rang an den Schwellen, wirksame Wahl, Faktoren, Prüfung,
   Laden), `BalanceTests.talentsStayEven` (jede Kombination höchstens 0,05 Reserve
   neben der Grundform, gemessen 0,039).
 - App: Rang schaltet ein Talent frei und prägt die Mission; Texte nennen jede Spielart.

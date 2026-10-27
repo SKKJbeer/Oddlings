@@ -53,11 +53,15 @@ public struct Avatar: Codable, Equatable, Sendable {
         guard var valid = Avatar(race: race, name: name, portrait: portrait) else {
             throw DecodingError.dataCorruptedError(forKey: .name, in: container, debugDescription: "ungültiger Avatar")
         }
-        // Eine kaputte Talentwahl kostet nur die Wahl, nie den Avatar: Sie ist
-        // jederzeit neu zu treffen, Name und Volk nicht.
-        let raw = (try? container.decodeIfPresent([String].self, forKey: .talents)) ?? nil
-        let sides = raw?.compactMap(TalentSide.init(rawValue:)) ?? []
-        if let raw, sides.count == raw.count, raw.count <= Self.maxTalentRows { valid.talents = sides }
+        valid.talents = Self.validTalents((try? container.decodeIfPresent([String].self, forKey: .talents)) ?? nil)
         self = valid
+    }
+
+    /// Eine kaputte Talentwahl kostet nur die Wahl, nie den Avatar: Sie ist
+    /// jederzeit neu zu treffen, Name und Volk nicht.
+    static func validTalents(_ raw: [String]?) -> [TalentSide] {
+        guard let raw, raw.count <= maxTalentRows else { return [] }
+        let sides = raw.compactMap(TalentSide.init(rawValue:))
+        return sides.count == raw.count ? sides : []
     }
 }
