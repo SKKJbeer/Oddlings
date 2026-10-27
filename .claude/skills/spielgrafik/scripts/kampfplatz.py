@@ -38,6 +38,7 @@ UEBERHANG = 0.2   # Zellen, so weit darf eine Krone ins Feld ragen
 WEGBREITE = 0.95  # Zellen; BattleStyle.pathWidth (0,8) ist die Linie der Platzhaltergrafik
 ECKE = 0.45       # Zellen, Halbmesser der Wegecken
 FESTUNG = (W + 0.9, pfad[-1][1] - 0.4, 1.7)  # Mitte x, y und Halbmesser des Festungsplatzes
+HOEHLE_X = -0.95  # Mitte der Hoehle am Wegeingang, in Zellen
 
 
 def lade(muster):
@@ -83,9 +84,10 @@ def gerundet(punkte):
     return aus
 
 
-# Weg reicht ueber beide Enden hinaus: links in die Hoehle, rechts unter die Festung.
-ende = (pfad[-1][0] + MX, pfad[-1][1])
-weglinie = gerundet([(pfad[0][0] - MX, pfad[0][1])] + pfad[1:-1] + [ende])
+# Weg endet links in der Hoehle und rechts im Festungshof, nicht am Bildrand:
+# Bei breitem Rand lief er sonst sichtbar hinter beiden weiter in den Wald.
+ende = (FESTUNG[0], pfad[-1][1])
+weglinie = gerundet([(HOEHLE_X - 0.35, pfad[0][1])] + pfad[1:-1] + [ende])
 wegpixel = [at(*p) for p in weglinie]
 dichte = [(weglinie[i][0] + (weglinie[i + 1][0] - weglinie[i][0]) * t / 4,
            weglinie[i][1] + (weglinie[i + 1][1] - weglinie[i][1]) * t / 4)
@@ -163,7 +165,7 @@ hindernisse = []  # (x, y, Halbmesser) in Zellen
 hoehle = lade("hoehle*.png")
 if hoehle:
     # Die Gegner kommen aus der Hoehle der Kampagnenkarte (Bosshoehle m7).
-    hx, hy = -0.95, pfad[0][1]
+    hx, hy = HOEHLE_X, pfad[0][1]
     setze(hoehle[0], *at(hx, hy), C * 2.0, spiegeln=True, schatten=0.5)
     hindernisse.append((hx, hy, 1.0))
 hindernisse.append((fx, fy, fr))

@@ -35,7 +35,7 @@ Festung, die man schützen will.
 | Teil | Was |
 |---|---|
 | Fehler | Bodenbild unter alles (`zPosition` −1), Festung über Boden und Bauzonen |
-| Boden mit Rand | `map_mission01_ground` deckt das Feld **plus 2 Zellen Rand** je Seite: 20 × 13 Zellen, 130 px je Zelle (2600 × 1690). Der Rand ist Wald und reicht für iPhone-Breite und iPad-Höhe |
+| Boden mit Rand | `map_mission01_ground` deckt das Feld **plus 4 Zellen Rand links und rechts, 2 oben und unten**: 24 × 13 Zellen (3096 × 1677 @3x). Der Rand ist Wald. Er muss die Karte unter der Kopfleiste füllen, und die ist auf dem iPhone bis 22,7 Zellen breit, auf dem iPad bis 11,3 hoch (zuerst mit 2 Zellen ringsum geplant, im Probelauf zu schmal) |
 | Boden gemalt | Collage wie die Kampagnenkarte (`regionscollage.py`-Weg): Gras- und Wegtextur, Bäume und Höhle aus `art/karten/region01`. Weg mit runden Ecken und dunklerer Furche, Lichtflecken, Baumschatten, warmes Licht |
 | Festung | neu gemalt, Perspektive und Stil der Türme (45° von oben, Konturen), Tor nach links zum Weg, größer (3 Zellen) und ganz im rechten Rand, damit sie keine Bauzelle verdeckt |
 
@@ -44,8 +44,8 @@ Festung, die man schützen will.
 
 ## Architektur
 
-- `BattleStyle.groundMargin` (Zellen) ist die eine Stelle für den Rand. Der
-  Asset-Vertrag nennt `zellen: [20, 13]` und `rand: 2`; die Kunstprüfung hält
+- `BattleStyle.groundMargin` (Zellen, waagrecht und senkrecht) ist die eine Stelle
+  für den Rand. Der Asset-Vertrag nennt `zellen: [24, 13]` und `rand: [4, 2]`; die Kunstprüfung hält
   beide zusammen.
 - `BattleSprites.ground` legt das Bild von Zelle (−Rand, −Rand) bis
   (Breite + Rand, Höhe + Rand). `BoardLayout` bleibt unverändert: Eingabe und
@@ -59,7 +59,7 @@ Festung, die man schützen will.
 - `BattleSceneTests`: Festung liegt über dem Boden (`zPosition`), Bodenbild
   deckt die ganze Szene für iPhone- und iPad-Seitenverhältnis, Festungsbild
   überdeckt keine Bauzelle. Jeder Test einmal rot.
-- `tools/art-check`: Vertrag (Größe 20 × 13 Zellen), Weg im Bild liegt auf der
+- `tools/art-check`: Vertrag (Größe 24 × 13 Zellen), Weg im Bild liegt auf der
   Weggeometrie (wie bisher, um den Rand verschoben), Rand ist dunkler als das
   Feld (Wald).
 - Simulator-Probelauf: Bildschirmfotos der Mission ansehen, bevor ausgeliefert
@@ -67,7 +67,7 @@ Festung, die man schützen will.
 
 ## Risiken
 
-- **Speicher:** 2600 × 1690 JPEG sind dekomprimiert etwa 17 MB. Vertretbar für
+- **Speicher:** 3096 × 1677 JPEG sind dekomprimiert etwa 21 MB. Vertretbar für
   ein Bild je Mission.
 - **Bäume am Rand verdecken Gegner am Wegeingang.** Der Weg beginnt bei x = −1;
   der Waldrand bekommt dort eine Lücke mit der Höhle, Bäume halten Abstand vom Weg.

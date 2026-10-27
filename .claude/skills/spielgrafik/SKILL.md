@@ -40,8 +40,10 @@ description: Hochwertige Spielgrafik (App-Symbole, Figuren, Store-Bilder, Hinter
 - **Kampfplatz (Boden einer Mission):** `kampfplatz.py <mission.json> <teile>
   <aus> [px_je_zelle] [rand] [vorschau]` setzt aus den Teilen der Regionskarte
   eine Lichtung: Weg auf der Weggeometrie, Bäume nur im Rand (nie auf
-  Bauzellen), Höhle am Wegeingang, Licht und Schatten. Danach verkleinern und
-  einmal übermalen (`STAERKE=0.4 VERSCHIEBUNG=0.5`, 1024x640): Das vereinheitlicht
+  Bauzellen), Höhle am Wegeingang, Licht und Schatten. Rand je Achse (`4x2`):
+  Die Karte unter der Kopfleiste ist breiter als der Bildschirm. Danach verkleinern und
+  einmal übermalen (`STAERKE=0.4 VERSCHIEBUNG=0.5`, höchstens 1024x640: 1152x640
+  bricht beim Entschlüsseln mit Speichermangel ab, 16 GB): Das vereinheitlicht
   den Malstil, und der Weg bleibt liegen. Kleine Figuren, die FLUX trotz „no
   characters" hineinmalt, mit `retusche.py` entfernen.
 - **Lange Läufe in der Cloud:** Ein 512er-Bild braucht rund 12 Minuten, 1024x640

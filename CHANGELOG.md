@@ -15,8 +15,8 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 
 **Neu**
 - Der Kampfplatz ist eine Lichtung im Flüsterwald, aus denselben gemalten Teilen
-  wie die Kampagnenkarte: Waldrand bis an den Bildschirmrand (2 Zellen Rand je
-  Seite, auf iPhone und iPad ohne leere Streifen), Weg mit runden Ecken, die
+  wie die Kampagnenkarte: Waldrand bis an den Bildschirmrand (4 Zellen links und
+  rechts, 2 oben und unten, auf iPhone und iPad ohne leere Streifen), Weg mit runden Ecken, die
   Goblinhöhle am Wegeingang, warmes Licht und Baumschatten.
 - Neue Festung: Zwergenfeste mit zwei Ecktürmen, Fackeln und Bannern, im Stil
   der Türme. Sie steht im rechten Rand und verdeckt keine Bauzelle.
@@ -26,8 +26,9 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   mit `ignoresSiblingOrder` lag der Boden oben.
 
 **Tests**
-- App: Boden deckt die ganze Szene (iPhone und iPad), Festung über Boden und
-  Bauzonen, Festung über keiner Bauzelle. Kunstprüfung: Vertrag 20 × 13 Zellen,
+- App: Boden deckt die ganze Szene (iPhone und iPad, mit und ohne Kopfleiste),
+  Festung über Boden und Bauzonen, Festung über keiner Bauzelle. Kunstprüfung:
+  Vertrag 24 × 13 Zellen,
   Weg im Bild auf der Weggeometrie, Waldrand dunkler als das Feld, Collage legt
   keine Bäume auf Bauzellen.
 

@@ -304,17 +304,18 @@ class Kampfplatzbild(unittest.TestCase):
         karte = json.load(open(konf))["map"]
         vertrag = json.load(open(os.path.join(WURZEL, "art/asset-vertrag.json")))
         regel = vertrag["assets"]["map_mission01_ground"]
-        m = regel["rand"]
-        self.assertEqual(regel["zellen"], [karte["width"] + 2 * m, karte["height"] + 2 * m])
+        mx, my = regel["rand"]  # Zellen links/rechts und oben/unten (BattleStyle.groundMargin)
+        self.assertEqual(regel["zellen"], [karte["width"] + 2 * mx, karte["height"] + 2 * my])
         bild = Image.open(os.path.join(WURZEL, "App/Assets.xcassets/Maps/map_mission01_ground.imageset/map_mission01_ground@3x.jpg")).convert("RGB")
         z = bild.width / regel["zellen"][0]
-        px = lambda x, y: bild.getpixel((int((x + m) * z), int((y + m) * z)))
+        px = lambda x, y: bild.getpixel((int((x + mx) * z), int((y + my) * z)))
         for x, y in karte["path"][1:-1]:
             p = px(x, y)
             self.assertGreater(p[0], p[1], (x, y))  # Erde, nicht Gras
         hell = lambda x, y: sum(px(x, y)) / 3
         feld = sum(hell(x + 0.5, y + 0.5) for x in range(karte["width"]) for y in range(karte["height"])) / (karte["width"] * karte["height"])
-        for x, y in ((-1.5, karte["height"] / 2), (karte["width"] / 2, -1.5), (karte["width"] / 2, karte["height"] + 1.5)):
+        for x, y in ((-1.5, karte["height"] / 2), (-mx + 0.5, karte["height"] / 2), (karte["width"] + mx - 0.5, 1.5),
+                     (karte["width"] / 2, -1.5), (karte["width"] / 2, karte["height"] + 1.5)):
             self.assertLess(hell(x, y), feld * 0.8, (x, y))
 
 
