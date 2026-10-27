@@ -17,7 +17,9 @@ neuester VALID-Bau 32 (0.11.1). Der Spielrahmen R-1 bis R-6 steht. Spielbar ist 
 3. **Spieltest mit drei Personen** (WP-15) auf dem neuesten Bau, mit dem
    [Beobachtungsbogen](playtests/beobachtungsbogen.md). Davon hängen Phase 2 und die
    Werte von Mission 1 ab.
-4. Ohne Eile: Messung des Spikes auf dem iPhone (WP-01).
+4. Was nach R-6 als Nächstes kommt: Entscheidungskarte im Thread „Architektur, Doku und
+   Roadmap nachziehen“ (Empfehlung: Mission 2 mit Zwergenbank jetzt, Spieltest parallel).
+5. Ohne Eile: Messung des Spikes auf dem iPhone (WP-01).
 
 ## Fertig
 

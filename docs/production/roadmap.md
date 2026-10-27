@@ -34,6 +34,7 @@ zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzeln
 | S2 | Volk wechseln, bevor es eine Spielwährung gibt (Entscheidungskarte seit 26.10.) | Thread „Oddlings-Designstand und MVP-Plan aufsetzen“ | nichts, die Empfehlung gilt bis zur Antwort | Gar nicht |
 | S3 | **Spieltest mit drei Personen** auf dem neuesten Bau, [Beobachtungsbogen](playtests/beobachtungsbogen.md) | WP-15 | Abschluss Phase 1, Schnitt Phase 2, D-030, Werte D-007 | so bald wie möglich |
 | S4 | Leistung des Spikes auf dem iPhone messen | WP-01 | nichts Akutes; D-002 gilt bis dahin | ohne Eile |
+| S6 | **Was nach R-6 als Nächstes?** (Entscheidungskarte seit 27.10.) | Thread „Architektur, Doku und Roadmap nachziehen“ | Reihenfolge unter „Als Nächstes“ | Mission 2 jetzt, Spieltest parallel |
 | S5 | Kommt mit R-7: Herkunft der Ausrüstung und Obergrenze der Boni (Karten folgen) | Haupt-Thread | R-7 Umsetzung | – |
 
 ## Als Nächstes
