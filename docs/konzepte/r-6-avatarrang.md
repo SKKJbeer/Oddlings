@@ -36,11 +36,9 @@ Steffen will ein eigenes Avatar-Menü, in dem man sich über die Zeit einen cool
 wertvollen Charakter aufbaut. Deshalb ist es ein Schirm und keine Tafel: Links steht
 immer der Charakter, rechts seine Abschnitte. Heute gibt es einen, die Talente. Was
 später dazukommt, bekommt einen eigenen Abschnitt daneben (Reiter über der rechten
-Spalte), ohne den Charakter zu verdrängen. **[OFFEN, Entscheidungskarte]** Was das
-Ausbauen außer Talenten bringt: Empfehlung Aussehen und Titel freispielen (Rahmen,
-Banner, Rüstungsfarben, Titel über Sterne und Erfolge), weil der Charakter so
-sichtbar wertvoll wird, ohne die Leitplanke „anders, nicht stärker“ aufzugeben.
-Gebaut wird davon nichts vor der Entscheidung (Scope-Verbot).
+Spalte), ohne den Charakter zu verdrängen. Als Nächstes kommt dort **Ausrüstung mit
+kleinen Boni** (D-066, Steffen 27.10.2026). Sie ist ein eigenes Paket mit eigenem
+Konzept; R-6 baut davon nichts vor (Scope-Verbot).
 
 ## Ränge **[ENTSCHIEDEN, D-065]**
 
@@ -151,5 +149,5 @@ bevor sie eine Konfiguration erreicht. Kein Netz, keine neue Abhängigkeit.
 
 ## Offen
 
-1. Was das Avatar-Menü außer Talenten bringt: Entscheidungskarte (siehe oben).
+1. Ausrüstung (D-066): eigenes Paket nach R-6.
 2. Rangabzeichen und Talentbilder kommen aus dem Grafik-Thread; bis dahin Symbole.
