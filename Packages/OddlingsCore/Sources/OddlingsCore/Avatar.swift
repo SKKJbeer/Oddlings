@@ -13,6 +13,11 @@ public struct Avatar: Codable, Equatable, Sendable {
     /// Kennung aus dem Porträtkatalog der App. Der Kern prüft nur die Form:
     /// Welche Bilder es gibt, weiß allein die App.
     public let portrait: String
+    /// Gewählte Seite je Talentreihe (R-6). Was gilt, entscheidet erst der Rang
+    /// (`AvatarRank.effective`); fehlende Reihen stehen auf A.
+    public var talents: [TalentSide] = []
+    /// Mehr Reihen kennt kein Volk; was länger ist, kommt nicht aus dieser App.
+    public static let maxTalentRows = 8
 
     /// Nur gültige Werte: ein Name, den `validName` annimmt, und eine Kennung,
     /// die `isValidPortrait` annimmt. Sonst `nil`.
@@ -45,9 +50,18 @@ public struct Avatar: Codable, Equatable, Sendable {
         let race = try container.decode(Race.self, forKey: .race)
         let name = try container.decode(String.self, forKey: .name)
         let portrait = try container.decode(String.self, forKey: .portrait)
-        guard let valid = Avatar(race: race, name: name, portrait: portrait) else {
+        guard var valid = Avatar(race: race, name: name, portrait: portrait) else {
             throw DecodingError.dataCorruptedError(forKey: .name, in: container, debugDescription: "ungültiger Avatar")
         }
+        valid.talents = Self.validTalents((try? container.decodeIfPresent([String].self, forKey: .talents)) ?? nil)
         self = valid
+    }
+
+    /// Eine kaputte Talentwahl kostet nur die Wahl, nie den Avatar: Sie ist
+    /// jederzeit neu zu treffen, Name und Volk nicht.
+    static func validTalents(_ raw: [String]?) -> [TalentSide] {
+        guard let raw, raw.count <= maxTalentRows else { return [] }
+        let sides = raw.compactMap(TalentSide.init(rawValue:))
+        return sides.count == raw.count ? sides : []
     }
 }

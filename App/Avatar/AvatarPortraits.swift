@@ -60,20 +60,26 @@ struct PortraitView: View {
 /// Avatarschild: Porträt, Name, Volk. Hauptmenü und Missionstafel.
 struct AvatarBadge: View {
     let avatar: Avatar
+    var rank = 1
     var size: CGFloat = 44
+    /// Ein neuer Rang hat ein Talent freigegeben, das Avatar-Menü war noch nicht offen.
+    var newTalent = false
 
     var body: some View {
         HStack(spacing: 10) {
             PortraitView(portrait: AvatarPortraits.resolve(avatar.portrait, race: avatar.race), size: size)
+                .overlay(alignment: .bottomTrailing) { RankMark(rank: rank, size: size * 0.46) }
             VStack(alignment: .leading, spacing: 0) {
                 Text(avatar.name)
                     .font(UITheme.display(20))
                     .foregroundStyle(UITheme.cream)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
-                Text(CampaignTexts.race(avatar.race))
+                Text(newTalent ? AvatarTexts.newTalent : CampaignTexts.race(avatar.race))
                     .font(UITheme.bodyHeavy(13))
-                    .foregroundStyle(UITheme.coin)
+                    .foregroundStyle(newTalent ? UITheme.outline : UITheme.coin)
+                    .padding(.horizontal, newTalent ? 6 : 0)
+                    .background(Capsule().fill(newTalent ? UITheme.goldFace : .clear))
             }
         }
         .padding(.leading, 4)
@@ -81,6 +87,26 @@ struct AvatarBadge: View {
         .padding(.vertical, 4)
         .background(Capsule().fill(UITheme.outline.opacity(0.6)))
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(AvatarTexts.badge(avatar))
+        .accessibilityLabel(AvatarTexts.badge(avatar, rank: rank))
+        .accessibilityValue(newTalent ? AvatarTexts.newTalent : "")
+    }
+}
+
+/// Rangabzeichen am Porträt. Bis der Grafik-Thread Abzeichen liefert, eine Münze
+/// mit römischer Ziffer.
+struct RankMark: View {
+    let rank: Int
+    let size: CGFloat
+
+    var body: some View {
+        Text(AvatarTexts.roman(rank))
+            .font(UITheme.display(size * 0.5))
+            .foregroundStyle(UITheme.outline)
+            .minimumScaleFactor(0.5)
+            .frame(width: size, height: size)
+            .background(Circle().fill(UITheme.coin))
+            .overlay(Circle().stroke(UITheme.outline, lineWidth: 2))
+            .offset(x: size * 0.15, y: size * 0.1)
+            .accessibilityHidden(true)
     }
 }

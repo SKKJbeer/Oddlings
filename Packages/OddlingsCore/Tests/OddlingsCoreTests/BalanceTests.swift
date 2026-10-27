@@ -83,4 +83,41 @@ struct BalanceTests {
             #expect(raced.reserve(mix, castsAbility: true) > raced.reserve(watchOnly, castsAbility: true) + 0.05, "\(race)")
         }
     }
+
+    /// R-6/D-065: Ein Rang macht den Avatar anders, nicht stärker. Ein Lauf
+    /// springt schon, wenn ein Wurf eine Welle früher fällt (gemessen: ±0,05 über
+    /// die Kombinationen eines Volks). Deshalb zählt der Schnitt über vier
+    /// Mischungen, und verglichen wird mit der Mitte aller Kombinationen; die
+    /// Mitte selbst darf nicht spürbar über der Grundform liegen.
+    @Test("Jede Talentkombination liegt nah an der Mitte ihres Volks, und die Mitte nah an der Grundform",
+          arguments: Race.allCases)
+    func talentsStayEven(race: Race) throws {
+        let mixes = try ["Mix", "Wach + Blitz", "Wach + Sporen", "Blitz + Sporen"].map(order)
+        let mix = try order("Mix"), watchOnly = try order("Nur Wachtürme")
+        func average(_ config: BalanceConfig, castsAbility: Bool) -> Double {
+            let simulation = Simulation(config: config)
+            return mixes.map { simulation.reserve($0, castsAbility: castsAbility) }.reduce(0, +) / Double(mixes.count)
+        }
+        var plain = sim.config
+        plain.ability = nil
+        let without = average(plain, castsAbility: false)
+        let config = try #require(try RaceTable.bundled()[race])
+        var results: [(name: String, reserve: Double)] = []
+        for choice in config.allTalentChoices() {
+            let talented = sim.config.applying(config, talents: choice)
+            let name = "\(race) \(choice.map(\.rawValue).joined())"
+            let with = average(talented, castsAbility: true)
+            #expect(with > without, "\(name) hilft")
+            let raced = Simulation(config: talented)
+            #expect(raced.reserve(mix, castsAbility: true) > raced.reserve(watchOnly, castsAbility: true) + 0.05,
+                    "\(name): Mischung vor Monokultur")
+            results.append((name, with))
+        }
+        let base = results[0].reserve
+        let center = results.map(\.reserve).reduce(0, +) / Double(results.count)
+        #expect(abs(center - base) <= 0.05, "\(race): im Schnitt nicht stärker, \(center) gegen \(base)")
+        for result in results {
+            #expect(abs(result.reserve - center) <= 0.06, "\(result.name): \(result.reserve) gegen Mitte \(center)")
+        }
+    }
 }

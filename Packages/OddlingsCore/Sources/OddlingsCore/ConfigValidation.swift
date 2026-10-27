@@ -24,6 +24,9 @@ public struct ConfigIssue: Hashable, Sendable, CustomStringConvertible {
         case mustBeAboveOne
         case missingAbilityValue
         case missingRace
+        case ranksOutOfOrder           // 0 < erste Schwelle < zweite < …
+        case talentRowsDontMatchRanks  // eine Talentreihe je Rang über I
+        case fieldNotInAbility         // Spielart skaliert ein Feld, das die Fähigkeit nicht hat
     }
 
     public init(field: String, rule: Rule) {
@@ -49,6 +52,9 @@ public struct ConfigIssue: Hashable, Sendable, CustomStringConvertible {
         case .mustBeAboveOne: "\(field) muss größer als 1 sein"
         case .missingAbilityValue: "\(field) fehlt, die Art der Fähigkeit braucht es"
         case .missingRace: "\(field) fehlt"
+        case .ranksOutOfOrder: "\(field) braucht steigende Schwellen größer als 0"
+        case .talentRowsDontMatchRanks: "\(field) braucht genau eine Reihe je Rang über I"
+        case .fieldNotInAbility: "\(field) gibt es bei dieser Fähigkeit nicht"
         case .starsOutOfOrder: "\(field) braucht 0 < two ≤ three ≤ fortressLives"
         }
     }

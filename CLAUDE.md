@@ -138,7 +138,7 @@ Ablauf von der Umsetzung bis zum Bau in TestFlight:
 
 ## Testen
 
-- Simulation: `swift test --package-path Packages/OddlingsCore` (ab WP-02).
+- Simulation: `swift test -c release -Xswiftc -enable-testing --package-path Packages/OddlingsCore` (ab WP-02; Release, weil die Balancetests sonst über 20 Minuten brauchen).
 - Balance: `BalanceTests` im Paket (Bot-Bauweisen aus `simStrategies`, Reserve je Bauweise).
 - Jede Balanceänderung: Balancetests laufen lassen und Ergebnis in
   [04](docs/game-design/04-economy-and-balance.md) nachtragen.

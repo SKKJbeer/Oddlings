@@ -69,7 +69,7 @@ struct E2EApp {
     var mapBack: XCUIElement { app.buttons["map.back"] }
     func node(_ id: String) -> XCUIElement { app.buttons["map.node.\(id)"] }
     var raceDetail: String { app.staticTexts["map.race.detail"].label }
-    var mapAvatar: XCUIElement { app.otherElements["map.avatar"] }
+    var mapAvatar: XCUIElement { app.buttons["map.avatar"] }
     var setup: XCUIElement { app.otherElements["setup"] }
     func setupRace(_ race: Race) -> XCUIElement { app.buttons["setup.race.\(race.rawValue)"] }
     func setupPortrait(_ id: String) -> XCUIElement { app.buttons["setup.portrait.\(id)"] }

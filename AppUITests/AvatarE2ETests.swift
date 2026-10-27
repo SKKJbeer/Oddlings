@@ -17,7 +17,7 @@ final class AvatarE2ETests: XCTestCase {
     @MainActor
     func testAvatarIsBuiltOnceAndSurvivesRelaunch() throws {
         let e2e = try E2EApp(["--e2e-erste-welle", E2EApp.wavesOnHold], storage: "avatar")
-        XCTAssertFalse(e2e.app.descendants(matching: .any)["menu.avatar"].exists, "vor dem Aufbau kein Avatarschild")
+        XCTAssertFalse(e2e.app.buttons["menu.avatar"].exists, "vor dem Aufbau kein Avatarschild")
         tapPlay(e2e)
         XCTAssertTrue(e2e.setup.waitForExistence(timeout: 5), "ohne Avatar erst der Aufbau")
         XCTAssertFalse(e2e.mapStart.exists)
@@ -45,11 +45,11 @@ final class AvatarE2ETests: XCTestCase {
         e2e.setupConfirm.tap()
 
         XCTAssertTrue(e2e.mapStart.waitForExistence(timeout: 5), "nach dem Aufbau die Karte")
-        XCTAssertEqual(e2e.mapAvatar.label, "Lyra, Elfen")
+        XCTAssertEqual(e2e.mapAvatar.label, "Lyra, Elfen, Rang I")
         XCTAssertTrue(e2e.raceDetail.contains("Mondmal"), e2e.raceDetail)
         XCTAssertFalse(e2e.app.buttons["map.race.dwarves"].exists, "auf der Tafel gibt es keine Volkswahl mehr")
         e2e.mapBack.tap()
-        XCTAssertTrue(e2e.app.descendants(matching: .any)["menu.avatar"].waitForExistence(timeout: 5),
+        XCTAssertTrue(e2e.app.buttons["menu.avatar"].waitForExistence(timeout: 5),
                       "das Schild steht sofort im Hauptmenü")
         tapPlay(e2e)
         XCTAssertTrue(e2e.mapStart.waitForExistence(timeout: 5), "kein zweiter Aufbau")
@@ -60,16 +60,16 @@ final class AvatarE2ETests: XCTestCase {
 
         e2e.app.terminate()
         let again = try E2EApp(storage: "avatar", fresh: false)
-        let badge = again.app.descendants(matching: .any)["menu.avatar"]
+        let badge = again.app.buttons["menu.avatar"]
         XCTAssertTrue(again.app.buttons["menu.play"].waitForExistence(timeout: 15))
         again.screenshot("7-hauptmenue-avatar", in: self)
         if !badge.waitForExistence(timeout: 5) { print(again.app.debugDescription) }
         XCTAssertTrue(badge.exists, "Avatarschild im Hauptmenü")
-        XCTAssertEqual(badge.label, "Lyra, Elfen")
+        XCTAssertEqual(badge.label, "Lyra, Elfen, Rang I")
         tapPlay(again)
         XCTAssertTrue(again.mapStart.waitForExistence(timeout: 5), "kein zweiter Aufbau")
         XCTAssertFalse(again.setup.exists)
-        XCTAssertEqual(again.mapAvatar.label, "Lyra, Elfen", "Name und Volk stehen im Spielstand")
+        XCTAssertEqual(again.mapAvatar.label, "Lyra, Elfen, Rang I", "Name und Volk stehen im Spielstand")
     }
 
     /// D-062: Ein Zwerg zahlt für den Wachturm weniger, sichtbar im Ring und
@@ -100,6 +100,67 @@ final class AvatarE2ETests: XCTestCase {
         waitForExpectations(timeout: 5)
     }
 
+    /// R-6: Drei Sterne liegen schon (Testschalter), ein Sieg mit drei weiteren
+    /// hebt auf Rang II. Das Schild meldet das neue Talent, das Avatar-Menü zeigt
+    /// die freie und die gesperrten Reihen, die Wahl übersteht den Neustart, und
+    /// nichts im Menü liegt übereinander.
+    @MainActor
+    func testRankUnlocksATalentThatSurvivesRelaunch() throws {
+        let e2e = try E2EApp(["--e2e-zeitraffer", E2EApp.fastForward, "--e2e-mitspieler", "--e2e-volle-sterne", "m2"],
+                             storage: "rang", avatar: .elves)
+        let resume = e2e.app.buttons["menu.continue"]
+        XCTAssertTrue(resume.waitForExistence(timeout: 15))
+        XCTAssertEqual(e2e.app.buttons["menu.avatar"].label, "Test, Elfen, Rang I")
+        resume.tap()
+        e2e.waitForBoard()
+        XCTAssertTrue(e2e.result.waitForExistence(timeout: 180), "Mission endet")
+        XCTAssertEqual(e2e.result.label, "Sieg")
+        e2e.app.buttons["result.back"].tap()
+        XCTAssertTrue(e2e.mapStart.waitForExistence(timeout: 5))
+        guard e2e.nodeState("m1").hasPrefix("gewonnen, 3") else {
+            // Der Mitspieler gewinnt Mission 1 bisher immer ohne Verlust; ohne
+            // drei Sterne gäbe es hier keinen neuen Rang zu prüfen.
+            return XCTFail("drei Sterne erwartet: \(e2e.nodeState("m1"))")
+        }
+        XCTAssertEqual(e2e.mapAvatar.label, "Test, Elfen, Rang II")
+        XCTAssertEqual(e2e.mapAvatar.value as? String, "Neues Talent")
+
+        e2e.mapAvatar.tap()
+        let screen = e2e.app.otherElements["avatar.screen"]
+        XCTAssertTrue(screen.waitForExistence(timeout: 5))
+        XCTAssertEqual(e2e.app.staticTexts["avatar.rank"].label, "Elfen · Rang II")
+        XCTAssertEqual(e2e.app.staticTexts["avatar.progress"].label, "6 von 12 Sternen bis Rang III")
+        let first = e2e.app.buttons["talent.0.a"], second = e2e.app.buttons["talent.0.b"]
+        XCTAssertTrue(first.isSelected, "eine neue Reihe steht auf A")
+        XCTAssertFalse(second.isSelected)
+        for row in 1...3 {
+            XCTAssertTrue(e2e.app.descendants(matching: .any)["talent.\(row).locked"].exists, "Reihe \(row + 1) ist gesperrt")
+        }
+        XCTAssertFalse(e2e.app.buttons["talent.1.a"].isEnabled)
+        e2e.screenshot("8-avatarmenue", in: self)
+        assertFits([e2e.app.buttons["avatar.back"], e2e.app.staticTexts["avatar.rank"],
+                    e2e.app.staticTexts["avatar.progress"], first, second,
+                    e2e.app.buttons["talent.1.a"], e2e.app.buttons["talent.1.b"]],
+                   in: e2e, hittable: false)
+        second.tap()
+        XCTAssertTrue(second.isSelected)
+        XCTAssertFalse(first.isSelected)
+        e2e.app.buttons["avatar.back"].tap()
+        XCTAssertTrue(e2e.mapStart.waitForExistence(timeout: 5), "zurück zur Karte")
+        XCTAssertNotEqual(e2e.mapAvatar.value as? String, "Neues Talent", "einmal angesehen, kein Hinweis mehr")
+
+        e2e.app.terminate()
+        let again = try E2EApp(storage: "rang", fresh: false)
+        let badge = again.app.buttons["menu.avatar"]
+        XCTAssertTrue(badge.waitForExistence(timeout: 15))
+        XCTAssertEqual(badge.label, "Test, Elfen, Rang II")
+        badge.tap()
+        XCTAssertTrue(again.app.otherElements["avatar.screen"].waitForExistence(timeout: 5))
+        XCTAssertTrue(again.app.buttons["talent.0.b"].isSelected, "die Wahl steht im Spielstand")
+        again.app.buttons["avatar.back"].tap()
+        XCTAssertTrue(badge.waitForExistence(timeout: 5), "zurück ins Hauptmenü")
+    }
+
     /// Im Querformat ist wenig Platz: Im Aufbau und auf der Tafel mit Avatar darf
     /// nichts übereinander liegen oder aus dem Bild ragen.
     @MainActor
@@ -118,12 +179,13 @@ final class AvatarE2ETests: XCTestCase {
     }
 
     @MainActor
-    private func assertFits(_ parts: [XCUIElement], in e2e: E2EApp, file: StaticString = #filePath, line: UInt = #line) {
+    private func assertFits(_ parts: [XCUIElement], in e2e: E2EApp, hittable: Bool = true,
+                            file: StaticString = #filePath, line: UInt = #line) {
         let window = e2e.app.windows.firstMatch.frame
         for part in parts {
             XCTAssertTrue(part.waitForExistence(timeout: 5), part.identifier, file: file, line: line)
             XCTAssertTrue(window.contains(part.frame), "\(part.identifier) liegt im Bild: \(part.frame)", file: file, line: line)
-            XCTAssertTrue(part.isHittable, part.identifier, file: file, line: line)
+            if hittable { XCTAssertTrue(part.isHittable, part.identifier, file: file, line: line) }
         }
         for (index, part) in parts.enumerated() {
             for other in parts[(index + 1)...] {
