@@ -5,8 +5,8 @@ ergänzt, D-067). Reihenfolge, Pakete und alles, was auf dich wartet, stehen in 
 [Roadmap](roadmap.md); Einzelheiten im [Backlog](backlog.md), offene Fragen im
 [Register](offene-fragen.md).
 
-**Stand: 01.11.2026** · Neueste Version **0.16.0** (Mission 2 mit Zwergenbank), Bau läuft;
-davor 0.15.0 (Ton und Musik), 0.13.0 (Plünderer mit Gliedmaßen); neuester VALID-Bau 35 (0.15.0). Der Spielrahmen R-1 bis R-6 steht. Spielbar sind Mission 1 und Mission 2.
+**Stand: 01.11.2026** · Neueste Version **0.16.0** (Mission 2 mit Zwergenbank), Bau 36 VALID in TestFlight;
+davor 0.15.0 (Ton und Musik), 0.13.0 (Plünderer mit Gliedmaßen). Der Spielrahmen R-1 bis R-6 steht. Spielbar sind Mission 1 und Mission 2.
 
 ## Wartet auf dich
 
@@ -47,7 +47,7 @@ davor 0.15.0 (Ton und Musik), 0.13.0 (Plünderer mit Gliedmaßen); neuester VALI
 | Thread | Woran | Nächster Schritt |
 |---|---|---|
 | Haupt-Thread | [Konzept R-7 Ausrüstung](../konzepte/r-7-ausruestung.md) steht: höchstens +10 % (D-069), feste Belohnungen und Schmiede (D-070) | R-7a feste Belohnungen umsetzen |
-| Mission 2 mit Zwergenbank | 0.16.0 ausgeliefert | Bau in TestFlight, Werte nach dem Spieltest nachziehen |
+| Mission 2 mit Zwergenbank | 0.16.0, Bau 36 in TestFlight | Werte nach dem Spieltest nachziehen |
 | Plünderer-3D-Modell | 0.13.0 in TestFlight | Flitzer und Panzerbestie, wenn dir der Plünderer im Spiel gefällt |
 | Ton und Musik | 0.15.0 in Bau 35 | Hörprobe beim Spieltest |
 
