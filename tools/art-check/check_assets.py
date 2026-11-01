@@ -37,16 +37,32 @@ def pruefe(wurzel):
     for basis in sorted({atlas, *ordner_je_name.values()}):
         if os.path.isdir(basis):
             eintraege += [(basis, e) for e in sorted(os.listdir(basis)) if e.endswith(".imageset")]
+    # Bildfolgen (FX 02): `enemy_raider_walk` mit "folge": 8 verlangt
+    # enemy_raider_walk_00 bis _07, lückenlos. Die Szene lädt bis zur ersten
+    # Lücke; ein fehlendes Bild in der Mitte schnitte die Folge still ab.
+    folgen_da = {}
+    for basis, eintrag in eintraege:
+        m = re.fullmatch(r"(.+)_(\d\d)\.imageset", eintrag)
+        if m and "folge" in vertrag["assets"].get(m.group(1), {}):
+            folgen_da.setdefault(m.group(1), set()).add(int(m.group(2)))
+    for name, regel in vertrag["assets"].items():
+        if "folge" in regel and folgen_da.get(name, set()) != set(range(regel["folge"])):
+            fehler.append(f"{name}: Folge verlangt _00 bis _{regel['folge'] - 1:02d}, da sind {sorted(folgen_da.get(name, []))}")
+
     for basis, eintrag in eintraege:
         name = eintrag[: -len(".imageset")]
         regel = vertrag["assets"].get(name)
+        m = re.fullmatch(r"(.+)_(\d\d)", name)
+        folge = m.group(1) if m and "folge" in vertrag["assets"].get(m.group(1), {}) else None
+        if folge:
+            regel = vertrag["assets"][folge]
         if regel is None:
             fehler.append(f"{name}: steht nicht im Vertrag (Tippfehler? Die Szene fände es nie)")
             continue
         if ordner_je_name.get(name, atlas) != basis:
             fehler.append(f"{name}: liegt in {os.path.relpath(basis, wurzel)}, Vertrag sagt {os.path.relpath(ordner_je_name.get(name, atlas), wurzel)}")
             continue
-        if f"`{name}`" not in herkunft:
+        if f"`{folge or name}`" not in herkunft:
             fehler.append(f"{name}: keine Herkunft in art/**/ENTSTEHUNG.md (Name in Backticks)")
         ordner = os.path.join(basis, eintrag)
         endung = regel.get("format", "png")
@@ -62,8 +78,10 @@ def pruefe(wurzel):
                 soll = round(regel["seiteZellen"] * pt * f)
                 if bild.size != (soll, soll):
                     fehler.append(f"{name}@{f}x: Groesse {bild.size}, Vertrag Quadrat {soll}px")
-                elif bild.mode == "RGBA":
+                elif bild.mode == "RGBA" and (folge is None or name.endswith("_00")):
                     # Fuss = unterste deckende Zeile; die Szene setzt anchorPoint.y = anker.
+                    # In einer Folge nur im ersten Bild: Beim Laufen hebt ein Fuß ab,
+                    # beim Sturz liegt die Figur; gleicher Maßstab kommt aus folge.py.
                     box = bild.getchannel("A").point(lambda v: 255 if v > 24 else 0).getbbox()
                     if box:
                         fuss = (bild.height - box[3]) / bild.height

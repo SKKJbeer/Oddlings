@@ -30,7 +30,6 @@ zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzeln
 
 | # | Was | Wo | Blockiert | Empfehlung |
 |---|---|---|---|---|
-| S1 | **Darf der neue 3D-Plünderer ins Spiel?** (Entscheidungskarte seit 26.10.) | Thread „Plünderer-3D-Modell mit Token erzeugen“ | FX 02 komplett | Ja, einbauen |
 | S2 | Volk wechseln, bevor es eine Spielwährung gibt (Entscheidungskarte seit 26.10.) | Thread „Oddlings-Designstand und MVP-Plan aufsetzen“ | nichts, die Empfehlung gilt bis zur Antwort | Gar nicht |
 | S3 | **Spieltest mit drei Personen** auf dem neuesten Bau, [Beobachtungsbogen](playtests/beobachtungsbogen.md) | WP-15 | Abschluss Phase 1, Schnitt Phase 2, D-030, Werte D-007 | so bald wie möglich |
 | S4 | Leistung des Spikes auf dem iPhone messen | WP-01 | nichts Akutes; D-002 gilt bis dahin | ohne Eile |
@@ -45,12 +44,12 @@ umsortieren.
 | # | Paket | Thread | Abh. | Stand |
 |---|---|---|---|---|
 | 1 | 0.12.0 Bau in TestFlight, Baunummer eintragen | Haupt-Thread | – | läuft |
-| 2 | **FX 02 Plünderer mit Gliedmaßen** einbauen ([Konzept](../konzepte/fx-02-figuren-in-3d.md)) | Plünderer-3D-Modell | S1 | fertig bis auf die Freigabe |
+| 2 | ~~FX 02 Plünderer mit Gliedmaßen~~ ([Konzept](../konzepte/fx-02-figuren-in-3d.md)) | Plünderer-3D-Modell | – | ✓ 0.13.0 |
 | 3 | **R-7 Ausrüstung** im Avatar-Menü (D-066): Konzept, Karten, Umsetzung | Haupt-Thread | R-6, S5 | Konzept als Nächstes |
 | 4 | **WP-15 Spieltest**, danach Phase 2 schneiden | Steffen | S3 | wartet |
 | 5 | P2-5 **Mission 2 mit Zwergenbank** (Knoten M2 der Karte); erster Talentrang wird erreichbar | – | WP-15 (Balance) | Konzept K3 steht |
 | 6 | P2-3 **Ton und Musik** (K9) | neuer Thread | – | Weg offen |
-| 7 | FX 02 Flitzer und Panzerbestie | Plünderer-3D-Modell | 2 und Steffens Urteil am Bild | – |
+| 7 | FX 02 Flitzer und Panzerbestie | Plünderer-3D-Modell | Steffens Urteil am Plünderer im Spiel | – |
 | 8 | P2-6 Mission 3 mit Aufwertungen, P2-6b Balance-Labor, P2-2 Fortsetzen, P2-8 Synergie sichtbar, P2-9 Abstimmung | – | 5 | Konzepte K1, K6, K8, K11 |
 
 ## Ausgeliefert
@@ -76,6 +75,7 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | R-5: Avatar einmal am Anfang (D-063) | 0.11.0 | 31 | [Konzept](../konzepte/r-5-avatar.md) |
 | Grafik 05: Kampfplatz als Lichtung, Zwergenfeste, Porträts | 0.11.1 | 32 | [Konzept](../konzepte/grafik-05-kampfplatz.md) |
 | R-6: Avatarrang, Talente, Avatar-Menü (D-064, D-065) | 0.12.0 | läuft | [Konzept](../konzepte/r-6-avatarrang.md) |
+| FX 02: Plünderer mit Gliedmaßen aus 3D (D-051, D-052) | 0.13.0 | offen | [Konzept](../konzepte/fx-02-figuren-in-3d.md) |
 
 ## Gilt für jedes Paket
 
@@ -119,7 +119,7 @@ Spieltest WP-15 wartet nicht darauf.
 |---|---|
 | Grafik 01 bis 05 (Figuren, Symbole, Titelbild, Kampagnenkarte, Kampfplatz, Festung, Porträts) | ✓ 0.5.2 bis 0.11.1 |
 | FX 01 Bewegung und Effekte an Ereignissen (D-050) | ✓ 0.10.0 |
-| FX 02 Gegner mit Gliedmaßen aus 3D (D-051): Plünderer | fertig, wartet auf S1 |
+| FX 02 Gegner mit Gliedmaßen aus 3D (D-051): Plünderer | ✓ 0.13.0 |
 | FX 02 Flitzer, Panzerbestie | nach dem Plünderer, Freigabe am Bild |
 
 ## Entwurf Phase 2 [VORSCHLAG]

@@ -110,6 +110,25 @@ class AtlasPruefung(unittest.TestCase):
         open(os.path.join(self.w, "art/ENTSTEHUNG.md"), "a").write(" FLUX.1-dev")
         self.assertTrue(any("nicht-kommerziell" in z for z in self.fehler()))
 
+    def folge(self, anzahl):
+        v = dict(VERTRAG, assets=dict(VERTRAG["assets"], tower_x_walk={"folge": 3, "seiteZellen": 2, "anker": 0.0, "alpha": True}))
+        json.dump(v, open(os.path.join(self.w, "art/asset-vertrag.json"), "w"))
+        open(os.path.join(self.w, "art/ENTSTEHUNG.md"), "a").write(" `tower_x_walk`")
+        for i in anzahl:
+            self.lege(f"tower_x_walk_{i:02d}", lambda f: self.figur(20 * f))
+
+    def test_bildfolge_vollstaendig(self):
+        self.folge([0, 1, 2])
+        self.assertEqual(self.fehler(), [])
+
+    def test_bildfolge_mit_luecke(self):
+        self.folge([0, 2])
+        self.assertTrue(any("Folge verlangt" in z for z in self.fehler()), self.fehler())
+
+    def test_bildfolge_zu_lang(self):
+        self.folge([0, 1, 2, 3])
+        self.assertTrue(any("Folge verlangt" in z for z in self.fehler()), self.fehler())
+
     def test_zu_gross(self):
         import random
         r = random.Random(1)
@@ -260,6 +279,31 @@ class Kartenvorlage(unittest.TestCase):
                 self.assertTrue(sand(bild.getpixel((int(x * 32), int(y * 32)))), (x, y))
             # Zellmitte weit weg vom Weg ist Wiese: Zelle (0, 8) unten links.
             self.assertFalse(sand(bild.getpixel((16, 8 * 32 + 16))))
+
+
+class Angleichen(unittest.TestCase):
+    """FX 02: Rohrender werden an das gemalte Bild angeglichen, ohne zu flackern."""
+
+    def test_farbe_kontur_und_gleiche_umrechnung(self):
+        with tempfile.TemporaryDirectory() as w:
+            vorbild = Image.new("RGBA", (60, 60), (0, 0, 0, 0))
+            vorbild.paste((90, 200, 60, 255), (5, 5, 55, 55))
+            vorbild.save(os.path.join(w, "vorbild.png"))
+            os.makedirs(os.path.join(w, "ein"))
+            roh = Image.new("RGBA", (40, 40), (0, 0, 0, 0))
+            roh.paste((40, 60, 35, 255), (10, 5, 30, 35))
+            for n in ("walk_00", "walk_01"):
+                roh.save(os.path.join(w, "ein", f"{n}.png"))
+            subprocess.run([sys.executable, os.path.join(WURZEL, ".claude/skills/spielgrafik/scripts/angleichen.py"),
+                            os.path.join(w, "vorbild.png"), os.path.join(w, "ein"), os.path.join(w, "aus")],
+                           check=True, capture_output=True)
+            a, b = (Image.open(os.path.join(w, "aus", f"walk_0{i}.png")) for i in (0, 1))
+            self.assertEqual(a.size, roh.size)  # nicht zugeschnitten, Anker bleibt
+            self.assertEqual(a.tobytes(), b.tobytes())  # eine Umrechnung fuer die ganze Folge
+            r, g, _, _ = a.getpixel((20, 20))
+            self.assertGreater(g, 120)  # heller und gruener als das Rohbild
+            self.assertGreater(g, r)
+            self.assertGreater(a.getpixel((9, 20))[3], 0)  # Kontur ausserhalb der Figur
 
 
 class Kampfplatz(unittest.TestCase):

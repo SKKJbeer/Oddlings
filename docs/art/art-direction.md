@@ -71,10 +71,14 @@ Szene: Hüpfen und Squash-and-Stretch im Lauftakt, Kippen in Kurven, Aufbau-Effe
 beim Bauen, Aufblitzen bei Treffern. Begründung und Grenzen in
 [asset-vertrag.md](asset-vertrag.md#bewegung).
 
-Stufe 2 (in Arbeit, FX 02, D-051): echte Gliedmaßen über 3D-Modelle, die aus unseren
-Gemälden entstehen und zu Bildfolgen (Gehen, Treffer, Sturz) gerendert werden.
-Zuerst der Plünderer; ob Flitzer und Panzerbestie folgen, entscheidet Steffen am
-Bild. Weg und Werkzeuge: [FX 02](../konzepte/fx-02-figuren-in-3d.md).
+Stufe 2 (Plünderer seit 0.13.0, FX 02, D-051): echte Gliedmaßen über 3D-Modelle,
+die aus einer gemalten Vorlage im Comic-Stil entstehen und zu Bildfolgen (Gehen,
+Treffer, Sturz) gerendert werden. Der Comic-Look kommt aus dem Render selbst
+(satte Farben, flächige Schatten, dunkler Umriss, Randlicht), der Farbangleich ans
+Gemälde aus `angleichen.py`. Die erste Vorlage mit freundlichem Gesicht hat Steffen
+verworfen: Die Vorlage muss schon grimmig und comichaft sein, der Render holt das
+nicht nach. Ob Flitzer und Panzerbestie folgen, entscheidet Steffen am Plünderer im
+Spiel. Weg und Werkzeuge: [FX 02](../konzepte/fx-02-figuren-in-3d.md).
 
 ## Werkzeug
 

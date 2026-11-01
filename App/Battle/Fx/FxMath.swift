@@ -91,6 +91,23 @@ enum FxMath {
         )
     }
 
+    /// Bild einer Laufbildfolge (FX 02) aus der zurückgelegten Strecke wie bei
+    /// `pose`: Die Füße setzen dort auf, wo der Gegner gerade ist, egal wie
+    /// schnell die Bilder kommen oder ob er verlangsamt ist. Eine Folge zeigt
+    /// zwei Schritte, ein Bein nach dem anderen.
+    static func walkFrame(distance: Double, phase: Double, stride: Double, frames: Int) -> Int {
+        guard stride > 0, frames > 0 else { return 0 }
+        let cycles = distance / (2 * stride) + phase
+        return min(frames - 1, Int((cycles - floor(cycles)) * Double(frames)))
+    }
+
+    /// Bild einer einmaligen Folge (Treffer, Sturz) beim Anteil `t` von 0 bis 1;
+    /// das letzte Bild bleibt stehen.
+    static func onceFrame(_ t: Double, frames: Int) -> Int {
+        guard frames > 0 else { return 0 }
+        return min(frames - 1, max(0, Int(t * Double(frames))))
+    }
+
     /// Takt eines Gegners aus seiner Kennung, 0 bis 1. Goldener Schnitt, damit
     /// aufeinanderfolgende Kennungen weit auseinander liegen.
     static func phase(forID id: Int) -> Double {
