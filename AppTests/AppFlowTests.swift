@@ -130,7 +130,10 @@ final class AppFlowTests: XCTestCase {
         XCTAssertEqual(flow.nextRankStars, 12)
         XCTAssertTrue(flow.newTalentWaiting, "das Schild weist auf das neue Talent hin")
         XCTAssertEqual(flow.talents, [.a])
-        XCTAssertEqual(flow.battleMission(for: "m1"), mission.applying(elves, talents: [.a]))
+        // Der Sieg bringt auch Ausrüstung (R-7a); sie gilt mit, die Talentwahl ist hier die Frage.
+        let gear = flow.equippedPieces
+        XCTAssertFalse(gear.isEmpty, "drei Sterne in Mission 1 geben ein Stück")
+        XCTAssertEqual(flow.battleMission(for: "m1"), mission.applying(elves, talents: [.a], equipment: gear))
         flow.openAvatar()
         XCTAssertEqual(flow.screen, .avatar)
         XCTAssertFalse(flow.newTalentWaiting)
@@ -138,8 +141,8 @@ final class AppFlowTests: XCTestCase {
         XCTAssertTrue(flow.chooseTalent(row: 0, side: .b))
         XCTAssertFalse(flow.chooseTalent(row: 1, side: .b), "Reihe 2 braucht Rang III")
         XCTAssertEqual(flow.talents, [.b])
-        XCTAssertEqual(flow.battleMission(for: "m1"), mission.applying(elves, talents: [.b]))
-        XCTAssertNotEqual(flow.battleMission(for: "m1"), mission.applying(elves, talents: [.a]))
+        XCTAssertEqual(flow.battleMission(for: "m1"), mission.applying(elves, talents: [.b], equipment: gear))
+        XCTAssertNotEqual(flow.battleMission(for: "m1"), mission.applying(elves, talents: [.a], equipment: gear))
         flow.closeAvatar()
         XCTAssertEqual(flow.screen, .map, "zurück dorthin, wo das Menü geöffnet wurde")
 
