@@ -16,6 +16,12 @@ Der Weg liegt auf map.path (Zellmitten, Ursprung oben links), mit runden Ecken
 vom Halbmesser ECKE: Gegner laufen in der Simulation eckig, weichen dort aber
 weniger als eine Viertelzelle ab, und eckige Wege sahen gezeichnet aus.
 
+Umgebung (fuer die Missionen ab M2, Grafik 06; ohne beide rechnet es wie fuer M1):
+  DEKO=<ordner>   freigestellte Teile deko*.png, die in den Waldrand gesetzt werden
+                  (Stollen, Pilze, Ruinen). Nie auf Bauzellen, nicht vor die Hoehle.
+                  DEKO_ANZAHL (Standard 9) Versuche, Zufall eigener Seed DEKO_SEED.
+  LICHT=r,g,b     Toenung des ganzen Bilds statt des warmen Nachmittags (255,238,210).
+
 Mit [vorschau.png] zeichnet das Skript zusaetzlich Zellgitter und Weglinie ein.
 """
 import glob, json, math, os, random, sys
@@ -170,6 +176,36 @@ if hoehle:
     hindernisse.append((hx, hy, 1.0))
 hindernisse.append((fx, fy, fr))
 
+# --- Deko im Waldrand (Grafik 06) -------------------------------------------------------
+# Eigener Zufall, damit M1 ohne DEKO bitgleich bleibt. Deko steht vor den Baeumen in der
+# Liste der Hindernisse: Baeume weichen ihr aus, nicht umgekehrt.
+deko_lagen = []  # (x, y, breite) in Zellen, fuer die Pruefung im Test
+if os.environ.get("DEKO"):
+    rnd_deko = random.Random(int(os.environ.get("DEKO_SEED", "11")))
+    deko = [Image.open(p).convert("RGBA") for p in sorted(glob.glob(os.path.join(os.environ["DEKO"], "deko*.png")))]
+    # Das flaechengroesste Teil (Stolleneingang, grosse Mauer) bekommt den meisten Platz.
+    groesse = sorted(deko, key=lambda t: -t.getchannel("A").point(lambda v: 255 if v > 40 else 0).histogram()[255])
+    for i in range(int(os.environ.get("DEKO_ANZAHL", "9")) * 40):
+        if len(deko_lagen) >= int(os.environ.get("DEKO_ANZAHL", "9")):
+            break
+        teil = groesse[len(deko_lagen) % len(groesse)]
+        breite = (3.0 if teil is groesse[0] else rnd_deko.uniform(1.6, 2.2))
+        # Nur das innere Band des Rands: weiter aussen sieht man es auf keinem Geraet.
+        px = rnd_deko.uniform(-min(MX, 1.9), W + min(MX, 1.9))
+        py = rnd_deko.uniform(-min(MY, 1.5), H + min(MY, 1.5))
+        def frei_deko(x, y, b):
+            r = b / 2
+            if -r + UEBERHANG < x < W + r - UEBERHANG and -r + UEBERHANG < y < H + r - UEBERHANG:
+                return False
+            if wegabstand(x, y) < WEGBREITE / 2 + r * 0.9:
+                return False
+            return not any(math.dist((x, y), (hx, hy)) < hr + r * 0.8 for hx, hy, hr in hindernisse)
+        if frei_deko(px, py, breite):
+            # Etwas dunkler als gemalt: Im Rand liegt Waldschatten, das Feld bleibt der hellste Ort.
+            setze(Image.merge("RGBA", [k.point(lambda v: int(v * 0.82)) for k in teil.split()[:3]] + [teil.getchannel("A")]), *at(px, py), C * breite, rnd_deko.random() < 0.5, schatten=0.6)
+            hindernisse.append((px, py, breite / 2))
+            deko_lagen.append((px, py, breite))
+
 baeume = lade("baum*.png")
 
 
@@ -220,7 +256,8 @@ bild = bild.convert("RGB")
 flecken = Image.effect_noise((max(2, BB // (C * 2)), max(2, HH // (C * 2))), 90).resize((BB, HH), Image.BICUBIC)
 flecken = ImageChops.multiply(flecken.point(lambda v: max(0, min(255, (v - 110) * 3))), offen)
 bild = Image.composite(ImageEnhance.Brightness(bild).enhance(1.16), bild, flecken.point(lambda v: int(v * 0.6)))
-bild = ImageChops.multiply(bild, Image.new("RGB", (BB, HH), (255, 238, 210)))
+licht = tuple(int(v) for v in os.environ.get("LICHT", "255,238,210").split(","))
+bild = ImageChops.multiply(bild, Image.new("RGB", (BB, HH), licht))
 # Aussenrand dunkel in den Wald: Er ist nur auf breiten Bildschirmen zu sehen.
 rand = Image.new("L", (BB, HH), 255)
 ImageDraw.Draw(rand).rounded_rectangle((*at(-MX * 0.55, -MY * 0.55), *at(W + MX * 0.55, H + MY * 0.55)), radius=C * 1.5, fill=0)
@@ -231,6 +268,10 @@ if ziel.lower().endswith((".jpg", ".jpeg")):
 else:
     bild.save(ziel)
 print(f"✓ {ziel} {BB}x{HH}")
+if deko_lagen:
+    # Lagen fuer die Kunstpruefung (kein Teil auf Bauzellen), neben dem Ergebnis.
+    json.dump({"deko": [[round(v, 3) for v in l] for l in deko_lagen], "ueberhang": UEBERHANG},
+              open(os.path.splitext(ziel)[0] + "-deko.json", "w"))
 
 if vorschau:
     v = bild.copy()
