@@ -103,8 +103,8 @@ enum BattleTexts {
 
     /// 20.0 → „20“, 2.5 → „2,5“: Sekunden, wie man sie spricht.
     static func seconds(_ value: Double) -> String {
-        value.rounded() == value ? "\(Int(value))"
-            : value.formatted(.number.precision(.fractionLength(1)).locale(Locale(identifier: "de_DE")))
+        let tenths = Int((value * 10).rounded())
+        return tenths % 10 == 0 ? "\(tenths / 10)" : "\(tenths / 10),\(abs(tenths % 10))"
     }
 
     static func missing(_ gold: Int) -> String { "fehlt \(gold)" }
