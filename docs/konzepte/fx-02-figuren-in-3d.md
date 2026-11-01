@@ -1,6 +1,6 @@
 # Konzept: Figuren mit echten Gliedmaßen (FX 02)
 
-Status: **Weg A entschieden** (Steffen, 26.10.2026), Plünderer in Arbeit · Stand 26.10.2026 · Thread „Animationen und Effekte
+Status: **Weg A entschieden** (Steffen, 26.10.2026), Plünderer ausgeliefert in 0.13.0 · Stand 01.11.2026 · Thread „Animationen und Effekte
 hochwertig machen", zusammen mit dem Grafik-Thread
 Grundlage: D-051 (3D-Modelle zu Sprite-Blättern), D-016 (Stylized 3D),
 [FX 01](fx-01-bewegung-und-effekte.md#stufe-2-echte-gliedmaßen-entschieden-3d-zu-sprite-blättern-d-051),
