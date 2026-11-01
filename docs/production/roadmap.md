@@ -12,7 +12,7 @@ Entscheidungskarte beantwortet. Alles, was auf ihn wartet, steht unter
 zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzelnen:
 [backlog.md](backlog.md), offene Fragen: [offene-fragen.md](offene-fragen.md).
 
-**Stand: 01.11.2026** · neueste Version 0.13.0 (Bau läuft), neuester VALID-Bau 33 (0.12.0)
+**Stand: 01.11.2026** · neueste Version 0.14.0 (Bau läuft), neuester VALID-Bau 33 (0.12.0)
 
 ## Phasen
 
@@ -20,7 +20,7 @@ zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzeln
 |---|---|---|---|
 | **0 – Design und Planung** | Konsistenter Designstand, MVP abgegrenzt, Backlog | Steffen gibt Dokumente und offene Entscheidungen frei | ✓ 25.10.2026 |
 | **1 – Spielbarer Kampfprototyp** | Eine Karte, ein Weg, drei Türme, Gegner, Gold, Wellen, Sieg/Niederlage, Neustart, Tests | Mission 1 auf dem iPhone spielbar, Regeltests grün, drei Personen haben gespielt | Technik ✓, **Spieltest WP-15 offen** |
-| **Spielrahmen (vorgezogen, D-060)** | Hauptmenü, Kampagnenkarte, Festungsfähigkeit, Völker, Avatar | Pakete R-1 bis R-6 in TestFlight | ✓ bis R-6 (0.12.0), R-7 Ausrüstung folgt |
+| **Spielrahmen (vorgezogen, D-060)** | Hauptmenü, Kampagnenkarte, Festungsfähigkeit, Völker, Avatar | Pakete R-1 bis R-7 in TestFlight | ✓ bis R-7a (0.14.0), R-7b Schmiede folgt |
 | **2 – Vertical Slice** | Zwergenbank, spürbare Synergie, Ton, Animation, Grafik, Fortsetzen | Eine Mission wirkt wie das fertige Spiel; Spieler finden die Synergie ohne Erklärung | Grafik und Effekte laufen, Rest wartet auf den Schnitt nach WP-15 |
 | **3 – Kleine Kampagne** | Region 1 mit sieben Haupt- und zwei Nebenmissionen, Boss | Spieler wollen nach Mission 1 weiterspielen (gemessen) | Karte steht, Missionen 2 bis 7 fehlen |
 | **4 – Qualität und Balancing** | Echte Geräte, Leistung, externe Spieltests, Balance-Labor | Absturzfrei, 60 Bilder/s auf dem ältesten Zielgerät | – |
@@ -43,7 +43,7 @@ umsortieren.
 | # | Paket | Thread | Abh. | Stand |
 |---|---|---|---|---|
 | 1 | ~~FX 02 Plünderer mit Gliedmaßen~~ ([Konzept](../konzepte/fx-02-figuren-in-3d.md)) | Plünderer-3D-Modell | – | ✓ 0.13.0 |
-| 2 | **R-7a Ausrüstung** im Avatar-Menü (D-066, D-069, D-070): feste Belohnungen, danach R-7b Schmiede mit Spielwährung | Haupt-Thread | R-6 | [Konzept](../konzepte/r-7-ausruestung.md) steht, Umsetzung läuft |
+| 2 | ~~R-7a Ausrüstung~~ im Avatar-Menü (D-066, D-069, D-070, D-071), danach **R-7b Schmiede** mit Spielwährung: Konzept und Karten zur Währung | Haupt-Thread | R-6 | ✓ R-7a 0.14.0, R-7b Konzept als Nächstes |
 | 3 | **WP-15 Spieltest**, danach Phase 2 schneiden | Steffen | S3 | wartet |
 | 4 | P2-5 **Mission 2 mit Zwergenbank** (Knoten M2 der Karte); erster Talentrang wird erreichbar | – | WP-15 (Balance) | Konzept K3 steht |
 | 5 | P2-3 **Ton und Musik** (K9) | neuer Thread | – | Weg offen |
@@ -74,6 +74,7 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | Grafik 05: Kampfplatz als Lichtung, Zwergenfeste, Porträts | 0.11.1 | 32 | [Konzept](../konzepte/grafik-05-kampfplatz.md) |
 | R-6: Avatarrang, Talente, Avatar-Menü (D-064, D-065) | 0.12.0 | 33 | [Konzept](../konzepte/r-6-avatarrang.md) |
 | FX 02: Plünderer mit Gliedmaßen aus 3D (D-051, D-052) | 0.13.0 | offen | [Konzept](../konzepte/fx-02-figuren-in-3d.md) |
+| R-7a: Ausrüstung aus festen Belohnungen (D-066, D-069 bis D-071) | 0.14.0 | läuft | [Konzept](../konzepte/r-7-ausruestung.md) |
 
 ## Gilt für jedes Paket
 
@@ -109,7 +110,7 @@ Spieltest WP-15 wartet nicht darauf.
 | R-4 | Völker Zwerge (Bollwerk, Wachtürme billiger D-062) und Elfen (Mondmal) | R-1, R-3 | ✓ 0.9.0, 0.10.1 |
 | R-5 | Avatar einmal am Anfang: Volk, Porträt, Name (D-063) | R-4 | ✓ 0.11.0, Porträts 0.11.1 |
 | R-6 | Avatarrang mit Talentwahl, eigenes Avatar-Menü (D-064, D-065) | R-5 | ✓ 0.12.0 |
-| R-7a | **Ausrüstung mit kleinen Boni** im Avatar-Menü, feste Belohnungen (D-066, D-069, D-070) | R-6 | Konzept steht, Umsetzung läuft |
+| R-7a | Ausrüstung mit kleinen Boni im Avatar-Menü, feste Belohnungen (D-066, D-069 bis D-071) | R-6 | ✓ 0.14.0 |
 | R-7b | **Schmiede** mit Spielwährung im Avatar-Menü (D-070) | R-7a | Konzept offen |
 
 ## Parallel: Grafik und Bewegung

@@ -61,13 +61,13 @@ Tests prüfen, dass die App genau so funktioniert wie gedacht. **[ENTSCHIEDEN]**
 
 Umgesetzt ab Version 0.5.1; Aufbau und Grundsätze: [e2e-tests.md](../konzepte/e2e-tests.md).
 
-**Stand 0.12.0: 27 Fälle** in `AppUITests/`:
+**Stand 0.14.0: 28 Fälle** in `AppUITests/`:
 
 | Datei | Fälle | Ablauf |
 |---|---|---|
 | `NavigationE2ETests` | 4 | Menü → Karte → Mission → zurück, Vorführung, Hintergrund pausiert, Einstellung übersteht Neustart |
 | `CampaignE2ETests` | 2 | Sterne nach Sieg überstehen Neustart, gesperrte Missionen nennen den Grund |
-| `AvatarE2ETests` | 4 | Avatar einmal aufbauen (R-5), Zwerge mit Preis und Fähigkeit, Rang schaltet Talent frei (R-6), Aufbau und Menü passen auf den Schirm |
+| `AvatarE2ETests` | 5 | Avatar einmal aufbauen (R-5), Zwerge mit Preis und Fähigkeit, Rang schaltet Talent frei (R-6), Ausrüstung anlegen und ablegen übersteht den Neustart (R-7a), Aufbau und Menü passen auf den Schirm |
 | `BuildAndSellE2ETests` | 4 | Kreismenü, Vorschau, bauen, verkaufen, „fehlt N“, Schließen |
 | `HUDE2ETests` | 4 | Startwerte, Welle rufen, Pause hält Countdown, Tempo |
 | `TablesE2ETests` | 4 | Pausetafel (weiter, neu starten), Aufgeben, Bildschirmfotos zum Abgleich |

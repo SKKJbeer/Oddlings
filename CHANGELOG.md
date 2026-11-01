@@ -11,7 +11,34 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-<<<<<<< HEAD
+## 0.14.0 – 01.11.2026 (R-7a: Ausrüstung aus festen Belohnungen), Bau offen
+
+**Neu**
+- Das Avatar-Menü hat Reiter: „Talente“ und neu „Ausrüstung“. Drei Plätze (Banner für
+  Türme, Amulett für die Festungsfähigkeit, Siegel für die Kasse), je zwei Stücke.
+  Jedes Stück nennt seinen Bonus in Prozent; noch nicht erhaltene stehen gesperrt da
+  und sagen, woher sie kommen (D-066, D-070).
+- Feste Belohnungen ohne Zufall: Mission 1 gibt mit einem, zwei und drei Sternen
+  Wachbanner, Beutelsiegel und Flinkes Amulett; Sturmbanner, Mondamulett und
+  Schatzsiegel kommen mit 9, 15 und 21 Sternen der Region.
+- Ein neues Stück wandert auf einen freien Platz, das Avatarschild meldet „Neue
+  Ausrüstung“. Anlegen und Ablegen per Tippen kostet nichts und gilt ab der nächsten
+  Mission.
+
+**Regeln**
+- Werte in `Balance/equipment.json`, Prüfung beim Laden (`EquipmentTable.issues`).
+  Besitz wird nicht gespeichert, sondern aus den besten Sternen abgeleitet; der
+  Spielstand hält nur die Belegung und verwirft kaputte Kennungen einzeln.
+- Volle Ausrüstung hebt die Reserve gemessen um 3 bis 9 %, höchstens erlaubt sind
+  10 % (D-069). Beim ersten Spielen verliert jede Monokultur außer Wachtürmen (D-071).
+
+**Tests**
+- Kern: Besitz, Belegung, Boni nur auf ihre Felder, Prüfung der Tabelle, Laden,
+  Amulette halten jede Fähigkeit gültig, Obergrenze je Volk und Talentwahl,
+  Monokultur beim ersten Spielen (alle rot gesehen).
+- App: Belohnung, Anlegen, Ablegen, Neustart, Texte. E2E: Reiter „Ausrüstung“,
+  Anlegen und Ablegen, Belegung übersteht den Neustart, nichts überlappt.
+
 ## Dokumente, kein Bau – 01.11.2026 (Bau 33, Konzept R-7 Ausrüstung)
 
 - Bau 33 (0.12.0) von Apple als VALID gemeldet, in Roadmap und Stand eingetragen.
@@ -20,7 +47,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - D-069: volle Ausrüstung macht den Avatar höchstens +10 % stärker.
 - D-070: Ausrüstung kommt aus festen Belohnungen (R-7a) und einer Schmiede mit
   Spielwährung (R-7b, eigenes Konzept).
-=======
+
 ## 0.13.0 – 01.11.2026 (FX 02: Plünderer mit Gliedmaßen), Bau offen
 
 **Neu**
@@ -43,7 +70,6 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - App: Bildwahl je Strecke, Unabhängigkeit von der Bildrate, Phase, Treffer- und
   Sturzfolge im Director, Plünderer hat Bildfolgen. E2E prüft `flinches` und `falls`.
 - Grafik: Angleichen, Bildfolge vollständig, mit Lücke, zu lang (rot gesehen).
->>>>>>> origin/main
 
 ## Dokumente, kein Bau – 27.10.2026 (Architektur, Design und Roadmap nachgezogen, D-067)
 

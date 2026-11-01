@@ -1,7 +1,8 @@
 # R-7 Ausrüstung des Avatars
 
 **Stand:** 01.11.2026 · Grundlage D-066 (Steffen, 27.10.2026: „Ausrüstung mit kleinen
-Boni“), Vorgänger [R-6](r-6-avatarrang.md). **Konzept, nichts gebaut.**
+Boni“), Vorgänger [R-6](r-6-avatarrang.md). **R-7a umgesetzt in 0.14.0**, R-7b
+(Schmiede) folgt mit eigenem Konzept.
 
 ## Ziel
 
@@ -62,7 +63,13 @@ Die Säulen bleiben bestehen und begrenzen, was Ausrüstung darf:
   abgeleitet (feste Belohnungen). So lässt sich nichts doppelt verdienen oder durch
   einen veränderten Spielstand erschleichen. `Avatar.equipment` speichert nur, welches
   Stück je Platz angelegt ist. Beim Laden wird jede Wahl geprüft: unbekannt oder nicht
-  erhalten heißt leerer Platz, ohne Avatar oder Fortschritt zu verlieren.
+  erhalten heißt leerer Platz, ohne Avatar oder Fortschritt zu verlieren. Umgesetzt
+  in zwei Stufen: Beim Laden prüft `EquipmentLoadout` die Form jeder Kennung (eine
+  kaputte kostet nur ihren Platz); beim Anwenden lässt `EquipmentTable.effective`
+  unbekannte, fremde oder noch nicht erhaltene Stücke weg. So braucht der Spielstand
+  die Tabelle nicht zum Lesen.
+- **Belohnung:** Ein Sieg, der ein Stück freigibt, legt es auf einen freien Platz
+  und setzt den Hinweis „Neue Ausrüstung“ am Avatarschild.
 - **App:** Reiter im Avatar-Menü (`AvatarScreen`), eine Spalte je Abschnitt.
 
 ## Balance
@@ -70,8 +77,11 @@ Die Säulen bleiben bestehen und begrenzen, was Ausrüstung darf:
 - Jede Mission bleibt **ohne** Ausrüstung mit drei Sternen schaffbar (Bot, Mischung).
 - Die stärkste erlaubte Ausrüstung hebt die Reserve höchstens um die Obergrenze von
   +10 % (D-069).
-- „Nur Blitztürme“ und „Nur Sporentürme“ verlieren auch mit der stärksten Ausrüstung.
-  Die Mischung bleibt mehr als 0,05 vor „Nur Wachtürme“.
+- „Nur Blitztürme“ und „Nur Sporentürme“ verlieren **beim ersten Spielen** einer
+  Mission, also mit dem, was frühere Missionen gaben (D-071). Mit voller Ausrüstung
+  und Rang V darf eine frühe Mission leicht werden. Die Mischung bleibt mit der
+  stärksten Ausrüstung mehr als 0,05 vor „Nur Wachtürme“.
+- Gemessen und Werte: [04](../game-design/04-economy-and-balance.md#ausrüstung-r-7a-hypothese).
 - Die Balancetests rechnen dafür die stärkste Ausrüstung je Platz mit jedem Volk und
   der stärksten Talentwahl.
 

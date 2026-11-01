@@ -232,6 +232,27 @@ Die Streuung von etwa ±0,05 kommt aus der Rechnung selbst (ein Wurf, eine Welle
 früher), nicht aus einem Talent. Die Balancetests laufen deshalb im Release-Bau:
 Im Debug-Bau brauchten 62 Kombinationen über 20 Minuten.
 
+### Ausrüstung (R-7a) [HYPOTHESE]
+
+Faktoren in `Balance/equipment.json`, Obergrenze +10 % Reserve (D-069).
+`BalanceTests.equipmentBounded` rechnet jede volle Belegung (ein Stück je Platz, acht
+je Volk) mit den vier gewinnenden Mischungen und nimmt den Schnitt; jede muss helfen
+und darf höchstens das 1,10-Fache der Reserve ohne Ausrüstung erreichen. Die stärkste
+Belegung wird zusätzlich mit jeder Talentwahl des höchsten Rangs gerechnet, und die
+Mischung bleibt dort mehr als 0,05 vor „Nur Wachtürme“. Gemessen am 01.11.2026:
+
+| | schwächste volle Belegung | stärkste |
+|---|---|---|
+| Zwerge | ×1,042 | ×1,093 (Sturmbanner, Mondamulett, Schatzsiegel) |
+| Elfen | ×1,034 | ×1,092 (dieselbe) |
+
+Das Festungsleben ist als Feld vorgesehen, aber kein Stück nutzt es: +10 % Leben
+trugen „Nur Blitztürme“ mit Zwergen zum Sieg, weil mehr Gegner durchlaufen dürfen.
+Säule 1 gilt beim ersten Spielen (D-071, `monocultureLosesOnFirstPlay`): vor Mission 1
+gibt es weder Talente noch Ausrüstung, und Blitz- wie Sporen-Monokultur verlieren mit
+jedem Volk. Zwerge liegen dabei knapp (Reserve 0,99 mit „Nur Blitztürme“); mit Rang V
+gewinnen sie Mission 1 auch so.
+
 ### Grenzen der Rechnung
 
 - Keine Menschen: perfekte Platzierung, keine Reaktionszeit, kein Verkaufen.

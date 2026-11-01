@@ -89,7 +89,7 @@ Was dauerhaft freigeschaltet wird:
 | Türme, Aufwertungen, Spezialisierungen, Festungsfähigkeit | Hauptmissionen ([Region 1](#region-1-und-die-vollversion)) |
 | Volk | einmal beim Avatar-Aufbau, beide von Anfang an (D-063) |
 | Avatarrang und Talente | Sterne (D-064, D-065, umgesetzt 0.12.0) |
-| Ausrüstung mit kleinen Boni | **OFFEN** (D-066): Herkunft und Obergrenze entscheidet Steffen im Paket Ausrüstung |
+| Ausrüstung mit kleinen Boni | feste Belohnungen aus Missionen und Sternschwellen (D-070, umgesetzt 0.14.0); Schmiede mit Spielwährung folgt (R-7b) |
 | Nebenmissionen | Sterne |
 | Bestiarium und Turmbuch (E11): Eintrag mit Bild und Charaktertext | erste Begegnung |
 | Abzeichen, Banner, Titel für den Avatar | Eisern-Modi, Bosse, alle Sterne einer Region |
@@ -99,9 +99,10 @@ Was es **nicht** gibt:
   denselben Werten für jeden Spieler; nur so bleiben die Balancetests gültig.
   **Ausnahme seit D-066 (Steffen, 27.10.2026):** Ausrüstung des Avatars gibt kleine
   Boni. Damit die Balancetests gültig bleiben, rechnen sie künftig jede Mission auch
-  mit der stärksten erlaubten Ausrüstung; die Obergrenze wird Teil der Konfiguration.
+  mit der stärksten erlaubten Ausrüstung, höchstens +10 % (D-069). Säule 1 wird beim
+  ersten Spielen einer Mission geprüft (D-071).
 
-- Keine zweite Währung, keine Erfahrungspunkte, kein Ausdauerbalken. Säule 5.
+- Keine zweite Währung **[überholt durch D-070: die Schmiede braucht eine Spielwährung, Konzept R-7b]**, keine Erfahrungspunkte, kein Ausdauerbalken. Säule 5.
 - Keine täglichen Pflichtaufgaben im ersten Release. Die tägliche Herausforderung
   (E10) bleibt ein Kandidat für nach dem Release und braucht eine Freigabe.
 
