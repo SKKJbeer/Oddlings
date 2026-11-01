@@ -45,7 +45,8 @@ Status: **gilt**, umgesetzt bis 0.12.0; Ende-zu-Ende-Tests **[ENTSCHIEDEN D-029]
   Sekunde). Das deckt nur das Paket ab; App und Oberfläche baut allein die
   macOS-CI.
 - **CI-Jobs heute** (`.github/workflows/ci.yml`): `regeln` (`scripts/regeln-pruefen.sh`:
-  Architektur, Sicherheit, Verweise, Doku-Stand nach D-067), `art` (`tools/art-check`),
+  Architektur, Sicherheit, Verweise, Doku-Stand nach D-067), `art` (`tools/art-check`;
+  seit 0.15.0 auch `tools/ton`: jede Tondatei mit Herkunft und CC0-Lizenz, D-082),
   `core-linux` (Paket unter Linux), `iphone` (Paket im Release-Bau, App-Bau,
   `AppTests`, `AppUITests`, Probelauf im Simulator mit Bildschirmfotos und
   Spielstand im Artefakt `simulator-probe`). Zusammengeführt wird nur, wenn alle grün sind.
@@ -61,7 +62,7 @@ Tests prüfen, dass die App genau so funktioniert wie gedacht. **[ENTSCHIEDEN]**
 
 Umgesetzt ab Version 0.5.1; Aufbau und Grundsätze: [e2e-tests.md](../konzepte/e2e-tests.md).
 
-**Stand 0.12.0: 27 Fälle** in `AppUITests/`:
+**Stand 0.15.0: 29 Fälle** in `AppUITests/`:
 
 | Datei | Fälle | Ablauf |
 |---|---|---|
@@ -74,11 +75,12 @@ Umgesetzt ab Version 0.5.1; Aufbau und Grundsätze: [e2e-tests.md](../konzepte/e
 | `MissionE2ETests` | 2 | Niederlage und Nochmal setzt alles zurück, Sieg und zurück ins Menü |
 | `AbilityE2ETests` | 2 | Fähigkeit auf den Weg, Abklingzeit, Knopf verschwindet am Missionsende |
 | `EffectsE2ETests` | 1 | Vorführung spielt jede Effektart (FX 01) |
+| `SoundE2ETests` | 2 | Menümusik, Vorführung spielt jede Klanggruppe mit Kampfmusik und ohne Bedientöne, Lautstärkeregler überstehen Neustart (P2-3) |
 
 **Testschalter** (nur Debug-Bau, ändern keine Regel): `--play` (Mission direkt),
 `--demo`, `--e2e-frisch` (leerer Speicher), `--e2e-speicher`, `--e2e-avatar <volk>`
 (fertiger Avatar), `--e2e-volle-sterne`, `--e2e-erste-welle` (erste Welle gehalten),
-`--e2e-zeitraffer N`, `--e2e-abklingzeit`, `--e2e-mitspieler`, `--e2e-fx`,
+`--e2e-zeitraffer N`, `--e2e-abklingzeit`, `--e2e-mitspieler`, `--e2e-fx`, `--e2e-ton` (Tonzähler `audio.stats`),
 `--fx-messung`. Ein neuer Schalter kommt hier in die Liste.
 
 **Was sie prüfen.** Nicht einzelne Regeln (das tun die Paket-Tests), sondern dass

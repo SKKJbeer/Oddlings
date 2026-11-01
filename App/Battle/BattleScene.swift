@@ -14,6 +14,8 @@ final class BattleScene: SKScene {
     private(set) var towerNodes: [Int: TowerNode] = [:]
     private(set) var enemyNodes: [Int: EnemyNode] = [:]
     let fx: FxDirector
+    /// Ton hängt wie das Bild an Ereignissen (P2-3). Nil in Tests ohne Ton.
+    var audio: AudioDirector?
 
     /// Alles, was beim Bildschirmwackeln mitwackelt. Die Szene selbst bleibt
     /// stehen, damit Tippen und Lagerechnung unberührt sind.
@@ -97,6 +99,7 @@ final class BattleScene: SKScene {
 
     func restart() {
         model.restart()
+        audio?.startBattle()
         fx.reset()
         clearPieces()
         controller?.restart()
@@ -306,6 +309,7 @@ final class BattleScene: SKScene {
     // MARK: Ereignisse
 
     private func play(_ event: Event) {
+        if let moment = soundMoment(for: event) { audio?.play(moment) }
         switch event {
         case .towerFired(let towerID, let targets):
             guard let tower = towerNodes[towerID] else { return }
@@ -354,6 +358,34 @@ final class BattleScene: SKScene {
         case .enemySlowed:
             // Verlangsamung zeigt sich über den Zustand (Farbton am Gegner).
             break
+        }
+    }
+
+    /// Was zu hören ist. Der Sporenfunke (E2) gilt wie im Bild, wenn ein Ziel der
+    /// Kette gerade verlangsamt ist; das zeigt die Node des Gegners.
+    private func soundMoment(for event: Event) -> SoundMoment? {
+        switch event {
+        case .towerFired(let towerID, let targets):
+            guard let kind = towerNodes[towerID]?.kind else { return nil }
+            let combo = kind == .lightning && targets.contains { enemyNodes[$0]?.isSlowed == true }
+            return .fired(kind, links: targets.count, combo: combo)
+        case .towerBuilt: return .built
+        case .towerSold: return .sold
+        case .commandRejected: return .rejected
+        case .enemyDamaged: return .damaged
+        case .enemySlowed: return .slowed
+        case .enemyKilled: return .killed
+        case .enemyLeaked: return .leaked
+        case .enemySpawned: return nil
+        case .waveStarted(let index): return .waveStarted(index: index, count: model.sim.config.waves.count)
+        case .missionEnded(let won): return .missionEnded(won: won)
+        case .abilityCast:
+            // Das Bollwerk steht sofort und klingt mit `barrierRaised`.
+            guard let ability = model.sim.config.ability, ability.kind != .bulwark else { return nil }
+            return .abilityCast
+        case .abilityImpact: return .abilityImpact(moon: model.sim.config.ability?.kind == .moonMark)
+        case .barrierRaised: return .wallRaised
+        case .barrierFell: return .wallFell
         }
     }
 

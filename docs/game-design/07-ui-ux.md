@@ -86,7 +86,7 @@ Ergebnis sind Überlagerungen der Schlacht, keine eigenen Schirme.
 ### Hauptmenü
 Gemaltes Bild links, Knöpfe rechts im Daumenbereich: großes „Spielen" (64 pt
 hoch), darüber eine Karte „Weiter mit Mission 1" mit Wellenzahl und Dauer, darunter
-Einstellungen (Klänge, Musik, Vibration) und Mitwirkende. Unten links „Offline ·
+Einstellungen (Regler für Klänge und Musik, Schalter Vibration; P2-3) und Mitwirkende. Unten links „Offline ·
 ohne Konto" (Lücke 5 der Marktanalyse). Kein Ladebildschirm, kein Anmeldefenster.
 
 ### Schlacht und HUD
@@ -194,7 +194,8 @@ BattleView (SwiftUI, ZStack)
 | `HudLayout` | vorhanden (0.6.0), reine Funktion neben `BoardLayout` | Bildschirmgröße + sichere Ränder + `BoardLayout` → Rechtecke der vier Ecken, Lage des Kreismenüs zu einer Zelle (Umklappen an Rändern und Ecken) | Für SE, 13 mini, 15, 16 Pro Max: Tippziele ≥ 44 pt, Knöpfe im sicheren Bereich, Kreismenü vollständig sichtbar, keine Überlappung mit Ecken |
 | `BattleController` | vorhanden | Auswahl (Zelle, Vorschau, Turm), beobachtete Kopien von Gold, Leben, Welle, Countdown, Ergebnis, Pause, Tempo; setzt nur bei Änderung | vorhanden; neu: zweites Tippen beim Verkaufen |
 | `UITheme` | vorhanden (0.6.0) | Farben, Schriften, Radien, Kontur an einer Stelle; Farben laut `art-direction.md`. Löst die UI-Farben in `BattleStyle` ab, Szenenfarben bleiben dort | Farben gleich der Art-Direction |
-| `FeedbackPlayer` | vorhanden (0.6.0, nur Haptik; Ton mit P2-3) | Haptik und Ton laut Tabelle 5, hängt an Ereignissen und an Controller-Handlungen | Jede Zeile der Tabelle hat einen Eintrag |
+| `FeedbackPlayer` | vorhanden (0.6.0) | Haptik laut Tabelle 5, hängt an Ereignissen und an Controller-Handlungen | Jede Zeile der Tabelle hat einen Eintrag |
+| `AudioDirector` | vorhanden (0.15.0, P2-3) | Ton laut Tabelle 5 und [Konzept](../konzepte/p2-3-ton-und-musik.md), Musik nach Lage, Regler in den Einstellungen | `SoundMapTests`, `AudioDirectorTests`, E2E `SoundE2ETests` |
 | Hauptmenü, Kampagnenkarte, Avatar | vorhanden (`AppFlow`, `MainMenuView`, `CampaignMapView`, `Avatar/`) | Navigation; Ergebnis und Pause bleiben Überlagerungen der Schlacht | E2E `NavigationE2ETests`, `CampaignE2ETests`, `AvatarE2ETests` |
 
 Abgelehnte Befehle (zu wenig Gold, Feld belegt) meldet die Simulation als
@@ -207,11 +208,11 @@ Die Mission läuft weiter, während das Kreismenü offen ist (D-019).
 | Handlung | Bild | Ton | Haptik |
 |---|---|---|---|
 | Feld antippen | Umrandung, Bogen springt auf | leises Klicken | Auswahl (`selectionChanged`) |
-| Turm vorwählen | Reichweitenkreis, Vorschau | Holzklopfen | Auswahl |
-| Bauen | Turm wächst aus dem Boden, Staub, Gold zählt runter | Aufbau je Turm eigen | Stoß mittel |
+| Turm vorwählen | Reichweitenkreis, Vorschau | leises Klicken | Auswahl |
+| Bauen | Turm wächst aus dem Boden, Staub, Gold zählt runter | Stein setzt auf | Stoß mittel |
 | Zu wenig Gold | Knopf wackelt, Gold blinkt orange, Hinweis | dumpfer Ton | Warnung |
 | Verkaufen | Turm sinkt ein, Münzen fliegen zum Goldzähler | Münzen | Stoß leicht |
-| Welle rufen | Band „Welle 5", Ring leert sich | Horn | Stoß schwer |
+| Welle rufen | Band „Welle 5", Ring leert sich | Bestätigung, dann Gong zum Wellenstart | Stoß schwer |
 | Durchbruch | Festung blitzt rot, Leben wackeln | Einschlag | Warnung |
 | Sieg / Niederlage | Tafel mit Band | Fanfare / tiefer Akkord | Erfolg / Fehler |
 

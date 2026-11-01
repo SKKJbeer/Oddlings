@@ -56,6 +56,9 @@ final class BattleController {
 
     /// Rückmeldung an den Finger. Austauschbar, damit Tests mitschreiben können.
     @ObservationIgnored var haptics: @MainActor (Haptic) -> Void
+    /// Ton zur eigenen Handlung (P2-3). Stumm, bis die Ansicht ihn verbindet,
+    /// damit Tests ohne Lautsprecher laufen.
+    @ObservationIgnored var sounds: @MainActor (SoundMoment) -> Void = { _ in }
 
     init(model: BattleModel, interactive: Bool) {
         self.model = model
@@ -158,14 +161,14 @@ final class BattleController {
                 selection = .none
             } else {
                 selection = .tower(id: tower.id)
-                haptics(FeedbackPlayer.haptic(for: .selectCell))
+                feedback(.selectCell)
             }
         } else if map.isBuildable(cell) {
             if case .cell(cell, _) = selection {
                 selection = .none
             } else {
                 selection = .cell(cell, choice: nil)
-                haptics(FeedbackPlayer.haptic(for: .selectCell))
+                feedback(.selectCell)
             }
         } else {
             // Weg oder Rand: Dort kann nie etwas stehen, also kein Menü und keine
@@ -182,7 +185,7 @@ final class BattleController {
             // Gedimmt, aber antippbar: Man soll spüren, warum nichts geschieht
             // (07-ui-ux.md, „Bauen“). Es geht kein Befehl hinaus.
             goldWarnings += 1
-            haptics(FeedbackPlayer.haptic(for: .cannotAfford))
+            feedback(.cannotAfford)
             return
         }
         if choice == kind {
@@ -190,7 +193,7 @@ final class BattleController {
             selection = .none
         } else {
             selection = .cell(cell, choice: kind)
-            haptics(FeedbackPlayer.haptic(for: .preview))
+            feedback(.preview)
         }
     }
 
@@ -202,7 +205,7 @@ final class BattleController {
             selection = .none
         } else {
             selection = .tower(id: id, sellArmed: true)
-            haptics(FeedbackPlayer.haptic(for: .armSell))
+            feedback(.armSell)
         }
     }
 
@@ -214,9 +217,9 @@ final class BattleController {
             selection = .none
         } else if abilityReady {
             selection = .aiming
-            haptics(FeedbackPlayer.haptic(for: .selectCell))
+            feedback(.selectCell)
         } else {
-            haptics(FeedbackPlayer.haptic(for: .cannotAfford))
+            feedback(.cannotAfford)
         }
     }
 
@@ -225,7 +228,7 @@ final class BattleController {
     func cast(at point: Point?) {
         guard aiming else { return }
         guard let point, let target = snappedTarget(for: point) else {
-            haptics(FeedbackPlayer.haptic(for: .cannotAfford))
+            feedback(.cannotAfford)
             return
         }
         model.enqueue(.useAbility(target))
@@ -235,7 +238,7 @@ final class BattleController {
     func callNextWave() {
         guard canCallNextWave else { return }
         model.enqueue(.callNextWave)
-        haptics(FeedbackPlayer.haptic(for: .callWave))
+        feedback(.callWave)
     }
 
     /// Beendet die Mission aus der Pause heraus und zeigt die Niederlage-Tafel
@@ -247,6 +250,14 @@ final class BattleController {
         paused = false
         model.paused = true
         haptics(.error)
+        // Aufgeben endet wie eine Niederlage, auch in der Musik.
+        sounds(.missionEnded(won: false))
+    }
+
+    /// Eine Bedienhandlung: spüren und hören.
+    private func feedback(_ action: UserAction) {
+        haptics(FeedbackPlayer.haptic(for: action))
+        sounds(.user(action))
     }
 
     /// Pause hält nur die Uhr an; der Zustand bleibt unberührt, deshalb gehört

@@ -41,6 +41,9 @@ struct BattleView: View {
         let controller = BattleController(model: model, interactive: mode == .play)
         let scene = BattleScene(model: model)
         scene.controller = controller
+        let audio = AudioDirector.shared
+        scene.audio = audio
+        if mode == .play { controller.sounds = { audio.play($0) } }
         _scene = State(initialValue: scene)
         _controller = State(initialValue: controller)
     }
@@ -79,6 +82,8 @@ struct BattleView: View {
         .onChange(of: scenePhase) { _, phase in
             if phase != .active { controller.pauseForBackground() }
         }
+        .onAppear { AudioDirector.shared.startBattle() }
+        .onChange(of: controller.paused) { _, paused in AudioDirector.shared.setPaused(paused) }
         .onChange(of: controller.shownOutcome) { _, outcome in
             if let outcome { onFinish?(outcome, controller.lives) }
         }

@@ -11,6 +11,31 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.15.0 – 01.11.2026 (P2-3: Ton und Musik), Bau offen
+
+**Neu**
+- Klänge an den Spielereignissen: Bauen, Verkaufen, Schüsse je Turm (der Blitz
+  steigt mit jedem Sprung um einen Halbton), Treffer, Verlangsamung, Kombination,
+  Gegnersturz mit Münze, Durchbruch, Wellengong, Steinregen, Mondmal, Bollwerk.
+  30 Dateien, je Klang bis zu drei Fassungen und leicht gestreute Tonhöhe, damit
+  nichts maschinell klingt. Ein Begrenzer hält gleichzeitige Stimmen je Klang knapp.
+- Musik in fünf Lagen: Menü, Kampf, letzte Welle, Sieg, Niederlage, mit Überblendung.
+  Pause dämpft die Musik, eigene Musik vom iPhone hat Vorrang, der Stummschalter gilt.
+- Einstellungen: Regler für Klänge und Musik (statt „Ton folgt“), bleiben gespeichert.
+- Nur CC0-Quellen (Steffens Wahl, D-082). Herkunft, Lizenz und Prüfsumme jeder Quelle
+  in `art/ton/klaenge.json` und `art/ton/ENTSTEHUNG.md`; gebaut mit `tools/ton/ton_bauen.py`.
+
+**Architektur**
+- `App/Audio`: `SoundMap` (Moment → Klang, Musiklage), `SoundLimiter`, `AudioDirector`
+  (wie `FxDirector`, liest keinen Spielzustand), `AudioEngine` (AVAudioEngine, `.ambient`).
+  OddlingsCore unverändert. Konzept: [p2-3-ton-und-musik](docs/konzepte/p2-3-ton-und-musik.md).
+
+**Tests**
+- App-Tests für Zuordnung, Begrenzer, Regie, Dateien und Einstellungen; zwei
+  Ende-zu-Ende-Fälle (`SoundE2ETests`: Musiklage und alle Klanggruppen im Demo-Kampf,
+  Regler überleben den Neustart). CI: `tools/ton/ton_pruefen.py` lässt nur CC0 und
+  gelistete Dateien durch.
+
 ## Dokumente, kein Bau – 01.11.2026 (Reihenfolge nach R-6: Mission 2 jetzt, D-080)
 
 - Steffen hat entschieden: Mission 2 mit Zwergenbank kommt jetzt, der Spieltest

@@ -20,7 +20,8 @@ jobs:
       - name: Architektur- und Sicherheitsregeln
         run: scripts/regeln-pruefen.sh
 
-  # Grafik: Atlas gegen den Asset-Vertrag, Kartenvorlage gegen die Weggeometrie.
+  # Grafik und Ton: Atlas gegen den Asset-Vertrag, Kartenvorlage gegen die
+  # Weggeometrie, Tondateien gegen ihre Herkunftsliste.
   art:
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -35,6 +36,11 @@ jobs:
         run: python -m unittest discover -s tools/art-check/tests -v
       - name: Atlas prüfen
         run: python tools/art-check/check_assets.py .
+      # Ton (P2-3, D-082): jede Datei mit Herkunft, nur CC0.
+      - name: Ton-Prüfer testen
+        run: python -m unittest discover -s tools/ton/tests -v
+      - name: Ton prüfen
+        run: python tools/ton/ton_pruefen.py
 
   # Die Simulation braucht nur Foundation. Unter Linux geprüft, damit ein
   # versehentlicher Apple-Import sofort rot wird, nicht erst im Mac-Lauf.
