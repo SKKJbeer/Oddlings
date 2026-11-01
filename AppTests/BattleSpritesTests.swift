@@ -106,6 +106,26 @@ final class BattleSpritesTests: XCTestCase {
         XCTAssertEqual(lines, 0)
     }
 
+    /// Grafik 06: Jede Mission mit Missionsdatei findet ihren eigenen gemalten
+    /// Boden; fehlt einer, zeichnete die Szene still die Ersatzlinie. Die
+    /// Festung verdeckt auch dort keine Bauzelle.
+    func testEveryBundledMissionHasItsPaintedGround() throws {
+        for file in ["mvp-mission-01", "mission-02"] {
+            let config = try BalanceConfig.bundledMission(named: file)
+            let name = BattleSprites.groundName(missionID: config.mission.id)
+            XCTAssertNotNil(BattleSprites.texture(named: name), name)
+            let scene = BattleScene(model: BattleModel(config: config, seed: 1, autoplay: false))
+            XCTAssertNotNil(scene.childNode(withName: "//\(name)"), name)
+            let fortress = try XCTUnwrap(scene.childNode(withName: "//\(BattleSprites.fortressName)"))
+            let parent = try XCTUnwrap(fortress.parent)
+            let frame = CGRect(origin: scene.convert(fortress.frame.origin, from: parent), size: fortress.frame.size)
+            let layout = BoardLayout(size: scene.size, map: scene.model.sim.map)
+            for cell in scene.model.sim.map.buildableCells {
+                XCTAssertFalse(frame.contains(layout.scenePoint(cell.center)), "\(file) \(cell)")
+            }
+        }
+    }
+
     /// FX 02: Der Plünderer hat Laufen, Zucken und Sturz als Bildfolge, gleich
     /// groß wie sein Standbild; die anderen Gegner bleiben beim Standbild.
     func testRaiderHasFramesOthersKeepTheirPicture() throws {

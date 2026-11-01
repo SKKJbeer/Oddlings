@@ -50,3 +50,40 @@ gemalt. Alle Bilder FLUX.1-schnell (Apache 2.0), euler, 4 Schritte, unter
 **Verworfen:** `verworfen-blatt-teiche.jpg` (Seed 26): eckige Kästen mit
 Plastikrand, auf der Karte wie Schachteln. Blätter in 1024 × 1024 liefen auf dem
 Container über den Speicher (sd-cli, 14 GB), deshalb 768.
+
+## `map_mission02_ground`, `map_mission03_ground`, `map_mission04_ground` (Grafik 06)
+
+01.11.2026, [Konzept](../../docs/konzepte/grafik-06-kampfplaetze-m2-m4.md). Gleicher
+Weg wie Mission 1, dieselben Teile aus `region01/` (Bäume, Höhle, Gras, Weg, wie oben
+zerlegt und umgefärbt), dazu je Mission Deko im Waldrand und ein eigener Lichtton.
+Weggeometrie: M2 aus `mission-02.json` (Thread „Mission 2 mit Zwergenbank"), M3 und M4
+aus `wegvorschlaege/` (D-081).
+
+1. **Deko-Blätter** (FLUX.1-schnell, Seed 31, 768 × 768, Stil-Teil wie bei `region01`),
+   zerlegt mit `zerlegen.py`:
+   - `kampfplaetze/blatt-zwerge.jpg` (M2, 7 Teile): `sprite sheet of six separate dwarven mining props, a wooden mine shaft entrance framed with heavy timber beams in a rocky mound, a small iron ore mine cart on a short rail piece, a stack of chopped logs, a pile of grey rocks with glittering gold ore, a wooden barrel, a crate with pickaxes, each isolated and evenly spaced on a plain white background, <Stil>, no characters, no text`
+   - `kampfplaetze/blatt-pilze.jpg` (M3, 6 Teile): `sprite sheet of six separate fantasy forest floor props, a cluster of giant red and orange toadstool mushrooms, a cluster of glowing teal mushrooms, a mossy boulder, a large fern bush, a fallen mossy log, a ring of small brown mushrooms, each isolated and evenly spaced on a plain white background, <Stil>, no characters, no text`
+   - M4: `region01/blatt-ruinen.jpg` (7 Teile), dieselben Ruinen wie auf der Kampagnenkarte.
+2. **Collage:** `DEKO=<teile> DEKO_ANZAHL=<n> LICHT=<r,g,b> kampfplatz.py <weg.json> <teile> aus.png 130 4x2`
+   — M2: 9 Teile, `245,245,225` (Morgen); M3: 10, `225,240,232` (gedämpft, leicht
+   türkis); M4: 8, `255,226,190` (später Nachmittag). Das größte Teil (Stollen,
+   große Mauer) steht genau einmal, oben, weit weg von der Höhle. Auf 1024 × 576
+   verkleinert.
+3. **Übermalen:** `INIT=<collage> STAERKE=0.4 VERSCHIEBUNG=0.5 erzeugen.sh aus 5 "<prompt>" 1024x576`.
+   Gemeinsamer Teil: `mobile strategy game battlefield seen from directly above, stylized 3D cartoon render, hand-painted textures, vibrant saturated colors, a winding packed brown dirt path with small pebbles and grass tufts along its edges, a dark rocky goblin cave entrance on the left, highly detailed, no buildings in the clearing, no characters, no text, no letters, full bleed`, dahinter je Mission:
+   - M2: `a sunny morning forest clearing at the edge of an old dwarven mine, a timber framed mine shaft entrance, an ore cart and stacked logs among the dense round tree canopies, lush fresh green grass with small flowers, cool fresh morning light from top left with golden highlights, soft tree shadows`
+   - M3: `a mossy clearing deep in an enchanted forest, giant red toadstools and glowing teal mushrooms, ferns and mossy boulders among the dense round tree canopies, deep green mossy grass with clover, soft diffused afternoon light with a gentle teal tint, soft tree shadows`
+   - M4: `a forest clearing at the edge of ancient crumbling grey stone ruins, broken mossy walls and fallen pillars among the dense round tree canopies, lush grass with small flowers, warm golden late afternoon light from top left, long soft tree shadows`
+   **Verworfen:** ein erster Durchgang mit Stärke 0,4 und langen Ortsprompts
+   (`a sunny morning forest clearing at the edge of an old dwarven mine, …`): Die runden
+   Baumkronen wurden Farn, die Höhle eine Lore. Gilt jetzt der Prompt von Mission 1 mit
+   angehängtem Ort, Stärke 0,3. Auch dann verwischt die Höhle, deshalb Schritt 5.
+4. **Hochrechnen:** `hochskalieren.sh rohbild gross.png 3096x1677`.
+5. **Ebene auflegen:** `ebene.py gross.png <collage>-ebene.png fertig.png` (Höhle und Deko
+   aus der Collage obenauf, weicher Schatten).
+6. **Nachbessern:** M2 `retusche.py fertig.png aus.png "1370,615,1470,720:1240,615"
+   "1070,695,1165,790:1170,695" "2545,1290,2640,1385:2440,1290"` (drei große Kiesel im
+   Feld); M3 zweimal `ausgleichen.py fertig.png aus.png 8.2,1.4,12.6,6.6` (dunkler Fleck).
+7. **Atlas:** `atlas.py aus map_missionNN_ground 24x13 voll _ App/Assets.xcassets/Maps`.
+   Collagen und Rohbilder liegen unter `kampfplaetze/` (`missionNN-collage.jpg`,
+   `missionNN-rohbild.jpg`).

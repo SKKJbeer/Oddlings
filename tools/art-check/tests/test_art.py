@@ -339,28 +339,102 @@ class Kampfplatz(unittest.TestCase):
             self.assertTrue(baumig(px(-1, karte["height"] / 2)))
 
 
+class KampfplatzDeko(unittest.TestCase):
+    """Grafik 06: Deko (cyan) steht nur im Waldrand, nie auf einer Zellmitte des Feldes,
+    und LICHT toent das Bild. Ohne DEKO bleibt M1 unveraendert (eigener Zufall)."""
+
+    def test_deko_nur_im_rand(self):
+        konf = os.path.join(WURZEL, "art/karten/wegvorschlaege/mission-04.json")
+        karte = json.load(open(konf))["map"]
+        z = 20
+        with tempfile.TemporaryDirectory() as t:
+            Image.new("RGB", (200, 200), (120, 200, 90)).save(os.path.join(t, "gras.png"))
+            Image.new("RGB", (200, 200), (210, 150, 90)).save(os.path.join(t, "weg.png"))
+            baum = Image.new("RGBA", (60, 60), (0, 0, 0, 0))
+            ImageDraw.Draw(baum).ellipse((0, 0, 59, 59), fill=(30, 90, 30, 255))
+            baum.save(os.path.join(t, "baum0.png"))
+            deko = os.path.join(t, "deko")
+            os.makedirs(deko)
+            for i, g in enumerate((60, 40, 30)):
+                d = Image.new("RGBA", (g, g), (0, 0, 0, 0))
+                ImageDraw.Draw(d).rectangle((0, 0, g - 1, g - 1), fill=(0, 255, 255, 255))
+                d.save(os.path.join(deko, f"deko{i}.png"))
+            aus = os.path.join(t, "k.png")
+            umg = dict(os.environ, DEKO=deko, DEKO_ANZAHL="9", LICHT="255,255,255")
+            subprocess.run([sys.executable, os.path.join(WURZEL, ".claude/skills/spielgrafik/scripts/kampfplatz.py"),
+                            konf, t, aus, str(z), "4x2"], check=True, capture_output=True, env=umg)
+            bild = Image.open(aus).convert("RGB")
+            px = lambda x, y: bild.getpixel((int((x + 4) * z), int((y + 2) * z)))
+            cyan = lambda p: p[1] > p[0] + 60 and p[2] > p[0] + 60
+            for x in range(karte["width"]):
+                for y in range(karte["height"]):
+                    self.assertFalse(cyan(px(x + 0.5, y + 0.5)), (x, y))
+            lagen = json.load(open(os.path.join(t, "k-deko.json")))
+            self.assertGreater(len(lagen["deko"]), 3)  # es steht ueberhaupt Deko
+            for x, y, b in lagen["deko"]:
+                r = b / 2 - lagen["ueberhang"]
+                im_feld = -r < x < karte["width"] + r and -r < y < karte["height"] + r
+                self.assertFalse(im_feld, (x, y, b))
+            self.assertTrue(any(cyan(bild.getpixel((xx, yy))) for xx in range(0, bild.width, 4)
+                                for yy in range(0, bild.height, 4)))
+
+
+def kampfplatzkarten():
+    """Alle Karten des Vertrags mit Weggeometrie: (Name, Regel, Karte)."""
+    vertrag = json.load(open(os.path.join(WURZEL, "art/asset-vertrag.json")))
+    for name, regel in sorted(vertrag["assets"].items()):
+        if "mission" in regel:
+            yield name, regel, json.load(open(os.path.join(WURZEL, regel["mission"])))["map"]
+
+
 class Kampfplatzbild(unittest.TestCase):
-    """Das ausgelieferte Bild: Rand laut Vertrag, Weg dort, wo die Simulation ihn
-    fuehrt, und dunkler Wald im Rand."""
+    """Die ausgelieferten Bilder: Rand laut Vertrag, Weg dort, wo die Simulation ihn
+    fuehrt, und dunkler Wald im Rand. Fuer jede Mission mit Bild (Grafik 06)."""
+
+    def test_alle_missionen_haben_eine_geometrie(self):
+        namen = [n for n, _, _ in kampfplatzkarten()]
+        self.assertIn("map_mission01_ground", namen)
+
+    def test_wegvorschlag_stimmt_mit_der_missionsdatei(self):
+        # D-081: Uebernimmt ein Missions-Thread den Weg in seine Missionsdatei, muss das
+        # Bild auf diese Datei zeigen; weicht der Weg ab, ist der Kampfplatz nachzumalen.
+        balance = os.path.join(WURZEL, "Packages/OddlingsCore/Sources/OddlingsCore/Resources/Balance")
+        for name, regel, karte in kampfplatzkarten():
+            if "wegvorschlaege" not in regel["mission"]:
+                continue
+            mission = os.path.join(balance, os.path.basename(regel["mission"]))
+            if os.path.exists(mission):
+                self.assertEqual(json.load(open(mission))["map"]["path"], karte["path"],
+                                 f"{name}: Weg der Missionsdatei weicht vom gemalten ab, nachmalen")
 
     def test_weg_und_wald_liegen_richtig(self):
-        konf = os.path.join(WURZEL, "Packages/OddlingsCore/Sources/OddlingsCore/Resources/Balance/mvp-mission-01.json")
-        karte = json.load(open(konf))["map"]
-        vertrag = json.load(open(os.path.join(WURZEL, "art/asset-vertrag.json")))
-        regel = vertrag["assets"]["map_mission01_ground"]
-        mx, my = regel["rand"]  # Zellen links/rechts und oben/unten (BattleStyle.groundMargin)
-        self.assertEqual(regel["zellen"], [karte["width"] + 2 * mx, karte["height"] + 2 * my])
-        bild = Image.open(os.path.join(WURZEL, "App/Assets.xcassets/Maps/map_mission01_ground.imageset/map_mission01_ground@3x.jpg")).convert("RGB")
-        z = bild.width / regel["zellen"][0]
-        px = lambda x, y: bild.getpixel((int((x + mx) * z), int((y + my) * z)))
-        for x, y in karte["path"][1:-1]:
-            p = px(x, y)
-            self.assertGreater(p[0], p[1], (x, y))  # Erde, nicht Gras
-        hell = lambda x, y: sum(px(x, y)) / 3
-        feld = sum(hell(x + 0.5, y + 0.5) for x in range(karte["width"]) for y in range(karte["height"])) / (karte["width"] * karte["height"])
-        for x, y in ((-1.5, karte["height"] / 2), (-mx + 0.5, karte["height"] / 2), (karte["width"] + mx - 0.5, 1.5),
-                     (karte["width"] / 2, -1.5), (karte["width"] / 2, karte["height"] + 1.5)):
-            self.assertLess(hell(x, y), feld * 0.8, (x, y))
+        for name, regel, karte in kampfplatzkarten():
+            with self.subTest(name):
+                mx, my = regel["rand"]  # Zellen links/rechts und oben/unten (BattleStyle.groundMargin)
+                self.assertEqual(regel["zellen"], [karte["width"] + 2 * mx, karte["height"] + 2 * my])
+                bild = Image.open(os.path.join(WURZEL, regel["ordner"], f"{name}.imageset", f"{name}@3x.jpg")).convert("RGB")
+                z = bild.width / regel["zellen"][0]
+                px = lambda x, y: bild.getpixel((int((x + mx) * z), int((y + my) * z)))
+                for x, y in karte["path"][1:-1]:
+                    p = px(x, y)
+                    self.assertGreater(p[0], p[1], (x, y))  # Erde, nicht Gras
+                # Mitte jedes geraden Wegstuecks ebenso: Ecken allein liessen einen verschobenen Weg durch.
+                for (ax, ay), (bx, by) in zip(karte["path"][1:-2], karte["path"][2:-1]):
+                    p = px((ax + bx) / 2, (ay + by) / 2)
+                    self.assertGreater(p[0], p[1], ((ax + bx) / 2, (ay + by) / 2))
+                hell = lambda x, y: sum(px(x, y)) / 3
+                feld = sum(hell(x + 0.5, y + 0.5) for x in range(karte["width"]) for y in range(karte["height"])) / (karte["width"] * karte["height"])
+                # Rand als Streifen gemittelt, nicht als Einzelpixel: Ein heller Busch im Wald
+                # ist erlaubt, ein heller Waldrand nicht.
+                def streifen(punkte):
+                    return sum(hell(x, y) for x, y in punkte) / len(punkte)
+                h, w = karte["height"], karte["width"]
+                for name_, punkte in (("links", [(-1.5, y / 2) for y in range(2 * h)]),
+                                      ("aussen links", [(-mx + 0.5, y / 2) for y in range(2 * h)]),
+                                      ("aussen rechts", [(w + mx - 0.5, y / 2) for y in range(2 * h)]),
+                                      ("oben", [(x / 2, -1.5) for x in range(2 * w)]),
+                                      ("unten", [(x / 2, h + 1.5) for x in range(2 * w)])):
+                    self.assertLess(streifen(punkte), feld * 0.8, name_)
 
 
 if __name__ == "__main__":

@@ -46,6 +46,13 @@ description: Hochwertige Spielgrafik (App-Symbole, Figuren, Store-Bilder, Hinter
   bricht beim Entschlüsseln mit Speichermangel ab, 16 GB): Das vereinheitlicht
   den Malstil, und der Weg bleibt liegen. Kleine Figuren, die FLUX trotz „no
   characters" hineinmalt, mit `retusche.py` entfernen.
+- **Weitere Missionen (Grafik 06):** `DEKO=<ordner> LICHT=r,g,b kampfplatz.py …` setzt
+  Deko (`deko*.png`, aus einem Teileblatt) in den Waldrand und schreibt `<aus>-ebene.png`.
+  Nach Übermalen und Hochrechnen `ebene.py` (Höhle und Deko wieder obenauf: Das Übermalen
+  macht aus der Höhle sonst eine Lore). Übermal-Prompt = Prompt von M1 plus Ort, Stärke
+  0,3; lange Ortsprompts machten aus Bäumen Farn. Große Flecken im Gras mit
+  `ausgleichen.py` (Zellrechteck ohne Weg), einzelne Fremdkörper mit `retusche.py`.
+  Danach immer eine Szene mit Türmen und Gegnern zusammensetzen und ansehen.
 - **Lange Läufe in der Cloud:** Ein 512er-Bild braucht rund 12 Minuten, 1024x640
   rund 20, Hochrechnen auf 2580 px rund 10. Ein mit `setsid nohup` abgekoppelter
   Lauf überlebt das Abräumen eines untätigen Containers NICHT (26.10.2026
