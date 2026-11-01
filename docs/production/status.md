@@ -5,7 +5,7 @@ ergänzt, D-067). Reihenfolge, Pakete und alles, was auf dich wartet, stehen in 
 [Roadmap](roadmap.md); Einzelheiten im [Backlog](backlog.md), offene Fragen im
 [Register](offene-fragen.md).
 
-**Stand: 01.11.2026** · Neueste Version **0.16.1** (gemalte Kampfplätze für Mission 2 bis 4), Bau läuft;
+**Stand: 01.11.2026** · Neueste Version **0.16.1** (gemalte Kampfplätze für Mission 2 bis 4), Bau 37 VALID;
 davor 0.16.0 (Mission 2 mit Zwergenbank, Bau 36 VALID), 0.15.0 (Ton und Musik), 0.13.0 (Plünderer mit Gliedmaßen). Der Spielrahmen R-1 bis R-6 steht. Spielbar sind Mission 1 und Mission 2.
 
 ## Wartet auf dich
