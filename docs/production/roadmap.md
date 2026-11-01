@@ -33,22 +33,21 @@ zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzeln
 | S2 | Volk wechseln, bevor es eine Spielwährung gibt (Entscheidungskarte seit 26.10.) | Thread „Oddlings-Designstand und MVP-Plan aufsetzen“ | nichts, die Empfehlung gilt bis zur Antwort | Gar nicht |
 | S3 | **Spieltest mit drei Personen** auf dem neuesten Bau, [Beobachtungsbogen](playtests/beobachtungsbogen.md) | WP-15 | Abschluss Phase 1, Schnitt Phase 2, D-030, Werte D-007 | so bald wie möglich |
 | S4 | Leistung des Spikes auf dem iPhone messen | WP-01 | nichts Akutes; D-002 gilt bis dahin | ohne Eile |
-| S6 | **Was nach R-6 als Nächstes?** (Entscheidungskarte seit 27.10.) | Thread „Architektur, Doku und Roadmap nachziehen“ | Reihenfolge unter „Als Nächstes“ | Mission 2 jetzt, Spieltest parallel |
 
 ## Als Nächstes
 
-Reihenfolge **[VORSCHLAG]**; was davor steht, wird zuerst gebaut. Steffen kann
-umsortieren.
+Reihenfolge entschieden (D-080, Steffen 01.11.2026): Mission 2 kommt jetzt, der
+Spieltest läuft parallel. Was davor steht, wird zuerst gebaut. Steffen kann umsortieren.
 
 | # | Paket | Thread | Abh. | Stand |
 |---|---|---|---|---|
 | 1 | ~~FX 02 Plünderer mit Gliedmaßen~~ ([Konzept](../konzepte/fx-02-figuren-in-3d.md)) | Plünderer-3D-Modell | – | ✓ 0.13.0 |
-| 2 | **R-7a Ausrüstung** im Avatar-Menü (D-066, D-069, D-070): feste Belohnungen, danach R-7b Schmiede mit Spielwährung | Haupt-Thread | R-6 | [Konzept](../konzepte/r-7-ausruestung.md) steht, Umsetzung läuft |
-| 3 | **WP-15 Spieltest**, danach Phase 2 schneiden | Steffen | S3 | wartet |
-| 4 | P2-5 **Mission 2 mit Zwergenbank** (Knoten M2 der Karte); erster Talentrang wird erreichbar | – | WP-15 (Balance) | Konzept K3 steht |
+| 2 | P2-5 **Mission 2 mit Zwergenbank** (Knoten M2 der Karte); Rang II und die erste Talentwahl werden spielbar. Werte [HYPOTHESE], nach WP-15 nachgezogen | neuer Thread (beim Coordinator angefragt) | – | Konzept K3 steht, startet jetzt |
+| 3 | **R-7a Ausrüstung** im Avatar-Menü (D-066, D-069, D-070): feste Belohnungen, danach R-7b Schmiede mit Spielwährung | Haupt-Thread | R-6 | [Konzept](../konzepte/r-7-ausruestung.md) steht, Umsetzung läuft |
+| 4 | **WP-15 Spieltest** parallel, danach Werte von Mission 1 und 2 nachziehen und Phase 2 schneiden | Steffen | S3 | wartet |
 | 5 | P2-3 **Ton und Musik** (K9) | neuer Thread | – | Weg offen |
 | 6 | FX 02 Flitzer und Panzerbestie | Plünderer-3D-Modell | Steffens Urteil am Plünderer im Spiel | – |
-| 7 | P2-6 Mission 3 mit Aufwertungen, P2-6b Balance-Labor, P2-2 Fortsetzen, P2-8 Synergie sichtbar, P2-9 Abstimmung | – | 4 | Konzepte K1, K6, K8, K11 |
+| 7 | P2-6 Mission 3 mit Aufwertungen, P2-6b Balance-Labor, P2-2 Fortsetzen, P2-8 Synergie sichtbar, P2-9 Abstimmung | – | 2 | Konzepte K1, K6, K8, K11 |
 
 ## Ausgeliefert
 
@@ -133,7 +132,7 @@ Phase wie oben: Eine Mission wirkt wie das fertige Spiel.
 | P2-2 | Fortsetzen einer laufenden Mission nach App-Ende (Speicherstand selbst kommt mit R-1) | R-1 | K6 | D-022 |
 | P2-3 | Ton und Haptik | P2-1 (Rückmeldeliste) | K9 | Weg offen, neuer Thread |
 | P2-4 | Menüs, Pause, Einstellungen, Ergebnis im Stil: ✓ 0.6.0 und 0.7.0 | M1.3, Oberflächen-Thread | [07](../game-design/07-ui-ux.md) | D-031, D-032 |
-| P2-5 | Zwergenbank und Bonus für frühes Rufen | M1.4 (Balance aus dem Spieltest) | K3 | D-026 |
+| P2-5 | Zwergenbank und Bonus für frühes Rufen | – (D-080: startet vor dem Spieltest, Werte nach M1.4 nachziehen) | K3 | D-026 |
 | P2-6 | Aufwertungen mit Gabelung, Zielwahl | P2-5 (gleiche Wirtschaftsrechnung) | K1 | D-024 |
 | P2-6b | **Balance-Labor, Grundstock:** Lauf-Werkzeug, Zufalls- und Menschenbot, Zielwerte, PR-Stufe in der CI | P2-5, P2-6 | K11 | D-028 |
 | P2-7 | ~~Festungsfähigkeit Steinregen~~ vorgezogen als R-3 | – | K2a | D-025, D-060 |
