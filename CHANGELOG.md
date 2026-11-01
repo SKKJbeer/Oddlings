@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.13.0 – 01.11.2026 (FX 02: Plünderer mit Gliedmaßen), Bau offen
+## 0.13.0 – 01.11.2026 (FX 02: Plünderer mit Gliedmaßen), Bau 34 (VALID)
 
 **Neu**
 - Der Plünderer geht, zuckt bei Treffern und stürzt als echte Figur mit Armen und
@@ -48,7 +48,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   gemeldet. `regeln-pruefen.sh` prüft die neueste Version in `CLAUDE.md`, `status.md`
   und Roadmap sowie jeden App-Ordner und jede Kerndatei in der Architektur (rot gesehen).
 
-## 0.12.0 – 27.10.2026 (R-6: Avatarrang mit Talentwahl), Bau offen
+## 0.12.0 – 27.10.2026 (R-6: Avatarrang mit Talentwahl), Bau 33 (VALID)
 
 **Neu**
 - Avatarrang (D-064, D-065, [Konzept](docs/konzepte/r-6-avatarrang.md)): fünf Ränge,
