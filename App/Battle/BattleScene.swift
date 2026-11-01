@@ -395,6 +395,10 @@ final class BattleScene: SKScene {
         case .abilityImpact: return .abilityImpact(moon: model.sim.config.ability?.kind == .moonMark)
         case .barrierRaised: return .wallRaised
         case .barrierFell: return .wallFell
+        case .bankPaid: return .bankPaid
+        // Die leere Bank wird nur grau; ein Klang dafür wäre ein Fehlalarm.
+        case .bankEmptied: return nil
+        case .earlyCallBonus: return .earlyCallBonus
         }
     }
 

@@ -30,6 +30,8 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   [04](docs/game-design/04-economy-and-balance.md#mission-2--ergebnis-der-prüfung-0160-hypothese)),
   `BankControllerTests`, vier Knöpfe in `HudLayoutTests`, `BankE2ETests`;
   `CampaignE2ETests` startet jetzt Mission 2. Testschalter `--e2e-knoten`.
+- Ton (mit 0.15.0 zusammengeführt): Auszahlung der Bank und Bonus fürs frühe Rufen
+  klingen als leise Münze, die leere Bank bleibt stumm (`SoundMapTests`).
 - `scripts/swift-linux.sh`: `/etc/os-release` überschrieb die Swift-Version.
 
 ## 0.15.0 – 01.11.2026 (P2-3: Ton und Musik), Bau offen

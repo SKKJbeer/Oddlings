@@ -137,8 +137,9 @@ Nach [07](../game-design/07-ui-ux.md#zwergenbank), dort steht sie schon fest:
   fehlen dir in den nächsten Wellen.“ Zahlen aus der Datei.
 - Höchstzahl erreicht: Knopf gedimmt, Schild „2/2“ statt Preis, Tippen gibt die
   Gold-Rückmeldung nicht, sondern sagt „Höchstens 2 Banken“.
-- An der Bank: Füllbalken für den ausgezahlten Anteil, „+5“ steigt auf, Münzen
-  fliegen zum Goldzähler. Leer: Bank grau, Schild „leer“, Infotafel „Leer.
+- An der Bank: Füllbalken für den ausgezahlten Anteil, „+5“ steigt auf (keine
+  fliegenden Münzen, die gehören den Kills); zu hören ist eine leise Münze, wie beim
+  Bonus fürs frühe Rufen. Leer, ohne Klang: Bank grau, Schild „leer“, Infotafel „Leer.
   Verkaufen gibt den Platz frei.“
 - Welle-Knopf: kleines Goldschild mit dem Bonus, den Rufen jetzt brächte, nur in
   Missionen mit Bonus und nur, wenn er größer als 0 ist. Beim Rufen erscheint
