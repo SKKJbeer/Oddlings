@@ -18,6 +18,8 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Konzept [R-7 Ausrüstung](docs/konzepte/r-7-ausruestung.md): drei Plätze (Banner,
   Amulett, Siegel), nie gegen Echtgeld, keine Zufallstruhen.
 - D-069: volle Ausrüstung macht den Avatar höchstens +10 % stärker.
+- D-070: Ausrüstung kommt aus festen Belohnungen (R-7a) und einer Schmiede mit
+  Spielwährung (R-7b, eigenes Konzept).
 =======
 ## 0.13.0 – 01.11.2026 (FX 02: Plünderer mit Gliedmaßen), Bau offen
 

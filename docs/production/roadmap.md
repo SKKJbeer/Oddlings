@@ -34,7 +34,6 @@ zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzeln
 | S3 | **Spieltest mit drei Personen** auf dem neuesten Bau, [Beobachtungsbogen](playtests/beobachtungsbogen.md) | WP-15 | Abschluss Phase 1, Schnitt Phase 2, D-030, Werte D-007 | so bald wie möglich |
 | S4 | Leistung des Spikes auf dem iPhone messen | WP-01 | nichts Akutes; D-002 gilt bis dahin | ohne Eile |
 | S6 | **Was nach R-6 als Nächstes?** (Entscheidungskarte seit 27.10.) | Thread „Architektur, Doku und Roadmap nachziehen“ | Reihenfolge unter „Als Nächstes“ | Mission 2 jetzt, Spieltest parallel |
-| S5 | **Woher kommen die Ausrüstungsstücke?** (Entscheidungskarte seit 27.10.; Obergrenze +10 % ist entschieden, D-069) | Haupt-Thread | R-7 Umsetzung | Feste Belohnungen |
 
 ## Als Nächstes
 
@@ -44,7 +43,7 @@ umsortieren.
 | # | Paket | Thread | Abh. | Stand |
 |---|---|---|---|---|
 | 1 | ~~FX 02 Plünderer mit Gliedmaßen~~ ([Konzept](../konzepte/fx-02-figuren-in-3d.md)) | Plünderer-3D-Modell | – | ✓ 0.13.0 |
-| 2 | **R-7 Ausrüstung** im Avatar-Menü (D-066): Konzept, Karten, Umsetzung | Haupt-Thread | R-6, S5 | [Konzept](../konzepte/r-7-ausruestung.md) steht, wartet auf S5 |
+| 2 | **R-7a Ausrüstung** im Avatar-Menü (D-066, D-069, D-070): feste Belohnungen, danach R-7b Schmiede mit Spielwährung | Haupt-Thread | R-6 | [Konzept](../konzepte/r-7-ausruestung.md) steht, Umsetzung läuft |
 | 3 | **WP-15 Spieltest**, danach Phase 2 schneiden | Steffen | S3 | wartet |
 | 4 | P2-5 **Mission 2 mit Zwergenbank** (Knoten M2 der Karte); erster Talentrang wird erreichbar | – | WP-15 (Balance) | Konzept K3 steht |
 | 5 | P2-3 **Ton und Musik** (K9) | neuer Thread | – | Weg offen |
@@ -110,7 +109,8 @@ Spieltest WP-15 wartet nicht darauf.
 | R-4 | Völker Zwerge (Bollwerk, Wachtürme billiger D-062) und Elfen (Mondmal) | R-1, R-3 | ✓ 0.9.0, 0.10.1 |
 | R-5 | Avatar einmal am Anfang: Volk, Porträt, Name (D-063) | R-4 | ✓ 0.11.0, Porträts 0.11.1 |
 | R-6 | Avatarrang mit Talentwahl, eigenes Avatar-Menü (D-064, D-065) | R-5 | ✓ 0.12.0 |
-| R-7 | **Ausrüstung mit kleinen Boni** im Avatar-Menü (D-066) | R-6, S5 | Konzept als Nächstes |
+| R-7a | **Ausrüstung mit kleinen Boni** im Avatar-Menü, feste Belohnungen (D-066, D-069, D-070) | R-6 | Konzept steht, Umsetzung läuft |
+| R-7b | **Schmiede** mit Spielwährung im Avatar-Menü (D-070) | R-7a | Konzept offen |
 
 ## Parallel: Grafik und Bewegung
 

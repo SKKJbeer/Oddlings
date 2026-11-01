@@ -1,6 +1,6 @@
 # R-7 Ausrüstung des Avatars
 
-**Stand:** 27.10.2026 · Grundlage D-066 (Steffen, 27.10.2026: „Ausrüstung mit kleinen
+**Stand:** 01.11.2026 · Grundlage D-066 (Steffen, 27.10.2026: „Ausrüstung mit kleinen
 Boni“), Vorgänger [R-6](r-6-avatarrang.md). **Konzept, nichts gebaut.**
 
 ## Ziel
@@ -36,11 +36,15 @@ Die Säulen bleiben bestehen und begrenzen, was Ausrüstung darf:
 
 ## Offene Entscheidungen (Karten an Steffen)
 
-1. **Woher kommen die Stücke?** Empfehlung: **feste Belohnungen**. Bestimmte
-   Missionen und Sternschwellen geben bestimmte Stücke, ohne Zufall. Das ist planbar
-   und passt zu „keine Zufallskisten“. Die Schmiede (Material sammeln, selbst
-   herstellen) braucht eine Spielwährung. Die gibt es noch nicht, und über sie wartet
-   auch die Karte „Volk wechseln“.
+1. **Woher kommen die Stücke?** **Entschieden (D-070): beides.** Grundstücke kommen
+   als feste Belohnung aus bestimmten Missionen und Sternschwellen, ohne Zufall.
+   Bessere Stücke stellt der Spieler in der **Schmiede** im Avatar-Menü her, mit einer
+   Spielwährung aus Missionen. Gebaut wird in zwei Paketen:
+   - **R-7a Feste Belohnungen:** Plätze, Grundstücke, Anlegen, Balance. Braucht keine
+     Währung und kommt zuerst.
+   - **R-7b Schmiede:** eigenes Konzept zur Spielwährung (Name, woher, wofür, wie viel
+     je Mission, Schutz gegen veränderte Spielstände). Auch das stärkste
+     geschmiedete Stück bleibt unter der Obergrenze aus Entscheidung 2.
 2. **Wie stark höchstens?** **Entschieden (D-069): volle Ausrüstung zusammen
    höchstens +10 %** Reserve gegenüber ohne. Das ist spürbar, wiegt aber keine
    Bauweise auf (die Mischung liegt heute rund 0,2 vor der Monokultur).
@@ -90,6 +94,6 @@ neue Abhängigkeit.
 
 ## Offen
 
-1. Herkunft der Stücke (Karte).
+1. ~~Herkunft der Stücke~~: beides, in R-7a und R-7b (D-070).
 2. ~~Obergrenze der Boni~~: +10 % (D-069).
 3. Bilder der Stücke und Rahmen am Porträt: Grafik-Thread, bis dahin Symbole.

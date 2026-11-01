@@ -18,7 +18,8 @@ Spielkonzepte führen"). Vergeben bzw. reserviert:
 | D-040 bis D-049 | AAA-Grafik |
 | D-050 bis D-059 | Animationen und Effekte |
 | D-060 bis D-069 | Projektplanung |
-| ab D-070 | frei, Block von zehn bei der Projektplanung anfragen |
+| D-070 bis D-079 | Haupt-Thread (Avatar, Ausrüstung) |
+| ab D-080 | frei, Block von zehn bei der Projektplanung anfragen |
 
 Eine Nummer doppelt bricht den CI-Schritt `regeln` (`scripts/links-pruefen.py`).
 
@@ -73,4 +74,5 @@ Eine Nummer doppelt bricht den CI-Schritt `regeln` (`scripts/links-pruefen.py`).
 =======
 | D-068 | 27.10.2026 | **Plünderer mit Gliedmaßen aus 3D ins Spiel** (FX 02): neue grimmige Comic-Vorlage, Modell mit Keule und Sack, 17 Bildfolgenbilder statt des Gemäldes; die anderen Gegner bleiben vorerst Gemälde. Die erste, freundlichere Fassung hatte Steffen am 26.10. verworfen | gilt (Steffen, Entscheidungskarte) | [FX 02](../konzepte/fx-02-figuren-in-3d.md) |
 | D-069 | 27.10.2026 | **Volle Ausrüstung macht den Avatar höchstens +10 % stärker.** Gemessen als Reserve des Balance-Bots mit stärkster Ausrüstung gegenüber ohne, je Volk und mit der stärksten Talentwahl | entschieden (Steffen, 27.10.2026, Entscheidungskarte); Optionen: höchstens +10 % (Empfehlung), höchstens +5 %, höchstens +20 % | [R-7](../konzepte/r-7-ausruestung.md). Die Balancetests erzwingen die Grenze; Monokulturen verlieren weiter |
+| D-070 | 01.11.2026 | **Ausrüstung kommt aus festen Belohnungen und aus einer Schmiede.** Grundstücke geben bestimmte Missionen und Sternschwellen, ohne Zufall. Bessere Stücke stellt der Spieler in der Schmiede im Avatar-Menü her, mit einer Spielwährung aus Missionen. Nie gegen Echtgeld, keine Zufallstruhen | entschieden (Steffen, 01.11.2026, Entscheidungskarte); Optionen: feste Belohnungen (Empfehlung), Schmiede mit Spielwährung, beides | [R-7](../konzepte/r-7-ausruestung.md). Gebaut in zwei Paketen: R-7a feste Belohnungen, R-7b Schmiede mit eigenem Konzept zur Spielwährung. Auch die stärkste Schmiedeausrüstung bleibt unter der Obergrenze aus D-069 |
 >>>>>>> origin/main
