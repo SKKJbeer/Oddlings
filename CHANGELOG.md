@@ -16,7 +16,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Bau 34 (0.13.0) und Bau 35 (0.15.0) von Apple als VALID gemeldet, in Roadmap
   und Stand eingetragen.
 
-## 0.16.0 – 01.11.2026 (P2-5: Mission 2 mit Zwergenbank) · Bau offen
+## 0.16.0 – 01.11.2026 (P2-5: Mission 2 mit Zwergenbank) · Bau 36
 
 - **Mission 2** spielbar, nach dem Sieg in Mission 1 auf der Kampagnenkarte offen:
   eigener Weg mit ruhigen Feldern für Banken, zehn Wellen, etwas härter als
