@@ -61,6 +61,13 @@ while IFS= read -r schrift; do
   ls "$ordner"/OFL*.txt >/dev/null 2>&1 || melde "$schrift: keine Lizenzdatei (OFL*.txt) daneben"
 done < <(git ls-files -co --exclude-standard -- '*.ttf' '*.otf')
 
+# Liegengebliebene Konfliktmarken: Zwei Einträge in CHANGELOG und
+# Entscheidungsprotokoll standen so schon einmal auf main (PR #53), und keine
+# Prüfung hat es gemerkt, weil Markdown sie klaglos anzeigt.
+while IFS= read -r datei; do
+  melde "$datei: Konfliktmarke (<<<<<<< / >>>>>>>) aus einem Zusammenführen"
+done < <(git ls-files -co --exclude-standard -z | xargs -0 grep -lE '^(<<<<<<< |>>>>>>> )' 2>/dev/null || true)
+
 # Doku wächst mit jeder Auslieferung (D-067). Was sich prüfen lässt, prüfen wir:
 # Die neueste Version steht im Stand von CLAUDE.md, in status.md und in der Roadmap,
 # und die Architektur kennt jeden App-Ordner und jede Kerndatei. Sonst beschreiben

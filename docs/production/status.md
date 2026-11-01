@@ -41,7 +41,7 @@ davor 0.12.0 (Avatarrang und Avatar-Menü, Bau 33). Der Spielrahmen R-1 bis R-6 
 
 | Thread | Woran | Nächster Schritt |
 |---|---|---|
-| Haupt-Thread | 0.12.0 in TestFlight (Bau 33) | Konzept R-7 Ausrüstung (D-066) mit Karten an dich |
+| Haupt-Thread | [Konzept R-7 Ausrüstung](../konzepte/r-7-ausruestung.md) steht: höchstens +10 % (D-069), feste Belohnungen und Schmiede (D-070) | R-7a feste Belohnungen umsetzen |
 | Plünderer-3D-Modell | 0.13.0 in TestFlight (Bau 34) | Flitzer und Panzerbestie, wenn dir der Plünderer im Spiel gefällt |
 
 ## Als Nächstes
