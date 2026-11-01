@@ -11,6 +11,13 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## Dokumente, kein Bau – 01.11.2026 (Bau 33, Konzept R-7 Ausrüstung)
+
+- Bau 33 (0.12.0) von Apple als VALID gemeldet, in Roadmap und Stand eingetragen.
+- Konzept [R-7 Ausrüstung](docs/konzepte/r-7-ausruestung.md): drei Plätze (Banner,
+  Amulett, Siegel), nie gegen Echtgeld, keine Zufallstruhen.
+- D-068: volle Ausrüstung macht den Avatar höchstens +10 % stärker.
+
 ## Dokumente, kein Bau – 27.10.2026 (Architektur, Design und Roadmap nachgezogen, D-067)
 
 - Architektur auf den Stand 0.12.0: Module der App, Kerndateien, Datenfluss beim
@@ -25,7 +32,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   gemeldet. `regeln-pruefen.sh` prüft die neueste Version in `CLAUDE.md`, `status.md`
   und Roadmap sowie jeden App-Ordner und jede Kerndatei in der Architektur (rot gesehen).
 
-## 0.12.0 – 27.10.2026 (R-6: Avatarrang mit Talentwahl), Bau offen
+## 0.12.0 – 27.10.2026 (R-6: Avatarrang mit Talentwahl), Bau 33
 
 **Neu**
 - Avatarrang (D-064, D-065, [Konzept](docs/konzepte/r-6-avatarrang.md)): fünf Ränge,

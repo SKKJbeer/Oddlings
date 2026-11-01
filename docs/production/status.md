@@ -5,8 +5,8 @@ ergänzt, D-067). Reihenfolge, Pakete und alles, was auf dich wartet, stehen in 
 [Roadmap](roadmap.md); Einzelheiten im [Backlog](backlog.md), offene Fragen im
 [Register](offene-fragen.md).
 
-**Stand: 27.10.2026, 10:30** · Neueste Version **0.12.0** (Avatarrang und Avatar-Menü), Bau läuft;
-neuester VALID-Bau 32 (0.11.1). Der Spielrahmen R-1 bis R-6 steht. Spielbar ist Mission 1.
+**Stand: 01.11.2026** · Neueste Version **0.12.0** (Avatarrang und Avatar-Menü),
+Bau 33 in TestFlight. Der Spielrahmen R-1 bis R-6 steht. Spielbar ist Mission 1.
 
 ## Wartet auf dich
 
@@ -19,7 +19,9 @@ neuester VALID-Bau 32 (0.11.1). Der Spielrahmen R-1 bis R-6 steht. Spielbar ist 
    Werte von Mission 1 ab.
 4. Was nach R-6 als Nächstes kommt: Entscheidungskarte im Thread „Architektur, Doku und
    Roadmap nachziehen“ (Empfehlung: Mission 2 mit Zwergenbank jetzt, Spieltest parallel).
-5. Ohne Eile: Messung des Spikes auf dem iPhone (WP-01).
+5. **Woher kommen die Ausrüstungsstücke?** Entscheidungskarte im Haupt-Thread
+   (Empfehlung: feste Belohnungen). Davon hängt die Umsetzung von R-7 ab.
+6. Ohne Eile: Messung des Spikes auf dem iPhone (WP-01).
 
 ## Fertig
 
@@ -42,7 +44,7 @@ neuester VALID-Bau 32 (0.11.1). Der Spielrahmen R-1 bis R-6 steht. Spielbar ist 
 
 | Thread | Woran | Nächster Schritt |
 |---|---|---|
-| Haupt-Thread | 0.12.0 in TestFlight | Konzept R-7 Ausrüstung (D-066) mit Karten an dich |
+| Haupt-Thread | [Konzept R-7 Ausrüstung](../konzepte/r-7-ausruestung.md) steht, Obergrenze +10 % (D-068) | Umsetzung, sobald die Herkunft entschieden ist |
 | Plünderer-3D-Modell | FX 02: Plünderer mit Gliedmaßen fertig | wartet auf deine Freigabe (Punkt 1) |
 
 ## Als Nächstes
