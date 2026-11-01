@@ -161,6 +161,52 @@ final class AvatarE2ETests: XCTestCase {
         XCTAssertTrue(badge.waitForExistence(timeout: 5), "zurück ins Hauptmenü")
     }
 
+    /// R-7a: Drei Sterne in Mission 1 (Testschalter) geben drei Stücke. Der
+    /// Reiter „Ausrüstung“ zeigt alle Plätze, gesperrte Stücke mit ihrer Herkunft,
+    /// Anlegen und Ablegen per Tippen, und die Belegung übersteht den Neustart.
+    @MainActor
+    func testEquipmentIsChosenInTheAvatarMenuAndSurvivesRelaunch() throws {
+        let e2e = try E2EApp(["--e2e-volle-sterne", "m1"], storage: "ausruestung", avatar: .dwarves)
+        let badge = e2e.app.buttons["menu.avatar"]
+        XCTAssertTrue(badge.waitForExistence(timeout: 15))
+        badge.tap()
+        XCTAssertTrue(e2e.app.otherElements["avatar.screen"].waitForExistence(timeout: 5))
+        let tab = e2e.app.buttons["avatar.tab.equipment"]
+        XCTAssertFalse(tab.isSelected, "die Talente liegen vorn")
+        tab.tap()
+        XCTAssertTrue(tab.isSelected)
+        let watch = e2e.app.buttons["equip.watch-banner"], storm = e2e.app.buttons["equip.storm-banner"]
+        let amulet = e2e.app.buttons["equip.swift-amulet"], seal = e2e.app.buttons["equip.purse-seal"]
+        XCTAssertTrue(watch.waitForExistence(timeout: 5))
+        XCTAssertTrue(watch.isEnabled, "drei Sterne in Mission 1 geben das Wachbanner")
+        XCTAssertFalse(watch.isSelected, "angelegt wird von Hand")
+        XCTAssertTrue(watch.label.contains("Reichweite"), watch.label)
+        XCTAssertFalse(storm.isEnabled, "das Sturmbanner braucht mehr Sterne")
+        XCTAssertTrue(amulet.isEnabled, "drei Sterne geben auch das Amulett")
+        XCTAssertTrue(storm.label.contains("9 ★"), storm.label)
+        watch.tap()
+        XCTAssertTrue(watch.isSelected)
+        seal.tap()
+        XCTAssertTrue(seal.isSelected)
+        seal.tap()
+        XCTAssertFalse(seal.isSelected, "nochmal tippen legt ab")
+        e2e.screenshot("9-ausruestung", in: self)
+        assertFits([e2e.app.buttons["avatar.back"], e2e.app.buttons["avatar.tab.talents"], tab,
+                    e2e.app.staticTexts["equip.slot.banner"], watch, storm],
+                   in: e2e, hittable: false)
+        e2e.app.buttons["avatar.back"].tap()
+
+        e2e.app.terminate()
+        let again = try E2EApp(storage: "ausruestung", fresh: false)
+        let againBadge = again.app.buttons["menu.avatar"]
+        XCTAssertTrue(againBadge.waitForExistence(timeout: 15))
+        againBadge.tap()
+        again.app.buttons["avatar.tab.equipment"].tap()
+        XCTAssertTrue(again.app.buttons["equip.watch-banner"].waitForExistence(timeout: 5))
+        XCTAssertTrue(again.app.buttons["equip.watch-banner"].isSelected, "die Belegung steht im Spielstand")
+        XCTAssertFalse(again.app.buttons["equip.purse-seal"].isSelected)
+    }
+
     /// Im Querformat ist wenig Platz: Im Aufbau und auf der Tafel mit Avatar darf
     /// nichts übereinander liegen oder aus dem Bild ragen.
     @MainActor

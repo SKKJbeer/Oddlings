@@ -153,6 +153,62 @@ final class AppFlowTests: XCTestCase {
         XCTAssertEqual(reopened.screen, .menu)
     }
 
+    /// R-7a, D-070: Drei Sterne in Mission 1 geben drei Grundstücke. Sie wandern
+    /// auf freie Plätze und prägen die nächste Mission; Gesperrtes lässt sich
+    /// nicht anlegen, Ablegen geht, und die Belegung steht in der Datei.
+    @MainActor
+    func testEquipmentComesFromStarsAndShapesTheBattle() throws {
+        let flow = try makeFlow()
+        flow.showMap()
+        XCTAssertTrue(flow.createAvatar(race: .dwarves, name: "Brokk", portrait: "dwarf-1"))
+        let dwarves = try XCTUnwrap(try RaceTable.bundled()[.dwarves])
+        let table = try EquipmentTable.bundled()
+        let mission = try XCTUnwrap(flow.mission(for: "m1"))
+        XCTAssertFalse(flow.equip("watch-banner", in: .banner), "vor dem ersten Sieg gibt es nichts")
+        XCTAssertEqual(flow.equippedPieces, [])
+        XCTAssertEqual(flow.battleMission(for: "m1"), mission.applying(dwarves, talents: []))
+        XCTAssertNil(flow.avatarNews)
+
+        flow.finish("m1", outcome: .won, livesLeft: try fullLives())
+        XCTAssertEqual(flow.equippedPieces.map(\.id), ["watch-banner", "swift-amulet", "purse-seal"])
+        XCTAssertEqual(flow.avatarNews, AvatarTexts.newEquipment)
+        let pieces = try ["watch-banner", "swift-amulet", "purse-seal"].map { try XCTUnwrap(table.piece($0)) }
+        XCTAssertEqual(flow.battleMission(for: "m1"), mission.applying(dwarves, talents: [], equipment: pieces))
+        XCTAssertNotEqual(flow.battleMission(for: "m1"), mission.applying(dwarves, talents: []))
+        XCTAssertFalse(flow.equip("storm-banner", in: .banner), "das Sturmbanner braucht 9 Sterne")
+        XCTAssertFalse(flow.equip("watch-banner", in: .seal), "ein Banner gehört nicht aufs Siegel")
+        XCTAssertTrue(flow.equip(nil, in: .banner))
+        XCTAssertEqual(flow.equippedPieces.map(\.id), ["swift-amulet", "purse-seal"])
+
+        flow.openAvatar()
+        XCTAssertEqual(flow.avatarSection, .equipment, "die neue Ausrüstung liegt vorn")
+        XCTAssertNil(flow.avatarNews)
+        flow.closeAvatar()
+
+        let reopened = try makeFlow()
+        XCTAssertEqual(reopened.equippedPieces.map(\.id), ["swift-amulet", "purse-seal"], "die Belegung steht in der Datei")
+        XCTAssertTrue(reopened.owns("watch-banner"))
+        XCTAssertTrue(reopened.equip("watch-banner", in: .banner))
+        reopened.finish("m1", outcome: .won, livesLeft: try fullLives())
+        XCTAssertNil(reopened.avatarNews, "ein zweiter Sieg bringt nichts Neues")
+    }
+
+    @MainActor
+    func testEquipmentTextsNameEveryPieceAndItsNumbers() throws {
+        let table = try EquipmentTable.bundled()
+        for piece in table.pieces {
+            XCTAssertNotEqual(AvatarTexts.piece(piece.id), piece.id, "\(piece.id) hat einen Namen")
+            XCTAssertTrue(AvatarTexts.bonus(piece).contains("%"), AvatarTexts.bonus(piece))
+            XCTAssertTrue(AvatarTexts.locked(piece.source).contains("★"))
+        }
+        XCTAssertEqual(AvatarTexts.percent(1.03), "+3\u{00A0}%")
+        XCTAssertEqual(AvatarTexts.percent(0.95), "−5\u{00A0}%")
+        XCTAssertEqual(AvatarTexts.source(EquipmentSource(mission: "m1", stars: 2)), "Mission 1 mit 2 ★")
+        XCTAssertEqual(AvatarTexts.source(EquipmentSource(stars: 9)), "9 ★ in der Region")
+        let banner = try XCTUnwrap(table.piece("watch-banner"))
+        XCTAssertEqual(AvatarTexts.bonus(banner), "Wachturm: Reichweite +3\u{00A0}%")
+    }
+
     @MainActor
     func testTalentTextsNameEveryOptionAndItsNumbers() throws {
         let races = try RaceTable.bundled()

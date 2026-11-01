@@ -62,8 +62,8 @@ struct AvatarBadge: View {
     let avatar: Avatar
     var rank = 1
     var size: CGFloat = 44
-    /// Ein neuer Rang hat ein Talent freigegeben, das Avatar-Menü war noch nicht offen.
-    var newTalent = false
+    /// Was im Avatar-Menü neu ist (neues Talent, neues Stück), solange es nicht offen war.
+    var news: String?
 
     var body: some View {
         HStack(spacing: 10) {
@@ -75,11 +75,11 @@ struct AvatarBadge: View {
                     .foregroundStyle(UITheme.cream)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
-                Text(newTalent ? AvatarTexts.newTalent : CampaignTexts.race(avatar.race))
+                Text(news ?? CampaignTexts.race(avatar.race))
                     .font(UITheme.bodyHeavy(13))
-                    .foregroundStyle(newTalent ? UITheme.outline : UITheme.coin)
-                    .padding(.horizontal, newTalent ? 6 : 0)
-                    .background(Capsule().fill(newTalent ? UITheme.goldFace : .clear))
+                    .foregroundStyle(news != nil ? UITheme.outline : UITheme.coin)
+                    .padding(.horizontal, news != nil ? 6 : 0)
+                    .background(Capsule().fill(news != nil ? UITheme.goldFace : .clear))
             }
         }
         .padding(.leading, 4)
@@ -88,7 +88,7 @@ struct AvatarBadge: View {
         .background(Capsule().fill(UITheme.outline.opacity(0.6)))
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(AvatarTexts.badge(avatar, rank: rank))
-        .accessibilityValue(newTalent ? AvatarTexts.newTalent : "")
+        .accessibilityValue(news ?? "")
     }
 }
 

@@ -17,7 +17,7 @@ struct MainMenuView: View {
     /// Avatarschild oben links neben den Einstellungen (R-5); fehlt vor dem Aufbau.
     var avatar: Avatar?
     var rank = 1
-    var newTalent = false
+    var news: String?
     /// Das Schild öffnet das Avatar-Menü (R-6).
     var onAvatar: () -> Void = {}
 
@@ -54,7 +54,7 @@ struct MainMenuView: View {
                             .accessibilityIdentifier("menu.settings")
                             if let avatar {
                                 Button(action: onAvatar) {
-                                    AvatarBadge(avatar: avatar, rank: rank, newTalent: newTalent)
+                                    AvatarBadge(avatar: avatar, rank: rank, news: news)
                                 }
                                 .buttonStyle(.plain)
                                 .accessibilityIdentifier("menu.avatar")
