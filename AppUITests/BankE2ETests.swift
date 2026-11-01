@@ -6,6 +6,7 @@ import XCTest
 final class BankE2ETests: XCTestCase {
     override func setUp() { continueAfterFailure = false }
 
+    @MainActor
     private func launch() throws -> E2EApp {
         // Welle zurückgehalten: Bis zur ersten Auszahlung vergeht mehr Zeit als
         // bis zum Ablesen, also stimmt der Goldvergleich genau.
