@@ -1,7 +1,9 @@
 # Rückmeldung je Ereignis
 
 Status: **[VORSCHLAG]**, Bildspalte umgesetzt in FX 01
-([Konzept](../konzepte/fx-01-bewegung-und-effekte.md); Haptik: UI 01; Ton: K9) · Umsetzung der Empfehlungen E1–E3 aus der
+([Konzept](../konzepte/fx-01-bewegung-und-effekte.md); Haptik: UI 01), Tonspalte
+umgesetzt in 0.15.0 ([Konzept P2-3](../konzepte/p2-3-ton-und-musik.md), dort die
+Zuordnung zu den Dateien; Wellenstart mit Gong statt Horn, Ende über die Musik) · Umsetzung der Empfehlungen E1–E3 aus der
 [Marktanalyse](../game-design/market-analysis.md). Abnahmekriterium für die
 Darstellung: Jede Zeile hat Bild, Ton und, wo genannt, Haptik. Nichts passiert
 stumm. Die Ereignisse sind die der Simulation (Architekturregel 3); keine Zeile
@@ -30,6 +32,6 @@ Welle nicht die Lesbarkeit (Säule 2) zerstören.
 
 ## Grenzen gegen Überladung
 
-- Höchstens vier gleichzeitige Klänge derselben Art; weitere entfallen.
+- Höchstens vier gleichzeitige Klänge derselben Art; weitere entfallen (`SoundLimiter`, Werte je Klang in `AudioStyle`).
 - Treffer-Aufblitzen je Gegner höchstens alle 0,1 s.
 - Bei 2× Geschwindigkeit werden Dauern nicht halbiert, sondern Effekte zusammengefasst.

@@ -12,7 +12,8 @@ Kampagnenkarte Region 1 mit Sternen, Steinregen, Völker Zwerge/Elfen, Avatar ei
 Anfang (0.11.0), Avatarrang mit Talenten und eigenem Avatar-Menü (0.12.0). Grafik 01
 bis 05 (zuletzt Kampfplatz und Zwergenfeste, 0.11.1), Effekte an Ereignissen über
 `App/Battle/Fx/FxDirector` (FX 01, D-050). Der Plünderer
-läuft mit Gliedmaßen aus 3D (FX 02, 0.13.0). Als Nächstes R-7 Ausrüstung (D-066). Reihenfolge und was
+läuft mit Gliedmaßen aus 3D (FX 02, 0.13.0). Ton und Musik (P2-3, 0.15.0):
+Klänge an Ereignissen über `App/Audio/AudioDirector`, nur CC0-Quellen (D-082, `art/ton/`). Als Nächstes R-7 Ausrüstung (D-066). Reihenfolge und was
 auf Steffen wartet: [Roadmap](docs/production/roadmap.md), Kurzstand:
 [status.md](docs/production/status.md), Versionen: [CHANGELOG.md](CHANGELOG.md).
 Projekt erzeugen: `xcodegen generate` (Xcode-Projekt ist nicht eingecheckt).

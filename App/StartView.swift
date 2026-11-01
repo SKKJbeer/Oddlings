@@ -7,6 +7,7 @@ import SwiftUI
 struct StartView: View {
     @State private var flow: AppFlow
     @State private var showsSettings = false
+    @Environment(\.scenePhase) private var scenePhase
 
     init() {
         let campaign: CampaignConfig
@@ -36,6 +37,29 @@ struct StartView: View {
     }
 
     var body: some View {
+        screen
+            .onAppear { updateMusic() }
+            .onChange(of: flow.screen) { _, _ in updateMusic() }
+            // Im Hintergrund schweigt alles; die Schlacht pausiert dort ohnehin.
+            .onChange(of: scenePhase) { _, phase in
+                if phase == .background { AudioDirector.shared.suspend() }
+                if phase == .active { AudioDirector.shared.resume() }
+            }
+            #if DEBUG
+            .overlay { AudioStatsOverlay() }
+            #endif
+    }
+
+    /// Menü, Karte, Avatar und Leistungsprobe teilen die Menümusik; die
+    /// Schlacht setzt ihre Lage selbst (`BattleView`, Szene).
+    private func updateMusic() {
+        switch flow.screen {
+        case .battle, .watch: break
+        case .menu, .setup, .map, .avatar, .spike: AudioDirector.shared.setMood(.menu)
+        }
+    }
+
+    @ViewBuilder private var screen: some View {
         switch flow.screen {
         case .menu:
             MainMenuView(
@@ -82,5 +106,8 @@ enum MenuTexts {
     static let settings = "Einstellungen"
     static let vibration = "Vibration"
     static let done = "Fertig"
-    static let soundLater = "Klänge und Musik kommen mit dem Ton. Oddlings spielt offline und ohne Konto."
+    static let sound = "Klänge"
+    static let music = "Musik"
+    static func percent(_ value: Double) -> String { "\(Int((value * 100).rounded())) %" }
+    static let offline = "Oddlings spielt offline und ohne Konto. Musik und Klänge sind frei lizenziert (CC0)."
 }

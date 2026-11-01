@@ -184,6 +184,18 @@ final class BattleControllerTests: XCTestCase {
         XCTAssertEqual(felt, [.selection, .selection, .medium, .heavy])
     }
 
+    /// Ton zur eigenen Handlung (P2-3): Tippen, Vorschau, Welle rufen, Aufgeben.
+    func testOwnActionsAreHeard() {
+        var heard: [SoundMoment] = []
+        controller.sounds = { heard.append($0) }
+        controller.tap(freeCell)
+        controller.choose(.watch)
+        controller.callNextWave()
+        controller.togglePause()
+        controller.giveUp()
+        XCTAssertEqual(heard, [.user(.selectCell), .user(.preview), .user(.callWave), .missionEnded(won: false)])
+    }
+
     func testWatchingIsNotFelt() {
         let demo = BattleModel(config: config, seed: 1, autoplay: true)
         let watching = BattleController(model: demo, interactive: false)

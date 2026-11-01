@@ -114,6 +114,9 @@ Gehört zu Phase 2 (Menüs und Führung). Abhängigkeit zum Thread „Spieloberf
 
 ## K9 · Ton und Haptik
 
+**Umgesetzt** in 0.15.0: [Konzept P2-3](p2-3-ton-und-musik.md), Musik dauerhaft
+CC0 (D-082). Der Text unten ist der ursprüngliche Vorschlag.
+
 Übergabe: Phase 2 „Soundeffekte und Animationen" · Marktanalyse E1, Abschnitt 3
 
 **Lücke in der Planung:** Für Grafik gibt es einen Weg (D-016, Skill

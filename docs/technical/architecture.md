@@ -101,6 +101,8 @@ Oddlings/
 │   ├── Avatar/                  Avatar-Aufbau, Avatar-Menü, Porträtkatalog
 │   ├── Battle/                  Mission: Takt, Szene, Bedienung, HUD, Kreismenü
 │   │   └── Fx/                  Bewegung und Effekte an Ereignissen (D-050)
+│   ├── Audio/                   Klänge und Musik an Ereignissen (P2-3, D-082)
+│   │   └── Sounds/              erzeugt von tools/ton/ton_bauen.py aus art/ton/klaenge.json
 │   ├── Spike/                   Leistungsprobe WP-01, Wegwerfcode
 │   └── Assets.xcassets/         Battle.spriteatlas, Maps, UI, Avatar, AppIcon
 ├── AppTests/                    Darstellungstests (XCTest, nur macOS-CI)
@@ -156,6 +158,7 @@ unberührt, und jede Kombination ist eine geprüfte Konfiguration.
 | `Avatar/` | `AvatarSetupView` (R-5), `AvatarScreen` (R-6, eigener Schirm zum Ausbauen), `AvatarPortraits` | Avatar anlegen, Talent wählen (über `AppFlow`) | Talentwerte kennen (stehen in `races.json`) |
 | `Battle/` | `BattleModel` (Takt), `BattleScene`, `BattleController` (Tippen → Befehle), `BattleHUD`, `RingMenu`, `BoardLayout`, `HudLayout` | Befehle erzeugen, Zustand und Ereignisse lesen | Gold, Leben oder Gegner direkt ändern (Regel 2) |
 | `Battle/Fx/` | `FxDirector` spielt Effekte an Ereignissen auf eigener Uhr, dazu Treffer- und Sturzbilder (FX 02); `FxMath` rein, auch die Bildwahl je Strecke (`walkFrame`); `FxProbe`, `FxStatsOverlay` nur für Messung und E2E | gepoolte Sprites, Tweens im Bildtakt | `SKAction`/`SKShapeNode` für flüchtige Effekte, Zustand anfassen (D-050) |
+| `Audio/` | `AudioDirector` nimmt `SoundMoment`s aus Szene und Bedienung und Lagen aus den Schirmen, `SoundMap` (rein: Moment → Klang, Lage), `SoundLimiter` (rein: Stimmen und Abstand je Klang), `AudioStyle` (Mischung), `AudioEngine` (AVAudioEngine für Klänge, AVAudioPlayer für Musik, Audiositzung `.ambient`), `AudioStatsOverlay` nur für E2E | Klänge und Musik spielen, Lautstärke aus `AppSettings` | Spielzustand lesen oder ändern, Netz, Fremdbibliotheken ([Konzept](../konzepte/p2-3-ton-und-musik.md)) |
 | `Spike/` | Leistungsprobe WP-01 | – | wird nach der Messung gelöscht |
 
 ### Datenfluss beim Missionsstart
@@ -167,7 +170,7 @@ Spielstand (SaveStore) ──▶ AppFlow: Avatar (Volk, Talente), Fortschritt (S
                                                                           │
                        BattleModel ── Befehle ──▶ Simulation.step ──▶ Zustand + Ereignisse
                             ▲                                              │
-                 BattleController (Tippen)            BattleScene, FxDirector, HUD, FeedbackPlayer
+                 BattleController (Tippen)     BattleScene, FxDirector, AudioDirector, HUD, FeedbackPlayer
                                                                           │
                                          Sieg ──▶ AppFlow trägt Sterne ein ──▶ SaveStore
 ```

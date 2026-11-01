@@ -12,7 +12,7 @@ Entscheidungskarte beantwortet. Alles, was auf ihn wartet, steht unter
 zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzelnen:
 [backlog.md](backlog.md), offene Fragen: [offene-fragen.md](offene-fragen.md).
 
-**Stand: 01.11.2026** · neueste Version 0.13.0 (Bau läuft), neuester VALID-Bau 33 (0.12.0)
+**Stand: 01.11.2026** · neueste Version 0.15.0 (Ton und Musik, Bau läuft), neuester VALID-Bau 33 (0.12.0)
 
 ## Phasen
 
@@ -45,7 +45,7 @@ Spieltest läuft parallel. Was davor steht, wird zuerst gebaut. Steffen kann ums
 | 2 | P2-5 **Mission 2 mit Zwergenbank** (Knoten M2 der Karte); Rang II und die erste Talentwahl werden spielbar. Werte [HYPOTHESE], nach WP-15 nachgezogen | neuer Thread (beim Coordinator angefragt) | – | Konzept K3 steht, startet jetzt |
 | 3 | **R-7a Ausrüstung** im Avatar-Menü (D-066, D-069, D-070): feste Belohnungen, danach R-7b Schmiede mit Spielwährung | Haupt-Thread | R-6 | [Konzept](../konzepte/r-7-ausruestung.md) steht, Umsetzung läuft |
 | 4 | **WP-15 Spieltest** parallel, danach Werte von Mission 1 und 2 nachziehen und Phase 2 schneiden | Steffen | S3 | wartet |
-| 5 | P2-3 **Ton und Musik** (K9) | neuer Thread | – | Weg offen |
+| 5 | ~~P2-3 Ton und Musik~~ ([Konzept](../konzepte/p2-3-ton-und-musik.md)) | Ton und Musik | – | ✓ 0.15.0 |
 | 6 | FX 02 Flitzer und Panzerbestie | Plünderer-3D-Modell | Steffens Urteil am Plünderer im Spiel | – |
 | 7 | P2-6 Mission 3 mit Aufwertungen, P2-6b Balance-Labor, P2-2 Fortsetzen, P2-8 Synergie sichtbar, P2-9 Abstimmung | – | 2 | Konzepte K1, K6, K8, K11 |
 
@@ -73,6 +73,7 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | Grafik 05: Kampfplatz als Lichtung, Zwergenfeste, Porträts | 0.11.1 | 32 | [Konzept](../konzepte/grafik-05-kampfplatz.md) |
 | R-6: Avatarrang, Talente, Avatar-Menü (D-064, D-065) | 0.12.0 | 33 | [Konzept](../konzepte/r-6-avatarrang.md) |
 | FX 02: Plünderer mit Gliedmaßen aus 3D (D-051, D-052) | 0.13.0 | offen | [Konzept](../konzepte/fx-02-figuren-in-3d.md) |
+| P2-3: Ton und Musik, nur CC0 (D-082) | 0.15.0 | offen | [Konzept](../konzepte/p2-3-ton-und-musik.md) |
 
 ## Gilt für jedes Paket
 
@@ -130,7 +131,7 @@ Phase wie oben: Eine Mission wirkt wie das fertige Spiel.
 |---|---|---|---|---|
 | P2-1 | Grafik einbauen: Atlas ✓ 0.5.2, Effekte ✓ 0.10.0 (FX 01), Laufzyklen aus 3D in Arbeit (FX 02) | M1.3, Atlas aus dem Grafik-Thread | Art-Direction | D-016 |
 | P2-2 | Fortsetzen einer laufenden Mission nach App-Ende (Speicherstand selbst kommt mit R-1) | R-1 | K6 | D-022 |
-| P2-3 | Ton und Haptik | P2-1 (Rückmeldeliste) | K9 | Weg offen, neuer Thread |
+| P2-3 | Ton und Haptik: Klänge, Musik, Regler ✓ 0.15.0 (nur CC0, D-082) | P2-1 (Rückmeldeliste) | K9 | ✓ 0.15.0 |
 | P2-4 | Menüs, Pause, Einstellungen, Ergebnis im Stil: ✓ 0.6.0 und 0.7.0 | M1.3, Oberflächen-Thread | [07](../game-design/07-ui-ux.md) | D-031, D-032 |
 | P2-5 | Zwergenbank und Bonus für frühes Rufen | – (D-080: startet vor dem Spieltest, Werte nach M1.4 nachziehen) | K3 | D-026 |
 | P2-6 | Aufwertungen mit Gabelung, Zielwahl | P2-5 (gleiche Wirtschaftsrechnung) | K1 | D-024 |

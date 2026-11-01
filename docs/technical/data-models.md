@@ -165,7 +165,7 @@ den Avatarrang. `StarRating` vergibt 1 bis 3 Sterne aus übrigen Leben.
 `SaveGame { schemaVersion = 2, progress: CampaignProgress, avatar: Avatar? }` als
 JSON in Application Support (`SaveLocation`). `SaveStore` schreibt atomar, behält die
 vorige Fassung und prüft beim Laden: Ein kaputter Teil kostet nur diesen Teil
-(Avatar, Talentwahl), nie den Fortschritt. Einstellungen (Klang, Vibration) liegen
+(Avatar, Talentwahl), nie den Fortschritt. Einstellungen (Lautstärke Klänge und Musik 0…1, beim Laden begrenzt; Vibration) liegen
 getrennt in `AppSettings`, weil sie dem Gerät gehören. Noch nicht umgesetzt:
 `suspendedMission` (Fortsetzen einer laufenden Mission, P2-2).
 
