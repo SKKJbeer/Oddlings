@@ -12,7 +12,7 @@ Entscheidungskarte beantwortet. Alles, was auf ihn wartet, steht unter
 zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzelnen:
 [backlog.md](backlog.md), offene Fragen: [offene-fragen.md](offene-fragen.md).
 
-**Stand: 01.11.2026** · neueste Version 0.15.0 (Ton und Musik, Bau läuft), neuester VALID-Bau 33 (0.12.0)
+**Stand: 01.11.2026** · neueste Version 0.16.0 (Mission 2 mit Zwergenbank, Bau läuft), neuester VALID-Bau 35 (0.15.0)
 
 ## Phasen
 
@@ -72,9 +72,9 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | R-5: Avatar einmal am Anfang (D-063) | 0.11.0 | 31 | [Konzept](../konzepte/r-5-avatar.md) |
 | Grafik 05: Kampfplatz als Lichtung, Zwergenfeste, Porträts | 0.11.1 | 32 | [Konzept](../konzepte/grafik-05-kampfplatz.md) |
 | R-6: Avatarrang, Talente, Avatar-Menü (D-064, D-065) | 0.12.0 | 33 | [Konzept](../konzepte/r-6-avatarrang.md) |
-| FX 02: Plünderer mit Gliedmaßen aus 3D (D-051, D-052) | 0.13.0 | offen | [Konzept](../konzepte/fx-02-figuren-in-3d.md) |
+| FX 02: Plünderer mit Gliedmaßen aus 3D (D-051, D-052) | 0.13.0 | 34 | [Konzept](../konzepte/fx-02-figuren-in-3d.md) |
 | P2-5: Mission 2 mit Zwergenbank und Bonus für frühes Rufen (D-026, D-083) | 0.16.0 | offen | [Konzept](../konzepte/p2-5-mission-2-zwergenbank.md) |
-| P2-3: Ton und Musik, nur CC0 (D-082) | 0.15.0 | offen | [Konzept](../konzepte/p2-3-ton-und-musik.md) |
+| P2-3: Ton und Musik, nur CC0 (D-082) | 0.15.0 | 35 | [Konzept](../konzepte/p2-3-ton-und-musik.md) |
 
 ## Gilt für jedes Paket
 

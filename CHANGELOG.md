@@ -11,6 +11,11 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## Dokumente, kein Bau – 01.11.2026 (Bauten 34 und 35)
+
+- Bau 34 (0.13.0) und Bau 35 (0.15.0) von Apple als VALID gemeldet, in Roadmap
+  und Stand eingetragen.
+
 ## 0.16.0 – 01.11.2026 (P2-5: Mission 2 mit Zwergenbank) · Bau offen
 
 - **Mission 2** spielbar, nach dem Sieg in Mission 1 auf der Kampagnenkarte offen:
@@ -34,7 +39,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   klingen als leise Münze, die leere Bank bleibt stumm (`SoundMapTests`).
 - `scripts/swift-linux.sh`: `/etc/os-release` überschrieb die Swift-Version.
 
-## 0.15.0 – 01.11.2026 (P2-3: Ton und Musik), Bau offen
+## 0.15.0 – 01.11.2026 (P2-3: Ton und Musik), Bau 35
 
 **Neu**
 - Klänge an den Spielereignissen: Bauen, Verkaufen, Schüsse je Turm (der Blitz
@@ -78,7 +83,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - D-070: Ausrüstung kommt aus festen Belohnungen (R-7a) und einer Schmiede mit
   Spielwährung (R-7b, eigenes Konzept).
 
-## 0.13.0 – 01.11.2026 (FX 02: Plünderer mit Gliedmaßen), Bau offen
+## 0.13.0 – 01.11.2026 (FX 02: Plünderer mit Gliedmaßen), Bau 34
 
 **Neu**
 - Der Plünderer geht, zuckt bei Treffern und stürzt als echte Figur mit Armen und
