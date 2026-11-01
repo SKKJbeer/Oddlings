@@ -35,7 +35,7 @@ anderthalb Stunden), aber kurz genug, dass man das Ende sieht und mehr will.
 | Mission | Neu | Lehrt |
 |---|---|---|
 | M1 | Wach-, Blitz-, Sporenturm; Plünderer, Flitzer | Grundspiel (heutige Mission 1) |
-| M2 | Zwergenbank | Ernten oder verteidigen |
+| M2 | Zwergenbank | Ernten oder verteidigen (spielbar ab 0.16.0) |
 | M3 | Aufwerten Stufe 2, Zielwahl | Vertiefen statt verbreitern |
 | M4 | Festungsfähigkeit; Panzerbestie | Aktiv eingreifen, zähe Ziele |
 | M5a/b, M6a/b | Spezialisierungen (je Weg andere zuerst) | Gabelung: Sumpf schickt Flitzer, Ruinen schicken Panzerbestien |

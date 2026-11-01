@@ -58,7 +58,7 @@ final class BuildAndSellE2ETests: XCTestCase {
         let e2e = try E2EApp(["--play", "--e2e-erste-welle", E2EApp.wavesOnHold])
         e2e.waitForBoard()
         var cells = e2e.map.buildableCells.makeIterator()
-        let cheapest = TowerKind.allCases.min { e2e.cost($0) < e2e.cost($1) }!
+        let cheapest = e2e.config.buildable.min { e2e.cost($0) < e2e.cost($1) }!
         var expected = e2e.config.mission.startGold
         while expected >= e2e.cost(cheapest), let cell = cells.next() {
             e2e.build(cheapest, at: cell)

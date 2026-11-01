@@ -22,7 +22,13 @@ struct StartView: View {
         // Bildschirmfoto die Szene zeigt; die Oberflächentests der Mission
         // starten direkt das eigene Spiel.
         let arguments = ProcessInfo.processInfo.arguments
-        let first = campaign.nodes[0].id
+        var first = campaign.nodes[0].id
+        #if DEBUG
+        // Oberflächentests einer bestimmten Mission (P2-5: Mission 2 mit Bank).
+        if let node = SaveLocation.argument(after: "--e2e-knoten"), campaign.nodes.contains(where: { $0.id == node }) {
+            first = node
+        }
+        #endif
         let screen: AppFlow.Screen = arguments.contains("--demo") ? .watch
             : arguments.contains("--play") ? .battle(node: first) : .menu
         let flow = AppFlow(campaign: campaign, store: SaveLocation.store(), screen: screen)

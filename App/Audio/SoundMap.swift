@@ -19,6 +19,8 @@ enum SoundMap {
         case .fired(.lightning, let links, let combo):
             [Request(cue: .boltShot, semitones: boltPitch(links: links))] + (combo ? [Request(cue: .combo)] : [])
         case .fired(.spore, _, _): [Request(cue: .sporePuff)]
+        // Die Bank schießt nicht; sie meldet sich nur beim Auszahlen.
+        case .fired(.bank, _, _): []
         case .damaged: [Request(cue: .hit)]
         case .slowed: [Request(cue: .slowed)]
         case .killed: [Request(cue: .enemyPop), Request(cue: .coin)]
@@ -30,6 +32,8 @@ enum SoundMap {
         case .abilityImpact(let moon): [Request(cue: moon ? .moonImpact : .stoneImpact)]
         case .wallRaised: [Request(cue: .wallUp)]
         case .wallFell: [Request(cue: .wallDown)]
+        // Leise Münze statt eigenem Klang: Gold kommt herein, wie beim Sturz.
+        case .bankPaid, .earlyCallBonus: [Request(cue: .coin)]
         case .user(let action): [Request(cue: cue(for: action))]
         }
     }

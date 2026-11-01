@@ -58,7 +58,8 @@ Hier stehen Rollen und Regeln.
 ### Zwergenbank – Wirtschaft (Phase 2) [ENTSCHIEDEN: Rolle und Zeitpunkt]
 
 Kein Kampfschaden. Erträgt nach einer Verzögerung Gold. Regeln und Kennzahlen in
-[04](04-economy-and-balance.md#zwergenbank-phase-2).
+[04](04-economy-and-balance.md#zwergenbank-phase-2). Spielbar ab Mission 2
+(0.16.0, P2-5); Mission 1 bietet sie nicht an.
 
 ## Die Kernsynergie und wie Mission 1 sie lehrt
 

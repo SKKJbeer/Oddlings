@@ -23,4 +23,4 @@ kommen sie mit dem Arbeitspaket, das sie anzeigt.
 **Turmsymbole fürs Baumenü:** `ui_tower_watch`, `ui_tower_lightning`, `ui_tower_spore` sind keine
 eigenen Bilder, sondern die freigestellten Turmbilder aus `art/spielfeld/` (`tower_<turm>-frei.png`),
 mittig auf 40 pt gesetzt (`atlas.py … 40pt mitte`). Eine Quelle, damit Menü und Spielfeld nie
-auseinanderlaufen.
+auseinanderlaufen. `ui_tower_bank` (P2-5, Mission 2) kommt genauso aus `art/phase-2/tower_bank-frei.png`.

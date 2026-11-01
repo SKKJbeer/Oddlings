@@ -118,9 +118,9 @@ extension BalanceConfig {
         config.ability = race.ability
         for kind in TowerKind.allCases {
             if let factor = race.rangeFactor?[kind] { config.towers[kind]?.range *= factor }
-            if let factor = race.costFactor?[kind], let cost = config.towers[kind]?.cost {
-                config.towers[kind]?.cost = Int((Double(cost) * factor).rounded())
-            }
+            guard let factor = race.costFactor?[kind], let cost = config.cost(of: kind) else { continue }
+            let scaled = Int((Double(cost) * factor).rounded())
+            if kind == .bank { config.bank?.cost = scaled } else { config.towers[kind]?.cost = scaled }
         }
         return config
     }

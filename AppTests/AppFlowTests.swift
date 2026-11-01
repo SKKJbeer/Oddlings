@@ -90,19 +90,23 @@ final class AppFlowTests: XCTestCase {
         flow.start("m2")
         XCTAssertEqual(flow.screen, .map, "gesperrt: kein Start")
         flow.finish("m1", outcome: .won, livesLeft: 1)
-        flow.start("m2")
+        flow.finish("m2", outcome: .won, livesLeft: 1)
+        flow.start("m3")
         XCTAssertEqual(flow.screen, .map, "in Arbeit: kein Start")
-        flow.start("m1")
-        XCTAssertEqual(flow.screen, .battle(node: "m1"))
+        flow.start("m2")
+        XCTAssertEqual(flow.screen, .battle(node: "m2"), "Mission 2 hat eine Karte (P2-5)")
     }
 
+    /// Weiter führt zur nächsten spielbaren Mission und bleibt auf der letzten,
+    /// solange danach nichts gebaut ist.
     @MainActor
-    func testContinueStaysOnMissionOneUntilMoreIsBuilt() throws {
+    func testContinueStopsAtTheLastBuiltMission() throws {
         let flow = try makeFlow()
         XCTAssertEqual(flow.continueNode?.id, "m1")
         flow.finish("m1", outcome: .won, livesLeft: 1)
-        XCTAssertEqual(flow.continueNode?.id, "m1")
-        XCTAssertEqual(flow.selectedNode, "m1")
+        XCTAssertEqual(flow.continueNode?.id, "m2")
+        flow.finish("m2", outcome: .won, livesLeft: 1)
+        XCTAssertEqual(flow.continueNode?.id, "m2", "Mission 3 ist noch in Arbeit")
     }
 
     /// R-6: Alle sechs Sterne ein Rang. Ein Sieg, der die Summe auf sechs hebt,

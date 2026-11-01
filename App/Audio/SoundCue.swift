@@ -13,6 +13,8 @@ enum SoundMoment: Equatable, Sendable {
     case abilityCast
     case abilityImpact(moon: Bool)
     case wallRaised, wallFell
+    /// Zwergenbank zahlt aus bzw. frühes Rufen schreibt Gold gut (P2-5).
+    case bankPaid, earlyCallBonus
     case user(UserAction)
 }
 

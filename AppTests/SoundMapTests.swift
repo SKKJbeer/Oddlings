@@ -12,6 +12,7 @@ final class SoundMapTests: XCTestCase {
             .fired(.spore, links: 3, combo: false), .damaged, .slowed, .killed, .leaked,
             .waveStarted(index: 0, count: 5), .abilityCast, .abilityImpact(moon: false), .abilityImpact(moon: true),
             .wallRaised, .wallFell, .user(.selectCell), .user(.callWave), .user(.cannotAfford),
+            .bankPaid, .earlyCallBonus,
         ]
         for moment in moments { XCTAssertFalse(cues(moment).isEmpty, "\(moment) klingt") }
         // Das Ende trägt die Musik, nicht ein Klang.
@@ -19,8 +20,14 @@ final class SoundMapTests: XCTestCase {
     }
 
     func testEachTowerHasItsOwnVoice() {
-        let voices = TowerKind.allCases.map { cues(.fired($0, links: 1, combo: false)) }
-        XCTAssertEqual(Set(voices.map { $0.first }).count, TowerKind.allCases.count)
+        let voices = TowerKind.combat.map { cues(.fired($0, links: 1, combo: false)) }
+        XCTAssertEqual(Set(voices.map { $0.first }).count, TowerKind.combat.count)
+    }
+
+    func testBankIsSilentUntilItPays() {
+        XCTAssertTrue(cues(.fired(.bank, links: 0, combo: false)).isEmpty)
+        XCTAssertEqual(cues(.bankPaid), [.coin])
+        XCTAssertEqual(cues(.earlyCallBonus), [.coin])
     }
 
     func testSporeSparkHasItsOwnSound() {
