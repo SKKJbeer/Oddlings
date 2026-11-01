@@ -12,7 +12,7 @@ Entscheidungskarte beantwortet. Alles, was auf ihn wartet, steht unter
 zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzelnen:
 [backlog.md](backlog.md), offene Fragen: [offene-fragen.md](offene-fragen.md).
 
-**Stand: 27.10.2026** · neueste Version 0.12.0 (Bau läuft), neuester VALID-Bau 32 (0.11.1)
+**Stand: 01.11.2026** · neueste Version 0.13.0 (Bau läuft), neuester VALID-Bau 33 (0.12.0)
 
 ## Phasen
 
@@ -34,7 +34,6 @@ zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzeln
 | S3 | **Spieltest mit drei Personen** auf dem neuesten Bau, [Beobachtungsbogen](playtests/beobachtungsbogen.md) | WP-15 | Abschluss Phase 1, Schnitt Phase 2, D-030, Werte D-007 | so bald wie möglich |
 | S4 | Leistung des Spikes auf dem iPhone messen | WP-01 | nichts Akutes; D-002 gilt bis dahin | ohne Eile |
 | S6 | **Was nach R-6 als Nächstes?** (Entscheidungskarte seit 27.10.) | Thread „Architektur, Doku und Roadmap nachziehen“ | Reihenfolge unter „Als Nächstes“ | Mission 2 jetzt, Spieltest parallel |
-| S5 | Kommt mit R-7: Herkunft der Ausrüstung und Obergrenze der Boni (Karten folgen) | Haupt-Thread | R-7 Umsetzung | – |
 
 ## Als Nächstes
 
@@ -43,14 +42,13 @@ umsortieren.
 
 | # | Paket | Thread | Abh. | Stand |
 |---|---|---|---|---|
-| 1 | 0.12.0 Bau in TestFlight, Baunummer eintragen | Haupt-Thread | – | läuft |
-| 2 | ~~FX 02 Plünderer mit Gliedmaßen~~ ([Konzept](../konzepte/fx-02-figuren-in-3d.md)) | Plünderer-3D-Modell | – | ✓ 0.13.0 |
-| 3 | **R-7 Ausrüstung** im Avatar-Menü (D-066): Konzept, Karten, Umsetzung | Haupt-Thread | R-6, S5 | Konzept als Nächstes |
-| 4 | **WP-15 Spieltest**, danach Phase 2 schneiden | Steffen | S3 | wartet |
-| 5 | P2-5 **Mission 2 mit Zwergenbank** (Knoten M2 der Karte); erster Talentrang wird erreichbar | – | WP-15 (Balance) | Konzept K3 steht |
-| 6 | P2-3 **Ton und Musik** (K9) | neuer Thread | – | Weg offen |
-| 7 | FX 02 Flitzer und Panzerbestie | Plünderer-3D-Modell | Steffens Urteil am Plünderer im Spiel | – |
-| 8 | P2-6 Mission 3 mit Aufwertungen, P2-6b Balance-Labor, P2-2 Fortsetzen, P2-8 Synergie sichtbar, P2-9 Abstimmung | – | 5 | Konzepte K1, K6, K8, K11 |
+| 1 | ~~FX 02 Plünderer mit Gliedmaßen~~ ([Konzept](../konzepte/fx-02-figuren-in-3d.md)) | Plünderer-3D-Modell | – | ✓ 0.13.0 |
+| 2 | **R-7a Ausrüstung** im Avatar-Menü (D-066, D-069, D-070): feste Belohnungen, danach R-7b Schmiede mit Spielwährung | Haupt-Thread | R-6 | [Konzept](../konzepte/r-7-ausruestung.md) steht, Umsetzung läuft |
+| 3 | **WP-15 Spieltest**, danach Phase 2 schneiden | Steffen | S3 | wartet |
+| 4 | P2-5 **Mission 2 mit Zwergenbank** (Knoten M2 der Karte); erster Talentrang wird erreichbar | – | WP-15 (Balance) | Konzept K3 steht |
+| 5 | P2-3 **Ton und Musik** (K9) | neuer Thread | – | Weg offen |
+| 6 | FX 02 Flitzer und Panzerbestie | Plünderer-3D-Modell | Steffens Urteil am Plünderer im Spiel | – |
+| 7 | P2-6 Mission 3 mit Aufwertungen, P2-6b Balance-Labor, P2-2 Fortsetzen, P2-8 Synergie sichtbar, P2-9 Abstimmung | – | 4 | Konzepte K1, K6, K8, K11 |
 
 ## Ausgeliefert
 
@@ -74,7 +72,7 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | Fähigkeitstest unabhängig vom Läufer | 0.10.3 | 30 | – |
 | R-5: Avatar einmal am Anfang (D-063) | 0.11.0 | 31 | [Konzept](../konzepte/r-5-avatar.md) |
 | Grafik 05: Kampfplatz als Lichtung, Zwergenfeste, Porträts | 0.11.1 | 32 | [Konzept](../konzepte/grafik-05-kampfplatz.md) |
-| R-6: Avatarrang, Talente, Avatar-Menü (D-064, D-065) | 0.12.0 | läuft | [Konzept](../konzepte/r-6-avatarrang.md) |
+| R-6: Avatarrang, Talente, Avatar-Menü (D-064, D-065) | 0.12.0 | 33 | [Konzept](../konzepte/r-6-avatarrang.md) |
 | FX 02: Plünderer mit Gliedmaßen aus 3D (D-051, D-052) | 0.13.0 | offen | [Konzept](../konzepte/fx-02-figuren-in-3d.md) |
 
 ## Gilt für jedes Paket
@@ -111,7 +109,8 @@ Spieltest WP-15 wartet nicht darauf.
 | R-4 | Völker Zwerge (Bollwerk, Wachtürme billiger D-062) und Elfen (Mondmal) | R-1, R-3 | ✓ 0.9.0, 0.10.1 |
 | R-5 | Avatar einmal am Anfang: Volk, Porträt, Name (D-063) | R-4 | ✓ 0.11.0, Porträts 0.11.1 |
 | R-6 | Avatarrang mit Talentwahl, eigenes Avatar-Menü (D-064, D-065) | R-5 | ✓ 0.12.0 |
-| R-7 | **Ausrüstung mit kleinen Boni** im Avatar-Menü (D-066) | R-6, S5 | Konzept als Nächstes |
+| R-7a | **Ausrüstung mit kleinen Boni** im Avatar-Menü, feste Belohnungen (D-066, D-069, D-070) | R-6 | Konzept steht, Umsetzung läuft |
+| R-7b | **Schmiede** mit Spielwährung im Avatar-Menü (D-070) | R-7a | Konzept offen |
 
 ## Parallel: Grafik und Bewegung
 

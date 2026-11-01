@@ -6,7 +6,7 @@ ergänzt, D-067). Reihenfolge, Pakete und alles, was auf dich wartet, stehen in 
 [Register](offene-fragen.md).
 
 **Stand: 01.11.2026** · Neueste Version **0.13.0** (Plünderer mit Gliedmaßen), Bau läuft;
-davor 0.12.0 (Avatarrang und Avatar-Menü); neuester VALID-Bau 32 (0.11.1). Der Spielrahmen R-1 bis R-6 steht. Spielbar ist Mission 1.
+davor 0.12.0 (Avatarrang und Avatar-Menü); neuester VALID-Bau 33 (0.12.0). Der Spielrahmen R-1 bis R-6 steht. Spielbar ist Mission 1.
 
 ## Wartet auf dich
 
@@ -41,7 +41,7 @@ davor 0.12.0 (Avatarrang und Avatar-Menü); neuester VALID-Bau 32 (0.11.1). Der 
 
 | Thread | Woran | Nächster Schritt |
 |---|---|---|
-| Haupt-Thread | 0.12.0 in TestFlight | Konzept R-7 Ausrüstung (D-066) mit Karten an dich |
+| Haupt-Thread | [Konzept R-7 Ausrüstung](../konzepte/r-7-ausruestung.md) steht: höchstens +10 % (D-069), feste Belohnungen und Schmiede (D-070) | R-7a feste Belohnungen umsetzen |
 | Plünderer-3D-Modell | 0.13.0 in TestFlight | Flitzer und Panzerbestie, wenn dir der Plünderer im Spiel gefällt |
 
 ## Als Nächstes
