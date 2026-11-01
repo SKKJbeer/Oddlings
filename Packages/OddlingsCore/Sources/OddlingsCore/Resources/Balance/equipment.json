@@ -1,0 +1,70 @@
+{
+  "_status": "Ausrüstung des Avatars (D-066, D-069, D-070; R-7a feste Belohnungen). HYPOTHESE bis zum Spieltest; die Obergrenze von +10 % Reserve je voller Belegung halten die Balancetests fest.",
+  "_einheiten": "bonus: Faktoren auf Felder der Mission (Preis, Startgold und Festungsleben auf ganze Werte gerundet). source: mission + stars = beste Sterne dort, nur stars = Sternsumme der Region. tower: nur diese Turmart.",
+  "pieces": [
+    {
+      "id": "watch-banner",
+      "slot": "banner",
+      "source": {
+        "mission": "m1",
+        "stars": 1
+      },
+      "tower": "watch",
+      "bonus": {
+        "towerRange": 1.03
+      }
+    },
+    {
+      "id": "storm-banner",
+      "slot": "banner",
+      "source": {
+        "stars": 9
+      },
+      "bonus": {
+        "towerDamage": 1.02
+      }
+    },
+    {
+      "id": "purse-seal",
+      "slot": "seal",
+      "source": {
+        "mission": "m1",
+        "stars": 2
+      },
+      "bonus": {
+        "startGold": 1.02
+      }
+    },
+    {
+      "id": "keep-seal",
+      "slot": "seal",
+      "source": {
+        "stars": 21
+      },
+      "bonus": {
+        "startGold": 1.04
+      }
+    },
+    {
+      "id": "swift-amulet",
+      "slot": "amulet",
+      "source": {
+        "mission": "m1",
+        "stars": 3
+      },
+      "bonus": {
+        "abilityCooldown": 0.95
+      }
+    },
+    {
+      "id": "moon-amulet",
+      "slot": "amulet",
+      "source": {
+        "stars": 15
+      },
+      "bonus": {
+        "abilityCooldown": 0.92
+      }
+    }
+  ]
+}

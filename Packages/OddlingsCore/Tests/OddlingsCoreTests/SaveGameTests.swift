@@ -39,6 +39,22 @@ final class SaveGameTests: XCTestCase {
         }
     }
 
+    func testEquipmentSurvivesTheSaveFile() throws {
+        var lyra = try avatar()
+        lyra.equipment = EquipmentLoadout(banner: "watch-banner", seal: "purse-seal")
+        let save = SaveGame(progress: CampaignProgress(), avatar: lyra)
+        XCTAssertEqual(try SaveGameCodec.decode(try SaveGameCodec.encode(save), campaign: campaign).save.avatar?.equipment,
+                       lyra.equipment)
+        for broken in [#""watch-banner""#, #"{"banner":"Ein Banner","seal":"purse-seal"}"#, #"[1]"#] {
+            let decoded = try decode(#"{"schemaVersion":2,"avatar":{"race":"elves","name":"Lyra","portrait":"elf-1","equipment":"#
+                                     + broken + "}}")
+            XCTAssertEqual(decoded.save.avatar?.name, "Lyra", broken)
+            XCTAssertNil(decoded.save.avatar?.equipment.banner, broken)
+        }
+        let kept = try decode(#"{"schemaVersion":2,"avatar":{"race":"elves","name":"Lyra","portrait":"elf-1","equipment":{"banner":"Ein Banner","seal":"purse-seal"}}}"#)
+        XCTAssertEqual(kept.save.avatar?.equipment, EquipmentLoadout(seal: "purse-seal"))
+    }
+
     func testDropsUnknownEntriesOneByOne() throws {
         let decoded = try decode("""
         {"schemaVersion":2,"avatar":{"race":"goblins","name":"Grok","portrait":"elf-1"},"progress":{"records":[

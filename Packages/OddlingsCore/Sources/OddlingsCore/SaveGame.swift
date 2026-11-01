@@ -94,6 +94,7 @@ public enum SaveGameCodec {
             } else if let race = rawAvatar.race.flatMap(Race.init(rawValue:)), let name = rawAvatar.name,
                       let portrait = rawAvatar.portrait, var valid = Avatar(race: race, name: name, portrait: portrait) {
                 valid.talents = Avatar.validTalents(rawAvatar.talents)
+                valid.equipment = rawAvatar.equipment ?? EquipmentLoadout()
                 avatar = valid
             } else {
                 dropped.append(.invalidAvatar)
@@ -135,8 +136,9 @@ public enum SaveGameCodec {
         var name: String?
         var portrait: String?
         var talents: [String]?
+        var equipment: EquipmentLoadout?
 
-        enum CodingKeys: String, CodingKey { case race, name, portrait, talents }
+        enum CodingKeys: String, CodingKey { case race, name, portrait, talents, equipment }
 
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -145,6 +147,7 @@ public enum SaveGameCodec {
             portrait = try container.decodeIfPresent(String.self, forKey: .portrait)
             // Falscher Typ heißt kaputte Wahl, nicht kaputte Datei.
             talents = (try? container.decodeIfPresent([String].self, forKey: .talents)) ?? nil
+            equipment = (try? container.decodeIfPresent(EquipmentLoadout.self, forKey: .equipment)) ?? nil
         }
     }
 

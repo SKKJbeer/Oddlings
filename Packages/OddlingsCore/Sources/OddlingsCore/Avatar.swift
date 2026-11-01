@@ -18,6 +18,9 @@ public struct Avatar: Codable, Equatable, Sendable {
     public var talents: [TalentSide] = []
     /// Mehr Reihen kennt kein Volk; was länger ist, kommt nicht aus dieser App.
     public static let maxTalentRows = 8
+    /// Angelegte Stücke je Platz (R-7). Ob sie gelten, entscheidet erst die
+    /// Tabelle mit dem Fortschritt (`EquipmentTable.effective`).
+    public var equipment = EquipmentLoadout()
 
     /// Nur gültige Werte: ein Name, den `validName` annimmt, und eine Kennung,
     /// die `isValidPortrait` annimmt. Sonst `nil`.
@@ -54,6 +57,8 @@ public struct Avatar: Codable, Equatable, Sendable {
             throw DecodingError.dataCorruptedError(forKey: .name, in: container, debugDescription: "ungültiger Avatar")
         }
         valid.talents = Self.validTalents((try? container.decodeIfPresent([String].self, forKey: .talents)) ?? nil)
+        valid.equipment = (try? container.decodeIfPresent(EquipmentLoadout.self, forKey: .equipment)) ?? nil
+            ?? EquipmentLoadout()
         self = valid
     }
 

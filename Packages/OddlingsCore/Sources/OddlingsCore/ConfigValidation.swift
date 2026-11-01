@@ -27,6 +27,13 @@ public struct ConfigIssue: Hashable, Sendable, CustomStringConvertible {
         case ranksOutOfOrder           // 0 < erste Schwelle < zweite < …
         case talentRowsDontMatchRanks  // eine Talentreihe je Rang über I
         case fieldNotInAbility         // Spielart skaliert ein Feld, das die Fähigkeit nicht hat
+        case invalidID                 // Kleinbuchstaben, Ziffern, Bindestrich
+        case duplicateID
+        case unknownMission
+        case starsAboveMaximum         // mehr Sterne, als eine Mission vergibt
+        case fieldNotInSlot            // Stück verschiebt ein Feld eines anderen Platzes
+        case noBonus
+        case emptySlot
     }
 
     public init(field: String, rule: Rule) {
@@ -56,6 +63,13 @@ public struct ConfigIssue: Hashable, Sendable, CustomStringConvertible {
         case .talentRowsDontMatchRanks: "\(field) braucht genau eine Reihe je Rang über I"
         case .fieldNotInAbility: "\(field) gibt es bei dieser Fähigkeit nicht"
         case .starsOutOfOrder: "\(field) braucht 0 < two ≤ three ≤ fortressLives"
+        case .invalidID: "\(field) darf nur Kleinbuchstaben, Ziffern und Bindestriche enthalten"
+        case .duplicateID: "\(field) ist doppelt vergeben"
+        case .unknownMission: "\(field) nennt eine Mission, die es in der Region nicht gibt"
+        case .starsAboveMaximum: "\(field) ist mehr, als eine Mission an Sternen vergibt"
+        case .fieldNotInSlot: "\(field) gehört zu einem anderen Platz"
+        case .noBonus: "\(field) braucht mindestens einen Bonus"
+        case .emptySlot: "\(field) braucht mindestens ein Stück"
         }
     }
 }
