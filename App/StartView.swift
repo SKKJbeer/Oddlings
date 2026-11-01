@@ -24,7 +24,15 @@ struct StartView: View {
         let first = campaign.nodes[0].id
         let screen: AppFlow.Screen = arguments.contains("--demo") ? .watch
             : arguments.contains("--play") ? .battle(node: first) : .menu
-        _flow = State(initialValue: AppFlow(campaign: campaign, store: SaveLocation.store(), screen: screen))
+        let flow = AppFlow(campaign: campaign, store: SaveLocation.store(), screen: screen)
+        #if DEBUG
+        // Oberflächentests, die nicht den Aufbau prüfen, beginnen mit fertigem Avatar.
+        if flow.avatar == nil, let raw = SaveLocation.argument(after: "--e2e-avatar"), let race = Race(rawValue: raw) {
+            flow.createAvatar(race: race, name: "Test", portrait: AvatarPortraits.of(race)[0].id)
+        }
+        if let node = SaveLocation.argument(after: "--e2e-volle-sterne") { flow.seedStarsForTests(StarRating.maximum, on: node) }
+        #endif
+        _flow = State(initialValue: flow)
     }
 
     var body: some View {
@@ -37,10 +45,16 @@ struct StartView: View {
                 },
                 onContinue: { if let node = flow.continueNode { flow.start(node.id) } },
                 onPlay: { flow.showMap() }, onWatch: { flow.showWatch() }, onSpike: { flow.showSpike() },
-                onSettings: { showsSettings = true })
+                onSettings: { showsSettings = true },
+                avatar: flow.avatar, rank: flow.rank, newTalent: flow.newTalentWaiting,
+                onAvatar: { flow.openAvatar() })
             .overlay { if showsSettings { SettingsCard { showsSettings = false } } }
+        case .setup:
+            AvatarSetupView(flow: flow)
         case .map:
             CampaignMapView(flow: flow)
+        case .avatar:
+            AvatarScreen(flow: flow)
         case .battle(let node):
             if let mission = flow.battleMission(for: node) {
                 BattleView(mission: mission, mode: .play, onClose: { flow.showMap() }) { outcome, lives in

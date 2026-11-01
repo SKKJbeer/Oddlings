@@ -1,6 +1,8 @@
 # Datenmodelle
 
-Status: **[VORSCHLAG]**. Namen im Code englisch, Begriffe im Spiel deutsch.
+Status: **gilt**, Stand 0.12.0. Wer ein Feld in Konfiguration, Zustand oder Spielstand
+ändert, zieht dieses Dokument im selben PR nach (D-067). Namen im Code englisch,
+Begriffe im Spiel deutsch.
 
 | Spiel | Code |
 |---|---|
@@ -128,7 +130,46 @@ Laden geprüft): Fähigkeit, dazu `rangeFactor` und `costFactor` je Turmart
 (Faktor > 0, Preis auf ganzes Gold gerundet). `BalanceConfig.applying(_:)` macht daraus eine zweite
 Konfiguration derselben Mission, deshalb kennt die Simulation keine Völker.
 
-## Speicherstand (Phase 2)
+**Avatar (R-5):** `SaveGame.avatar: Avatar?` mit `Avatar { race, name, portrait }`,
+Schema 2. `Avatar` lässt sich nur gültig anlegen und decodieren: Name getrimmt,
+1 bis 16 Zeichen, keine Steuerzeichen; Porträt nur `a-z`, `0-9`, `-`, höchstens
+32 Zeichen. Ein ungültiger Avatar in der Datei kostet nur den Avatar
+(`Dropped.invalidAvatar`). Schema 1 (nur `race`) wird zu Schema 2 ohne Avatar.
+Welche Porträts es gibt, weiß nur die App (`AvatarPortraits`); eine unbekannte
+Kennung zeigt das erste Porträt des Volks.
+
+**Talente (R-6):** `Avatar.talents: [TalentSide]`, eine Seite (`a`/`b`) je Reihe in
+Reihenfolge, höchstens `Avatar.maxTalentRows`. Das Feld ist optional, Schema bleibt 2.
+Eine kaputte Liste verwirft nur die Wahl. Was gilt, rechnet `AvatarRank.effective`:
+nur freie Reihen (Rang aus `RaceTable.rankStars` und den besten Sternen), fehlende
+Seite = A. `RaceConfig.talents` hält je Reihe zwei `TalentOption` mit Faktoren auf
+Felder der Fähigkeit; `ConfigValidation` prüft jede Kombination wie ein eigenes Volk.
+
+## Kampagne (R-2)
+
+`Resources/Campaign/region-01.json` → `CampaignConfig { id, nodes: [CampaignNode] }`.
+Ein Knoten hat `id`, `kind` (`main`/`side`/`boss`), optional `mission` (Datei der
+Mission; fehlt sie, ist der Knoten „in Vorbereitung“), `position`, `requires`
+(oder `requiresAny` an der Gabelung), optional `stars` (Sternschwelle der
+Nebenmissionen) und `novelty` (was die Mission neu einführt). Beim Laden geprüft
+(`CampaignIssue`): doppelte IDs, unbekannte Bedingungen, Kreise, kein Start,
+Lage außerhalb der Karte.
+
+`CampaignProgress { records: [MissionRecord { mission, bestStars }] }` hält nur die
+besten Sterne je Mission, sortiert, ohne Wörterbuch. Daraus rechnet der Kern
+`state(of:)` (`completed`/`open`/`inPreparation`/`locked(Grund)`), `totalStars` und
+den Avatarrang. `StarRating` vergibt 1 bis 3 Sterne aus übrigen Leben.
+
+## Speicherstand (umgesetzt R-1, R-5, R-6)
+
+`SaveGame { schemaVersion = 2, progress: CampaignProgress, avatar: Avatar? }` als
+JSON in Application Support (`SaveLocation`). `SaveStore` schreibt atomar, behält die
+vorige Fassung und prüft beim Laden: Ein kaputter Teil kostet nur diesen Teil
+(Avatar, Talentwahl), nie den Fortschritt. Einstellungen (Klang, Vibration) liegen
+getrennt in `AppSettings`, weil sie dem Gerät gehören. Noch nicht umgesetzt:
+`suspendedMission` (Fortsetzen einer laufenden Mission, P2-2).
+
+### Ursprünglicher Entwurf (Phase 0)
 
 `SaveGame { schemaVersion, settings, campaignProgress, suspendedMission: GameState? }`
 als JSON. `schemaVersion` von Anfang an, damit spätere Migrationen möglich sind.

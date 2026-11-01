@@ -69,9 +69,11 @@ Begründung:
 - Mondmal nutzt denselben Zustand „verwundbar" wie die Spezialisierung Fäulnis
   ([02](02-combat-and-towers.md#aufwertungen-mit-einer-gabelung-je-turm-phase-2)). Eine Regel, zwei Verwendungen.
 
-**Wahl.** Das Volk gehört zum Avatar, lässt sich aber vor jeder Mission
-wechseln. Fortschritt hängt nicht am Volk. So wird keins zur Pflicht, und wer
-ausprobieren will, verliert nichts.
+**Wahl [ENTSCHIEDEN D-063].** Das Volk gehört zum Avatar und wird einmal
+gewählt, beim ersten „Spielen“, zusammen mit Porträt und Name. Danach gilt es
+für jede Mission. Fortschritt hängt nicht am Volk, und beide Völker stehen von
+Anfang an zur Wahl; so wird keins zur Pflicht. Einen Wechsel gibt es erst mit
+einer Spielwährung ([R-5](../konzepte/r-5-avatar.md)).
 
 Ein volkseigener Turm (Möglichkeit 2) bleibt als Inhalt für eine spätere
 Erweiterungsregion denkbar. Goblins und Arkanisten ebenso.
@@ -80,5 +82,23 @@ Die Festungsfähigkeit kommt in Phase 2, die Völker in Phase 3.
 
 ## Avatar [ENTSCHIEDEN]
 
-Identität und Personalisierung: Volk, Name, Aussehen; später Embleme, Banner,
-Titel als Kosmetik. Kein steuerbarer Held im MVP.
+Identität und Personalisierung: Volk, Name, Porträt, einmal am Anfang aufgebaut
+(D-063, [R-5](../konzepte/r-5-avatar.md)); später Embleme, Banner, Titel als
+Kosmetik. Kein steuerbarer Held im MVP.
+
+Rollenspielartig wird der Avatar über einen **Rang mit Talentwahl ohne
+Mehrkraft** (D-064): Sterne heben den Rang, je Rang eine Wahl zwischen zwei gleich
+starken Spielarten der Volksfähigkeit. Der Avatar wird anders, nicht stärker. Umsetzung, Ränge und Talente:
+[R-6](../konzepte/r-6-avatarrang.md).
+
+**Avatar-Menü [ENTSCHIEDEN D-065].** Fünf Ränge (ab 6, 12, 18, 24 Sternen), je Rang
+eine Talentreihe, vier Reihen je Volk. Der Avatar hat einen eigenen Schirm: links der
+Charakter mit Porträt, Rang und Sternbalken, rechts seine Abschnitte. Heute gibt es
+einen (Talente); weitere kommen als Reiter daneben. Umgesetzt in 0.12.0.
+
+**Ausrüstung [ENTSCHIEDEN D-066, Ausgestaltung OFFEN].** Als nächster Abschnitt des
+Avatar-Menüs kommen Gegenstände mit kleinen Werteboni (Größenordnung +5 % auf Türme).
+Das ist die einzige Ausnahme von „anders, nicht stärker“; Talente bleiben ohne
+Mehrkraft. Offen und von Steffen zu entscheiden: woher die Gegenstände kommen und wie
+hoch die Boni höchstens gehen. Eigenes Paket mit Konzept nach R-6
+([Roadmap](../production/roadmap.md)).

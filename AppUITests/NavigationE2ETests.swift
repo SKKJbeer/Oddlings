@@ -6,7 +6,7 @@ final class NavigationE2ETests: XCTestCase {
 
     @MainActor
     func testMenuToMapToMissionAndBack() throws {
-        let e2e = try E2EApp()
+        let e2e = try E2EApp(avatar: .elves)
         let play = e2e.app.buttons["menu.play"]
         XCTAssertTrue(play.waitForExistence(timeout: 15), "Startbildschirm")
         play.tap()

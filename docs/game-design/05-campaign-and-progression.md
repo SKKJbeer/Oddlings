@@ -43,8 +43,8 @@ anderthalb Stunden), aber kurz genug, dass man das Ende sieht und mehr will.
 | N1, N2 | Nebenmissionen mit Sonderregel | Wiederspielwert |
 
 Beide Wege der Gabelung führen zum Boss. Wer will, spielt den anderen danach
-nach. Am Ende von Region 1 sind beide Völker freigespielt ([03](03-races-and-avatar.md#wie-ein-volk-wirkt-phase-3)), damit auch
-wer nicht kauft das ganze Grundspiel kennt.
+nach. Beide Völker stehen von Anfang an zur Wahl; der Spieler wählt sein Volk
+einmal beim Aufbau seines Avatars (D-063, [03](03-races-and-avatar.md#wie-ein-volk-wirkt-phase-3)).
 
 #### Regionen der Vollversion
 
@@ -87,7 +87,9 @@ Was dauerhaft freigeschaltet wird:
 | Freischaltung | Wodurch |
 |---|---|
 | Türme, Aufwertungen, Spezialisierungen, Festungsfähigkeit | Hauptmissionen ([Region 1](#region-1-und-die-vollversion)) |
-| Völker | Ende Region 1 |
+| Volk | einmal beim Avatar-Aufbau, beide von Anfang an (D-063) |
+| Avatarrang und Talente | Sterne (D-064, D-065, umgesetzt 0.12.0) |
+| Ausrüstung mit kleinen Boni | **OFFEN** (D-066): Herkunft und Obergrenze entscheidet Steffen im Paket Ausrüstung |
 | Nebenmissionen | Sterne |
 | Bestiarium und Turmbuch (E11): Eintrag mit Bild und Charaktertext | erste Begegnung |
 | Abzeichen, Banner, Titel für den Avatar | Eisern-Modi, Bosse, alle Sterne einer Region |
@@ -95,6 +97,9 @@ Was dauerhaft freigeschaltet wird:
 Was es **nicht** gibt:
 - Keine dauerhaften Werteboni („+5 % Schaden"). Jede Mission rechnet mit
   denselben Werten für jeden Spieler; nur so bleiben die Balancetests gültig.
+  **Ausnahme seit D-066 (Steffen, 27.10.2026):** Ausrüstung des Avatars gibt kleine
+  Boni. Damit die Balancetests gültig bleiben, rechnen sie künftig jede Mission auch
+  mit der stärksten erlaubten Ausrüstung; die Obergrenze wird Teil der Konfiguration.
 
 - Keine zweite Währung, keine Erfahrungspunkte, kein Ausdauerbalken. Säule 5.
 - Keine täglichen Pflichtaufgaben im ersten Release. Die tägliche Herausforderung

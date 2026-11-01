@@ -37,6 +37,21 @@ description: Hochwertige Spielgrafik (App-Symbole, Figuren, Store-Bilder, Hinter
   alles herum. Mit fünftem Argument zeichnet es die Medaillen in App-Größe ein.
   Bäume malt FLUX trotz „seen from above" schräg mit Stamm; das passt zum
   Märchenkarten-Stil und bleibt so. Blätter in 768, 1024 läuft über den Speicher.
+- **Kampfplatz (Boden einer Mission):** `kampfplatz.py <mission.json> <teile>
+  <aus> [px_je_zelle] [rand] [vorschau]` setzt aus den Teilen der Regionskarte
+  eine Lichtung: Weg auf der Weggeometrie, Bäume nur im Rand (nie auf
+  Bauzellen), Höhle am Wegeingang, Licht und Schatten. Rand je Achse (`4x2`):
+  Die Karte unter der Kopfleiste ist breiter als der Bildschirm. Danach verkleinern und
+  einmal übermalen (`STAERKE=0.4 VERSCHIEBUNG=0.5`, höchstens 1024x640: 1152x640
+  bricht beim Entschlüsseln mit Speichermangel ab, 16 GB): Das vereinheitlicht
+  den Malstil, und der Weg bleibt liegen. Kleine Figuren, die FLUX trotz „no
+  characters" hineinmalt, mit `retusche.py` entfernen.
+- **Lange Läufe in der Cloud:** Ein 512er-Bild braucht rund 12 Minuten, 1024x640
+  rund 20, Hochrechnen auf 2580 px rund 10. Ein mit `setsid nohup` abgekoppelter
+  Lauf überlebt das Abräumen eines untätigen Containers NICHT (26.10.2026
+  dreimal verloren). Lauf als begleitete Hintergrundaufgabe starten
+  (`run_in_background`), dann bleibt der Container wach, und die Warteschlange
+  so schreiben, dass sie fertige Bilder überspringt.
 - **Prüfung:** `python3 tools/art-check/check_assets.py` und
   `python3 -m unittest discover -s tools/art-check/tests` (laufen in der CI).
   Jedes Atlas-Bild braucht seinen Namen in Backticks in einer

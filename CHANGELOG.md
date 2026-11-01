@@ -11,6 +11,93 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## Dokumente, kein Bau – 27.10.2026 (Architektur, Design und Roadmap nachgezogen, D-067)
+
+- Architektur auf den Stand 0.12.0: Module der App, Kerndateien, Datenfluss beim
+  Missionsstart, Grafikwerkzeuge; Datenmodelle mit Kampagne und Spielstand;
+  Teststrategie mit allen 27 Ende-zu-Ende-Fällen und Testschaltern.
+- Design: Avatar-Menü (D-065) und Ausrüstung (D-066) in 03, 05, 06; Schirmfolge,
+  Avatar-Aufbau und Avatar-Menü in 07; Kampfplatz, Festung, Porträts und 3D-Weg in
+  den Art-Dokumenten.
+- Roadmap als gemeinsame Arbeitsliste: Phasen mit Stand, „Wartet auf Steffen“,
+  „Als Nächstes“, alle Auslieferungen mit Version und Bau. Status und Register neu.
+- Regel D-067: Doku wächst mit jeder Auslieferung, Entscheidungskarten werden sofort
+  gemeldet. `regeln-pruefen.sh` prüft die neueste Version in `CLAUDE.md`, `status.md`
+  und Roadmap sowie jeden App-Ordner und jede Kerndatei in der Architektur (rot gesehen).
+
+## 0.12.0 – 27.10.2026 (R-6: Avatarrang mit Talentwahl), Bau offen
+
+**Neu**
+- Avatarrang (D-064, D-065, [Konzept](docs/konzepte/r-6-avatarrang.md)): fünf Ränge,
+  alle 6 Sterne einer (aus den besten Sternen je Mission), als römische Ziffer am
+  Avatarschild. Mit nur Mission 1 bleibt es vorerst bei Rang I.
+- Avatar-Menü als eigener Schirm, über das Schild im Hauptmenü oder auf der Karte:
+  links der Charakter mit Porträt, Rang und Sternbalken, rechts vier Talentreihen je
+  Volk. Jeder Rang schaltet eine Reihe mit zwei gleich starken Spielarten der
+  Volksfähigkeit frei; Umstellen kostet nichts.
+- Nach einem neuen Rang trägt das Schild „Neues Talent“, bis das Avatar-Menü offen war.
+
+**Geändert**
+- `races.json` bekommt `rankStars` und je Volk vier Talentreihen (Faktoren auf die
+  Fähigkeit). Der Spielstand merkt sich die Wahl im Avatar; Schema bleibt 2, eine
+  kaputte Wahl kostet nur die Wahl.
+
+**Tests**
+- Kern: `SaveGameTests.testTalentChoiceSurvivesTheSaveFile` (Wahl übersteht die Datei,
+  kaputte Wahl kostet nur die Wahl), `TalentTests` (Rang an den Schwellen, wirksame Wahl, Faktoren, Prüfung,
+  Laden), `BalanceTests.talentsStayEven` (31 Kombinationen je Volk nah an der Mitte, die
+  Mitte nah an der Grundform; Werte in 04). Die Kerntests laufen in der CI im
+  Release-Bau.
+- App: Rang schaltet ein Talent frei und prägt die Mission; Texte nennen jede Spielart.
+- E2E: drei Sterne per Testschalter plus Sieg bringen Rang II, Avatar-Menü, Seite B
+  wählen, zurück, Neustart behält die Wahl; Überlappungsprobe des Menüs.
+
+## 0.11.1 – 27.10.2026 (Grafik 05: Kampfplatz und Festung), Bau 32 (VALID)
+
+**Neu**
+- Der Kampfplatz ist eine Lichtung im Flüsterwald, aus denselben gemalten Teilen
+  wie die Kampagnenkarte: Waldrand bis an den Bildschirmrand (4 Zellen links und
+  rechts, 2 oben und unten, auf iPhone und iPad ohne leere Streifen), Weg mit runden Ecken, die
+  Goblinhöhle am Wegeingang, warmes Licht und Baumschatten.
+- Neue Festung: Zwergenfeste mit zwei Ecktürmen, Fackeln und Bannern, im Stil
+  der Türme. Sie steht im rechten Rand und verdeckt keine Bauzelle.
+- Gemalte Porträts für die Avatarwahl: drei Zwerge, drei Elfen (statt Volkssymbol
+  im Kreis).
+
+**Behoben**
+- Die Festung war unsichtbar: Boden und Festung hatten dieselbe `zPosition`, und
+  mit `ignoresSiblingOrder` lag der Boden oben.
+
+**Tests**
+- App: Boden deckt die ganze Szene (iPhone und iPad, mit und ohne Kopfleiste),
+  Festung über Boden und Bauzonen, Festung über keiner Bauzelle. Kunstprüfung:
+  Vertrag 24 × 13 Zellen,
+  Weg im Bild auf der Weggeometrie, Waldrand dunkler als das Feld, Collage legt
+  keine Bäume auf Bauzellen. Jedes Avatar-Porträt ist gemalt und quadratisch.
+
+## 0.11.0 – 26.10.2026 (R-5: Avatar einmal am Anfang), Bau 31 (VALID)
+
+**Neu**
+- Avatar-Aufbau beim ersten „Spielen“ (D-063, [Konzept](docs/konzepte/r-5-avatar.md)):
+  Volk, Porträt und Name. Ein Namensvorschlag steht schon im Feld, der Würfel
+  bringt einen anderen. Danach ist das Volk gesetzt und gilt für jede Mission.
+- Avatarschild mit Porträt, Name und Volk im Hauptmenü und auf der Missionstafel.
+- Porträts: je Volk drei. Bis die gemalten Brustbilder kommen, zeigen Platzhalter
+  das Zeichen des Volks in drei Farben.
+
+**Geändert**
+- Die Volkswahl auf der Missionstafel entfällt (ersetzt D-061).
+- Spielstand Schema 2: `avatar` statt `race`. Ein Stand aus 0.7.0 bis 0.10.x
+  behält seinen Fortschritt, der Avatar wird einmal neu aufgebaut. Name und Porträt
+  werden beim Laden geprüft; ein kaputter Avatar kostet nur den Avatar.
+
+**Tests**
+- Kern: Avatar, Migration von Schema 1, Namens- und Porträtprüfung.
+- App: Aufbau genau einmal, Volk prägt die Mission, Porträtkatalog, Namensvorschläge.
+- E2E: Aufbau bis zur Mission und Neustart ohne zweiten Aufbau, Zwergenpreis und
+  Bollwerk, Überlappungsprobe für Aufbau und Tafel. Neuer Testschalter
+  `--e2e-avatar` (nur DEBUG) für Tests, die zur Karte wollen.
+
 ## 0.10.3 – 26.10.2026 (Wackliger Fähigkeitstest behoben), Bau 30 (VALID)
 
 **Behoben**

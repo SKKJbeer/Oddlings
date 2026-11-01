@@ -11,7 +11,12 @@ import os
 final class AppFlow {
     enum Screen: Equatable {
         case menu
+        /// Avatar-Aufbau (R-5), einmal vor der ersten Karte.
+        case setup
         case map
+        /// Avatar-Menü (R-6): eigener Schirm, damit es mit weiteren
+        /// Abschnitten wachsen kann, ohne eine Tafel zu überfüllen.
+        case avatar
         case battle(node: String)
         case watch
         case spike
@@ -24,10 +29,16 @@ final class AppFlow {
     var selectedNode: String
     /// Knoten, dessen Wertung gerade besser wurde. Die Karte hebt ihn hervor.
     private(set) var justImproved: String?
-    /// Gewähltes Volk (R-4). Ohne Wahl gilt die Fähigkeit der Missionsdatei.
-    private(set) var race: Race?
-    /// Werte der Völker. Fehlt die Datei, gibt es keine Wahl; die Kerntests
-    /// laden dieselbe Datei und fangen das vor der Auslieferung.
+    /// Einmal aufgebaut, danach gesetzt (R-5, D-063).
+    private(set) var avatar: Avatar?
+    /// Das Volk des Avatars bestimmt jede Mission. Ohne Avatar (nur die
+    /// Oberflächentests mit `--play`) gilt die Fähigkeit der Missionsdatei.
+    var race: Race? { avatar?.race }
+    /// Ein Sieg hat einen neuen Rang gebracht, und das Avatar-Menü war seitdem
+    /// nicht offen. Das Schild weist darauf hin. Gilt nur bis zum Neustart.
+    private(set) var newTalentWaiting = false
+    /// Werte der Völker. Die Kerntests laden dieselbe Datei und fangen einen
+    /// Fehler vor der Auslieferung; fehlt sie trotzdem, spielt die Mission ohne Volk.
     let races: RaceTable?
 
     @ObservationIgnored private let store: SaveStore?
@@ -42,6 +53,7 @@ final class AppFlow {
         if let store {
             let loaded = store.load(campaign: campaign)
             for note in loaded.notes { Self.log.error("\(note, privacy: .public)") }
+            Self.log.notice("Spielstand \(String(describing: loaded.source), privacy: .public), Avatar \(loaded.save.avatar == nil ? "fehlt" : "da", privacy: .public), \(store.directory.path, privacy: .public)")
             loadedSave = loaded.save
             loadedWritable = loaded.writable
         }
@@ -50,7 +62,7 @@ final class AppFlow {
         save = loadedSave
         writable = loadedWritable
         progress = loadedSave.progress
-        race = loadedSave.race
+        avatar = loadedSave.avatar
         do {
             races = try RaceTable.bundled()
         } catch {
@@ -71,14 +83,16 @@ final class AppFlow {
     func showWatch() { screen = .watch }
     func showSpike() { screen = .spike }
 
+    /// Ohne Avatar führt jeder Weg zur Karte erst durch den Aufbau.
     func showMap() {
         justImproved = nil
-        screen = .map
+        screen = avatar == nil ? .setup : .map
     }
 
     /// Startet nur, was die Regeln öffnen. Die Karte zeigt gesperrte Knoten
     /// ohne Startknopf; dies ist die zweite Sicherung dahinter.
     func start(_ nodeID: String) {
+        guard avatar != nil else { return showMap() }
         guard let node = campaign.node(nodeID), state(of: node).isPlayable else { return }
         selectedNode = nodeID
         justImproved = nil
@@ -95,20 +109,72 @@ final class AppFlow {
     func battleMission(for nodeID: String) -> BalanceConfig? {
         guard let mission = mission(for: nodeID) else { return nil }
         guard let race, let config = races?[race] else { return mission }
-        return mission.applying(config)
+        return mission.applying(config, talents: talents)
     }
 
-    // MARK: Volk
+    // MARK: Avatar
 
-    /// Beide Völker sind wählbar, solange nur Mission 1 spielbar ist (D-061).
-    var canChooseRace: Bool { races != nil }
-
-    /// Gemerkt im Spielstand, damit die nächste Mission mit demselben Volk beginnt.
-    func choose(_ race: Race) {
-        guard canChooseRace, race != self.race else { return }
-        self.race = race
-        save.race = race
+    /// Legt den Avatar an, genau einmal: Danach ist das Volk gesetzt (D-063).
+    /// Ein Wechsel kommt erst mit einer Spielwährung, über die Steffen noch
+    /// entscheidet. Vom Aufbau aus geht es zur Karte.
+    @discardableResult
+    func createAvatar(race: Race, name: String, portrait: String) -> Bool {
+        guard avatar == nil, let created = Avatar(race: race, name: name, portrait: portrait) else { return false }
+        avatar = created
+        save.avatar = created
         persist()
+        if screen == .setup { screen = .map }
+        return true
+    }
+
+    // MARK: Rang und Talente (R-6, D-064)
+
+    /// Aus den besten Sternen je Mission: sinkt nie und lässt sich nicht doppelt verdienen.
+    var rank: Int { races?.rank(stars: progress.totalStars) ?? 1 }
+
+    /// Sterne, ab denen der jetzige Rang gilt; für den Fortschrittsbalken.
+    var rankFloorStars: Int { races?.rankStars?.last { $0 <= progress.totalStars } ?? 0 }
+
+    /// Sterne für den nächsten Rang, `nil` auf dem höchsten.
+    var nextRankStars: Int? { races?.rankStars?.first { $0 > progress.totalStars } }
+
+    var talentRows: [TalentRow] { race.flatMap { races?[$0]?.talents } ?? [] }
+
+    var unlockedTalentRows: Int { min(AvatarRank.unlockedRows(rank: rank), talentRows.count) }
+
+    /// Die Wahl, die in der Mission gilt.
+    var talents: [TalentSide] {
+        AvatarRank.effective(avatar?.talents ?? [], unlockedRows: unlockedTalentRows, rows: talentRows.count)
+    }
+
+    /// Umstellen kostet nichts (D-064) und gilt ab der nächsten Mission.
+    /// Eine gesperrte Reihe lässt sich nicht wählen.
+    @discardableResult
+    func chooseTalent(row: Int, side: TalentSide) -> Bool {
+        guard var changed = avatar, row >= 0, row < unlockedTalentRows else { return false }
+        var sides = talents
+        sides[row] = side
+        changed.talents = sides
+        avatar = changed
+        save.avatar = changed
+        persist()
+        return true
+    }
+
+    /// Wohin „Zurück“ im Avatar-Menü führt: dorthin, wo es geöffnet wurde.
+    private(set) var avatarReturn: Screen = .menu
+
+    /// Öffnet das Avatar-Menü aus Hauptmenü oder Karte.
+    func openAvatar() {
+        guard avatar != nil, screen == .menu || screen == .map else { return }
+        avatarReturn = screen
+        newTalentWaiting = false
+        screen = .avatar
+    }
+
+    func closeAvatar() {
+        guard screen == .avatar else { return }
+        screen = avatarReturn
     }
 
     // MARK: Ergebnis
@@ -121,17 +187,34 @@ final class AppFlow {
         let stars = StarRating.stars(outcome: outcome, livesLeft: livesLeft, thresholds: thresholds)
         let next = progress.recording(stars: stars, for: nodeID)
         guard next != progress else { return stars }
+        let before = rank
         progress = next
+        if rank > before, unlockedTalentRows > 0 { newTalentWaiting = true }
         justImproved = nodeID
         save.progress = next
         persist()
         return stars
     }
 
+    #if DEBUG
+    /// Oberflächentests: Sterne auf einem Knoten, den es noch nicht zu spielen
+    /// gibt, damit ein Rang über sechs Sternen prüfbar ist, solange nur
+    /// Mission 1 spielbar ist.
+    func seedStarsForTests(_ stars: Int, on nodeID: String) {
+        guard campaign.node(nodeID) != nil else { return }
+        let next = progress.recording(stars: stars, for: nodeID)
+        guard next != progress else { return }
+        progress = next
+        save.progress = next
+        persist()
+    }
+    #endif
+
     private func persist() {
         guard let store else { return }
         do {
             try store.save(save, allowed: writable)
+            Self.log.notice("Spielstand geschrieben, Avatar \(self.save.avatar == nil ? "fehlt" : "da", privacy: .public)")
         } catch {
             Self.log.error("Spielstand nicht geschrieben: \(String(describing: error), privacy: .public)")
         }

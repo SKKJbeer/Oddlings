@@ -64,7 +64,7 @@ final class TablesE2ETests: XCTestCase {
     /// Kreismenü, Turm mit Infotafel, Pause, Ergebnis.
     @MainActor
     func testScreensForReview() throws {
-        let e2e = try E2EApp(["--play"])
+        let e2e = try E2EApp(["--play"], avatar: .elves)
         e2e.waitForBoard()
         let cells = e2e.map.buildableCells
         let cell = try XCTUnwrap(cells.dropFirst(cells.count / 2).first)

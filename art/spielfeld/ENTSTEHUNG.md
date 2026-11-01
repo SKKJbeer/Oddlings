@@ -32,7 +32,7 @@ single isolated full body character centered in frame, side three-quarter view f
 | `tower_watch` | a sturdy round watchtower of warm grey stone with a wooden archer platform on top, a mounted crossbow and a red pennant flag | – |
 | `tower_lightning` | a slender round stone tower with copper rings, crowned by a large floating glowing blue crystal with crackling electric sparks | Funken oberhalb des Kupferrings (Bildzeilen 0–199) von Orange (Farbton 0,02–0,18, s > 0,25, v > 0,5) auf Blau 0,53 gedreht: Blitz ist in der Farbwelt blau |
 | `tower_spore` | a giant mushroom tower with a big purple cap covered in glowing green spots, a chubby cream stem with a small round wooden door, puffs of glowing green spores rising | – |
-| `fortress` | a small sturdy fortress gatehouse of grey stone and dark wood with two red banners and a big closed wooden gate | – |
+| `fortress` | a mighty dwarven-built stone fortress with a massive arched wooden gate, thick crenellated walls of warm grey stone, two round corner towers with pointed dark blue slate roofs, red and gold banners, glowing warm torches beside the gate, moss and ivy on the stones | **Seed 31** (Grafik 05, 26.10.2026; Seed 32 verworfen: Fass und Fackelständer als Fremdkörper). Vorher Seed 11 mit flachem Torhaus |
 | `enemy_raider` | a small mischievous goblin raider with green skin and a brown leather hood, carrying a loot sack over the shoulder and a wooden club | gespiegelt: trotz „facing right" nach links gemalt |
 | `enemy_runner` | a small skinny fast imp with orange skin, long pointy ears and a flowing red scarf, sprinting and leaning forward | gespiegelt |
 | `enemy_brute` | a hulking armored beast, a bulky boar-like creature with tusks, curved horns and riveted iron armor plates | gespiegelt |

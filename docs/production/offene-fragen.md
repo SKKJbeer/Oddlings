@@ -5,7 +5,8 @@ steht und wer entscheidet. Gepflegt von der Projektplanung; wird eine Frage
 entschieden, steht die Entscheidung im [Entscheidungsprotokoll](../decisions/decision-log.md)
 und hier nur noch ihr Status.
 
-Stand: 25.10.2026
+Stand: 27.10.2026. Was davon gerade auf Steffen wartet, steht zusätzlich oben in der
+[Roadmap](roadmap.md#wartet-auf-steffen).
 
 **Wer:** S = Steffen (Design, Feature, Architektur, Geld) · C = Claude
 entscheidet selbst und hält es fest (klein, technisch, umkehrbar).
@@ -47,3 +48,16 @@ entscheidet selbst und hält es fest (klein, technisch, umkehrbar).
 | Ton und Haptik: Weg und Herkunft | Phase 2 | [K9](../konzepte/phase-2-3.md#k9--ton-und-haptik) | S | Vorschlag, neuer Thread zu Beginn Phase 2 |
 | Automatisierte Balance- und Stresstests | Phase 2 (Grundstock), Phase 4 (voll) | [K11](../konzepte/phase-2-3.md#k11--balance-labor-automatisierte-balance--und-stresstests) | S (Richtung), C (Umsetzung) | Richtung entschieden D-028 |
 | Ende-zu-Ende-Tests über die ganze App | ab WP-15 | [Teststrategie](../technical/testing-strategy.md#ende-zu-ende-tests-d-029) | S | entschieden D-029 |
+
+## Seit dem Spielrahmen (26. und 27.10.2026)
+
+| Frage | Gebraucht in | Konzept | Wer | Stand |
+|---|---|---|---|---|
+| Volk wechseln, bevor es eine Spielwährung gibt | R-5 | [R-5](../konzepte/r-5-avatar.md) | S | **Karte offen** seit 26.10.; bis dahin gilt „gar nicht“ (D-063) |
+| Darf der 3D-Plünderer ins Spiel (Aussehen) | FX 02 | [FX 02](../konzepte/fx-02-figuren-in-3d.md) | S | **Karte offen** seit 26.10.; blockiert FX 02 |
+| Flitzer und Panzerbestie ebenfalls in 3D | FX 02 | [FX 02](../konzepte/fx-02-figuren-in-3d.md) | S | nach dem Plünderer, Urteil am Bild |
+| Ausrüstung: woher die Gegenstände kommen | R-7 | [03](../game-design/03-races-and-avatar.md#avatar-entschieden) | S | Richtung entschieden D-066, Karte folgt mit dem Konzept |
+| Ausrüstung: Obergrenze der Boni, Balancetests mit stärkster Ausrüstung | R-7 | [05](../game-design/05-campaign-and-progression.md#fortschritt) | S (Grenze), C (Tests) | Karte folgt mit dem Konzept |
+| Reservierte HUD-Ecken (D-030) | nach WP-15 | [07](../game-design/07-ui-ux.md#2-raster-und-bildschirm) | S | zurückgestellt bis zum Spieltest |
+| Mission hält im Hintergrund an (D-034) | Phase 1 | [07](../game-design/07-ui-ux.md#pause) | S | vorgeschlagen, umgesetzt seit 0.5.1 |
+| Doku bei jeder Auslieferung, Karten nie unbemerkt | immer | [D-067](../decisions/decision-log.md) | S | **entschieden** D-067 |

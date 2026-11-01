@@ -62,8 +62,10 @@ man einfarbig erkennt), Farben, Bewegung in der Szene und was das Bild
   (sehr schwach, nur bei Nahsicht).
 
 ## Festung `fortress`
-- Torhaus aus Stein und dunklem Holz, zwei rote Banner. Steht am rechten Rand
-  am Wegende. Bebt bei `enemyLeaked`.
+- Seit 0.11.1 eine Zwergenfeste mit zwei Ecktürmen, Fackeln und Bannern, im Stil
+  der Türme ([Grafik 05](../konzepte/grafik-05-kampfplatz.md)); vorher ein Torhaus
+  aus Stein und dunklem Holz. Steht im rechten Rand am Wegende, verdeckt keine
+  Bauzelle. Bebt bei `enemyLeaked`.
 
 ## Spätere Phasen: nur Konzept, nicht im Spiel
 
@@ -75,4 +77,4 @@ eine Welt ergibt. Sie liegen unter `art/konzept/`, nie im Atlas.
 |---|---|---|
 | Zwergenbank | 2 | gedrungenes Steinhaus mit Goldkessel und Kran, Zwerg mit Lupe am Tresen; Farben Stein, Messing, warmes Gold (keine Münzen mit Währungszeichen) |
 | Schattenflieger | später | Fledermaus-Kobold mit Laterne; Violett-Schwarz, damit er sich vom Boden abhebt |
-| Völker | 3+ | je ein Porträt im Avatar-Stil der Fortress-Linie, Grundlage [03](../game-design/03-races-and-avatar.md) |
+| Völker | ✓ 0.11.1 | drei Porträts je Volk für den Avatar-Aufbau, Herkunft in `art/avatar/ENTSTEHUNG.md` |
