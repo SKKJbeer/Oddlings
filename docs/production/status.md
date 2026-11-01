@@ -15,9 +15,7 @@ davor 0.12.0 (Avatarrang und Avatar-Menü); neuester VALID-Bau 33 (0.12.0). Der 
 2. **Spieltest mit drei Personen** (WP-15) auf dem neuesten Bau, mit dem
    [Beobachtungsbogen](playtests/beobachtungsbogen.md). Davon hängen Phase 2 und die
    Werte von Mission 1 ab.
-3. Was nach R-6 als Nächstes kommt: Entscheidungskarte im Thread „Architektur, Doku und
-   Roadmap nachziehen“ (Empfehlung: Mission 2 mit Zwergenbank jetzt, Spieltest parallel).
-4. Ohne Eile: Messung des Spikes auf dem iPhone (WP-01).
+3. Ohne Eile: Messung des Spikes auf dem iPhone (WP-01).
 
 ## Fertig
 
@@ -42,8 +40,10 @@ davor 0.12.0 (Avatarrang und Avatar-Menü); neuester VALID-Bau 33 (0.12.0). Der 
 | Thread | Woran | Nächster Schritt |
 |---|---|---|
 | Haupt-Thread | [Konzept R-7 Ausrüstung](../konzepte/r-7-ausruestung.md) steht: höchstens +10 % (D-069), feste Belohnungen und Schmiede (D-070) | R-7a feste Belohnungen umsetzen |
+| Neuer Thread (angefragt) | Mission 2 mit Zwergenbank (D-080) | Konzept nach K3, dann Umsetzung |
 | Plünderer-3D-Modell | 0.13.0 in TestFlight | Flitzer und Panzerbestie, wenn dir der Plünderer im Spiel gefällt |
 
 ## Als Nächstes
 
-Die Reihenfolge steht in der [Roadmap](roadmap.md#als-nächstes): R-7 Ausrüstung, Spieltest, dann Mission 2 mit Zwergenbank und Ton.
+Die Reihenfolge steht in der [Roadmap](roadmap.md#als-nächstes): Mission 2 mit Zwergenbank jetzt (deine Wahl vom 01.11., D-080),
+R-7 Ausrüstung läuft parallel, der Spieltest korrigiert danach die Werte; dann Ton.

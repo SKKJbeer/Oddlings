@@ -11,7 +11,16 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-<<<<<<< HEAD
+## Dokumente, kein Bau – 01.11.2026 (Reihenfolge nach R-6: Mission 2 jetzt, D-080)
+
+- Steffen hat entschieden: Mission 2 mit Zwergenbank kommt jetzt, der Spieltest
+  WP-15 läuft parallel und korrigiert die Werte danach (D-080). Roadmap „Als
+  Nächstes“ und Stand umgestellt, Karte S6 erledigt.
+- Nummernblock D-080 bis D-089 an die Projektplanung vergeben.
+- Konfliktmarken aus dem Zusammenführen von #52 und #53 in `CHANGELOG.md` und im
+  Entscheidungsprotokoll entfernt; `scripts/regeln-pruefen.sh` bricht jetzt bei
+  Konfliktmarken in eingecheckten Textdateien.
+
 ## Dokumente, kein Bau – 01.11.2026 (Bau 33, Konzept R-7 Ausrüstung)
 
 - Bau 33 (0.12.0) von Apple als VALID gemeldet, in Roadmap und Stand eingetragen.
@@ -20,7 +29,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - D-069: volle Ausrüstung macht den Avatar höchstens +10 % stärker.
 - D-070: Ausrüstung kommt aus festen Belohnungen (R-7a) und einer Schmiede mit
   Spielwährung (R-7b, eigenes Konzept).
-=======
+
 ## 0.13.0 – 01.11.2026 (FX 02: Plünderer mit Gliedmaßen), Bau offen
 
 **Neu**
@@ -43,7 +52,6 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - App: Bildwahl je Strecke, Unabhängigkeit von der Bildrate, Phase, Treffer- und
   Sturzfolge im Director, Plünderer hat Bildfolgen. E2E prüft `flinches` und `falls`.
 - Grafik: Angleichen, Bildfolge vollständig, mit Lücke, zu lang (rot gesehen).
->>>>>>> origin/main
 
 ## Dokumente, kein Bau – 27.10.2026 (Architektur, Design und Roadmap nachgezogen, D-067)
 
