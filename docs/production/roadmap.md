@@ -12,7 +12,7 @@ Entscheidungskarte beantwortet. Alles, was auf ihn wartet, steht unter
 zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzelnen:
 [backlog.md](backlog.md), offene Fragen: [offene-fragen.md](offene-fragen.md).
 
-**Stand: 01.11.2026** · neueste Version 0.15.0 (Ton und Musik), neuester VALID-Bau 35 (0.15.0)
+**Stand: 01.11.2026** · neueste Version 0.16.0 (Mission 2 mit Zwergenbank, Bau läuft), neuester VALID-Bau 35 (0.15.0)
 
 ## Phasen
 
@@ -42,7 +42,7 @@ Spieltest läuft parallel. Was davor steht, wird zuerst gebaut. Steffen kann ums
 | # | Paket | Thread | Abh. | Stand |
 |---|---|---|---|---|
 | 1 | ~~FX 02 Plünderer mit Gliedmaßen~~ ([Konzept](../konzepte/fx-02-figuren-in-3d.md)) | Plünderer-3D-Modell | – | ✓ 0.13.0 |
-| 2 | P2-5 **Mission 2 mit Zwergenbank** (Knoten M2 der Karte); Rang II und die erste Talentwahl werden spielbar. Werte [HYPOTHESE], nach WP-15 nachgezogen | neuer Thread (beim Coordinator angefragt) | – | Konzept K3 steht, startet jetzt |
+| 2 | ~~P2-5 **Mission 2 mit Zwergenbank**~~ ([Konzept](../konzepte/p2-5-mission-2-zwergenbank.md)); Rang II und die erste Talentwahl werden spielbar. Werte [HYPOTHESE], nach WP-15 nachgezogen. Gemalter Boden kommt aus „Kampfplätze für Mission 2 bis 4 malen“ | Mission 2 mit Zwergenbank | – | ✓ 0.16.0 |
 | 3 | **R-7a Ausrüstung** im Avatar-Menü (D-066, D-069, D-070): feste Belohnungen, danach R-7b Schmiede mit Spielwährung | Haupt-Thread | R-6 | [Konzept](../konzepte/r-7-ausruestung.md) steht, Umsetzung läuft |
 | 4 | **WP-15 Spieltest** parallel, danach Werte von Mission 1 und 2 nachziehen und Phase 2 schneiden | Steffen | S3 | wartet |
 | 5 | ~~P2-3 Ton und Musik~~ ([Konzept](../konzepte/p2-3-ton-und-musik.md)) | Ton und Musik | – | ✓ 0.15.0 |
@@ -73,6 +73,7 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | Grafik 05: Kampfplatz als Lichtung, Zwergenfeste, Porträts | 0.11.1 | 32 | [Konzept](../konzepte/grafik-05-kampfplatz.md) |
 | R-6: Avatarrang, Talente, Avatar-Menü (D-064, D-065) | 0.12.0 | 33 | [Konzept](../konzepte/r-6-avatarrang.md) |
 | FX 02: Plünderer mit Gliedmaßen aus 3D (D-051, D-052) | 0.13.0 | 34 | [Konzept](../konzepte/fx-02-figuren-in-3d.md) |
+| P2-5: Mission 2 mit Zwergenbank und Bonus für frühes Rufen (D-026, D-083) | 0.16.0 | offen | [Konzept](../konzepte/p2-5-mission-2-zwergenbank.md) |
 | P2-3: Ton und Musik, nur CC0 (D-082) | 0.15.0 | 35 | [Konzept](../konzepte/p2-3-ton-und-musik.md) |
 
 ## Gilt für jedes Paket
@@ -133,7 +134,7 @@ Phase wie oben: Eine Mission wirkt wie das fertige Spiel.
 | P2-2 | Fortsetzen einer laufenden Mission nach App-Ende (Speicherstand selbst kommt mit R-1) | R-1 | K6 | D-022 |
 | P2-3 | Ton und Haptik: Klänge, Musik, Regler ✓ 0.15.0 (nur CC0, D-082) | P2-1 (Rückmeldeliste) | K9 | ✓ 0.15.0 |
 | P2-4 | Menüs, Pause, Einstellungen, Ergebnis im Stil: ✓ 0.6.0 und 0.7.0 | M1.3, Oberflächen-Thread | [07](../game-design/07-ui-ux.md) | D-031, D-032 |
-| P2-5 | Zwergenbank und Bonus für frühes Rufen | – (D-080: startet vor dem Spieltest, Werte nach M1.4 nachziehen) | K3 | D-026 |
+| P2-5 | Zwergenbank und Bonus für frühes Rufen: ✓ 0.16.0 (Mission 2) | – (D-080: startet vor dem Spieltest, Werte nach M1.4 nachziehen) | K3 | D-026, D-083 |
 | P2-6 | Aufwertungen mit Gabelung, Zielwahl | P2-5 (gleiche Wirtschaftsrechnung) | K1 | D-024 |
 | P2-6b | **Balance-Labor, Grundstock:** Lauf-Werkzeug, Zufalls- und Menschenbot, Zielwerte, PR-Stufe in der CI | P2-5, P2-6 | K11 | D-028 |
 | P2-7 | ~~Festungsfähigkeit Steinregen~~ vorgezogen als R-3 | – | K2a | D-025, D-060 |

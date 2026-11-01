@@ -6,7 +6,11 @@ import Foundation
 enum Strategies {
     /// Nach Namen sortiert, weil ein Dictionary keine Reihenfolge hat.
     static func missionOne() throws -> [(name: String, order: [TowerKind])] {
-        let strategies = try BalanceConfig.missionOne().simStrategies ?? [:]
+        try of(BalanceConfig.missionOne())
+    }
+
+    static func of(_ config: BalanceConfig) -> [(name: String, order: [TowerKind])] {
+        let strategies = config.simStrategies ?? [:]
         return strategies.keys.sorted().map { ($0, strategies[$0]!) }
     }
 }
@@ -46,10 +50,12 @@ struct BalanceBot {
         var gold = state.gold
         var placed = state.towers.map { (kind: $0.kind, cell: $0.cell) }
         var commands: [Command] = []
-        while let kind = order.first, let stats = sim.config.towers[kind], gold >= stats.cost {
+        while let kind = order.first, let cost = sim.config.cost(of: kind), gold >= cost {
             order.removeFirst()
-            guard let cell = bestCell(for: kind, stats: stats, placed: placed) else { break }
-            gold -= stats.cost
+            let found = kind == .bank ? quietCell(placed: placed)
+                : sim.config.towers[kind].flatMap { bestCell(for: kind, stats: $0, placed: placed) }
+            guard let cell = found else { break }
+            gold -= cost
             placed.append((kind, cell))
             commands.append(.build(kind, cell))
         }
@@ -75,7 +81,7 @@ struct BalanceBot {
             let d = Double(index) * Self.sampleStep
             guard distances.filter({ $0 <= d && $0 > d - Self.wallApproach }).count >= 2 else { continue }
             let cover = state.towers.filter { tower in
-                tower.kind != .spore && p.distance(to: tower.cell.center) <= sim.config.towers[tower.kind]!.range
+                tower.kind != .spore && tower.kind != .bank && p.distance(to: tower.cell.center) <= sim.config.towers[tower.kind]!.range
             }.count
             if cover > bestCover {
                 best = p
@@ -100,6 +106,23 @@ struct BalanceBot {
         return best
     }
 
+    /// Die Bank dorthin, wo am wenigsten Weg in Reichweite eines Turms läge:
+    /// Sie soll keinen Verteidigungsplatz nehmen. Bei Gleichstand die erste Zelle.
+    private func quietCell(placed: [(kind: TowerKind, cell: Cell)]) -> Cell? {
+        var best: Cell?, bestValue = Int.max
+        for cell in candidates where !placed.contains(where: { $0.cell == cell }) {
+            let value = samples.filter { $0.distance(to: cell.center) <= Self.bankProbe }.count
+            if value < bestValue {
+                best = cell
+                bestValue = value
+            }
+        }
+        return best
+    }
+
+    /// Testwert: Reichweite, in der eine Bank einem Kampfturm Platz nähme.
+    static let bankProbe = 2.5
+
     private func bestCell(for kind: TowerKind, stats: TowerConfig, placed: [(kind: TowerKind, cell: Cell)]) -> Cell? {
         var best: Cell?, bestValue = -1.0
         for cell in candidates where !placed.contains(where: { $0.cell == cell }) {
@@ -108,7 +131,7 @@ struct BalanceBot {
             if kind == .spore {
                 for q in samples where q.distance(to: p) <= stats.range + 0.5 {
                     let shooters = placed.filter { other in
-                        other.kind != .spore && q.distance(to: other.cell.center) <= sim.config.towers[other.kind]!.range
+                        other.kind != .spore && other.kind != .bank && q.distance(to: other.cell.center) <= sim.config.towers[other.kind]!.range
                     }.count
                     value += 0.25 * Double(1 + shooters)
                 }

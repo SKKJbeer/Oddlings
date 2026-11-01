@@ -19,12 +19,15 @@ public struct BalanceConfig: Codable, Equatable, Sendable {
     /// Festungsfähigkeit der Mission (D-025). Fehlt sie, gibt es keinen Knopf,
     /// und die Simulation lehnt den Befehl ab.
     public var ability: AbilityConfig?
+    /// Zwergenbank (D-026, P2-5). Fehlt sie, bietet die Mission keine Bank an,
+    /// und die Simulation lehnt den Bau ab.
+    public var bank: BankConfig?
 
     public init(
         simulation: SimulationConfig, mission: MissionConfig, map: MapConfig,
         towers: [TowerKind: TowerConfig], enemies: [EnemyKind: EnemyConfig], waves: [WaveConfig],
         simStrategies: [String: [TowerKind]]? = nil, demoStrategy: String? = nil,
-        ability: AbilityConfig? = nil
+        ability: AbilityConfig? = nil, bank: BankConfig? = nil
     ) {
         self.simulation = simulation
         self.mission = mission
@@ -35,6 +38,44 @@ public struct BalanceConfig: Codable, Equatable, Sendable {
         self.simStrategies = simStrategies
         self.demoStrategy = demoStrategy
         self.ability = ability
+        self.bank = bank
+    }
+
+    /// Was die Mission zu bauen anbietet, in fester Reihenfolge: die
+    /// Kampftürme, dazu die Bank, wenn die Mission sie hat. Die Oberfläche
+    /// fragt nur hier, nie die Tabellen direkt.
+    public var buildable: [TowerKind] { TowerKind.combat + (bank == nil ? [] : [.bank]) }
+
+    /// Baupreis einer Turmart, nil, wenn die Mission sie nicht anbietet.
+    public func cost(of kind: TowerKind) -> Int? {
+        kind == .bank ? bank?.cost : towers[kind]?.cost
+    }
+}
+
+/// Werte der Zwergenbank (04, „Zwergenbank“). Eigener Typ statt `TowerConfig`:
+/// Eine Bank hat keine Reichweite, keinen Schaden und keinen Takt, und ein Typ
+/// mit Feldern, die für ihn nichts bedeuten, lädt zu Fehlern ein.
+public struct BankConfig: Codable, Equatable, Sendable {
+    public var cost: Int
+    /// Sekunden ab Bau bis zum Beginn des Ertrags. Die erste Auszahlung kommt
+    /// nach `delay + interval`.
+    public var delay: Double
+    /// Sekunden zwischen zwei Auszahlungen
+    public var interval: Double
+    /// Gold je Auszahlung
+    public var payout: Int
+    /// Gold, das eine Bank insgesamt auszahlt
+    public var cap: Int
+    /// Höchstzahl gleichzeitig stehender Banken je Mission
+    public var limit: Int
+
+    public init(cost: Int, delay: Double, interval: Double, payout: Int, cap: Int, limit: Int) {
+        self.cost = cost
+        self.delay = delay
+        self.interval = interval
+        self.payout = payout
+        self.cap = cap
+        self.limit = limit
     }
 }
 
@@ -129,11 +170,14 @@ public struct MissionConfig: Codable, Equatable, Sendable {
     /// Fehlt sie, gibt jeder Sieg einen Stern. Optional, damit Regeltests
     /// ohne Kampagne auskommen.
     public var stars: StarThresholds?
+    /// Gold je eingesparter Sekunde, wenn die nächste Welle früher gerufen
+    /// wird (D-009, E8). Fehlt er, gibt es keinen Bonus.
+    public var earlyCallBonus: Double?
 
     public init(
         id: String, fortressLives: Int, startGold: Int,
         firstWaveDelay: Double, timeBetweenWaves: Double, sellRefundRate: Double,
-        stars: StarThresholds? = nil
+        stars: StarThresholds? = nil, earlyCallBonus: Double? = nil
     ) {
         self.id = id
         self.fortressLives = fortressLives
@@ -142,6 +186,7 @@ public struct MissionConfig: Codable, Equatable, Sendable {
         self.timeBetweenWaves = timeBetweenWaves
         self.sellRefundRate = sellRefundRate
         self.stars = stars
+        self.earlyCallBonus = earlyCallBonus
     }
 }
 
@@ -200,6 +245,12 @@ public struct Point: Codable, Equatable, Sendable {
 
 public enum TowerKind: String, Codable, CaseIterable, CodingKeyRepresentable, Sendable {
     case watch, lightning, spore
+    /// Zwergenbank: kein Kampf, Ertrag nach Verzögerung (D-026).
+    case bank
+
+    /// Die Türme, die kämpfen und in `towers` stehen. Feuern und Prüfung laufen
+    /// nur über sie.
+    public static let combat: [TowerKind] = [.watch, .lightning, .spore]
 }
 
 public enum EnemyKind: String, Codable, CaseIterable, CodingKeyRepresentable, Sendable {

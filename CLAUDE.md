@@ -13,7 +13,8 @@ Anfang (0.11.0), Avatarrang mit Talenten und eigenem Avatar-Menü (0.12.0). Graf
 bis 05 (zuletzt Kampfplatz und Zwergenfeste, 0.11.1), Effekte an Ereignissen über
 `App/Battle/Fx/FxDirector` (FX 01, D-050). Der Plünderer
 läuft mit Gliedmaßen aus 3D (FX 02, 0.13.0). Ton und Musik (P2-3, 0.15.0):
-Klänge an Ereignissen über `App/Audio/AudioDirector`, nur CC0-Quellen (D-082, `art/ton/`). Als Nächstes R-7 Ausrüstung (D-066). Reihenfolge und was
+Klänge an Ereignissen über `App/Audio/AudioDirector`, nur CC0-Quellen (D-082, `art/ton/`). Mission 2 mit Zwergenbank und Bonus
+fürs frühe Rufen ist spielbar (P2-5, 0.16.0, D-080). Als Nächstes R-7 Ausrüstung (D-066). Reihenfolge und was
 auf Steffen wartet: [Roadmap](docs/production/roadmap.md), Kurzstand:
 [status.md](docs/production/status.md), Versionen: [CHANGELOG.md](CHANGELOG.md).
 Projekt erzeugen: `xcodegen generate` (Xcode-Projekt ist nicht eingecheckt).

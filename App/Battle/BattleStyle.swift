@@ -23,8 +23,15 @@ enum BattleStyle {
         case .watch: SKColor(red: 0.85, green: 0.78, blue: 0.62, alpha: 1)
         case .lightning: SKColor(red: 0.45, green: 0.65, blue: 1.00, alpha: 1)
         case .spore: SKColor(red: 0.62, green: 0.85, blue: 0.35, alpha: 1)
+        case .bank: SKColor(red: 0.95, green: 0.78, blue: 0.30, alpha: 1)
         }
     }
+
+    /// Zwergenbank (P2-5): Balken unter dem Turm, in Feldern unter dem Fuß.
+    static let bankBarDrop: CGFloat = 0.32
+    static let bankFill = SKColor(red: 1.00, green: 0.84, blue: 0.25, alpha: 1)
+    static let bankSpent = SKColor(white: 0.55, alpha: 1)
+    static let bankEmptyAlpha: CGFloat = 0.6
 
     static func enemyColor(_ kind: EnemyKind) -> SKColor {
         switch kind {

@@ -16,6 +16,29 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Bau 34 (0.13.0) und Bau 35 (0.15.0) von Apple als VALID gemeldet, in Roadmap
   und Stand eingetragen.
 
+## 0.16.0 – 01.11.2026 (P2-5: Mission 2 mit Zwergenbank) · Bau offen
+
+- **Mission 2** spielbar, nach dem Sieg in Mission 1 auf der Kampagnenkarte offen:
+  eigener Weg mit ruhigen Feldern für Banken, zehn Wellen, etwas härter als
+  Mission 1. Alle Werte [HYPOTHESE] bis zum Spieltest (D-080).
+- **Zwergenbank** als vierter Knopf im Kreismenü, nur in Missionen mit Bank: zahlt
+  ab 20 s nach dem Bau alle 4 s 5 Gold, bis 300; höchstens zwei. Infotafel nennt
+  Ertrag und in Orange den Preis des Wartens; Füllbalken an der Bank, „+5“ bei
+  jeder Auszahlung, leer wird sie grau. An der Höchstzahl zeigt der Knopf „2/2“.
+- **Bonus fürs frühe Rufen** (D-009): Der Welle-Knopf trägt das Gold, das Rufen
+  jetzt bringt (0,5 je eingesparter Sekunde); beim Rufen steigt es an der
+  Goldanzeige auf. Mission 1 bleibt ohne Bonus und ohne Bank.
+- Kern: `BankConfig` als eigener Abschnitt (D-083), `TowerKind.bank` und
+  `.combat`, Ereignisse `bankPaid`, `bankEmptied`, `earlyCallBonus`, Ablehnung
+  `limitReached`, Prüfung der neuen Felder; alte Spielstände lesen sich weiter.
+- Tests: `BankTests`, `EarlyCallTests`, `MissionTwoTests` (Balance in
+  [04](docs/game-design/04-economy-and-balance.md#mission-2--ergebnis-der-prüfung-0160-hypothese)),
+  `BankControllerTests`, vier Knöpfe in `HudLayoutTests`, `BankE2ETests`;
+  `CampaignE2ETests` startet jetzt Mission 2. Testschalter `--e2e-knoten`.
+- Ton (mit 0.15.0 zusammengeführt): Auszahlung der Bank und Bonus fürs frühe Rufen
+  klingen als leise Münze, die leere Bank bleibt stumm (`SoundMapTests`).
+- `scripts/swift-linux.sh`: `/etc/os-release` überschrieb die Swift-Version.
+
 ## 0.15.0 – 01.11.2026 (P2-3: Ton und Musik), Bau 35
 
 **Neu**

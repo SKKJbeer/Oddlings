@@ -33,12 +33,12 @@ struct RingMenu: View {
         case .none, .aiming:
             EmptyView()
         case .cell(_, let choice):
-            let kinds = TowerKind.allCases
+            let kinds = controller.buildable
             let points = hud.ring(at: cell, count: kinds.count)
             ZStack {
                 if let choice {
                     let rect = hud.panel(for: cell, avoiding: points)
-                    InfoPanel(kind: choice, action: BattleTexts.tapAgainToBuild, actionID: nil)
+                    InfoPanel(kind: choice, lines: previewLines(choice), action: BattleTexts.tapAgainToBuild, actionID: nil)
                         .frame(width: rect.width, height: rect.height)
                         .position(x: rect.midX, y: rect.midY)
                 }
@@ -55,7 +55,7 @@ struct RingMenu: View {
                 let rect = hud.panel(for: cell, avoiding: points)
                 let refund = controller.refund(for: tower)
                 ZStack {
-                    InfoPanel(kind: tower.kind,
+                    InfoPanel(kind: tower.kind, lines: towerLines(tower),
                               action: armed ? BattleTexts.confirmSell(refund: refund) : BattleTexts.refundLine(refund),
                               actionID: armed ? "sell.confirm" : nil)
                         .frame(width: rect.width, height: rect.height)
@@ -70,6 +70,34 @@ struct RingMenu: View {
     }
 }
 
+extension RingMenu {
+    /// Zweite und dritte Zeile der Infotafel vor dem Bau. Bei der Bank steht
+    /// der Preis des Wartens in Orange da (07, „Zwergenbank“).
+    fileprivate func previewLines(_ kind: TowerKind) -> InfoLines {
+        guard kind == .bank, let bank = controller.bank else {
+            return InfoLines(first: BattleTexts.role(kind), second: BattleTexts.combo(kind))
+        }
+        return InfoLines(first: BattleTexts.bankIncome(bank), second: BattleTexts.bankWarning(cost: bank.cost), warn: true)
+    }
+
+    /// Bei einem gebauten Turm; die Bank zeigt, wie viel sie ausgezahlt hat.
+    fileprivate func towerLines(_ tower: Tower) -> InfoLines {
+        guard tower.kind == .bank, let bank = controller.bank else {
+            return InfoLines(first: BattleTexts.role(tower.kind), second: BattleTexts.combo(tower.kind))
+        }
+        if controller.isEmpty(tower) { return InfoLines(first: BattleTexts.bankEmpty, second: BattleTexts.role(.bank)) }
+        return InfoLines(first: BattleTexts.bankPaid(tower.paid, of: bank.cap), second: BattleTexts.bankIncome(bank))
+    }
+}
+
+/// Rolle und Zusammenspiel, bei der Bank Ertrag und Warnung.
+fileprivate struct InfoLines {
+    var first: String
+    var second: String
+    /// Zweite Zeile in Orange statt Grün: ein Preis, kein Vorteil.
+    var warn = false
+}
+
 /// Ein Turmknopf im Bogen: Bild des Turms, darunter das Preisschild.
 private struct TowerRingButton: View {
     let controller: BattleController
@@ -79,24 +107,30 @@ private struct TowerRingButton: View {
     var body: some View {
         let affordable = controller.canAfford(kind)
         let missing = controller.missingGold(for: kind)
+        // Höchstzahl erreicht: gedimmt, das Schild zeigt „2/2“ statt des Preises (07).
+        let full = controller.atLimit(kind)
+        let usable = affordable && !full
         Button { controller.choose(kind) } label: {
             RingButtonFace(highlighted: chosen, tint: RingMenuStyle.tint(kind), size: BattleStyle.ringButton) {
                 TowerPicture(kind: kind)
                     .padding(6)
-                    .saturation(affordable ? 1 : 0.2)
-                    .opacity(affordable ? 1 : 0.6)
+                    .saturation(usable ? 1 : 0.2)
+                    .opacity(usable ? 1 : 0.6)
             }
             .overlay(alignment: .bottom) {
-                PriceTag(text: chosen ? BattleTexts.build
-                                      : affordable ? "\(controller.cost(of: kind))" : BattleTexts.missing(missing),
-                         coin: affordable && !chosen, warn: !affordable)
+                PriceTag(text: full ? controller.limitTag
+                               : chosen ? BattleTexts.build
+                               : affordable ? "\(controller.cost(of: kind))" : BattleTexts.missing(missing),
+                         coin: usable && !chosen, warn: !affordable && !full)
                     .offset(y: 11)
             }
         }
         .buttonStyle(RingPressStyle())
-        .accessibilityLabel(chosen ? "\(BattleTexts.build), \(BattleTexts.name(kind))"
-                                   : affordable ? "\(BattleTexts.name(kind)), \(BattleTexts.price(controller.cost(of: kind)))"
-                                                : "\(BattleTexts.name(kind)), \(BattleTexts.missing(missing))")
+        .accessibilityLabel(full ? "\(BattleTexts.name(kind)), \(controller.limitReachedText)"
+                                 : chosen ? "\(BattleTexts.build), \(BattleTexts.name(kind))"
+                                 : affordable ? "\(BattleTexts.name(kind)), \(BattleTexts.price(controller.cost(of: kind)))"
+                                              : "\(BattleTexts.name(kind)), \(BattleTexts.missing(missing))")
+        .accessibilityValue(full ? controller.limitTag : "")
         .accessibilityIdentifier("build.\(kind.rawValue)")
     }
 }
@@ -133,14 +167,18 @@ private struct SellRingButton: View {
 /// Name, Rolle, Zusammenspiel und was das nächste Tippen tut.
 private struct InfoPanel: View {
     let kind: TowerKind
+    let lines: InfoLines
     let action: String
     let actionID: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(BattleTexts.name(kind)).font(UITheme.display(19))
-            Text(BattleTexts.role(kind)).font(UITheme.body(13)).foregroundStyle(UITheme.parchment)
-            Text(BattleTexts.combo(kind)).font(UITheme.body(13)).foregroundStyle(UITheme.fresh)
+            Text(lines.first).font(UITheme.body(13)).foregroundStyle(UITheme.parchment)
+                .accessibilityIdentifier("panel.first")
+            Text(lines.second).font(lines.warn ? UITheme.bodyHeavy(13) : UITheme.body(13))
+                .foregroundStyle(lines.warn ? UITheme.danger : UITheme.fresh)
+                .accessibilityIdentifier("panel.second")
             actionLine
         }
         .lineLimit(1)
@@ -202,6 +240,7 @@ enum RingMenuStyle {
         case .watch: UITheme.heart
         case .lightning: UITheme.bolt
         case .spore: UITheme.fresh
+        case .bank: UITheme.coin
         }
     }
 }

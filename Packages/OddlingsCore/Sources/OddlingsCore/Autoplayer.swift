@@ -11,6 +11,10 @@ public struct Autoplayer: Sendable {
 
     public init(order: [TowerKind]) { self.order = order }
 
+    /// Ein Kampfturm reicht etwa so weit; so weit vom Weg weg steht die Bank
+    /// niemandem im Weg. Bedienung des Mitspielers, kein Balancewert.
+    static let bankProbe = 2.5
+
     /// Die Vorführbauweise aus der Konfiguration, leer, wenn keine angegeben ist.
     public init(demoOf config: BalanceConfig) {
         order = config.demoStrategy.flatMap { config.simStrategies?[$0] } ?? []
@@ -21,10 +25,13 @@ public struct Autoplayer: Sendable {
         var gold = state.gold
         var occupied = state.towers.map(\.cell)
         var commands: [Command] = []
-        while let kind = order.first, let stats = sim.config.towers[kind], gold >= stats.cost {
-            guard let cell = bestCell(range: stats.range, occupied: occupied, sim: sim) else { break }
+        while let kind = order.first, let cost = sim.config.cost(of: kind), gold >= cost {
+            // Eine Bank braucht keinen Weg in Reichweite: Sie kommt dorthin, wo
+            // kein Kampfturm hinwill.
+            let range = sim.config.towers[kind]?.range ?? 0
+            guard let cell = bestCell(range: range, occupied: occupied, sim: sim, least: kind == .bank) else { break }
             order.removeFirst()
-            gold -= stats.cost
+            gold -= cost
             occupied.append(cell)
             commands.append(.build(kind, cell))
         }
@@ -32,10 +39,13 @@ public struct Autoplayer: Sendable {
     }
 
     /// Strikt größer: Bei Gleichstand gewinnt die erste Zelle in Kartenreihenfolge.
-    private func bestCell(range: Double, occupied: [Cell], sim: Simulation) -> Cell? {
+    /// `least` sucht die Zelle, die am wenigsten Weg abdeckt (für die Bank).
+    private func bestCell(range: Double, occupied: [Cell], sim: Simulation, least: Bool = false) -> Cell? {
         var best: Cell?, bestValue = -Double.infinity
+        let radius = least ? Self.bankProbe : range
         for cell in sim.map.buildableCells where !occupied.contains(cell) {
-            let value = sim.map.path.coverage(around: cell.center, radius: range)
+            let cover = sim.map.path.coverage(around: cell.center, radius: radius)
+            let value = least ? -cover : cover
             if value > bestValue {
                 best = cell
                 bestValue = value

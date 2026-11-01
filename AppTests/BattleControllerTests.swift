@@ -108,8 +108,8 @@ final class BattleControllerTests: XCTestCase {
 
     func testUnaffordableChoiceWarnsAndSendsNothing() throws {
         recordHaptics()
-        let priciest = try XCTUnwrap(TowerKind.allCases.max { controller.cost(of: $0) < controller.cost(of: $1) })
-        let cheapest = try XCTUnwrap(TowerKind.allCases.min { controller.cost(of: $0) < controller.cost(of: $1) })
+        let priciest = try XCTUnwrap(controller.buildable.max { controller.cost(of: $0) < controller.cost(of: $1) })
+        let cheapest = try XCTUnwrap(controller.buildable.min { controller.cost(of: $0) < controller.cost(of: $1) })
         var cells = model.sim.map.buildableCells.makeIterator()
         while controller.canAfford(priciest), let cell = cells.next() { build(cheapest, at: cell) }
         let free = try XCTUnwrap(cells.next())
@@ -222,16 +222,16 @@ final class BattleControllerTests: XCTestCase {
     }
 
     func testUnaffordableKindIsMarked() {
-        let cheapest = TowerKind.allCases.map(controller.cost(of:)).min() ?? 0
+        let cheapest = controller.buildable.map(controller.cost(of:)).min() ?? 0
         var cells = model.sim.map.buildableCells.makeIterator()
         while controller.gold >= cheapest, let cell = cells.next() {
-            let kind = TowerKind.allCases.first { controller.cost(of: $0) == cheapest }!
+            let kind = controller.buildable.first { controller.cost(of: $0) == cheapest }!
             build(kind, at: cell)
         }
-        for kind in TowerKind.allCases {
+        for kind in controller.buildable {
             XCTAssertEqual(controller.canAfford(kind), controller.gold >= controller.cost(of: kind))
         }
-        XCTAssertFalse(TowerKind.allCases.allSatisfy(controller.canAfford))
+        XCTAssertFalse(controller.buildable.allSatisfy(controller.canAfford))
     }
 
     func testWatchModeIgnoresInput() {

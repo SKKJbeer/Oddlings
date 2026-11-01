@@ -54,6 +54,13 @@ Status: **gilt**, umgesetzt bis 0.12.0; Ende-zu-Ende-Tests **[ENTSCHIEDEN D-029]
   mit Prüfsumme, 1× = 2×, Speichern/Laden mitten in der Welle, feste Prüfsumme
   einer kleinen Mission, die Linux und macOS gleich liefern müssen) und Balance
   (`BalanceTests`) ab. Das Python-Prüfskript der Phase 0 ist gelöscht.
+- Seit P2-5 (0.16.0): `BankTests` (Auszahlung, Deckel, Höchstzahl, Verkauf,
+  alter Spielstand), `EarlyCallTests` (Bonus abgerundet, Ereignis, ohne Bonus
+  nichts) und `MissionTwoTests` (Karte mit ruhigen Zellen, Bauweisen mit und ohne
+  Bank, Bank spät höchstens 0,05 Reserve neben der besten ohne Bank, Gier
+  verliert, Determinismus, Völker). In der App `BankControllerTests` (Angebot,
+  Höchstzahl, Bonus wie die Simulation, Füllbalken, leere Bank grau, Szene zählt
+  Auszahlungen) und vier Knöpfe in `HudLayoutTests`.
 
 ## Ende-zu-Ende-Tests (D-029)
 
@@ -62,12 +69,13 @@ Tests prüfen, dass die App genau so funktioniert wie gedacht. **[ENTSCHIEDEN]**
 
 Umgesetzt ab Version 0.5.1; Aufbau und Grundsätze: [e2e-tests.md](../konzepte/e2e-tests.md).
 
-**Stand 0.15.0: 29 Fälle** in `AppUITests/`:
+**Stand 0.16.0: 31 Fälle** in `AppUITests/`:
 
 | Datei | Fälle | Ablauf |
 |---|---|---|
 | `NavigationE2ETests` | 4 | Menü → Karte → Mission → zurück, Vorführung, Hintergrund pausiert, Einstellung übersteht Neustart |
-| `CampaignE2ETests` | 2 | Sterne nach Sieg überstehen Neustart, gesperrte Missionen nennen den Grund |
+| `CampaignE2ETests` | 2 | Sterne nach Sieg überstehen Neustart, Mission 2 danach offen und startbar, gesperrte Missionen nennen den Grund |
+| `BankE2ETests` | 2 | Mission 2: Bank im Kreismenü mit Warnung und Preis (P2-5), frühes Rufen schreibt Gold gut, Höchstzahl sperrt die dritte Bank |
 | `AvatarE2ETests` | 4 | Avatar einmal aufbauen (R-5), Zwerge mit Preis und Fähigkeit, Rang schaltet Talent frei (R-6), Aufbau und Menü passen auf den Schirm |
 | `BuildAndSellE2ETests` | 4 | Kreismenü, Vorschau, bauen, verkaufen, „fehlt N“, Schließen |
 | `HUDE2ETests` | 4 | Startwerte, Welle rufen, Pause hält Countdown, Tempo |
@@ -79,7 +87,7 @@ Umgesetzt ab Version 0.5.1; Aufbau und Grundsätze: [e2e-tests.md](../konzepte/e
 
 **Testschalter** (nur Debug-Bau, ändern keine Regel): `--play` (Mission direkt),
 `--demo`, `--e2e-frisch` (leerer Speicher), `--e2e-speicher`, `--e2e-avatar <volk>`
-(fertiger Avatar), `--e2e-volle-sterne`, `--e2e-erste-welle` (erste Welle gehalten),
+(fertiger Avatar), `--e2e-volle-sterne`, `--e2e-knoten <id>` (mit `--play`: diese Mission statt M1), `--e2e-erste-welle` (erste Welle gehalten),
 `--e2e-zeitraffer N`, `--e2e-abklingzeit`, `--e2e-mitspieler`, `--e2e-fx`, `--e2e-ton` (Tonzähler `audio.stats`),
 `--fx-messung`. Ein neuer Schalter kommt hier in die Liste.
 
