@@ -11,7 +11,12 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-<<<<<<< HEAD
+## Dokumente, kein Bau – 01.11.2026 (Bau 34, Konfliktmarken)
+
+- Bau 34 (0.13.0) von Apple als VALID gemeldet, in Roadmap und Stand eingetragen.
+- Liegengebliebene Konfliktmarken aus PR #53 in CHANGELOG und Entscheidungsprotokoll
+  entfernt; `regeln-pruefen.sh` lässt keine mehr durch (rot gesehen).
+
 ## Dokumente, kein Bau – 01.11.2026 (Bau 33, Konzept R-7 Ausrüstung)
 
 - Bau 33 (0.12.0) von Apple als VALID gemeldet, in Roadmap und Stand eingetragen.
@@ -20,8 +25,8 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - D-069: volle Ausrüstung macht den Avatar höchstens +10 % stärker.
 - D-070: Ausrüstung kommt aus festen Belohnungen (R-7a) und einer Schmiede mit
   Spielwährung (R-7b, eigenes Konzept).
-=======
-## 0.13.0 – 01.11.2026 (FX 02: Plünderer mit Gliedmaßen), Bau offen
+
+## 0.13.0 – 01.11.2026 (FX 02: Plünderer mit Gliedmaßen), Bau 34 (VALID)
 
 **Neu**
 - Der Plünderer geht, zuckt bei Treffern und stürzt als echte Figur mit Armen und
@@ -43,7 +48,6 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - App: Bildwahl je Strecke, Unabhängigkeit von der Bildrate, Phase, Treffer- und
   Sturzfolge im Director, Plünderer hat Bildfolgen. E2E prüft `flinches` und `falls`.
 - Grafik: Angleichen, Bildfolge vollständig, mit Lücke, zu lang (rot gesehen).
->>>>>>> origin/main
 
 ## Dokumente, kein Bau – 27.10.2026 (Architektur, Design und Roadmap nachgezogen, D-067)
 
@@ -59,7 +63,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   gemeldet. `regeln-pruefen.sh` prüft die neueste Version in `CLAUDE.md`, `status.md`
   und Roadmap sowie jeden App-Ordner und jede Kerndatei in der Architektur (rot gesehen).
 
-## 0.12.0 – 27.10.2026 (R-6: Avatarrang mit Talentwahl), Bau 33
+## 0.12.0 – 27.10.2026 (R-6: Avatarrang mit Talentwahl), Bau 33 (VALID)
 
 **Neu**
 - Avatarrang (D-064, D-065, [Konzept](docs/konzepte/r-6-avatarrang.md)): fünf Ränge,
