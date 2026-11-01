@@ -15,11 +15,13 @@ if [ -x "$ZIEL/usr/bin/swift" ]; then
   ln -sf "$ZIEL"/usr/bin/swift* /usr/local/bin/ 2>/dev/null || true
   exit 0
 fi
-. /etc/os-release
+# Nur VERSION_ID lesen: /etc/os-release setzt auch VERSION und NAME und
+# überschrieb damit die Swift-Version (URL kaputt, „Malformed input“).
+VERSION_ID=$(. /etc/os-release && echo "$VERSION_ID")
 case "$VERSION_ID" in
   24.04) PLATTFORM=ubuntu2404; NAME=ubuntu24.04 ;;
   22.04) PLATTFORM=ubuntu2204; NAME=ubuntu22.04 ;;
-  *) echo "Kein Swift-Paket für $PRETTY_NAME hinterlegt." >&2; exit 1 ;;
+  *) echo "Kein Swift-Paket für Ubuntu $VERSION_ID hinterlegt." >&2; exit 1 ;;
 esac
 URL="https://download.swift.org/swift-$VERSION-release/$PLATTFORM/swift-$VERSION-RELEASE/swift-$VERSION-RELEASE-$NAME.tar.gz"
 mkdir -p "$ZIEL.tmp"

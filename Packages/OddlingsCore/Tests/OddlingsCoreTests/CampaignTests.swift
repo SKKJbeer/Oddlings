@@ -21,12 +21,12 @@ final class CampaignTests: XCTestCase {
         CampaignProgress(records: pairs.map { MissionRecord(mission: $0.0, bestStars: $0.1) })
     }
 
-    func testRegionOneLoadsAndOnlyMissionOneIsBuilt() throws {
+    func testRegionOneLoadsWithMissionsOneAndTwoBuilt() throws {
         let config = try CampaignConfig.regionOne()
         XCTAssertEqual(config.nodes.count, 11, "sieben Hauptmissionen mit zwei Wegen (9 Knoten) und zwei Nebenmissionen")
         XCTAssertEqual(config.nodes.filter { $0.kind == .side }.compactMap(\.stars), [6, 15])
         XCTAssertEqual(config.nodes.filter { $0.kind == .boss }.map(\.id), ["m7"])
-        XCTAssertEqual(config.nodes.compactMap(\.mission), ["mvp-mission-01"])
+        XCTAssertEqual(config.nodes.compactMap(\.mission), ["mvp-mission-01", "mission-02"])
     }
 
     func testRegionOneStatesAtStartAndAfterMissionOne() throws {
@@ -37,9 +37,15 @@ final class CampaignTests: XCTestCase {
         XCTAssertEqual(config.state(of: try XCTUnwrap(config.node("n1")), progress: fresh), .locked(.stars(6)))
         let won = fresh.recording(stars: 3, for: "m1")
         XCTAssertEqual(config.state(of: try XCTUnwrap(config.node("m1")), progress: won), .completed(stars: 3))
-        XCTAssertEqual(config.state(of: try XCTUnwrap(config.node("m2")), progress: won), .inPreparation)
+        XCTAssertEqual(config.state(of: try XCTUnwrap(config.node("m2")), progress: won), .open, "M2 ist gebaut (P2-5)")
+        XCTAssertEqual(config.state(of: try XCTUnwrap(config.node("m3")), progress: won), .locked(.after(["m2"])))
         XCTAssertEqual(config.continueNode(progress: fresh)?.id, "m1")
-        XCTAssertEqual(config.continueNode(progress: won)?.id, "m1", "nichts Neues offen: zurück zur gewonnenen Mission")
+        XCTAssertEqual(config.continueNode(progress: won)?.id, "m2", "Weiter mit Mission 2")
+        let both = won.recording(stars: 3, for: "m2")
+        XCTAssertEqual(config.state(of: try XCTUnwrap(config.node("m3")), progress: both), .inPreparation)
+        XCTAssertEqual(config.continueNode(progress: both)?.id, "m2", "nichts Neues offen: zurück zur gewonnenen Mission")
+        XCTAssertEqual(try RaceTable.bundled().rank(stars: both.totalStars), 2,
+                       "drei Sterne in M1 und M2 bringen Rang II und die erste Talentwahl")
     }
 
     func testForkOpensBossAfterEitherPath() {

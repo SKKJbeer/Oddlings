@@ -41,6 +41,36 @@ public struct Tower: Codable, Equatable, Sendable {
     public var cooldownTicks: Int
     /// Bezahltes Gold; Grundlage der Erstattung beim Verkaufen.
     public var spent: Int
+    /// Tick des Baus. Die Bank rechnet ihren Ertrag daraus; Kampftürme
+    /// brauchen ihn nicht.
+    public var builtTick: Int = 0
+    /// Gold, das eine Bank schon ausgezahlt hat. Erreicht es den Deckel, ist sie leer.
+    public var paid: Int = 0
+
+    public init(id: Int, kind: TowerKind, cell: Cell, cooldownTicks: Int, spent: Int,
+                builtTick: Int = 0, paid: Int = 0) {
+        self.id = id
+        self.kind = kind
+        self.cell = cell
+        self.cooldownTicks = cooldownTicks
+        self.spent = spent
+        self.builtTick = builtTick
+        self.paid = paid
+    }
+
+    private enum CodingKeys: String, CodingKey { case id, kind, cell, cooldownTicks, spent, builtTick, paid }
+
+    /// Zustände ohne die Bankfelder (vor 0.14.0) bleiben lesbar.
+    public init(from decoder: any Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(Int.self, forKey: .id)
+        kind = try c.decode(TowerKind.self, forKey: .kind)
+        cell = try c.decode(Cell.self, forKey: .cell)
+        cooldownTicks = try c.decode(Int.self, forKey: .cooldownTicks)
+        spent = try c.decode(Int.self, forKey: .spent)
+        builtTick = try c.decodeIfPresent(Int.self, forKey: .builtTick) ?? 0
+        paid = try c.decodeIfPresent(Int.self, forKey: .paid) ?? 0
+    }
 }
 
 public struct Enemy: Codable, Equatable, Sendable {
@@ -140,6 +170,8 @@ public enum Rejection: Equatable, Sendable {
     case abilityNotReady
     case notOnPath
     case noAbility
+    /// So viele Banken stehen schon, wie die Mission erlaubt.
+    case limitReached
 }
 
 public enum Event: Equatable, Sendable {
@@ -162,4 +194,10 @@ public enum Event: Equatable, Sendable {
     /// Bollwerk steht an `distance` (Wegstrecke) bis `untilTick`.
     case barrierRaised(distance: Double, untilTick: Int)
     case barrierFell
+    /// Eine Bank zahlt `gold` aus; `paid` ist ihr Stand danach.
+    case bankPaid(towerID: Int, gold: Int, paid: Int)
+    /// Die Bank hat ihren Deckel ausgezahlt und steht leer.
+    case bankEmptied(towerID: Int)
+    /// Die Welle kam früher; dafür gab es `gold`.
+    case earlyCallBonus(gold: Int)
 }
