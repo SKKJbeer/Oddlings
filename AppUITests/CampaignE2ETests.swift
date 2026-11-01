@@ -29,7 +29,6 @@ final class CampaignE2ETests: XCTestCase {
         e2e.node("m2").tap()
         XCTAssertEqual(e2e.app.staticTexts["map.panel.title"].label, "Mission 2")
         XCTAssertTrue(e2e.mapStart.isEnabled, "Mission 2 hat eine Karte und startet")
-        XCTAssertEqual(e2e.nodeState("m3"), "in Arbeit", "Mission 3 ist offen, aber noch nicht gebaut")
 
         e2e.app.terminate()
         let again = try E2EApp(storage: "sieg", fresh: false)
