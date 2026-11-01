@@ -35,6 +35,7 @@ struct BattleTopBar: View {
                             .foregroundStyle(warn ? UITheme.danger : UITheme.cream)
                             .scaleEffect(warn && !reduceMotion ? 1.12 : 1)
                     } animation: { _ in .easeOut(duration: 0.14) }
+                    .overlay(alignment: .bottomTrailing) { BonusFloat(controller: controller) }
                 counter(symbol: "flag.fill", color: UITheme.parchment,
                         value: "\(controller.wave)/\(controller.waveCount)",
                         label: BattleTexts.wave(controller.wave, of: controller.waveCount), id: "hud.wave")
@@ -46,8 +47,9 @@ struct BattleTopBar: View {
             if controller.canCallNextWave, let seconds = controller.secondsToNextWave {
                 WaveButton(next: controller.wave + 1,
                            fraction: Double(seconds) / Double(max(1, controller.countdownTotal)),
+                           bonus: controller.callBonus,
                            action: controller.callNextWave)
-                    .accessibilityLabel(BattleTexts.callWave(in: seconds))
+                    .accessibilityLabel(BattleTexts.callWave(in: seconds, bonus: controller.callBonus))
                     .accessibilityIdentifier("hud.nextWave")
             }
             Button(action: controller.toggleSpeed) {
@@ -119,10 +121,37 @@ private struct RoundBarButton: View {
     }
 }
 
+/// „+7“ steigt an der Goldanzeige auf, wenn frühes Rufen Gold gebracht hat.
+private struct BonusFloat: View {
+    let controller: BattleController
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        Text(BattleTexts.gain(controller.lastBonus))
+            .font(UITheme.display(15))
+            .foregroundStyle(UITheme.coin)
+            .keyframeAnimator(initialValue: CGFloat.zero, trigger: controller.bonusGains) { content, t in
+                content
+                    .opacity(controller.bonusGains == 0 ? 0 : Double(t > 0.7 ? (1 - t) / 0.3 : min(1, t * 6)))
+                    .offset(y: reduceMotion ? 18 : 18 - 22 * t)
+            } keyframes: { _ in
+                KeyframeTrack {
+                    LinearKeyframe(0, duration: 0.001)
+                    LinearKeyframe(1, duration: 1.1)
+                    LinearKeyframe(0, duration: 0.001)
+                }
+            }
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
+    }
+}
+
 /// „Welle rufen“ mit Ring, der bis zum automatischen Start abläuft (D-009).
 private struct WaveButton: View {
     let next: Int
     let fraction: Double
+    /// Gold fürs frühe Rufen (P2-5); 0 in Missionen ohne Bonus.
+    var bonus = 0
     let action: () -> Void
 
     var body: some View {
@@ -139,6 +168,15 @@ private struct WaveButton: View {
                 }
                 .frame(width: 26, height: 26)
                 Text(BattleTexts.nextWaveShort(next)).font(UITheme.display(17))
+                if bonus > 0 {
+                    Text(BattleTexts.gain(bonus))
+                        .font(UITheme.display(14))
+                        .monospacedDigit()
+                        .foregroundStyle(UITheme.cream)
+                        .padding(.horizontal, 6)
+                        .background(Capsule().fill(UITheme.outline))
+                        .accessibilityHidden(true)
+                }
             }
             .foregroundStyle(UITheme.outline)
             .padding(.horizontal, 12)

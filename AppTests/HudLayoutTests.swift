@@ -39,10 +39,20 @@ final class HudLayoutTests: XCTestCase {
     }
 
     func testRingFitsEveryCellOnEveryDevice() {
+        checkRing(counts: 1...3)
+    }
+
+    /// Mission 2 bietet die Zwergenbank als vierten Knopf an (P2-5).
+    func testFourButtonsFitEveryCellOfMissionTwo() throws {
+        map = Simulation(config: try BalanceConfig.bundledMission(named: "mission-02")).map
+        checkRing(counts: 4...4)
+    }
+
+    private func checkRing(counts: ClosedRange<Int>) {
         for device in devices {
             let hud = layout(device)
             for cell in map.buildableCells {
-                for count in 1...3 {
+                for count in counts {
                     let points = hud.ring(at: cell, count: count)
                     let context = "\(device.name), Zelle \(cell.x),\(cell.y), \(count) Knöpfe"
                     XCTAssertEqual(points.count, count, context)

@@ -35,8 +35,11 @@ struct E2EApp {
     /// auf dem Stand, den ein früherer Start mit derselben `storage` schrieb.
     /// `avatar` legt beim Start einen fertigen Avatar dieses Volks an, falls der
     /// Stand noch keinen hat: für Tests, die zur Karte wollen, ohne den Aufbau zu prüfen.
-    init(_ arguments: [String] = [], storage: String = "standard", fresh: Bool = true, avatar: Race? = nil) throws {
-        config = try BalanceConfig.missionOne()
+    /// `mission` nennt die Missionsdatei, aus der Karte und Preise kommen; die
+    /// App startet sie mit `--e2e-knoten` (P2-5).
+    init(_ arguments: [String] = [], storage: String = "standard", fresh: Bool = true, avatar: Race? = nil,
+         mission: String? = nil) throws {
+        config = try mission.map { try BalanceConfig.bundledMission(named: $0) } ?? BalanceConfig.missionOne()
         sim = Simulation(config: config)
         XCUIDevice.shared.orientation = .landscapeLeft
         app.launchArguments = arguments + ["--e2e-speicher", storage] + (fresh ? ["--e2e-frisch"] : [])
@@ -81,7 +84,9 @@ struct E2EApp {
     /// wird immer der echte Wert, auch während die Anzeige noch hochzählt.
     func resultValue(_ id: String) -> String { app.staticTexts[id].label }
 
-    func cost(_ kind: TowerKind) -> Int { config.towers[kind]?.cost ?? 0 }
+    /// Preis aus der Missionsdatei; eine Turmart, die die Mission nicht anbietet,
+    /// ist unbezahlbar statt umsonst.
+    func cost(_ kind: TowerKind) -> Int { config.cost(of: kind) ?? .max }
 
     // MARK: Handlungen
 

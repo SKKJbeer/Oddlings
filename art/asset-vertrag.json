@@ -19,6 +19,11 @@
       "anker": 0.2,
       "alpha": true
     },
+    "tower_bank": {
+      "seiteZellen": 1.9,
+      "anker": 0.2,
+      "alpha": true
+    },
     "fortress": {
       "seiteZellen": 2.4,
       "anker": 0.15,
@@ -155,6 +160,11 @@
       "ordner": "App/Assets.xcassets/UI"
     },
     "ui_tower_spore": {
+      "punkte": 40,
+      "alpha": true,
+      "ordner": "App/Assets.xcassets/UI"
+    },
+    "ui_tower_bank": {
       "punkte": 40,
       "alpha": true,
       "ordner": "App/Assets.xcassets/UI"

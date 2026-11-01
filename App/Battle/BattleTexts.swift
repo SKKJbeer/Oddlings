@@ -8,6 +8,7 @@ enum BattleTexts {
         case .watch: "Wachturm"
         case .lightning: "Blitzturm"
         case .spore: "Sporenturm"
+        case .bank: "Zwergenbank"
         }
     }
 
@@ -22,6 +23,7 @@ enum BattleTexts {
         case .abilityNotReady: "Noch nicht bereit"
         case .notOnPath: "Nur auf den Weg"
         case .noAbility: "Hier nicht verfügbar"
+        case .limitReached: "Höchstzahl erreicht"
         }
     }
 
@@ -67,6 +69,7 @@ enum BattleTexts {
         case .watch: "Ein Ziel, zuverlässig"
         case .lightning: "Springt durch Gruppen"
         case .spore: "Verlangsamt alles im Kreis"
+        case .bank: "Zahlt Gold, kämpft nicht"
         }
     }
 
@@ -75,7 +78,33 @@ enum BattleTexts {
         case .watch: "Schießt länger auf Verlangsamte"
         case .lightning: "Stark, wo Sporen Gruppen stauen"
         case .spore: "Macht Blitze stärker"
+        case .bank: "Früh gebaut, zahlt sie am meisten"
         }
+    }
+
+    // MARK: Zwergenbank und frühes Rufen (P2-5)
+
+    /// Ertrag in einer Zeile, Zahlen aus der Missionsdatei.
+    static func bankIncome(_ bank: BankConfig) -> String {
+        "Ab \(seconds(bank.delay)) s alle \(seconds(bank.interval)) s +\(bank.payout), bis \(bank.cap) Gold"
+    }
+    /// Die eigentliche Entscheidung (07, „Zwergenbank“), in Worten beim Kauf.
+    static func bankWarning(cost: Int) -> String { "Die \(cost) Gold fehlen dir in den nächsten Wellen." }
+    static func bankPaid(_ paid: Int, of cap: Int) -> String { "Ausgezahlt \(paid) von \(cap) Gold" }
+    static let bankEmpty = "Leer. Verkaufen gibt den Platz frei."
+    static let bankEmptyTag = "leer"
+    static func limit(_ standing: Int, of limit: Int) -> String { "\(standing)/\(limit)" }
+    static func limitReached(_ limit: Int) -> String { "Höchstens \(limit) Banken" }
+    static func gain(_ gold: Int) -> String { "+\(gold)" }
+    static func callWave(in seconds: Int, bonus: Int) -> String {
+        bonus > 0 ? "\(callWave(in: seconds)) · +\(bonus) Gold" : callWave(in: seconds)
+    }
+    static func earlyBonus(_ gold: Int) -> String { "Früh gerufen: +\(gold) Gold" }
+
+    /// 20.0 → „20“, 2.5 → „2,5“: Sekunden, wie man sie spricht.
+    static func seconds(_ value: Double) -> String {
+        value.rounded() == value ? "\(Int(value))"
+            : value.formatted(.number.precision(.fractionLength(1)).locale(Locale(identifier: "de_DE")))
     }
 
     static func missing(_ gold: Int) -> String { "fehlt \(gold)" }

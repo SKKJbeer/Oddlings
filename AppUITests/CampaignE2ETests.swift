@@ -25,10 +25,11 @@ final class CampaignE2ETests: XCTestCase {
         XCTAssertEqual(e2e.nodeState("m1"), earned)
         let total = e2e.app.otherElements["map.stars"].label
         XCTAssertTrue(total.hasPrefix("\(stars) von"), total)
-        XCTAssertEqual(e2e.nodeState("m2"), "in Arbeit", "nach M1 ist M2 offen, aber noch nicht gebaut")
+        XCTAssertEqual(e2e.nodeState("m2"), "offen", "nach M1 ist Mission 2 spielbar (P2-5)")
         e2e.node("m2").tap()
         XCTAssertEqual(e2e.app.staticTexts["map.panel.title"].label, "Mission 2")
-        XCTAssertFalse(e2e.mapStart.isEnabled, "eine Mission ohne Karte startet nicht")
+        XCTAssertTrue(e2e.mapStart.isEnabled, "Mission 2 hat eine Karte und startet")
+        XCTAssertEqual(e2e.nodeState("m3"), "in Arbeit", "Mission 3 ist offen, aber noch nicht gebaut")
 
         e2e.app.terminate()
         let again = try E2EApp(storage: "sieg", fresh: false)

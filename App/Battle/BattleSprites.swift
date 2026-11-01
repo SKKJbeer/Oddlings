@@ -313,6 +313,12 @@ final class TowerNode: SKNode {
     let glow: SKSpriteNode?
     /// Aufleuchten beim Schuss, 0 bis 1; die Szene addiert es zum Ruheglühen.
     var flare: CGFloat = 0
+    /// Zwergenbank (P2-5): Balken „ausgezahlt von Obergrenze“ am Fuß. Nur bei
+    /// der Bank vorhanden; leer wird sie grau, damit man sie verkauft.
+    let bankBar: SKSpriteNode?
+    private let bankFill = SKSpriteNode()
+    private let bankWidth: CGFloat
+    private(set) var bankEmpty = false
 
     init(tower: Tower, field: CGFloat) {
         towerID = tower.id
@@ -329,12 +335,49 @@ final class TowerNode: SKNode {
         } else {
             glow = nil
         }
+        bankWidth = BattleStyle.healthWidth * field
+        if tower.kind == .bank {
+            let bar = SKSpriteNode(color: BattleStyle.healthBack,
+                                   size: CGSize(width: bankWidth + 2, height: BattleStyle.healthHeight * field + 2))
+            bar.position = CGPoint(x: 0, y: -BattleStyle.bankBarDrop * field)
+            bar.zPosition = 2
+            bankBar = bar
+        } else {
+            bankBar = nil
+        }
         super.init()
         name = art.name
         addChild(lift)
         lift.addChild(pulse)
         pulse.addChild(art)
         if let glow { pulse.addChild(glow) }
+        if let bankBar {
+            bankFill.color = BattleStyle.bankFill
+            bankFill.anchorPoint = CGPoint(x: 0, y: 0.5)
+            bankFill.size = CGSize(width: 0, height: BattleStyle.healthHeight * field)
+            bankFill.position = CGPoint(x: -bankWidth / 2, y: 0)
+            bankBar.addChild(bankFill)
+            addChild(bankBar)
+        }
+    }
+
+    /// Anteil der Bank am Gold, das sie höchstens auszahlt, 0 bis 1.
+    var bankFraction: CGFloat { bankWidth > 0 ? bankFill.size.width / bankWidth : 0 }
+
+    /// Stand der Bank aus dem Zustand. Leer: grau und blass (07, „Zwergenbank“).
+    func showBank(paid: Int, cap: Int) {
+        guard bankBar != nil else { return }
+        let fraction = cap > 0 ? min(1, CGFloat(paid) / CGFloat(cap)) : 1
+        bankFill.size.width = bankWidth * fraction
+        let empty = paid >= cap
+        guard empty != bankEmpty else { return }
+        bankEmpty = empty
+        bankFill.color = empty ? BattleStyle.bankSpent : BattleStyle.bankFill
+        art.alpha = empty ? BattleStyle.bankEmptyAlpha : 1
+        for case let sprite as SKSpriteNode in art.children {
+            sprite.color = .gray
+            sprite.colorBlendFactor = empty ? 0.8 : 0
+        }
     }
 
     @available(*, unavailable)

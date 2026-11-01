@@ -20,11 +20,14 @@ final class FxDirector {
         /// Treffer und Stürze, die als Bildfolge gespielt wurden (FX 02).
         var flinches = 0, falls = 0
         var dropped = 0
+        /// Auszahlungen und leer gewordene Banken (P2-5).
+        var payouts = 0, empties = 0
 
         var summary: String {
             "arrows=\(arrows) bolts=\(bolts) combos=\(combos) spores=\(spores) hits=\(hits) deaths=\(deaths) "
                 + "coins=\(coins) builds=\(builds) sells=\(sells) leaks=\(leaks) spawns=\(spawns) "
                 + "casts=\(casts) impacts=\(impacts) walls=\(walls) flinches=\(flinches) falls=\(falls) dropped=\(dropped)"
+                + " payouts=\(payouts) empties=\(empties)"
         }
     }
 
@@ -367,6 +370,22 @@ final class FxDirector {
         let top = CGPoint(x: tower.position.x, y: tower.position.y + field * 0.6)
         coins(at: top, count: FxStyle.coinsPerKill)
         label("+\(refund)", at: CGPoint(x: top.x, y: top.y + field * 0.4), color: FxStyle.gold)
+    }
+
+    /// Zwergenbank zahlt: kurzes Nicken und die Summe in Gold. Keine Münzen,
+    /// die gehören den Kills; so bleibt `coins` je Kill zählbar.
+    func bankPaid(_ tower: TowerNode, gold: Int) {
+        stats.payouts += 1
+        recoil(tower, amount: 0.05)
+        label(BattleTexts.gain(gold), at: CGPoint(x: tower.position.x, y: tower.position.y + field * 0.9), color: FxStyle.gold)
+    }
+
+    /// Letzte Auszahlung: Staub und „leer“, danach steht die Bank grau da.
+    func bankEmptied(_ tower: TowerNode) {
+        stats.empties += 1
+        dust(at: tower.position, count: FxStyle.dustPuffs / 2, radius: 0.4, size: 0.4)
+        label(BattleTexts.bankEmptyTag, at: CGPoint(x: tower.position.x, y: tower.position.y + field * 1.2),
+              color: BattleStyle.bankSpent)
     }
 
     /// Wachturm: Rückstoß, Pfeil im Bogen, folgt dem Ziel, Funken beim Einschlag.

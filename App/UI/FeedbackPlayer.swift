@@ -39,6 +39,8 @@ enum FeedbackPlayer {
         case .abilityImpact: .heavy
         case .barrierRaised: .heavy
         case .barrierFell: nil
+        // Banken zahlen alle paar Sekunden; das soll nicht in der Hand summen.
+        case .bankPaid, .bankEmptied, .earlyCallBonus: nil
         case .towerFired, .enemyDamaged, .enemySlowed, .enemyKilled, .waveStarted, .enemySpawned: nil
         }
     }

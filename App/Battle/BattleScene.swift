@@ -244,6 +244,7 @@ final class BattleScene: SKScene {
             let node = towerNodes[tower.id] ?? makeTowerNode(tower)
             if pendingBuilds.remove(tower.id) != nil { fx.build(node) }
             node.idle(time: fx.time, still: fx.reduceMotion)
+            if tower.kind == .bank, let bank = model.sim.config.bank { node.showBank(paid: tower.paid, cap: bank.cap) }
         }
         for (id, node) in towerNodes where liveTowers[id] == nil {
             node.removeFromParent()
@@ -318,7 +319,15 @@ final class BattleScene: SKScene {
             case .watch: fx.arrow(from: tower, at: hit)
             case .lightning: fx.bolt(from: tower, through: hit)
             case .spore: fx.spores(from: tower, range: model.sim.config.towers[.spore]?.range ?? 0)
+            case .bank: break
             }
+        case .bankPaid(let towerID, let gold, _):
+            if let tower = towerNodes[towerID] { fx.bankPaid(tower, gold: gold) }
+        case .bankEmptied(let towerID):
+            if let tower = towerNodes[towerID] { fx.bankEmptied(tower) }
+        case .earlyCallBonus:
+            // Die Gutschrift zeigt die Goldanzeige der Oberfläche.
+            break
         case .enemyDamaged(let id, _):
             if let node = enemyNodes[id] { fx.hit(node) }
         case .enemyKilled(let id, let reward):
