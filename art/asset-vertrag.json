@@ -29,6 +29,24 @@
       "anker": 0.1,
       "alpha": true
     },
+    "enemy_raider_walk": {
+      "folge": 8,
+      "seiteZellen": 0.9,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_raider_hit": {
+      "folge": 3,
+      "seiteZellen": 0.9,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_raider_die": {
+      "folge": 6,
+      "seiteZellen": 0.9,
+      "anker": 0.1,
+      "alpha": true
+    },
     "enemy_runner": {
       "seiteZellen": 0.9,
       "anker": 0.1,

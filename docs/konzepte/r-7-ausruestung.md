@@ -41,7 +41,7 @@ Die Säulen bleiben bestehen und begrenzen, was Ausrüstung darf:
    und passt zu „keine Zufallskisten“. Die Schmiede (Material sammeln, selbst
    herstellen) braucht eine Spielwährung. Die gibt es noch nicht, und über sie wartet
    auch die Karte „Volk wechseln“.
-2. **Wie stark höchstens?** **Entschieden (D-068): volle Ausrüstung zusammen
+2. **Wie stark höchstens?** **Entschieden (D-069): volle Ausrüstung zusammen
    höchstens +10 %** Reserve gegenüber ohne. Das ist spürbar, wiegt aber keine
    Bauweise auf (die Mischung liegt heute rund 0,2 vor der Monokultur).
 
@@ -65,7 +65,7 @@ Die Säulen bleiben bestehen und begrenzen, was Ausrüstung darf:
 
 - Jede Mission bleibt **ohne** Ausrüstung mit drei Sternen schaffbar (Bot, Mischung).
 - Die stärkste erlaubte Ausrüstung hebt die Reserve höchstens um die Obergrenze von
-  +10 % (D-068).
+  +10 % (D-069).
 - „Nur Blitztürme“ und „Nur Sporentürme“ verlieren auch mit der stärksten Ausrüstung.
   Die Mischung bleibt mehr als 0,05 vor „Nur Wachtürme“.
 - Die Balancetests rechnen dafür die stärkste Ausrüstung je Platz mit jedem Volk und
@@ -91,5 +91,5 @@ neue Abhängigkeit.
 ## Offen
 
 1. Herkunft der Stücke (Karte).
-2. ~~Obergrenze der Boni~~: +10 % (D-068).
+2. ~~Obergrenze der Boni~~: +10 % (D-069).
 3. Bilder der Stücke und Rahmen am Porträt: Grafik-Thread, bis dahin Symbole.

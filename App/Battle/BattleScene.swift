@@ -265,8 +265,10 @@ final class BattleScene: SKScene {
             // Stücken bleibt die letzte Richtung, statt zu flackern.
             let ahead = path.position(at: distance + FxStyle.facingLookahead)
             if abs(ahead.x - here.x) > FxStyle.facingThreshold { node.facing = ahead.x > here.x ? 1 : -1 }
-            node.apply(FxMath.pose(distance: distance, phase: FxMath.phase(forID: enemy.id),
-                                   gait: FxStyle.gait(enemy.kind)), field: field)
+            let phase = FxMath.phase(forID: enemy.id)
+            let gait = node.hasFrames ? FxStyle.framedGait(enemy.kind) : FxStyle.gait(enemy.kind)
+            node.apply(FxMath.pose(distance: distance, phase: phase, gait: gait), field: field)
+            node.walk(distance: distance, phase: phase)
             node.show(enemy, dt: dt, stunned: (enemy.stunUntilTick ?? Int.min) > state.tick)
             if appeared { fx.spawn(node) }
         }

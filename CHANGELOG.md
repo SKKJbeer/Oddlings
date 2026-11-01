@@ -11,12 +11,37 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+<<<<<<< HEAD
 ## Dokumente, kein Bau – 01.11.2026 (Bau 33, Konzept R-7 Ausrüstung)
 
 - Bau 33 (0.12.0) von Apple als VALID gemeldet, in Roadmap und Stand eingetragen.
 - Konzept [R-7 Ausrüstung](docs/konzepte/r-7-ausruestung.md): drei Plätze (Banner,
   Amulett, Siegel), nie gegen Echtgeld, keine Zufallstruhen.
-- D-068: volle Ausrüstung macht den Avatar höchstens +10 % stärker.
+- D-069: volle Ausrüstung macht den Avatar höchstens +10 % stärker.
+=======
+## 0.13.0 – 01.11.2026 (FX 02: Plünderer mit Gliedmaßen), Bau offen
+
+**Neu**
+- Der Plünderer geht, zuckt bei Treffern und stürzt als echte Figur mit Armen und
+  Beinen: 17 Bilder aus einem 3D-Modell (Gehen 8, Treffer 3, Sturz 6), im
+  Comic-Stil des Gemäldes. Von Steffen am Bild freigegeben (D-051).
+- Das Laufbild folgt der gegangenen Strecke (`FxMath.walkFrame`), nicht der Zeit:
+  bei 2× und bei Pause passt der Schritt zum Weg. Gegner ohne Bildfolge bleiben
+  Gemälde und hüpfen wie bisher.
+- `FxDirector` spielt Treffer- und Sturzbilder (Zähler `flinches`, `falls` für E2E).
+
+**Werkzeuge**
+- `tools/figuren-3d`: TRELLIS-Modell aus einer gemalten Vorlage, Skelett aus
+  `rig.json`, Comic-Look (Sättigung, Eigenlicht, Umriss, Randlicht), `folge.py` legt
+  Bildfolgen mit einem Maßstab in den Atlas. `angleichen.py` gleicht Farben an das
+  Gemälde an (D-052).
+- `check_assets.py` prüft Bildfolgen auf Lücken (Vertragsfeld `folge`).
+
+**Tests**
+- App: Bildwahl je Strecke, Unabhängigkeit von der Bildrate, Phase, Treffer- und
+  Sturzfolge im Director, Plünderer hat Bildfolgen. E2E prüft `flinches` und `falls`.
+- Grafik: Angleichen, Bildfolge vollständig, mit Lücke, zu lang (rot gesehen).
+>>>>>>> origin/main
 
 ## Dokumente, kein Bau – 27.10.2026 (Architektur, Design und Roadmap nachgezogen, D-067)
 
