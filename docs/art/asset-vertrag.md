@@ -25,7 +25,7 @@ Sie folgen den IDs der Simulation.
 | `tower_<id>_top` | drehbares Oberteil, nur wo es eines gibt |
 | `enemy_raider`, `enemy_runner`, `enemy_brute` | Gegner, Blick nach rechts |
 | `fortress` | Festung am Wegende |
-| `map_mission01_ground` | Boden der ganzen Karte, Weg eingemalt |
+| `map_mission01_ground` … `map_mission04_ground` | Boden der ganzen Karte je Mission (Name aus der Missionskennung), Weg eingemalt; Geometrie je Bild in `art/asset-vertrag.json` unter `mission` ([Grafik 06](../konzepte/grafik-06-kampfplaetze-m2-m4.md)) |
 | `buildzone_tile` | Markierung einer bebaubaren Zelle, Overlay |
 | `fx_glow`, `fx_spark`, `fx_ring`, `fx_puff`, `fx_coin`, `fx_arrow`, `fx_bolt`, `fx_confetti`, `fx_star`, `fx_stone`, `fx_wall` | Effekte, siehe „Effekte“ unten |
 | `icon_slowed` | Zustandssymbol über dem Gegner (E3) |

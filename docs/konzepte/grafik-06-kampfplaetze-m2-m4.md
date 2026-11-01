@@ -1,6 +1,6 @@
 # Konzept: Kampfplätze für Mission 2 bis 4 (Grafik 06)
 
-Status: **[VORSCHLAG]** · Stil D-016 · Thread „Kampfplätze für Mission 2 bis 4 malen"
+Status: **umgesetzt in 0.16.1** · Stil D-016 · Thread „Kampfplätze für Mission 2 bis 4 malen"
 Anlass: Steffen, 01.11.2026, „ja zu allem" auf den Vorschlag, die gemalten
 Kampfplätze für M2 bis M4 parallel zu den Missionsregeln zu bauen.
 
@@ -66,9 +66,14 @@ ersetzt.
   `DEKO=<ordner>` setzt freigestellte Teile (`deko*.png`) in den Waldrand, mit
   Abstand zu Weg, Höhle und Festung, und `LICHT=r,g,b` tönt das Bild. Ohne beide
   rechnet es wie bisher.
-- **Ablauf je Karte** wie M1: Teile malen und freistellen → Collage → einmal
-  übermalen (Stärke 0,4) → Figuren retuschieren → hochrechnen → Atlas. Prompts,
-  Seeds und Schritte in `art/karten/ENTSTEHUNG.md`.
+- **Ablauf je Karte:** Teile malen und freistellen → Collage → einmal übermalen
+  (Stärke 0,4) → hochrechnen → **Ebene auflegen** (`ebene.py`) → Flecken ausgleichen
+  und Fremdkörper retuschieren → Atlas. Prompts, Seeds und Schritte in
+  `art/karten/ENTSTEHUNG.md`.
+- **Ebene:** Mit `DEKO` schreibt `kampfplatz.py` zusätzlich Höhle und Deko freigestellt
+  und getönt in `<aus>-ebene.png`. Grund (gemessen 01.11.2026, Stärke 0,4 und 0,3): Das
+  Übermalen machte aus der Höhle, dem Ursprung der Gegner, eine Lore oder Kuppel und aus
+  Pilzen dunkle Kugeln. Obenauf gelegt bleibt die Höhle in jeder Mission dieselbe.
 
 ## Tests
 
@@ -82,6 +87,16 @@ ersetzt.
   einen Fall, dass `mission-02` sein eigenes Bild findet (sobald M2 auf `main` ist).
 - Vor der Abgabe jede Karte in der echten Ansicht mit Türmen und Gegnern ansehen
   (Vorschau mit Gitter und Bildschirmfoto aus dem Simulator-Probelauf).
+
+## Ergebnis (01.11.2026)
+
+Alle drei Karten in der Szene mit Türmen, Festung und Plünderern angesehen
+(iPhone-Ausschnitt). Weg, Bauplätze und Gegner sind lesbar, der Waldrand trägt den Ort.
+Nachgebessert: In M3 malte FLUX einen dunklen Fleck von vier Zellen ins Feld
+(`ausgleichen.py`), in M2 drei Kiesel so groß wie ein Gegnerkopf (`retusche.py`).
+Kleinere Kiesel bleiben, sie gehören zum Boden. Der erste Übermal-Durchgang mit langen
+Prompts je Ort wurde verworfen (Bäume wurden Farn); der zweite nimmt den Prompt von M1
+und hängt nur den Ort an.
 
 ## Risiken
 

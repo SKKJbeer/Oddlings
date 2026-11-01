@@ -424,9 +424,17 @@ class Kampfplatzbild(unittest.TestCase):
                     self.assertGreater(p[0], p[1], ((ax + bx) / 2, (ay + by) / 2))
                 hell = lambda x, y: sum(px(x, y)) / 3
                 feld = sum(hell(x + 0.5, y + 0.5) for x in range(karte["width"]) for y in range(karte["height"])) / (karte["width"] * karte["height"])
-                for x, y in ((-1.5, karte["height"] / 2 + 2.3), (-mx + 0.5, karte["height"] / 2 + 2.3), (karte["width"] + mx - 0.5, 1.5),
-                             (karte["width"] / 2, -1.5), (karte["width"] / 2, karte["height"] + 1.5)):
-                    self.assertLess(hell(x, y), feld * 0.8, (x, y))
+                # Rand als Streifen gemittelt, nicht als Einzelpixel: Ein heller Busch im Wald
+                # ist erlaubt, ein heller Waldrand nicht.
+                def streifen(punkte):
+                    return sum(hell(x, y) for x, y in punkte) / len(punkte)
+                h, w = karte["height"], karte["width"]
+                for name_, punkte in (("links", [(-1.5, y / 2) for y in range(2 * h)]),
+                                      ("aussen links", [(-mx + 0.5, y / 2) for y in range(2 * h)]),
+                                      ("aussen rechts", [(w + mx - 0.5, y / 2) for y in range(2 * h)]),
+                                      ("oben", [(x / 2, -1.5) for x in range(2 * w)]),
+                                      ("unten", [(x / 2, h + 1.5) for x in range(2 * w)])):
+                    self.assertLess(streifen(punkte), feld * 0.8, name_)
 
 
 if __name__ == "__main__":

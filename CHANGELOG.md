@@ -11,6 +11,20 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.16.1 – 01.11.2026 (Grafik 06: Kampfplätze für Mission 2 bis 4)
+
+- **Mission 2 hat ihren gemalten Kampfplatz**: eine Lichtung am alten Zwergenstollen,
+  Morgenlicht, Lore, Holzstapel und Erz im Waldrand. Statt der gezeichneten Weglinie
+  liegt der Weg jetzt gemalt im Gras, wie in Mission 1.
+- **Kampfplätze für Mission 3 (Pilzhain) und Mission 4 (Ruinenrand)** liegen schon im
+  Katalog, auf den Wegen aus dem Vorschlag (D-081). Sie erscheinen, sobald die
+  Missionen gebaut sind.
+- Höhle der Goblins in jeder Mission dieselbe wie auf der Kampagnenkarte; Deko nur im
+  Wald, nie auf einem Bauplatz.
+- Werkzeug: `kampfplatz.py` mit Deko und Lichtton je Mission, `ebene.py` legt Höhle und
+  Deko nach dem Übermalen wieder auf, `ausgleichen.py` gleicht Flecken im Gras aus.
+  Kunstprüfung für jeden Kampfplatz, App-Test für den Boden jeder Mission.
+
 ## Dokumente, kein Bau – 01.11.2026 (Bauten 34 und 35)
 
 - Bau 34 (0.13.0) und Bau 35 (0.15.0) von Apple als VALID gemeldet, in Roadmap

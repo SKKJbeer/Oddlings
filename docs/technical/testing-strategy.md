@@ -46,7 +46,9 @@ Status: **gilt**, umgesetzt bis 0.12.0; Ende-zu-Ende-Tests **[ENTSCHIEDEN D-029]
   macOS-CI.
 - **CI-Jobs heute** (`.github/workflows/ci.yml`): `regeln` (`scripts/regeln-pruefen.sh`:
   Architektur, Sicherheit, Verweise, Doku-Stand nach D-067), `art` (`tools/art-check`;
-  seit 0.15.0 auch `tools/ton`: jede Tondatei mit Herkunft und CC0-Lizenz, D-082),
+  seit 0.15.0 auch `tools/ton`: jede Tondatei mit Herkunft und CC0-Lizenz, D-082;
+  seit 0.16.1 prüft es jeden Kampfplatz mit `mission` im Vertrag: Weg im Bild auf der
+  Geometrie, dunkler Waldrand, Deko nie auf Bauzellen, Wegvorschlag gleich Missionsdatei),
   `core-linux` (Paket unter Linux), `iphone` (Paket im Release-Bau, App-Bau,
   `AppTests`, `AppUITests`, Probelauf im Simulator mit Bildschirmfotos und
   Spielstand im Artefakt `simulator-probe`). Zusammengeführt wird nur, wenn alle grün sind.

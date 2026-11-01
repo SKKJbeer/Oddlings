@@ -187,6 +187,48 @@
       "alpha": false,
       "ordner": "App/Assets.xcassets/Maps",
       "format": "jpg"
+    },
+    "map_mission02_ground": {
+      "zellen": [
+        24,
+        13
+      ],
+      "alpha": false,
+      "ordner": "App/Assets.xcassets/Maps",
+      "format": "jpg",
+      "rand": [
+        4,
+        2
+      ],
+      "mission": "Packages/OddlingsCore/Sources/OddlingsCore/Resources/Balance/mission-02.json"
+    },
+    "map_mission03_ground": {
+      "zellen": [
+        24,
+        13
+      ],
+      "alpha": false,
+      "ordner": "App/Assets.xcassets/Maps",
+      "format": "jpg",
+      "rand": [
+        4,
+        2
+      ],
+      "mission": "art/karten/wegvorschlaege/mission-03.json"
+    },
+    "map_mission04_ground": {
+      "zellen": [
+        24,
+        13
+      ],
+      "alpha": false,
+      "ordner": "App/Assets.xcassets/Maps",
+      "format": "jpg",
+      "rand": [
+        4,
+        2
+      ],
+      "mission": "art/karten/wegvorschlaege/mission-04.json"
     }
   }
 }

@@ -74,6 +74,16 @@ aus `wegvorschlaege/` (D-081).
    - M2: `a sunny morning forest clearing at the edge of an old dwarven mine, a timber framed mine shaft entrance, an ore cart and stacked logs among the dense round tree canopies, lush fresh green grass with small flowers, cool fresh morning light from top left with golden highlights, soft tree shadows`
    - M3: `a mossy clearing deep in an enchanted forest, giant red toadstools and glowing teal mushrooms, ferns and mossy boulders among the dense round tree canopies, deep green mossy grass with clover, soft diffused afternoon light with a gentle teal tint, soft tree shadows`
    - M4: `a forest clearing at the edge of ancient crumbling grey stone ruins, broken mossy walls and fallen pillars among the dense round tree canopies, lush grass with small flowers, warm golden late afternoon light from top left, long soft tree shadows`
-4. **Hochrechnen und Atlas** wie bei Mission 1: `hochskalieren.sh rohbild aus 3096x1677`,
-   `atlas.py aus map_missionNN_ground 24x13 voll _ App/Assets.xcassets/Maps`.
-   Collagen und Rohbilder liegen unter `kampfplaetze/`.
+   **Verworfen:** ein erster Durchgang mit Stärke 0,4 und langen Ortsprompts
+   (`a sunny morning forest clearing at the edge of an old dwarven mine, …`): Die runden
+   Baumkronen wurden Farn, die Höhle eine Lore. Gilt jetzt der Prompt von Mission 1 mit
+   angehängtem Ort, Stärke 0,3. Auch dann verwischt die Höhle, deshalb Schritt 5.
+4. **Hochrechnen:** `hochskalieren.sh rohbild gross.png 3096x1677`.
+5. **Ebene auflegen:** `ebene.py gross.png <collage>-ebene.png fertig.png` (Höhle und Deko
+   aus der Collage obenauf, weicher Schatten).
+6. **Nachbessern:** M2 `retusche.py fertig.png aus.png "1370,615,1470,720:1240,615"
+   "1070,695,1165,790:1170,695" "2545,1290,2640,1385:2440,1290"` (drei große Kiesel im
+   Feld); M3 zweimal `ausgleichen.py fertig.png aus.png 8.2,1.4,12.6,6.6` (dunkler Fleck).
+7. **Atlas:** `atlas.py aus map_missionNN_ground 24x13 voll _ App/Assets.xcassets/Maps`.
+   Collagen und Rohbilder liegen unter `kampfplaetze/` (`missionNN-collage.jpg`,
+   `missionNN-rohbild.jpg`).

@@ -5,8 +5,8 @@ ergänzt, D-067). Reihenfolge, Pakete und alles, was auf dich wartet, stehen in 
 [Roadmap](roadmap.md); Einzelheiten im [Backlog](backlog.md), offene Fragen im
 [Register](offene-fragen.md).
 
-**Stand: 01.11.2026** · Neueste Version **0.16.0** (Mission 2 mit Zwergenbank), Bau 36 VALID in TestFlight;
-davor 0.15.0 (Ton und Musik), 0.13.0 (Plünderer mit Gliedmaßen). Der Spielrahmen R-1 bis R-6 steht. Spielbar sind Mission 1 und Mission 2.
+**Stand: 01.11.2026** · Neueste Version **0.16.1** (gemalte Kampfplätze für Mission 2 bis 4), Bau läuft;
+davor 0.16.0 (Mission 2 mit Zwergenbank, Bau 36 VALID), 0.15.0 (Ton und Musik), 0.13.0 (Plünderer mit Gliedmaßen). Der Spielrahmen R-1 bis R-6 steht. Spielbar sind Mission 1 und Mission 2.
 
 ## Wartet auf dich
 
@@ -29,7 +29,8 @@ davor 0.15.0 (Ton und Musik), 0.13.0 (Plünderer mit Gliedmaßen). Der Spielrahm
 - **Mission 2 mit Zwergenbank** (P2-5, 0.16.0): neuer Weg, zehn härtere Wellen, die
   Bank als vierter Knopf im Kreismenü (zahlt nach 20 s alle 4 s Gold bis 300, höchstens
   zwei), Gold fürs frühe Rufen der Welle. Nach dem Sieg in Mission 1 auf der Karte
-  offen. Werte sind Hypothesen bis zum Spieltest; der gemalte Boden kommt noch.
+  offen. Werte sind Hypothesen bis zum Spieltest. Gemalter Kampfplatz am Zwergenstollen (0.16.1);
+  die Kampfplätze für Mission 3 (Pilzhain) und 4 (Ruinenrand) liegen bereit.
 - **Grafik und Bewegung**: gemalte Figuren, Türme, Symbole, Titelbild, Kampfplatz als
   Waldlichtung mit Zwergenfeste, Porträts (Grafik 01 bis 05); Laufen, Treffer, Tod,
   Turmangriffe und Fähigkeiten als Effekte (FX 01, 0.10.0); der Plünderer geht,
