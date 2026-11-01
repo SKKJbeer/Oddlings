@@ -60,7 +60,7 @@ public struct Tower: Codable, Equatable, Sendable {
 
     private enum CodingKeys: String, CodingKey { case id, kind, cell, cooldownTicks, spent, builtTick, paid }
 
-    /// Zustände ohne die Bankfelder (vor 0.14.0) bleiben lesbar.
+    /// Zustände ohne die Bankfelder (vor 0.16.0) bleiben lesbar.
     public init(from decoder: any Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         id = try c.decode(Int.self, forKey: .id)

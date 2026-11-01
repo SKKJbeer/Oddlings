@@ -286,10 +286,15 @@ häufigste Handlung.
   beim Kauf in Worten dastehen.
 - **Höchstzahl erreicht:** Knopf gedimmt, Schild „2/2" statt Preis.
 - **Auf der Karte:** ein Füllbalken unter der Bank zeigt, wie viel vom Deckel
-  ausgezahlt ist. Jede Auszahlung (`bankPaid`) lässt „+10" aufsteigen, die
-  Münzen fliegen zum Goldzähler, der Zähler zählt hoch (E1).
-- **Leer:** Bank wird grau, Schild „leer", kein Balken. Antippen zeigt nur
-  „Verkaufen" und den Satz „Leer. Verkaufen gibt den Platz frei."
+  ausgezahlt ist. Jede Auszahlung (`bankPaid`) lässt die Summe in Gold aufsteigen
+  („+5“), die Bank nickt, der Goldzähler zählt hoch (E1). Keine Münzen: Die
+  gehören den Kills, sonst sähe eine Bank alle vier Sekunden wie ein Treffer aus.
+  Keine Vibration, aus demselben Grund.
+- **Leer:** Bank wird grau und blass, „leer“ steigt einmal auf, der Balken bleibt
+  voll und grau. Antippen zeigt nur „Verkaufen" und den Satz „Leer. Verkaufen
+  gibt den Platz frei."
+- **Infotafel einer stehenden Bank:** „Ausgezahlt 120 von 300 Gold“ und der
+  Ertrag in einer Zeile. Umgesetzt in 0.16.0.
 - Keine Aufwertung, keine Zielwahl (K3).
 
 ### Bonus für frühes Rufen
@@ -298,6 +303,8 @@ Der Knopf „Welle rufen" trägt neben der Wellennummer ein kleines Goldschild m
 dem Bonus, den Rufen **jetzt** brächte. Es sinkt mit dem Countdown. Beim Rufen
 zählt das Gold hoch und der Hinweis nennt den Betrag. Mehr braucht es nicht: Der
 Spieler sieht den Preis des Wartens, ohne dass ein Text ihn erklärt.
+Umgesetzt in 0.16.0: Schild „+12“ am Knopf, beim Rufen steigt „+12“ an der
+Goldanzeige auf; VoiceOver liest „Nächste Welle · 25 s · +12 Gold“.
 
 ### Festungsfähigkeit (Steinregen)
 

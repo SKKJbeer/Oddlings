@@ -16,9 +16,11 @@ Begriffe im Spiel deutsch.
 ```swift
 struct BalanceConfig: Codable {
     var simulation: SimulationConfig        // ticksPerSecond
-    var mission: MissionConfig               // fortressLives, startGold, firstWaveDelay, timeBetweenWaves, sellRefundRate
+    var mission: MissionConfig               // fortressLives, startGold, firstWaveDelay, timeBetweenWaves, sellRefundRate,
+                                             // earlyCallBonus: Double? (Gold je eingesparter Sekunde, P2-5)
     var map: MapConfig                       // width, height, path [[x,y]], buildZones (ab WP-03)
-    var towers: [TowerKind: TowerConfig]
+    var towers: [TowerKind: TowerConfig]     // nur Kampftürme (TowerKind.combat)
+    var bank: BankConfig?                    // Zwergenbank, nur wo die Mission sie anbietet (P2-5, D-083)
     var enemies: [EnemyKind: EnemyConfig]
     var waves: [WaveConfig]
 }
@@ -28,6 +30,10 @@ struct TowerConfig: Codable {               // ein Typ, optionale Felder je Roll
     var targeting: Targeting                 // .first, .aura
     var chainJumps: Int?; var chainRadius: Double?; var chainFalloff: Double?
     var slowFactor: Double?; var slowDuration: Double?
+}
+
+struct BankConfig: Codable {                // eigener Typ: keine Reichweite, kein Schaden, kein Takt (D-083)
+    var cost: Int; var delay: Double; var interval: Double; var payout: Int; var cap: Int; var limit: Int
 }
 
 struct EnemyConfig: Codable { var hp: Double; var speed: Double; var reward: Int; var leakDamage: Int }
@@ -42,9 +48,13 @@ referenzierte Gegner existiert, Weg hat ≥ 2 Punkte. Umgesetzt in
 `ConfigValidation.swift`: `BalanceConfig.load(from:)` liest und prüft in einem
 Schritt und meldet **alle** Verstöße mit Ort (`towers.watch.cost muss größer als 0
 sein`). Jeder Turmtyp muss Werte haben; ein Gegner ohne Werte ist nur ein Fehler,
-wenn eine Welle ihn ruft (die Panzerbestie ist optional). Ein Turmtyp, den es im
-MVP nicht gibt (`bank`), lässt das Lesen scheitern. Punkte stehen im JSON als
-`[x, y]`.
+wenn eine Welle ihn ruft (die Panzerbestie ist optional). Ein unbekannter Turmtyp
+lässt das Lesen scheitern; `bank` unter `towers` meldet die Prüfung als
+`bankNotATower`, denn die Bank hat ihren eigenen Abschnitt `bank`. Eine Bauweise
+der Bots, die eine Bank nennt, ohne dass die Mission eine hat, meldet
+`strategyNeedsBank`. `config.buildable` ist die Liste fürs Kreismenü (drei
+Kampftürme, mit Bank vier), `config.cost(of:)` der Preis jeder Art. Punkte stehen
+im JSON als `[x, y]`.
 
 **Später zur Wahl:** Optionale Felder genügen für drei Türme. Kommen viele Rollen
 dazu, wird `TowerConfig` zu einer Liste von Wirkungen (`effects: [Effect]`). Erst
@@ -66,7 +76,11 @@ struct GameState: Codable, Equatable {
     var rng: SplitMix64
 }
 
-struct Tower: Codable, Equatable { var id: Int; var kind: TowerKind; var cell: Cell; var cooldownTicks: Int; var spent: Int }
+struct Tower: Codable, Equatable {
+    var id: Int; var kind: TowerKind; var cell: Cell; var cooldownTicks: Int; var spent: Int
+    var builtTick: Int               // ab hier zählt die Verzögerung der Bank (P2-5)
+    var paid: Int                    // von der Bank ausgezahlt, höchstens `cap`
+}
 struct Enemy: Codable, Equatable {
     var id: Int; var kind: EnemyKind
     var hp: Double; var maxHP: Double
@@ -109,6 +123,8 @@ enum Event: Equatable {
     case abilityCast(center: Point, impactTick: Int)      // Schatten bis zum Einschlag
     case abilityImpact(center: Point, hits: [Int])       // Steinregen oder Mondmal
     case barrierRaised(distance: Double, untilTick: Int), barrierFell   // Bollwerk (R-4)
+    case bankPaid(towerID: Int, gold: Int, paid: Int), bankEmptied(towerID: Int)   // Zwergenbank (P2-5)
+    case earlyCallBonus(gold: Int)                        // frühes Rufen der nächsten Welle
 }
 
 func step(_ state: inout GameState, commands: [Command], config: BalanceConfig) -> [Event]
@@ -116,12 +132,20 @@ func step(_ state: inout GameState, commands: [Command], config: BalanceConfig) 
 
 **Reihenfolge innerhalb eines Schritts** (festgeschrieben, weil sie Ergebnisse
 ändert): Befehle → Mauer fällt, Einschlag von Stein oder Mal → Wellen/Spawns → Türme feuern (nach ID) → Tote auswerten und
-Gold gutschreiben → Bewegung (Angehaltene stehen, niemand läuft durch die Mauer)
+Gold gutschreiben → Banken zahlen (nach ID) → Bewegung (Angehaltene stehen, niemand läuft durch die Mauer)
 → Durchbrüche → Sieg/Niederlage.
 Fähigkeit im Zustand: `GameState.ability { readyTick, strike, barrier }`, am
 Gegner `stunUntilTick` und `vulnerable { factor, untilTick }`; alles zählt in
 die Prüfsumme. Jeder Treffer läuft durch `Simulation.hurt`, damit das Mondmal für
 Türme und Stein gleich wirkt.
+
+Zwergenbank (P2-5): Die erste Auszahlung kommt `delay + interval` nach
+`builtTick`, danach alle `interval`; die letzte wird auf den Rest bis `cap`
+gekürzt und meldet zusätzlich `bankEmptied`. Ältere Spielstände ohne `builtTick`
+und `paid` lesen sich mit 0. Bau über der Höchstzahl lehnt die Simulation mit
+`Rejection.limitReached` ab, vor der Goldprüfung. Der Bonus fürs frühe Rufen ist
+eingesparte Sekunden mal `earlyCallBonus`, abgerundet;
+`Simulation.earlyCallBonus(in:)` liefert dieselbe Zahl für den Knopf.
 
 **Völker (R-4):** `AbilityConfig.kind` ist `stoneRain`, `bulwark` oder
 `moonMark`. Fehlt `kind`, gilt `stoneRain`. `issues()` verlangt genau die Felder

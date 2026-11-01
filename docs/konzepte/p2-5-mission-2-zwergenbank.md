@@ -27,8 +27,8 @@ und bekommt seine erste Talentwahl. Das kommt ohne eigene Arbeit aus der Kampagn
 | Regel frühes Rufen | `callNextWave` schreibt Gold für die eingesparten Sekunden gut, Ereignis `earlyCallBonus` |
 | Mission 2 | `mission-02.json`: eigener Weg, 10 Wellen, Bank und Bonus, Sterngrenzen wie M1. Alle Werte **[HYPOTHESE]** bis nach WP-15 |
 | Kampagne | Knoten M2 bekommt seine Missionsdatei und ist nach M1 spielbar |
-| Bedienung | vierter Knopf im Kreismenü, Warnsatz in der Infotafel, Füllbalken und Münzen an der Bank, „leer“, Goldschild am Welle-Knopf |
-| Grafik | gemalter Kampfplatz `map_mission02_ground` mit dem Weg von M2 (Weg der Grafik 05), Bank `tower_bank` aus Grafik 02 in den Atlas |
+| Bedienung | vierter Knopf im Kreismenü, Warnsatz in der Infotafel, Füllbalken und „+5“ an der Bank (keine Münzen, die gehören den Kills), „leer“, Goldschild am Welle-Knopf |
+| Grafik | Bank `tower_bank` und `ui_tower_bank` aus der freigestellten Vorlage der Grafik 02 in Atlas und Symbolkatalog. Der gemalte Kampfplatz `map_mission02_ground` kommt aus dem Thread „Kampfplätze für Mission 2 bis 4 malen“ in einem eigenen PR; bis dahin zeigt M2 den gezeichneten Ersatzboden |
 | Tests | Regeln im Paket, Darstellung in `AppTests`, Ende-zu-Ende: M2 von der Karte starten, Bank bauen, Auszahlung sehen, früh rufen |
 
 **Nicht drin:** Aufwertungen und Zielwahl (P2-6, Mission 3), Panzerbestie und
@@ -100,14 +100,14 @@ Kreismenü ─▶ Controller.choose(.bank) ─▶ enqueue(.build(.bank, cell))
           ─▶ Simulation.step: apply(build) prüft limit, Gold, Zelle
                               payBanks() nach collectKills: bankPaid / bankEmptied
 Welle-Knopf ─▶ enqueue(.callNextWave) ─▶ apply: Gold gutschreiben, earlyCallBonus
-Szene ◀── Ereignisse (Münzen, „+5“, Leer-Zustand)    HUD ◀── Controller-Kopien
+Szene ◀── Ereignisse („+5“, Leer-Zustand)    HUD ◀── Controller-Kopien
 ```
 
 - **Eigener Abschnitt statt `TowerConfig`:** `BalanceConfig.bank: BankConfig?`.
   `TowerConfig` beschreibt Kampftürme (Reichweite, Schaden, Takt); eine Bank hat
   nichts davon. Die Anmerkung in [data-models.md](../technical/data-models.md)
   sah den Umbau für den vierten Rollentyp vor; so bleibt jeder Typ ohne Felder,
-  die für ihn nichts bedeuten. **[gilt]**, Eintrag im Entscheidungsprotokoll.
+  die für ihn nichts bedeuten. **[gilt]**, D-083 im Entscheidungsprotokoll.
 - `TowerKind.bank` kommt dazu, damit Bau, Verkauf, Befehl und Spielstand
   dieselben Wege nehmen wie jeder Turm. `TowerKind.combat` nennt die drei
   Kampftürme; Prüfung und Feuern laufen nur über sie. Welche Türme eine Mission
@@ -157,9 +157,9 @@ genannte Missionsdatei gültig ist (seit R-2). Kein Netz, keine neue Bibliothek.
 | Ebene | Was |
 |---|---|
 | Paket | `BankTests`: Bau, Ablehnung über `limit` und bei zu wenig Gold, erste Auszahlung genau nach `delay + interval`, Deckel mit gekürzter letzter Auszahlung, `bankEmptied` einmal, Verkauf erstattet nach Baukosten, Bank schießt nicht, Mission ohne Abschnitt lehnt `bank` ab. `EarlyCallTests`: Bonus abgerundet, kein Bonus ohne Wert, kein Bonus ohne ausstehende Welle. `ConfigValidation` für die neuen Felder. `CampaignTests`: M2 nach M1 offen, Datei gültig. Determinismus und `BalanceTests` für M2 |
-| App | `BattleControllerTests`: Bank im Angebot nur mit Abschnitt, Höchstzahl dimmt, Bonusvorschau sinkt mit dem Countdown. `BattleSpritesTests`/`UIArtTests`: Bild für `tower_bank` und Boden M2. `BattleSceneTests`: Füllbalken folgt `paid`, leer wird grau |
-| Ende-zu-Ende | `BankE2ETests`: M2 über `--play` mit `--e2e-knoten m2` starten, Bank bauen, Knopf zeigt danach die Höchstzahl, Gold steigt nach der Verzögerung (Zeitraffer), früh rufen bringt Gold. `CampaignE2ETests`: nach drei Sternen in M1 ist M2 spielbar |
-| Grafik | `tools/art-check`: Vertrag für `map_mission02_ground` (24 × 13 Zellen), Weg im Bild auf der Geometrie aus `mission-02.json` |
+| App | `BankControllerTests`: Bank im Angebot nur mit Abschnitt, Höchstzahl dimmt und sendet nichts, Bonus wie die Simulation, Füllbalken folgt `paid`, leer wird grau, Szene zählt Auszahlungen ohne Münzen. `BattleSpritesTests`/`UIArtTests`: Bild für `tower_bank`. `HudLayoutTests`: vier Knöpfe auf jeder Zelle von M2 |
+| Ende-zu-Ende | `BankE2ETests`: M2 über `--play` mit `--e2e-knoten m2` starten, Bank bauen (Warnsatz, Preis), früh rufen bringt Gold, an der Höchstzahl nennt der Knopf sie und baut nichts. `CampaignE2ETests`: nach dem Sieg in M1 ist M2 offen und startbar |
+| Grafik | `tools/art-check`: Vertrag für `tower_bank` und `ui_tower_bank`. Der Boden M2 bringt seinen Vertrag im PR des Kampfplatz-Threads mit |
 
 Jeder neue Test wird einmal rot gesehen.
 
@@ -168,8 +168,7 @@ Jeder neue Test wird einmal rot gesehen.
 - **Balance ohne Spieltest:** Alle Werte sind Hypothesen. Die Balancetests halten
   die Kennzahl aus 04, das Spielgefühl klärt erst ein Mensch. Nach WP-15 werden
   M1 und M2 zusammen nachgezogen.
-- **Bodenbild:** Der teure Teil. Weg der Grafik 05 (Collage, Übermalen,
-  Hochrechnen) mit dem neuen Weg; der Weg im Bild wird gegen die Geometrie
-  geprüft.
+- **Bodenbild:** Der teure Teil, deshalb in einem eigenen Thread. Bis es da ist,
+  sieht M2 schlichter aus als M1; die Regeln hängen nicht daran.
 - **Vier Knöpfe im Bogen** am oberen und unteren Rand: `HudLayout.ring` kennt
   beliebige Anzahlen; `HudLayoutTests` bekommt den Fall mit vier.
