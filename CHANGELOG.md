@@ -11,6 +11,11 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## Dokumente, kein Bau – 02.11.2026 (Mission 3 nach R-7a, D-085)
+
+- Steffen hat Karte S7 entschieden: nach der Ausrüstung kommt Mission 3 mit
+  Aufwertungen (D-085). Karte aus Roadmap und Stand gestrichen.
+
 ## Dokumente, kein Bau – 02.11.2026 (Karte S7: was nach R-7a kommt)
 
 - Neue Entscheidungskarte für Steffen in Roadmap und Stand eingetragen (D-067).
