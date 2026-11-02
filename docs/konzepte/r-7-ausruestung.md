@@ -2,7 +2,7 @@
 
 **Stand:** 01.11.2026 · Grundlage D-066 (Steffen, 27.10.2026: „Ausrüstung mit kleinen
 Boni“), Vorgänger [R-6](r-6-avatarrang.md). **R-7a umgesetzt in 0.19.0**, R-7b
-(Schmiede) folgt mit eigenem Konzept.
+(Schmiede) folgt mit eigenem [Konzept](r-7b-schmiede.md).
 
 ## Ziel
 

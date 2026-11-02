@@ -15,7 +15,9 @@ davor 0.18.0 (Mission 3 mit Aufwertungen, Bau 38 VALID), 0.16.1 (gemalte Kampfpl
 2. **Spieltest mit drei Personen** (WP-15) auf dem neuesten Bau, mit dem
    [Beobachtungsbogen](playtests/beobachtungsbogen.md). Davon hängen Phase 2 und die
    Werte von Mission 1 ab.
-3. Ohne Eile: Messung des Spikes auf dem iPhone (WP-01).
+3. Ohne Eile: drei Karten zur Schmiede (R-7b) im Haupt-Thread: woher die Spielwährung
+   kommt, was die Schmiede macht, wie die Währung heißt. Gebaut wird sie erst nach Mission 3.
+4. Ohne Eile: Messung des Spikes auf dem iPhone (WP-01).
 
 ## Fertig
 
@@ -54,7 +56,7 @@ davor 0.18.0 (Mission 3 mit Aufwertungen, Bau 38 VALID), 0.16.1 (gemalte Kampfpl
 
 | Thread | Woran | Nächster Schritt |
 |---|---|---|
-| Haupt-Thread | 0.19.0 Ausrüstung (R-7a) in TestFlight | Konzept R-7b Schmiede mit Spielwährung, Karten an dich |
+| Haupt-Thread | 0.19.0 Ausrüstung (R-7a) in TestFlight (Bau 39) | [Konzept R-7b Schmiede](../konzepte/r-7b-schmiede.md) steht, wartet auf deine drei Karten |
 | Mission 2 mit Zwergenbank | 0.16.0, Bau 36 in TestFlight | Werte nach dem Spieltest nachziehen |
 | Mission 3 mit Aufwertungen | 0.18.0 im PR | zusammenführen, Bau in TestFlight, danach Mission 4 |
 | Plünderer-3D-Modell | 0.13.0 in TestFlight | Flitzer und Panzerbestie, wenn dir der Plünderer im Spiel gefällt |

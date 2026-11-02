@@ -15,6 +15,8 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 
 - Bau 38 (0.18.0) und Bau 39 (0.19.0) von Apple als VALID gemeldet, in Roadmap und
   Stand eingetragen.
+- Konzept [R-7b Schmiede](docs/konzepte/r-7b-schmiede.md) mit drei offenen Karten an
+  Steffen (Karte S8 in der Roadmap).
 
 ## 0.19.0 – 02.11.2026 (R-7a: Ausrüstung aus festen Belohnungen) · Bau 39
 

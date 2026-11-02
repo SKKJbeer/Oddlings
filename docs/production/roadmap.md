@@ -33,6 +33,7 @@ zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzeln
 | S2 | Volk wechseln, bevor es eine Spielwährung gibt (Entscheidungskarte seit 26.10.) | Thread „Oddlings-Designstand und MVP-Plan aufsetzen“ | nichts, die Empfehlung gilt bis zur Antwort | Gar nicht |
 | S3 | **Spieltest mit drei Personen** auf dem neuesten Bau, [Beobachtungsbogen](playtests/beobachtungsbogen.md) | WP-15 | Abschluss Phase 1, Schnitt Phase 2, D-030, Werte D-007 | so bald wie möglich |
 | S4 | Leistung des Spikes auf dem iPhone messen | WP-01 | nichts Akutes; D-002 gilt bis dahin | ohne Eile |
+| S8 | R-7b Schmiede: woher die Währung kommt, was die Schmiede macht, wie die Währung heißt (drei Karten seit 02.11.) | Haupt-Thread, [Konzept](../konzepte/r-7b-schmiede.md) | nur R-7b; es kommt ohnehin erst nach Mission 3 (D-085) | ohne Eile |
 
 ## Als Nächstes
 
@@ -115,7 +116,7 @@ Spieltest WP-15 wartet nicht darauf.
 | R-5 | Avatar einmal am Anfang: Volk, Porträt, Name (D-063) | R-4 | ✓ 0.11.0, Porträts 0.11.1 |
 | R-6 | Avatarrang mit Talentwahl, eigenes Avatar-Menü (D-064, D-065) | R-5 | ✓ 0.12.0 |
 | R-7a | Ausrüstung mit kleinen Boni im Avatar-Menü, feste Belohnungen (D-066, D-069 bis D-071) | R-6 | ✓ 0.19.0 |
-| R-7b | **Schmiede** mit Spielwährung im Avatar-Menü (D-070) | R-7a | Konzept offen |
+| R-7b | **Schmiede** mit Spielwährung im Avatar-Menü (D-070) | R-7a | [Konzept](../konzepte/r-7b-schmiede.md) steht, wartet auf S8 |
 
 ## Parallel: Grafik und Bewegung
 
