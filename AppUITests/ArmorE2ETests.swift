@@ -9,7 +9,8 @@ final class ArmorE2ETests: XCTestCase {
 
     @MainActor
     func testArmoredBruteSparksAndShowsTheHint() throws {
-        let e2e = try E2EApp(["--play", "--e2e-knoten", "m4", "--e2e-zeitraffer", E2EApp.readableFastForward, "--e2e-fx"],
+        let e2e = try E2EApp(["--play", "--e2e-knoten", "m4", "--e2e-zeitraffer", E2EApp.readableFastForward,
+                              "--e2e-erste-welle", E2EApp.wavesOnHold, "--e2e-fx"],
                              mission: "mission-04")
         e2e.waitForBoard()
         XCTAssertTrue(e2e.config.hasArmoredEnemies, "Mission 4 hat Panzerung")
@@ -20,7 +21,11 @@ final class ArmorE2ETests: XCTestCase {
         let cells = e2e.map.buildableCells.sorted {
             e2e.map.path.coverage(around: $0.center, radius: range) > e2e.map.path.coverage(around: $1.center, radius: range)
         }
+        // Erst bauen, dann rufen: Im Zeitraffer liefen sonst schon Plünderer
+        // über die Zellen am Weg, und ein Tipp dort traf den Gegner statt der
+        // Zelle (erster CI-Lauf, „Baumenü öffnet“ rot).
         for cell in cells.prefix(2) { e2e.build(.watch, at: cell) }
+        e2e.nextWave.tap()
 
         let stats = e2e.app.staticTexts["fx.stats"]
         XCTAssertTrue(stats.waitForExistence(timeout: 10), "Effektzähler da")
