@@ -81,7 +81,7 @@ enum CampaignTexts {
         case .basics: "Wachturm, Blitzturm, Sporenturm"
         case .bank: "Neu: Zwergenbank"
         case .upgrades: "Neu: Aufwerten und Zielwahl"
-        case .ability: "Neu: Festungsfähigkeit und Panzerbestie"
+        case .armor: "Neu: gepanzerte Panzerbestie"
         case .specializations: "Neu: Spezialisierungen"
         case .boss: "Neu: der Boss des Flüsterwalds"
         case .specialRule: "Neu: Sonderregel"

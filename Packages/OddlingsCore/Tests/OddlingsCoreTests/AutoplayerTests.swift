@@ -59,4 +59,23 @@ struct AutoplayerTests {
         #expect(Set(cells).count == 3)
         #expect(player.order.count == 1)
     }
+
+    @Test("Gegen Panzerung zielt er mit aufgewerteten Wachtürmen auf die Stärksten, sonst nicht")
+    func targetsStrongestAgainstArmor() throws {
+        func finalTowers(_ config: BalanceConfig) -> [Tower] {
+            let sim = Simulation(config: config)
+            var player = Autoplayer(demoOf: config)
+            var state = sim.newGame(seed: 1)
+            while !state.isOver && state.tick < 200_000 {
+                sim.step(&state, commands: player.commands(for: state, in: sim))
+            }
+            return state.towers.filter { $0.kind == .watch && $0.level == 2 }
+        }
+        let four = finalTowers(try BalanceConfig.bundledMission(named: "mission-04"))
+        #expect(!four.isEmpty)
+        #expect(four.allSatisfy { $0.targetMode == .strongest })
+        let three = finalTowers(try BalanceConfig.bundledMission(named: "mission-03"))
+        #expect(!three.isEmpty)
+        #expect(three.allSatisfy { $0.targetMode == .first }, "M3 hat keine Panzerung")
+    }
 }

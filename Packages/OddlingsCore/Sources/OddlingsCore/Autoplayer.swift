@@ -56,6 +56,13 @@ public struct Autoplayer: Sendable {
             occupied.append(cell)
             commands.append(.build(kind, cell))
         }
+        // Gegen Panzerung richtet der Mitspieler aufgewertete Wachtürme auf die
+        // zähesten Ziele (P2-10), wie der Balance-Bot; sonst bleibt alles beim Alten.
+        if sim.config.hasArmoredEnemies {
+            for tower in state.towers where tower.kind == .watch && tower.level == 2 && tower.targetMode != .strongest {
+                commands.append(.setTargetMode(towerID: tower.id, .strongest))
+            }
+        }
         return commands
     }
 

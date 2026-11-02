@@ -10,6 +10,8 @@ enum SoundMoment: Equatable, Sendable {
     /// `links` = Ziele in der Kette (Blitz), `combo` = ein Ziel war verlangsamt (E2).
     case fired(TowerKind, links: Int, combo: Bool)
     case damaged, slowed, killed, leaked
+    /// Die Panzerung hat einen Treffer geschluckt (P2-10).
+    case armored
     case waveStarted(index: Int, count: Int)
     case missionEnded(won: Bool)
     case abilityCast

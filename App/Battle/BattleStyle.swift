@@ -33,6 +33,10 @@ enum BattleStyle {
     static let bankSpent = SKColor(white: 0.55, alpha: 1)
     /// Schild „II“ oben rechts an einem aufgewerteten Turm (P2-6): Gold auf Dunkel wie die Preisschilder.
     static let levelBadgeFill = SKColor(red: 1.00, green: 0.84, blue: 0.25, alpha: 1)
+    /// Schild gepanzerter Gegner (P2-10): kühles Eisen, dunkler Rand, Höhe in Feldern.
+    static let armorBadgeFill = SKColor(red: 0.72, green: 0.76, blue: 0.82, alpha: 1)
+    static let armorBadgeStroke = SKColor(red: 0.20, green: 0.22, blue: 0.27, alpha: 1)
+    static let armorBadgeSize: CGFloat = 0.26
     static let levelBadgeStroke = SKColor(red: 0x22 / 255, green: 0x16 / 255, blue: 0x0F / 255, alpha: 1)
     static let bankEmptyAlpha: CGFloat = 0.6
 

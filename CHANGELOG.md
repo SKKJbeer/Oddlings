@@ -11,12 +11,28 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.20.0 – 02.11.2026 (P2-10: Mission 4 mit gepanzerter Panzerbestie)
+
+- **Mission 4 „Ruinenrand“** spielbar, nach dem Sieg in Mission 3 offen: U-förmiger
+  Weg auf dem gemalten Kampfplatz (D-081), zehn Wellen mit Panzerbestien ab Welle 2,
+  Welle 6 nur Panzerbestien. Aufwerten, Bank und Bonus wie in Mission 3.
+- **Rüstung** (K7, D-087, Entscheidung S8 steht noch aus): Die Panzerbestie zieht
+  in Mission 4 von jedem Turmtreffer 8 ab, ein Viertel bleibt immer. Viele kleine
+  Treffer verlieren viel, der aufgewertete Wachturm wenig. Der Steinregen schlägt
+  durch, das Mondmal vervielfacht, was durchkommt. Mission 1 bis 3 bleiben unverändert.
+- Graues Schild an gepanzerten Gegnern, heller Funke und tieferer Trefferklang, wenn
+  die Panzerung schluckt, Hinweis beim ersten gepanzerten Gegner.
+- Mitspieler und Balance-Bot richten aufgewertete Wachtürme gegen Panzerung auf
+  „stärkster“.
+- Tests: `ArmorTests`, `MissionFourTests` im Kern, Schild, Klang und Ablauf in der
+  App, `ArmorE2ETests` in der echten App.
+
 ## Dokumente, kein Bau – 02.11.2026 (Bauten 38 und 39)
 
 - Bau 38 (0.18.0) und Bau 39 (0.19.0) von Apple als VALID gemeldet, in Roadmap und
   Stand eingetragen.
 - Konzept [R-7b Schmiede](docs/konzepte/r-7b-schmiede.md) mit drei offenen Karten an
-  Steffen (Karte S8 in der Roadmap).
+  Steffen (Karte S9 in der Roadmap).
 
 ## 0.19.0 – 02.11.2026 (R-7a: Ausrüstung aus festen Belohnungen) · Bau 39
 

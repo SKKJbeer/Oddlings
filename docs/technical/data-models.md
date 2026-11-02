@@ -43,7 +43,8 @@ struct UpgradeConfig: Codable {             // Faktoren auf die Werte der Stufe 
 // config.stats(of: tower) = Werte der Stufe des Turms; config.maxLevel(of:), config.upgradeCost(of:)
 // Bauweisen der Bots (simStrategies) sind [StrategyStep]: "watch" baut, "watch+" wertet den ältesten Wachturm auf.
 
-struct EnemyConfig: Codable { var hp: Double; var speed: Double; var reward: Int; var leakDamage: Int }
+struct EnemyConfig: Codable { var hp: Double; var speed: Double; var reward: Int; var leakDamage: Int
+                              var armor: Double?; var armorMinShare: Double? }   // Rüstung, nur M4 (P2-10)
 struct WaveConfig: Codable { var hpScale: Double; var groups: [SpawnGroup] }
 struct SpawnGroup: Codable { var enemy: EnemyKind; var count: Int; var interval: Double; var delay: Double? }
 ```
@@ -132,6 +133,7 @@ enum Event: Equatable {
     case waveStarted(index: Int), enemySpawned(id: Int)
     case towerFired(towerID: Int, targets: [Int])         // Kettenreihenfolge
     case enemyDamaged(id: Int, amount: Double), enemySlowed(id: Int)
+    case armorAbsorbed(id: Int, amount: Double)           // Rüstung schluckte etwas (P2-10), nur wenn sie griff
     case enemyKilled(id: Int, reward: Int), enemyLeaked(id: Int, damage: Int)
     case missionEnded(won: Bool)
     case abilityCast(center: Point, impactTick: Int)      // Schatten bis zum Einschlag
@@ -151,8 +153,17 @@ Gold gutschreiben → Banken zahlen (nach ID) → Bewegung (Angehaltene stehen, 
 → Durchbrüche → Sieg/Niederlage.
 Fähigkeit im Zustand: `GameState.ability { readyTick, strike, barrier }`, am
 Gegner `stunUntilTick` und `vulnerable { factor, untilTick }`; alles zählt in
-die Prüfsumme. Jeder Treffer läuft durch `Simulation.hurt`, damit das Mondmal für
-Türme und Stein gleich wirkt.
+die Prüfsumme. Jeder Treffer läuft durch `Simulation.strike` (`hurt` gibt nur den
+Schaden zurück), damit Mondmal und Rüstung für Türme und Stein an einer Stelle
+gelten.
+
+Rüstung (P2-10): Ein Turmtreffer verliert `armor`, behält aber mindestens
+`armorMinShare` von sich: `max(Treffer − armor, Treffer × armorMinShare)`. Danach
+vervielfacht das Mondmal. Der Steinregen durchschlägt Rüstung. Beide Felder nur
+zusammen (`armorNeedsBothValues`), `armor` ≥ 0, `armorMinShare` in (0, 1]. Kein
+neues Feld im Zustand; Spielstände bleiben gleich. `config.hasArmoredEnemies`
+sagt Bots und Szene, ob die Mission gepanzerte Gegner hat. Neuigkeit des Knotens
+`m4` heißt `armor` (vorher `ability`, nur in der Regionsdatei benutzt).
 
 Zwergenbank (P2-5): Die erste Auszahlung kommt `delay + interval` nach
 `builtTick`, danach alle `interval`; die letzte wird auf den Rest bis `cap`

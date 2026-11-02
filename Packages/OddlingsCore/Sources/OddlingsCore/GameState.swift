@@ -200,6 +200,8 @@ public enum Event: Equatable, Sendable {
     /// Ziele in Trefferreihenfolge: beim Blitz die Kette, beim Sporenturm alle im Puls.
     case towerFired(towerID: Int, targets: [Int])
     case enemyDamaged(id: Int, amount: Double)
+    /// Die Rüstung hat von einem Turmtreffer `amount` geschluckt (P2-10). Nur wenn sie griff.
+    case armorAbsorbed(id: Int, amount: Double)
     case enemySlowed(id: Int)
     case enemyKilled(id: Int, reward: Int)
     case waveStarted(index: Int)

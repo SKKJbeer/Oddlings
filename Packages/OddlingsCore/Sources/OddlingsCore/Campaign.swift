@@ -23,7 +23,7 @@ public enum CampaignNodeKind: String, Codable, Equatable, Sendable {
 
 /// Was eine Mission neu bringt (05, Spalte „Neu"). Die Anzeige steht in der App.
 public enum CampaignNovelty: String, Codable, Equatable, Sendable {
-    case basics, bank, upgrades, ability, specializations, boss, specialRule
+    case basics, bank, upgrades, armor, specializations, boss, specialRule
 }
 
 public struct CampaignNode: Codable, Equatable, Sendable {

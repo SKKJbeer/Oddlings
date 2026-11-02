@@ -79,4 +79,17 @@ final class BattleSceneTests: XCTestCase {
         node.show(marked)
         XCTAssertTrue(node.showsMoonMark)
     }
+
+    /// P2-10: Nur gepanzerte Gegner tragen das Schild, und zwar von Anfang an.
+    func testOnlyArmoredEnemiesWearTheShield() throws {
+        let config = try BalanceConfig.bundledMission(named: "mission-04")
+        let brute = EnemyNode(enemy: Enemy(id: 1, kind: .brute, hp: 10, maxHP: 10, distance: 1), field: 40,
+                              armored: (config.enemies[.brute]?.armor ?? 0) > 0)
+        let raider = EnemyNode(enemy: Enemy(id: 2, kind: .raider, hp: 10, maxHP: 10, distance: 2), field: 40,
+                               armored: (config.enemies[.raider]?.armor ?? 0) > 0)
+        XCTAssertTrue(brute.isArmored)
+        XCTAssertNotNil(brute.childNode(withName: "armor.badge"))
+        XCTAssertFalse(raider.isArmored)
+        XCTAssertNil(raider.childNode(withName: "armor.badge"))
+    }
 }

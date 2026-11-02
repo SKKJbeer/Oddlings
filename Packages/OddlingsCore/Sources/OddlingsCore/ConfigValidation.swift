@@ -40,6 +40,7 @@ public struct ConfigIssue: Hashable, Sendable, CustomStringConvertible {
         case emptyUpgrade              // Aufwertung ohne einen einzigen Faktor
         case statNotInTower            // Faktor auf einen Wert, den der Turm nicht hat
         case strategyNeedsUpgrades     // Bauweise wertet auf, die Mission bietet es nicht an
+        case armorNeedsBothValues      // Rüstung braucht armor und armorMinShare zusammen
     }
 
     public init(field: String, rule: Rule) {
@@ -74,6 +75,7 @@ public struct ConfigIssue: Hashable, Sendable, CustomStringConvertible {
         case .emptyUpgrade: "\(field) braucht mindestens einen Faktor in scale"
         case .statNotInTower: "\(field) gibt es bei diesem Turm nicht"
         case .strategyNeedsUpgrades: "\(field) wertet auf, die Mission hat dafür keine Werte"
+        case .armorNeedsBothValues: "\(field) braucht armor und armorMinShare zusammen"
         case .starsOutOfOrder: "\(field) braucht 0 < two ≤ three ≤ fortressLives"
         case .invalidID: "\(field) darf nur Kleinbuchstaben, Ziffern und Bindestriche enthalten"
         case .duplicateID: "\(field) ist doppelt vergeben"
@@ -216,6 +218,15 @@ extension BalanceConfig {
             positive(enemy.speed, "\(field).speed")
             nonNegative(Double(enemy.reward), "\(field).reward")
             positive(Double(enemy.leakDamage), "\(field).leakDamage")
+            switch (enemy.armor, enemy.armorMinShare) {
+            case (nil, nil):
+                break
+            case let (armor?, share?):
+                nonNegative(armor, "\(field).armor")
+                fraction(share, "\(field).armorMinShare")
+            default:
+                found.append(.init(field: field, rule: .armorNeedsBothValues))
+            }
         }
 
         if let ability { found += ability.issues(field: "ability") }
