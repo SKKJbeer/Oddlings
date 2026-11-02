@@ -79,6 +79,13 @@ struct BalanceBot {
             placed.append((kind, cell))
             commands.append(.build(kind, cell))
         }
+        // Gegen Panzerung richtet der Mitspieler aufgewertete Wachtürme auf die
+        // zähesten Ziele (P2-10); ohne gepanzerte Gegner bleibt alles, wie es war.
+        if sim.config.hasArmoredEnemies {
+            for tower in state.towers where tower.kind == .watch && tower.level == 2 && tower.targetMode != .strongest {
+                commands.append(.setTargetMode(towerID: tower.id, .strongest))
+            }
+        }
         if castsAbility, let target = abilityTarget(in: state) { commands.append(.useAbility(target)) }
         return commands
     }

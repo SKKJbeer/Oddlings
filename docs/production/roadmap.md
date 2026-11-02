@@ -12,7 +12,7 @@ Entscheidungskarte beantwortet. Alles, was auf ihn wartet, steht unter
 zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzelnen:
 [backlog.md](backlog.md), offene Fragen: [offene-fragen.md](offene-fragen.md).
 
-**Stand: 02.11.2026** · neueste Version 0.19.0 (Ausrüstung, Bau läuft), davor 0.18.0 (Mission 3 mit Aufwertungen), neuester VALID-Bau 37 (0.16.1)
+**Stand: 02.11.2026** · neueste Version 0.20.0 (Mission 4 mit Rüstung), davor 0.19.0 (Ausrüstung), 0.18.0 (Mission 3 mit Aufwertungen), neuester VALID-Bau 38 (0.18.0)
 
 ## Phasen
 
@@ -33,6 +33,7 @@ zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzeln
 | S2 | Volk wechseln, bevor es eine Spielwährung gibt (Entscheidungskarte seit 26.10.) | Thread „Oddlings-Designstand und MVP-Plan aufsetzen“ | nichts, die Empfehlung gilt bis zur Antwort | Gar nicht |
 | S3 | **Spieltest mit drei Personen** auf dem neuesten Bau, [Beobachtungsbogen](playtests/beobachtungsbogen.md) | WP-15 | Abschluss Phase 1, Schnitt Phase 2, D-030, Werte D-007 | so bald wie möglich |
 | S4 | Leistung des Spikes auf dem iPhone messen | WP-01 | nichts Akutes; D-002 gilt bis dahin | ohne Eile |
+| S8 | Was Mission 4 Neues bringt (Entscheidungskarte seit 02.11.) | Thread „Mission 3 mit Aufwertungen bauen“ | nichts, Mission 4 wird mit der Empfehlung gebaut | Panzerbestie mit Rüstung als fester Abzug je Treffer |
 
 ## Als Nächstes
 
@@ -49,6 +50,7 @@ Spieltest läuft parallel. Nach R-7a kommt Mission 3 mit Aufwertungen (D-085, 02
 | 6 | FX 02 Flitzer und Panzerbestie | Plünderer-3D-Modell | Steffens Urteil am Plünderer im Spiel | – |
 | 7 | ~~P2-6 **Mission 3 mit Aufwertungen**~~ ([Konzept](../konzepte/p2-6-mission-3-aufwerten.md)): Stufe 2 und Zielwahl, Weg „Pilzhain“ (D-081, D-084); Mission 4 folgt danach, nicht parallel | Mission 3 mit Aufwertungen bauen | 2 | ✓ 0.18.0 |
 | 8 | P2-6b Balance-Labor, P2-2 Fortsetzen, P2-8 Synergie sichtbar, P2-9 Abstimmung | – | 2 | Konzepte K1, K6, K8, K11 |
+| 9 | ~~P2-10 **Mission 4 „Ruinenrand“**~~ ([Konzept](../konzepte/p2-10-mission-4-ruestung.md)): Panzerbestie mit Rüstung (K7, S8, D-087), Weg aus D-081 | Mission 3 mit Aufwertungen bauen | 7 | ✓ 0.20.0 |
 
 ## Ausgeliefert
 
@@ -76,7 +78,8 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | FX 02: Plünderer mit Gliedmaßen aus 3D (D-051, D-052) | 0.13.0 | 34 | [Konzept](../konzepte/fx-02-figuren-in-3d.md) |
 | P2-5: Mission 2 mit Zwergenbank und Bonus für frühes Rufen (D-026, D-083) | 0.16.0 | 36 | [Konzept](../konzepte/p2-5-mission-2-zwergenbank.md) |
 | Grafik 06: gemalte Kampfplätze M2 (Zwergenstollen), M3 (Pilzhain), M4 (Ruinenrand), Wege M3/M4 als Vorschlag (D-081) | 0.16.1 | 37 | [Konzept](../konzepte/grafik-06-kampfplaetze-m2-m4.md) |
-| P2-6: Mission 3 mit Aufwerten auf Stufe 2 und Zielwahl (D-024, D-084) | 0.18.0 | – | [Konzept](../konzepte/p2-6-mission-3-aufwerten.md) |
+| P2-6: Mission 3 mit Aufwerten auf Stufe 2 und Zielwahl (D-024, D-084) | 0.18.0 | 38 | [Konzept](../konzepte/p2-6-mission-3-aufwerten.md) |
+| P2-10: Mission 4 mit gepanzerter Panzerbestie (K7, D-087) | 0.20.0 | – | [Konzept](../konzepte/p2-10-mission-4-ruestung.md) |
 | P2-3: Ton und Musik, nur CC0 (D-082) | 0.15.0 | 35 | [Konzept](../konzepte/p2-3-ton-und-musik.md) |
 | R-7a: Ausrüstung aus festen Belohnungen (D-066, D-069 bis D-071) | 0.19.0 | läuft | [Konzept](../konzepte/r-7-ausruestung.md) |
 

@@ -32,6 +32,9 @@ final class BattleScene: SKScene {
     /// Was im nächsten Abgleich mit Auftritt erscheint. Nach einer neuen
     /// Bildschirmgröße entstehen die Nodes neu, dann ohne Auftritt.
     private var pendingSpawns: Set<Int> = []
+    /// Der Hinweis auf die Panzerung kommt einmal je Mission, auch über einen
+    /// Neustart hinweg: Wer neu anfängt, hat ihn schon gelesen (P2-10).
+    private var armorHintShown = false
     private var pendingBuilds: Set<Int> = []
     private(set) var layout: BoardLayout
     private var field: CGFloat { layout.field }
@@ -275,7 +278,13 @@ final class BattleScene: SKScene {
             node.apply(FxMath.pose(distance: distance, phase: phase, gait: gait), field: field)
             node.walk(distance: distance, phase: phase)
             node.show(enemy, dt: dt, stunned: (enemy.stunUntilTick ?? Int.min) > state.tick)
-            if appeared { fx.spawn(node) }
+            if appeared {
+                fx.spawn(node)
+                if node.isArmored && !armorHintShown {
+                    armorHintShown = true
+                    fx.armorHint(node)
+                }
+            }
         }
         for (id, node) in enemyNodes where liveEnemies[id] == nil {
             node.removeFromParent()
@@ -302,7 +311,8 @@ final class BattleScene: SKScene {
     }
 
     private func makeEnemyNode(_ enemy: Enemy) -> EnemyNode {
-        let node = EnemyNode(enemy: enemy, field: field)
+        let armored = (model.sim.config.enemies[enemy.kind]?.armor ?? 0) > 0
+        let node = EnemyNode(enemy: enemy, field: field, armored: armored)
         enemyLayer.addChild(node)
         enemyNodes[enemy.id] = node
         return node
@@ -331,6 +341,9 @@ final class BattleScene: SKScene {
             break
         case .enemyDamaged(let id, _):
             if let node = enemyNodes[id] { fx.hit(node) }
+        case .armorAbsorbed(let id, _):
+            // Klang nur, wenn auch der Funke spielt: dieselbe Grenze je Gegner.
+            if let node = enemyNodes[id], fx.armor(node) { audio?.play(.armored) }
         case .enemyKilled(let id, let reward):
             // Ab hier gehört die Node dem Director, bis sie zerplatzt ist.
             if let node = enemyNodes.removeValue(forKey: id) { fx.death(node, reward: reward) }
@@ -396,6 +409,8 @@ final class BattleScene: SKScene {
         case .targetModeChanged: return nil
         case .commandRejected: return .rejected
         case .enemyDamaged: return .damaged
+        // Spielt `play` selbst, gedrosselt mit dem Funken.
+        case .armorAbsorbed: return nil
         case .enemySlowed: return .slowed
         case .enemyKilled: return .killed
         case .enemyLeaked: return .leaked

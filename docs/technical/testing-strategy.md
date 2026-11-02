@@ -75,6 +75,17 @@ Status: **gilt**, umgesetzt bis 0.12.0; Ende-zu-Ende-Tests **[ENTSCHIEDEN D-029]
   und Bild am Turm), Bilder der Stufe 2 in `BattleSpritesTests`, Klang und Haptik
   in `SoundMapTests` und `FeedbackPlayerTests`, jede Zelle von Mission 3 in
   `HudLayoutTests`.
+- Seit P2-10 (0.20.0): `ArmorTests` (Abzug je Turmtreffer, Mindestanteil, Blitz
+  je Sprung, Sporenpuls, Steinregen durchschlägt, Mondmal nach der Rüstung, ohne
+  Rüstung unverändert und ohne Meldung, Prüfung beim Laden) und
+  `MissionFourTests` (nur die Panzerbestie gepanzert und nur in M4, Weg =
+  Vorschlag D-081, Panzerbestien ab Welle 2, Mischungen gewinnen, alle vier
+  Monokulturen verlieren, Kennzahl Panzerung: mit Aufwertung ≥ 0,1 vor ohne und
+  Rüstung kostet ohne Aufwertung ≥ 0,1, Völker). `AutoplayerTests`: Der
+  Mitspieler stellt aufgewertete Wachtürme nur gegen Panzerung auf „stärkster“.
+  In der App: Schild nur an gepanzerten Gegnern (`BattleSceneTests`), gemalter
+  Boden für M1 bis M4 (`BattleSpritesTests`), tieferer Treffer (`SoundMapTests`),
+  keine Haptik (`FeedbackPlayerTests`), M4 spielbar (`AppFlowTests`).
 
 ## Ende-zu-Ende-Tests (D-029)
 
@@ -83,12 +94,13 @@ Tests prüfen, dass die App genau so funktioniert wie gedacht. **[ENTSCHIEDEN]**
 
 Umgesetzt ab Version 0.5.1; Aufbau und Grundsätze: [e2e-tests.md](../konzepte/e2e-tests.md).
 
-**Stand 0.19.0: 33 Fälle** in `AppUITests/`:
+**Stand 0.20.0: 34 Fälle** in `AppUITests/`:
 
 | Datei | Fälle | Ablauf |
 |---|---|---|
 | `NavigationE2ETests` | 4 | Menü → Karte → Mission → zurück, Vorführung, Hintergrund pausiert, Einstellung übersteht Neustart |
 | `CampaignE2ETests` | 2 | Sterne nach Sieg überstehen Neustart, Mission 2 danach offen und startbar, gesperrte Missionen nennen den Grund |
+| `ArmorE2ETests` | 1 | Mission 4: zwei Wachtürme, die erste Panzerbestie wirft Funken an der Panzerung, der Hinweis kommt genau einmal (`fx.stats`, P2-10) |
 | `UpgradeE2ETests` | 1 | Mission 3: Turm bauen, aufwerten (zweimal tippen, Preis abgezogen, „Wachturm II“), Zielwahl schaltet Erster → Letzter → Stärkster ohne Gold (P2-6) |
 | `BankE2ETests` | 2 | Mission 2: Bank im Kreismenü mit Warnung und Preis (P2-5), frühes Rufen schreibt Gold gut, Höchstzahl sperrt die dritte Bank |
 | `AvatarE2ETests` | 5 | Avatar einmal aufbauen (R-5), Zwerge mit Preis und Fähigkeit, Rang schaltet Talent frei (R-6), Ausrüstung anlegen und ablegen übersteht den Neustart (R-7a), Aufbau und Menü passen auf den Schirm |

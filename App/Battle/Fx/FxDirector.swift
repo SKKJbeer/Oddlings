@@ -24,12 +24,15 @@ final class FxDirector {
         var payouts = 0, empties = 0
         /// Aufgewertete Türme (P2-6).
         var upgrades = 0
+        /// Funken an der Panzerung und Hinweise auf sie (P2-10).
+        var armorSparks = 0, armorHints = 0
 
         var summary: String {
             "arrows=\(arrows) bolts=\(bolts) combos=\(combos) spores=\(spores) hits=\(hits) deaths=\(deaths) "
                 + "coins=\(coins) builds=\(builds) sells=\(sells) leaks=\(leaks) spawns=\(spawns) "
                 + "casts=\(casts) impacts=\(impacts) walls=\(walls) flinches=\(flinches) falls=\(falls) dropped=\(dropped)"
                 + " payouts=\(payouts) empties=\(empties) upgrades=\(upgrades)"
+                + " armorSparks=\(armorSparks) armorHints=\(armorHints)"
         }
     }
 
@@ -239,6 +242,30 @@ final class FxDirector {
             node.xScale = 1 + 0.12 * back
             node.yScale = 1 - 0.12 * back
         }
+    }
+
+    /// Die Panzerung schluckt einen Treffer (P2-10): heller Funke, der vom
+    /// Schild abprallt. Gibt zurück, ob er gespielt wurde, damit der Klang
+    /// derselben Grenze folgt.
+    @discardableResult
+    func armor(_ enemy: EnemyNode) -> Bool {
+        let start = max(time, arrivals[enemy.enemyID] ?? time)
+        guard start - enemy.lastArmorSpark >= FxStyle.armorSparkGap else { return false }
+        enemy.lastArmorSpark = start
+        stats.armorSparks += 1
+        let at = CGPoint(x: enemy.position.x, y: enemy.position.y + enemy.height * 0.6)
+        if start > time {
+            after(start - time) { [weak self] in self?.sparks(at: at, count: 4, color: FxStyle.armorSpark, speed: 2.2, size: 0.18) }
+        } else {
+            sparks(at: at, count: 4, color: FxStyle.armorSpark, speed: 2.2, size: 0.18)
+        }
+        return true
+    }
+
+    /// Beim ersten gepanzerten Gegner einer Mission ein kurzer Hinweis über ihm.
+    func armorHint(_ enemy: EnemyNode) {
+        stats.armorHints += 1
+        hint(at: CGPoint(x: enemy.position.x, y: enemy.position.y + enemy.height * 1.6), text: BattleTexts.armorHint)
     }
 
     /// Tod: Treffer-Halt, Stauchen, Zerplatzen in Rauch, Splittern und Münzen;

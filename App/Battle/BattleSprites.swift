@@ -7,6 +7,19 @@ import UIKit
 /// So ist der Tausch gegen echte Grafik nur ein neuer Katalog, kein Codeumbau.
 @MainActor
 enum BattleSprites {
+    /// Wappenschild, Spitze unten, mittig um den Nullpunkt; `size` ist die Höhe.
+    static func shieldPath(size: CGFloat) -> CGPath {
+        let w = size * 0.8, h = size
+        let path = CGMutablePath()
+        path.move(to: CGPoint(x: -w / 2, y: h / 2))
+        path.addLine(to: CGPoint(x: w / 2, y: h / 2))
+        path.addLine(to: CGPoint(x: w / 2, y: 0))
+        path.addQuadCurve(to: CGPoint(x: 0, y: -h / 2), control: CGPoint(x: w / 2, y: -h * 0.3))
+        path.addQuadCurve(to: CGPoint(x: -w / 2, y: 0), control: CGPoint(x: -w / 2, y: -h * 0.3))
+        path.closeSubpath()
+        return path
+    }
+
     static func towerName(_ kind: TowerKind) -> String { "tower_\(kind.rawValue)" }
     /// Stufe 2 hat ein eigenes Bild (`tower_watch_2`); Stufe 1 den Grundnamen.
     static func towerName(_ kind: TowerKind, level: Int) -> String {
@@ -142,6 +155,11 @@ final class EnemyNode: SKNode {
     var hasFrames: Bool { !walkFrames.isEmpty }
     /// Effekt-Uhr des letzten Aufblitzens (Grenze je Gegner).
     var lastHit: Double = -.infinity
+    /// Effekt-Uhr des letzten Funkens an der Panzerung (P2-10), eigene Grenze.
+    var lastArmorSpark: Double = -.infinity
+    /// Schild neben der Lebensleiste, nur bei Gegnern mit Rüstung (E3, P2-10).
+    private(set) var armorBadge: SKShapeNode?
+    var isArmored: Bool { armorBadge != nil }
     private let shadow = SKSpriteNode()
     private let health = SKSpriteNode()
     private let healthLag = SKSpriteNode()
@@ -154,7 +172,7 @@ final class EnemyNode: SKNode {
     private let healthWidth: CGFloat
     private var shownFraction: Double = 1
 
-    init(enemy: Enemy, field: CGFloat) {
+    init(enemy: Enemy, field: CGFloat, armored: Bool = false) {
         enemyID = enemy.id
         kind = enemy.kind
         body = BattleSprites.enemyBody(enemy.kind, field: field)
@@ -200,6 +218,19 @@ final class EnemyNode: SKNode {
         }
         health.isHidden = true
         addChild(health)
+
+        // Das Schild steht immer, nicht nur bei Schaden wie die Leiste: Umriss
+        // und Symbol sagen „gepanzert“, bevor der erste Schuss fällt (E3).
+        if armored {
+            let badge = SKShapeNode(path: BattleSprites.shieldPath(size: field * BattleStyle.armorBadgeSize))
+            badge.fillColor = BattleStyle.armorBadgeFill
+            badge.strokeColor = BattleStyle.armorBadgeStroke
+            badge.lineWidth = 1.5
+            badge.position = CGPoint(x: -healthWidth / 2 - field * BattleStyle.armorBadgeSize * 0.7, y: height * 1.15)
+            badge.name = "armor.badge"
+            addChild(badge)
+            armorBadge = badge
+        }
 
         moonMark.texture = FxTextures.texture(.glow)
         moonMark.color = BattleStyle.markTint

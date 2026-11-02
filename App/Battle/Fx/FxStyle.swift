@@ -54,6 +54,10 @@ enum FxStyle {
     /// Mindestabstand zwischen zwei Aufblitzen am selben Gegner
     /// (docs/art/rueckmeldung-je-ereignis.md, Grenzen).
     static let hitFlashGap: TimeInterval = 0.08
+    /// Funke an der Panzerung (P2-10): höchstens einer je Gegner und halbe
+    /// Sekunde, sonst knistert es bei Blitz und Sporen ununterbrochen.
+    static let armorSparkGap: TimeInterval = 0.5
+    static let armorSpark = SKColor(red: 0.92, green: 0.94, blue: 1.00, alpha: 1)
     static let slowTint = SKColor(red: 0.55, green: 0.95, blue: 0.45, alpha: 1)
     static let slowTintFactor: CGFloat = 0.35
     /// Wie schnell das helle Schadensstück im Lebensbalken nachläuft (Anteil je Sekunde).

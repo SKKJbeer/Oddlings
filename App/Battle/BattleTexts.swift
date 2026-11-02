@@ -114,6 +114,8 @@ enum BattleTexts {
     /// Name mit Stufe, wie auf dem Schild am Turm: „Wachturm II“.
     static func name(_ kind: TowerKind, level: Int) -> String { level >= 2 ? "\(name(kind)) II" : name(kind) }
     static let levelTag = "II"
+    /// Beim ersten gepanzerten Gegner einer Mission (P2-10).
+    static let armorHint = "Gepanzert: Steine schlagen durch"
     static let upgrade = "Aufwerten"
     static let upgradeArmed = "Stufe 2: gleiche Rolle, spürbar stärker."
     static let upgradeUnlocks = "Schaltet die Zielwahl frei."

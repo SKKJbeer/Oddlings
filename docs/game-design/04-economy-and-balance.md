@@ -371,6 +371,39 @@ geändert: Die Grenze gilt für die Vorführbauweise, und die Zahlen sind Hypoth
 bis zum Spieltest (WP-15). Fällt der Abstand dort auf, zuerst Bollwerk und Mondmal
 ansehen, nicht die Türme.
 
+### Mission 4 – Panzerung, Ergebnis der Prüfung (0.20.0) [HYPOTHESE]
+
+Werte in `mission-04.json`. Gold, Leben, Sterne, Bank, Bonus und Aufwertungen wie in
+Mission 3. Panzerbestie 330 Leben (M1 bis M3: 370), **Rüstung 8, Mindestanteil 0,25**:
+Wachturm 12 → 4, auf Stufe 2 18 → 10, Blitz 18 → 10, Sporenpuls 1 → 0,25,
+Steinregen 20 → 20. Panzerbestien ab Welle 2 und in jeder Welle danach, Welle 6
+nur Panzerbestien; Lebenspunkte der Wellen ×0,81 bis ×1,80 (unter M3, weil die
+Rüstung den Rest trägt). Die Bots stellen aufgewertete Wachtürme gegen Panzerung
+auf „stärkster“, wie ein Spieler es täte.
+
+| Bauweise | Reserve | Ergebnis |
+|---|---|---|
+| Mix mit Aufwertung | 1,25 | Sieg |
+| Mix mit Bank und Aufwertung (Vorführung) | 1,20 | Sieg |
+| Mix ohne Aufwertung | 1,06 | Sieg, 3 Leben verloren |
+| Nur Blitz, aufgewertet | 0,95 | Niederlage |
+| Nur Wachtürme, aufgewertet | 0,86 | Niederlage |
+| Nur Blitz | 0,81 | Niederlage |
+| Nur Wachtürme | 0,62 | Niederlage |
+
+**Kennzahl Panzerung** (`MissionFourTests.armorRewardsUpgrading`): Mit Aufwertung
+liegt mindestens 0,1 vor ohne (1,25 gegen 1,06), und die Rüstung ist der Grund:
+Ohne sie käme „Mix ohne Aufwertung“ auf 1,375 und „Mix mit Aufwertung“ auf 1,59.
+Ohne Rüstung gewönne sogar die Monokultur; mit Rüstung verlieren alle vier (D-071).
+
+**Völker** an der Vorführbauweise: Zwerge 1,22, Elfen 1,25 gegen 1,20 ohne Volk,
+innerhalb +0,1. Die Vorführbauweise baut ihre zweite Bank etwas später als in M3;
+mit der Reihenfolge aus M3 lagen die Zwerge 0,02 unter „ohne Volk“, ein Zufall der
+Bauzeitpunkte (die billigeren Wachtürme verschieben alles). An einzelnen Bauweisen
+liegen die Elfen höher: „Mix mit Aufwertung“ +0,12, „Mix ohne Aufwertung“ +0,08.
+Mit dem Mondmal vor der Rüstung waren es +0,15; deshalb rechnet die Simulation
+erst die Rüstung, dann das Mal (02). Bemerkt, nicht weiter geändert, wie in M3.
+
 ### Bonus für frühes Rufen (D-009, E8)
 
 

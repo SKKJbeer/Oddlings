@@ -410,18 +410,32 @@ public struct TowerConfig: Codable, Equatable, Sendable {
     }
 }
 
+extension BalanceConfig {
+    /// Ob ein Gegner der Mission Rüstung trägt (P2-10); Bots und Hinweise fragen hier.
+    public var hasArmoredEnemies: Bool {
+        EnemyKind.allCases.contains { (enemies[$0]?.armor ?? 0) > 0 }
+    }
+}
+
 public struct EnemyConfig: Codable, Equatable, Sendable {
     public var hp: Double
     /// Felder je Sekunde
     public var speed: Double
     public var reward: Int
     public var leakDamage: Int
+    /// Rüstung (K7, P2-10): fester Abzug je Turmtreffer. Fehlt sie, gibt es keine.
+    public var armor: Double? = nil
+    /// Anteil eines Treffers, den die Rüstung nie schluckt; nur zusammen mit `armor`.
+    public var armorMinShare: Double? = nil
 
-    public init(hp: Double, speed: Double, reward: Int, leakDamage: Int) {
+    public init(hp: Double, speed: Double, reward: Int, leakDamage: Int,
+                armor: Double? = nil, armorMinShare: Double? = nil) {
         self.hp = hp
         self.speed = speed
         self.reward = reward
         self.leakDamage = leakDamage
+        self.armor = armor
+        self.armorMinShare = armorMinShare
     }
 }
 

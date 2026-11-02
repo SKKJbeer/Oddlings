@@ -26,7 +26,7 @@ final class CampaignTests: XCTestCase {
         XCTAssertEqual(config.nodes.count, 11, "sieben Hauptmissionen mit zwei Wegen (9 Knoten) und zwei Nebenmissionen")
         XCTAssertEqual(config.nodes.filter { $0.kind == .side }.compactMap(\.stars), [6, 15])
         XCTAssertEqual(config.nodes.filter { $0.kind == .boss }.map(\.id), ["m7"])
-        XCTAssertEqual(config.nodes.compactMap(\.mission), ["mvp-mission-01", "mission-02", "mission-03"])
+        XCTAssertEqual(config.nodes.compactMap(\.mission), ["mvp-mission-01", "mission-02", "mission-03", "mission-04"])
     }
 
     func testRegionOneStatesAtStartAndAfterMissionOne() throws {
@@ -45,8 +45,11 @@ final class CampaignTests: XCTestCase {
         XCTAssertEqual(config.state(of: try XCTUnwrap(config.node("m3")), progress: both), .open, "M3 ist gebaut (P2-6)")
         XCTAssertEqual(config.continueNode(progress: both)?.id, "m3", "Weiter mit Mission 3")
         let three = both.recording(stars: 2, for: "m3")
-        XCTAssertEqual(config.state(of: try XCTUnwrap(config.node("m4")), progress: three), .inPreparation)
-        XCTAssertEqual(config.continueNode(progress: three)?.id, "m3", "nichts Neues offen: zurück zur letzten Mission")
+        XCTAssertEqual(config.state(of: try XCTUnwrap(config.node("m4")), progress: three), .open, "M4 ist gebaut (P2-10)")
+        XCTAssertEqual(config.continueNode(progress: three)?.id, "m4", "Weiter mit Mission 4")
+        let four = three.recording(stars: 1, for: "m4")
+        XCTAssertEqual(config.state(of: try XCTUnwrap(config.node("m5a")), progress: four), .inPreparation)
+        XCTAssertEqual(config.continueNode(progress: four)?.id, "m4", "nichts Neues offen: zurück zur letzten Mission")
         XCTAssertEqual(try RaceTable.bundled().rank(stars: both.totalStars), 2,
                        "drei Sterne in M1 und M2 bringen Rang II und die erste Talentwahl")
     }

@@ -160,7 +160,7 @@ Säule 1 und 3.
 |---|---|---|
 | Plünderer | Referenz: mittlere Geschwindigkeit und Zähigkeit | ja |
 | Flitzer | Schnell, wenig Leben; bestraft Lücken und fehlende Kontrolle | ja |
-| Panzerbestie | Langsam, sehr zäh; prüft nachhaltigen Einzelschaden | **[VORSCHLAG]** in Mission 1 ab Welle 7, abschaltbar, weil datengetrieben fast kostenlos |
+| Panzerbestie | Langsam, sehr zäh; prüft nachhaltigen Einzelschaden. Ab Mission 4 mit Rüstung ([unten](#rüstung-wie-gebaut-p2-10-0200)) | **[VORSCHLAG]** in Mission 1 ab Welle 7, abschaltbar, weil datengetrieben fast kostenlos |
 | Schattenflieger | Fliegt, umgeht etwas | nein, später |
 | Bosse | Taktische Herausforderung (Phasen, Schild, Beschwörung) | nein |
 
@@ -173,3 +173,20 @@ Säule 1 und 3.
 Rüstung gegen bestimmte Türme ist ein naheliegender späterer Hebel für die
 Panzerbestie, macht aber jede Balancerechnung zweidimensional. Erst wenn der
 Grundloop trägt.
+
+### Rüstung, wie gebaut (P2-10, 0.20.0)
+
+Ab Mission 4 „Ruinenrand“ trägt die Panzerbestie Rüstung, in M1 bis M3 nicht.
+Konzept: [p2-10-mission-4-ruestung](../konzepte/p2-10-mission-4-ruestung.md),
+Herkunft K7. Ob M4 das bringt, entscheidet Steffen noch (Karte S8, Roadmap); bis
+dahin gilt die Empfehlung **[VORSCHLAG]**.
+
+- **Fester Abzug je Turmtreffer**, kein Prozent: Viele kleine Treffer (Blitzsprünge,
+  Sporenpuls) verlieren viel, wenige große (Wachturm auf Stufe 2) wenig. Ein Anteil
+  des Treffers bleibt immer (`armorMinShare`), damit kein Turm wirkungslos wird.
+- **Der Steinregen durchschlägt Rüstung.** Die Fähigkeit ist das Werkzeug gegen zähe
+  Ziele („aktiv eingreifen“, 05).
+- **Erst die Rüstung, dann das Mondmal.** Davor gerechnet hob das Mal die Elfen in
+  M4 über die Grenze der Völker (03, Messung in 04).
+- Eine Schadensart, keine Resistenzen, keine Rüstung, die bricht. Der Lebensbalken
+  zeigt weiter nur Leben.
