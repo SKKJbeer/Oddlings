@@ -323,7 +323,7 @@ Reihenfolge; ob Menschen sie früh lohnend finden, zeigt erst der Spieltest
 ### Mission 3 – Aufwerten, Ergebnis der Prüfung (0.18.0) [HYPOTHESE]
 
 Werte in `mission-03.json` (Abschnitt `upgrades`, D-084). Startgold 200, Bank und
-Bonus fürs frühe Rufen wie in Mission 2 (Empfehlung der Entscheidungskarte S5).
+Bonus fürs frühe Rufen wie in Mission 2 (D-085, Steffen).
 Wellen gegenüber Mission 2: Anzahl ×1,1, Lebenspunkte ×1,29; Welle 6 bringt zwei
 Panzerbestien. Stufe 2: Wach- und Sporenturm 35 Gold, Blitzturm 56 (70 % des
 Grundturms, D-024); Schaden ×1,5, beim Sporenturm Kreis ×1,15 und Verlangsamung ×0,8.

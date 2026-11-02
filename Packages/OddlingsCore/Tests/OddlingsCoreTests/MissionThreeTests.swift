@@ -33,7 +33,7 @@ struct MissionThreeTests {
         #expect(try BalanceConfig.bundledMission(named: "mission-02").upgrades == nil, "M2 bleibt, wie sie abgestimmt ist")
     }
 
-    @Test("Bank und Bonus fürs frühe Rufen bleiben (Empfehlung der Entscheidungskarte S5)")
+    @Test("Bank und Bonus fürs frühe Rufen bleiben (D-085, Steffen)")
     func keepsBankAndBonus() {
         #expect(sim.config.buildable.contains(.bank))
         #expect((sim.config.mission.earlyCallBonus ?? 0) > 0)

@@ -16,8 +16,6 @@ davor 0.16.1 (gemalte Kampfplätze für Mission 2 bis 4, Bau 37 VALID), 0.16.0 (
    [Beobachtungsbogen](playtests/beobachtungsbogen.md). Davon hängen Phase 2 und die
    Werte von Mission 1 ab.
 3. Ohne Eile: Messung des Spikes auf dem iPhone (WP-01).
-4. Bleiben Zwergenbank und Bonus fürs frühe Rufen in Mission 3? Entscheidungskarte im
-   Thread „Mission 3 mit Aufwertungen bauen“. Blockiert nichts, gebaut ist „beides bleibt“.
 
 ## Fertig
 
@@ -37,7 +35,7 @@ davor 0.16.1 (gemalte Kampfplätze für Mission 2 bis 4, Bau 37 VALID), 0.16.0 (
   auf Stufe 2 aufwerten (zweimal tippen, etwa 70 % des Turmpreises, eigenes Bild und
   Schild „II“), danach wählen Wach- und Blitzturm ihr Ziel: Erster, Letzter oder
   Stärkster. Der Weg mit der Haarnadel belohnt tiefe Plätze, breit bauen gewinnt aber
-  auch. Bank und Bonus wie in Mission 2. Nach dem Sieg in Mission 2 offen; Werte sind
+  auch. Bank und Bonus wie in Mission 2 (deine Wahl, D-085). Nach dem Sieg in Mission 2 offen; Werte sind
   Hypothesen bis zum Spieltest.
 - **Grafik und Bewegung**: gemalte Figuren, Türme, Symbole, Titelbild, Kampfplatz als
   Waldlichtung mit Zwergenfeste, Porträts (Grafik 01 bis 05); Laufen, Treffer, Tod,
