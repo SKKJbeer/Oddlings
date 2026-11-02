@@ -37,7 +37,7 @@ zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzeln
 ## Als Nächstes
 
 Reihenfolge entschieden (D-080, Steffen 01.11.2026): Mission 2 kommt jetzt, der
-Spieltest läuft parallel. Was davor steht, wird zuerst gebaut. Steffen kann umsortieren.
+Spieltest läuft parallel. Nach R-7a kommt Mission 3 mit Aufwertungen (D-085, 02.11.2026). Was davor steht, wird zuerst gebaut. Steffen kann umsortieren.
 
 | # | Paket | Thread | Abh. | Stand |
 |---|---|---|---|---|

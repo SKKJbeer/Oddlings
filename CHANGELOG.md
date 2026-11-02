@@ -28,6 +28,15 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Tests: Aufwerten, Zielwahl und Mission 3 im Kern, `UpgradeControllerTests` und
   Kreismenü auf jeder Zelle von Mission 3 in der App, `UpgradeE2ETests` mit echtem Tippen.
 
+## Dokumente, kein Bau – 02.11.2026 (Mission 3 nach R-7a, D-085)
+
+- Steffen hat Karte S7 entschieden: nach der Ausrüstung kommt Mission 3 mit
+  Aufwertungen (D-085). Karte aus Roadmap und Stand gestrichen.
+
+## Dokumente, kein Bau – 02.11.2026 (Karte S7: was nach R-7a kommt)
+
+- Neue Entscheidungskarte für Steffen in Roadmap und Stand eingetragen (D-067).
+
 ## Dokumente, kein Bau – 01.11.2026 (Bau 37)
 
 - Bau 37 (0.16.1) von Apple als VALID gemeldet, in Roadmap und Stand eingetragen.
