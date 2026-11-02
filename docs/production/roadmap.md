@@ -12,7 +12,7 @@ Entscheidungskarte beantwortet. Alles, was auf ihn wartet, steht unter
 zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzelnen:
 [backlog.md](backlog.md), offene Fragen: [offene-fragen.md](offene-fragen.md).
 
-**Stand: 02.11.2026** · neueste Version 0.20.0 (Mission 4 mit Rüstung), davor 0.19.0 (Ausrüstung), 0.18.0 (Mission 3 mit Aufwertungen), neuester VALID-Bau 38 (0.18.0)
+**Stand: 02.11.2026** · neueste Version 0.20.0 (Mission 4 mit Rüstung), davor 0.19.0 (Ausrüstung, Bau 39), 0.18.0 (Mission 3 mit Aufwertungen, Bau 38), neuester VALID-Bau 39 (0.19.0)
 
 ## Phasen
 
@@ -34,6 +34,7 @@ zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzeln
 | S3 | **Spieltest mit drei Personen** auf dem neuesten Bau, [Beobachtungsbogen](playtests/beobachtungsbogen.md) | WP-15 | Abschluss Phase 1, Schnitt Phase 2, D-030, Werte D-007 | so bald wie möglich |
 | S4 | Leistung des Spikes auf dem iPhone messen | WP-01 | nichts Akutes; D-002 gilt bis dahin | ohne Eile |
 | S8 | Was Mission 4 Neues bringt (Entscheidungskarte seit 02.11.) | Thread „Mission 3 mit Aufwertungen bauen“ | nichts, Mission 4 wird mit der Empfehlung gebaut | Panzerbestie mit Rüstung als fester Abzug je Treffer |
+| S9 | R-7b Schmiede: woher die Währung kommt, was die Schmiede macht, wie die Währung heißt (drei Karten seit 02.11.) | Haupt-Thread, [Konzept](../konzepte/r-7b-schmiede.md) | nur R-7b; es kommt ohnehin erst nach Mission 3 (D-085) | ohne Eile |
 
 ## Als Nächstes
 
@@ -81,7 +82,7 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | P2-6: Mission 3 mit Aufwerten auf Stufe 2 und Zielwahl (D-024, D-084) | 0.18.0 | 38 | [Konzept](../konzepte/p2-6-mission-3-aufwerten.md) |
 | P2-10: Mission 4 mit gepanzerter Panzerbestie (K7, D-087) | 0.20.0 | – | [Konzept](../konzepte/p2-10-mission-4-ruestung.md) |
 | P2-3: Ton und Musik, nur CC0 (D-082) | 0.15.0 | 35 | [Konzept](../konzepte/p2-3-ton-und-musik.md) |
-| R-7a: Ausrüstung aus festen Belohnungen (D-066, D-069 bis D-071) | 0.19.0 | läuft | [Konzept](../konzepte/r-7-ausruestung.md) |
+| R-7a: Ausrüstung aus festen Belohnungen (D-066, D-069 bis D-071) | 0.19.0 | 39 | [Konzept](../konzepte/r-7-ausruestung.md) |
 
 ## Gilt für jedes Paket
 
@@ -118,7 +119,7 @@ Spieltest WP-15 wartet nicht darauf.
 | R-5 | Avatar einmal am Anfang: Volk, Porträt, Name (D-063) | R-4 | ✓ 0.11.0, Porträts 0.11.1 |
 | R-6 | Avatarrang mit Talentwahl, eigenes Avatar-Menü (D-064, D-065) | R-5 | ✓ 0.12.0 |
 | R-7a | Ausrüstung mit kleinen Boni im Avatar-Menü, feste Belohnungen (D-066, D-069 bis D-071) | R-6 | ✓ 0.19.0 |
-| R-7b | **Schmiede** mit Spielwährung im Avatar-Menü (D-070) | R-7a | Konzept offen |
+| R-7b | **Schmiede** mit Spielwährung im Avatar-Menü (D-070) | R-7a | [Konzept](../konzepte/r-7b-schmiede.md) steht, wartet auf S9 |
 
 ## Parallel: Grafik und Bewegung
 

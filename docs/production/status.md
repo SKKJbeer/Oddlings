@@ -6,7 +6,7 @@ ergänzt, D-067). Reihenfolge, Pakete und alles, was auf dich wartet, stehen in 
 [Register](offene-fragen.md).
 
 **Stand: 02.11.2026** · Neueste Version **0.20.0** (Mission 4 mit gepanzerter Panzerbestie), Bau folgt;
-davor 0.19.0 (Ausrüstung im Avatar-Menü), 0.18.0 (Mission 3 mit Aufwertungen, Bau 38 VALID), 0.16.1 (gemalte Kampfplätze für Mission 2 bis 4), 0.16.0 (Mission 2 mit Zwergenbank). Der Spielrahmen R-1 bis R-6 steht. Spielbar sind Mission 1 bis 4.
+davor 0.19.0 (Ausrüstung im Avatar-Menü, Bau 39 VALID), 0.18.0 (Mission 3 mit Aufwertungen, Bau 38 VALID), 0.16.1 (gemalte Kampfplätze für Mission 2 bis 4), 0.16.0 (Mission 2 mit Zwergenbank). Der Spielrahmen R-1 bis R-6 steht. Spielbar sind Mission 1 bis 4.
 
 ## Wartet auf dich
 
@@ -15,9 +15,11 @@ davor 0.19.0 (Ausrüstung im Avatar-Menü), 0.18.0 (Mission 3 mit Aufwertungen, 
 2. **Spieltest mit drei Personen** (WP-15) auf dem neuesten Bau, mit dem
    [Beobachtungsbogen](playtests/beobachtungsbogen.md). Davon hängen Phase 2 und die
    Werte von Mission 1 ab.
-3. Ohne Eile: Messung des Spikes auf dem iPhone (WP-01).
-4. Was Mission 4 Neues bringt: Entscheidungskarte im Thread „Mission 3 mit
+3. Was Mission 4 Neues bringt: Entscheidungskarte im Thread „Mission 3 mit
    Aufwertungen bauen“. Gebaut ist die Empfehlung, Panzerbestie mit Rüstung.
+4. Ohne Eile: drei Karten zur Schmiede (R-7b) im Haupt-Thread: woher die Spielwährung
+   kommt, was die Schmiede macht, wie die Währung heißt. Gebaut wird sie später (D-085).
+5. Ohne Eile: Messung des Spikes auf dem iPhone (WP-01).
 
 ## Fertig
 
@@ -61,7 +63,7 @@ davor 0.19.0 (Ausrüstung im Avatar-Menü), 0.18.0 (Mission 3 mit Aufwertungen, 
 
 | Thread | Woran | Nächster Schritt |
 |---|---|---|
-| Haupt-Thread | 0.19.0 Ausrüstung (R-7a) in TestFlight | Konzept R-7b Schmiede mit Spielwährung, Karten an dich |
+| Haupt-Thread | 0.19.0 Ausrüstung (R-7a) in TestFlight (Bau 39) | [Konzept R-7b Schmiede](../konzepte/r-7b-schmiede.md) steht, wartet auf deine drei Karten |
 | Mission 2 mit Zwergenbank | 0.16.0, Bau 36 in TestFlight | Werte nach dem Spieltest nachziehen |
 | Mission 3 mit Aufwertungen | 0.18.0 in Bau 38; Mission 4 (0.20.0) im PR | zusammenführen, Bau in TestFlight, Antwort auf die Karte zu Mission 4 |
 | Plünderer-3D-Modell | 0.13.0 in TestFlight | Flitzer und Panzerbestie, wenn dir der Plünderer im Spiel gefällt |
