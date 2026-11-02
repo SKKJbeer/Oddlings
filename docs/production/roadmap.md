@@ -12,7 +12,7 @@ Entscheidungskarte beantwortet. Alles, was auf ihn wartet, steht unter
 zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzelnen:
 [backlog.md](backlog.md), offene Fragen: [offene-fragen.md](offene-fragen.md).
 
-**Stand: 02.11.2026** · neueste Version 0.20.0 (Mission 4 mit Rüstung), davor 0.19.0 (Ausrüstung, Bau 39), 0.18.0 (Mission 3 mit Aufwertungen, Bau 38), neuester VALID-Bau 39 (0.19.0)
+**Stand: 02.11.2026** · neueste Version 0.20.0 (Mission 4 mit Rüstung, Bau 40), davor 0.19.0 (Ausrüstung, Bau 39), 0.18.0 (Mission 3 mit Aufwertungen, Bau 38), neuester VALID-Bau 40 (0.20.0)
 
 ## Phasen
 
@@ -80,7 +80,7 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | P2-5: Mission 2 mit Zwergenbank und Bonus für frühes Rufen (D-026, D-083) | 0.16.0 | 36 | [Konzept](../konzepte/p2-5-mission-2-zwergenbank.md) |
 | Grafik 06: gemalte Kampfplätze M2 (Zwergenstollen), M3 (Pilzhain), M4 (Ruinenrand), Wege M3/M4 als Vorschlag (D-081) | 0.16.1 | 37 | [Konzept](../konzepte/grafik-06-kampfplaetze-m2-m4.md) |
 | P2-6: Mission 3 mit Aufwerten auf Stufe 2 und Zielwahl (D-024, D-084) | 0.18.0 | 38 | [Konzept](../konzepte/p2-6-mission-3-aufwerten.md) |
-| P2-10: Mission 4 mit gepanzerter Panzerbestie (K7, D-087) | 0.20.0 | – | [Konzept](../konzepte/p2-10-mission-4-ruestung.md) |
+| P2-10: Mission 4 mit gepanzerter Panzerbestie (K7, D-087) | 0.20.0 | 40 | [Konzept](../konzepte/p2-10-mission-4-ruestung.md) |
 | P2-3: Ton und Musik, nur CC0 (D-082) | 0.15.0 | 35 | [Konzept](../konzepte/p2-3-ton-und-musik.md) |
 | R-7a: Ausrüstung aus festen Belohnungen (D-066, D-069 bis D-071) | 0.19.0 | 39 | [Konzept](../konzepte/r-7-ausruestung.md) |
 

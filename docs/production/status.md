@@ -5,7 +5,7 @@ ergänzt, D-067). Reihenfolge, Pakete und alles, was auf dich wartet, stehen in 
 [Roadmap](roadmap.md); Einzelheiten im [Backlog](backlog.md), offene Fragen im
 [Register](offene-fragen.md).
 
-**Stand: 02.11.2026** · Neueste Version **0.20.0** (Mission 4 mit gepanzerter Panzerbestie), Bau folgt;
+**Stand: 02.11.2026** · Neueste Version **0.20.0** (Mission 4 mit gepanzerter Panzerbestie), Bau 40 in TestFlight;
 davor 0.19.0 (Ausrüstung im Avatar-Menü, Bau 39 VALID), 0.18.0 (Mission 3 mit Aufwertungen, Bau 38 VALID), 0.16.1 (gemalte Kampfplätze für Mission 2 bis 4), 0.16.0 (Mission 2 mit Zwergenbank). Der Spielrahmen R-1 bis R-6 steht. Spielbar sind Mission 1 bis 4.
 
 ## Wartet auf dich
@@ -65,7 +65,7 @@ davor 0.19.0 (Ausrüstung im Avatar-Menü, Bau 39 VALID), 0.18.0 (Mission 3 mit 
 |---|---|---|
 | Haupt-Thread | 0.19.0 Ausrüstung (R-7a) in TestFlight (Bau 39) | [Konzept R-7b Schmiede](../konzepte/r-7b-schmiede.md) steht, wartet auf deine drei Karten |
 | Mission 2 mit Zwergenbank | 0.16.0, Bau 36 in TestFlight | Werte nach dem Spieltest nachziehen |
-| Mission 3 mit Aufwertungen | 0.18.0 in Bau 38; Mission 4 (0.20.0) im PR | zusammenführen, Bau in TestFlight, Antwort auf die Karte zu Mission 4 |
+| Mission 3 mit Aufwertungen | 0.18.0 in Bau 38, Mission 4 (0.20.0) in Bau 40 | Antwort auf die Karte zu Mission 4 |
 | Plünderer-3D-Modell | 0.13.0 in TestFlight | Flitzer und Panzerbestie, wenn dir der Plünderer im Spiel gefällt |
 | Ton und Musik | 0.15.0 in Bau 35 | Hörprobe beim Spieltest |
 
