@@ -153,9 +153,16 @@ final class BattleController {
     }
 
     var selectedTower: Tower? {
+        // `BattleModel` ist nicht beobachtet; erst das Lesen der Kopie meldet der
+        // Ansicht, dass sich der Turm ändern kann. Sonst blieb die Zielwahl auf
+        // dem Knopf stehen, weil sie weder Gold noch Auswahl ändert.
+        _ = shownTower
         guard case .tower(let id, _, _) = selection else { return nil }
         return model.state.towers.first { $0.id == id }
     }
+
+    /// Beobachtete Kopie des gewählten Turms (Stufe, Zielwahl, Auszahlung).
+    private(set) var shownTower: Tower?
 
     func refund(for tower: Tower) -> Int { model.sim.refund(for: tower.spent) }
 
@@ -427,6 +434,8 @@ final class BattleController {
     /// Eigenschaft lässt SwiftUI neu zeichnen, und das 60-mal je Sekunde.
     private func refreshCopies() {
         let state = model.state
+        let tower: Tower? = if case .tower(let id, _, _) = selection { state.towers.first { $0.id == id } } else { nil }
+        if shownTower != tower { shownTower = tower }
         if gold != state.gold { gold = state.gold }
         if lives != state.fortressLives { lives = state.fortressLives }
         if let ability = model.sim.config.ability {

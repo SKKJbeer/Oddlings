@@ -87,6 +87,8 @@ final class UpgradeControllerTests: XCTestCase {
             controller.cycleTargetMode()
             stepAndRefresh()
             XCTAssertEqual(model.state.towers.last?.targetMode, expected)
+            // Die beobachtete Kopie trägt den Wechsel in die Ansicht (sonst blieb der Knopf stehen).
+            XCTAssertEqual(controller.shownTower?.targetMode, expected)
         }
 
         let spore = Tower(id: watch.id, kind: .spore, cell: watch.cell, cooldownTicks: 0, spent: 1, level: 2)
