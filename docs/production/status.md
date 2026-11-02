@@ -5,8 +5,8 @@ ergänzt, D-067). Reihenfolge, Pakete und alles, was auf dich wartet, stehen in 
 [Roadmap](roadmap.md); Einzelheiten im [Backlog](backlog.md), offene Fragen im
 [Register](offene-fragen.md).
 
-**Stand: 02.11.2026** · Neueste Version **0.19.0** (Ausrüstung im Avatar-Menü), Bau läuft;
-davor 0.18.0 (Mission 3 mit Aufwertungen), 0.16.1 (gemalte Kampfplätze für Mission 2 bis 4, Bau 37 VALID), 0.16.0 (Mission 2 mit Zwergenbank), 0.15.0 (Ton und Musik). Der Spielrahmen R-1 bis R-6 steht. Spielbar sind Mission 1 bis 3.
+**Stand: 02.11.2026** · Neueste Version **0.19.0** (Ausrüstung im Avatar-Menü), Bau 39 VALID;
+davor 0.18.0 (Mission 3 mit Aufwertungen, Bau 38 VALID), 0.16.1 (gemalte Kampfplätze für Mission 2 bis 4, Bau 37 VALID), 0.16.0 (Mission 2 mit Zwergenbank), 0.15.0 (Ton und Musik). Der Spielrahmen R-1 bis R-6 steht. Spielbar sind Mission 1 bis 3.
 
 ## Wartet auf dich
 

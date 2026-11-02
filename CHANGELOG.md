@@ -11,7 +11,12 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.19.0 – 02.11.2026 (R-7a: Ausrüstung aus festen Belohnungen), Bau offen
+## Dokumente, kein Bau – 02.11.2026 (Bauten 38 und 39)
+
+- Bau 38 (0.18.0) und Bau 39 (0.19.0) von Apple als VALID gemeldet, in Roadmap und
+  Stand eingetragen.
+
+## 0.19.0 – 02.11.2026 (R-7a: Ausrüstung aus festen Belohnungen) · Bau 39
 
 **Neu**
 - Das Avatar-Menü hat Reiter: „Talente“ und neu „Ausrüstung“. Drei Plätze (Banner für
@@ -39,7 +44,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - App: Belohnung, Anlegen, Ablegen, Neustart, Texte. E2E: Reiter „Ausrüstung“,
   Anlegen und Ablegen, Belegung übersteht den Neustart, nichts überlappt.
 
-## 0.18.0 – 02.11.2026 (P2-6: Mission 3 mit Aufwertungen)
+## 0.18.0 – 02.11.2026 (P2-6: Mission 3 mit Aufwertungen) · Bau 38
 
 - **Mission 3 „Pilzhain“** spielbar, nach dem Sieg in Mission 2 auf der Kampagnenkarte
   offen: Weg mit Haarnadel auf dem gemalten Kampfplatz (D-081), zehn Wellen etwas
