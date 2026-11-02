@@ -35,7 +35,7 @@ davor 0.16.1 (gemalte Kampfplätze für Mission 2 bis 4, Bau 37 VALID), 0.16.0 (
   auf Stufe 2 aufwerten (zweimal tippen, etwa 70 % des Turmpreises, eigenes Bild und
   Schild „II“), danach wählen Wach- und Blitzturm ihr Ziel: Erster, Letzter oder
   Stärkster. Der Weg mit der Haarnadel belohnt tiefe Plätze, breit bauen gewinnt aber
-  auch. Bank und Bonus wie in Mission 2 (deine Wahl, D-085). Nach dem Sieg in Mission 2 offen; Werte sind
+  auch. Bank und Bonus wie in Mission 2 (deine Wahl, D-086). Nach dem Sieg in Mission 2 offen; Werte sind
   Hypothesen bis zum Spieltest.
 - **Grafik und Bewegung**: gemalte Figuren, Türme, Symbole, Titelbild, Kampfplatz als
   Waldlichtung mit Zwergenfeste, Porträts (Grafik 01 bis 05); Laufen, Treffer, Tod,

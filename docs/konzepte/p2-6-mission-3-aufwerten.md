@@ -94,7 +94,7 @@ Aufwertung (M1, M2), und die Simulation lehnt den Befehl ab.
 - **Wellen:** 10, Plünderer, Flitzer und ab Welle 6 Panzerbestien in kleiner
   Zahl. Die Gegner kommen dichter und zäher als in M2, damit eine Mission ohne
   Aufwertung knapper wird, nicht unmöglich. **[VORSCHLAG]**
-- **Bank und Bonus** wie in M2 (**[ENTSCHIEDEN D-085]**, Steffen 02.11.2026,
+- **Bank und Bonus** wie in M2 (**[ENTSCHIEDEN D-086]**, Steffen 02.11.2026,
   Entscheidungskarte S5). So stehen drei Anlagen nebeneinander: neuer Turm, Aufwertung, Bank.
 - **Startgold** 200, erste Welle nach 25 s.
 - **Zielgröße Balance** (neu in 04): Die beste Bauweise mit Aufwertungen hat
