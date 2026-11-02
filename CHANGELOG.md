@@ -11,6 +11,10 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## Dokumente, kein Bau – 02.11.2026 (Karte S7: was nach R-7a kommt)
+
+- Neue Entscheidungskarte für Steffen in Roadmap und Stand eingetragen (D-067).
+
 ## Dokumente, kein Bau – 01.11.2026 (Bau 37)
 
 - Bau 37 (0.16.1) von Apple als VALID gemeldet, in Roadmap und Stand eingetragen.

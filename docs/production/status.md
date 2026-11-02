@@ -15,7 +15,9 @@ davor 0.16.0 (Mission 2 mit Zwergenbank, Bau 36 VALID), 0.15.0 (Ton und Musik), 
 2. **Spieltest mit drei Personen** (WP-15) auf dem neuesten Bau, mit dem
    [Beobachtungsbogen](playtests/beobachtungsbogen.md). Davon hängen Phase 2 und die
    Werte von Mission 1 ab.
-3. Ohne Eile: Messung des Spikes auf dem iPhone (WP-01).
+3. **Was nach der Ausrüstung kommt:** Entscheidungskarte im Thread „Architektur, Doku und
+   Roadmap nachziehen“ (Empfehlung: Mission 3 mit Aufwertungen).
+4. Ohne Eile: Messung des Spikes auf dem iPhone (WP-01).
 
 ## Fertig
 
