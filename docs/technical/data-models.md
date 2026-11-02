@@ -21,6 +21,7 @@ struct BalanceConfig: Codable {
     var map: MapConfig                       // width, height, path [[x,y]], buildZones (ab WP-03)
     var towers: [TowerKind: TowerConfig]     // nur Kampftürme (TowerKind.combat)
     var bank: BankConfig?                    // Zwergenbank, nur wo die Mission sie anbietet (P2-5, D-083)
+    var upgrades: [TowerKind: UpgradeConfig]? // Stufe 2 je Kampfturm, ab Mission 3 (P2-6, D-084)
     var enemies: [EnemyKind: EnemyConfig]
     var waves: [WaveConfig]
 }
@@ -35,6 +36,12 @@ struct TowerConfig: Codable {               // ein Typ, optionale Felder je Roll
 struct BankConfig: Codable {                // eigener Typ: keine Reichweite, kein Schaden, kein Takt (D-083)
     var cost: Int; var delay: Double; var interval: Double; var payout: Int; var cap: Int; var limit: Int
 }
+
+struct UpgradeConfig: Codable {             // Faktoren auf die Werte der Stufe 1 (D-084)
+    var cost: Int; var scale: [TowerStat: Double]   // range, damage, attackInterval, chainRadius, slowFactor, slowDuration
+}
+// config.stats(of: tower) = Werte der Stufe des Turms; config.maxLevel(of:), config.upgradeCost(of:)
+// Bauweisen der Bots (simStrategies) sind [StrategyStep]: "watch" baut, "watch+" wertet den ältesten Wachturm auf.
 
 struct EnemyConfig: Codable { var hp: Double; var speed: Double; var reward: Int; var leakDamage: Int }
 struct WaveConfig: Codable { var hpScale: Double; var groups: [SpawnGroup] }
@@ -52,7 +59,11 @@ wenn eine Welle ihn ruft (die Panzerbestie ist optional). Ein unbekannter Turmty
 lässt das Lesen scheitern; `bank` unter `towers` meldet die Prüfung als
 `bankNotATower`, denn die Bank hat ihren eigenen Abschnitt `bank`. Eine Bauweise
 der Bots, die eine Bank nennt, ohne dass die Mission eine hat, meldet
-`strategyNeedsBank`. `config.buildable` ist die Liste fürs Kreismenü (drei
+`strategyNeedsBank`, eine mit Aufwerten ohne Abschnitt `upgrades`
+`strategyNeedsUpgrades`. `upgrades` prüft: nur Kampftürme
+(`upgradeNeedsCombatTower`), Preis und Faktoren > 0, mindestens ein Faktor
+(`emptyUpgrade`), jeder Faktor nennt einen Wert, den der Turm hat
+(`statNotInTower`), und `slowFactor` bleibt danach in (0, 1]. `config.buildable` ist die Liste fürs Kreismenü (drei
 Kampftürme, mit Bank vier), `config.cost(of:)` der Preis jeder Art. Punkte stehen
 im JSON als `[x, y]`.
 
@@ -80,6 +91,8 @@ struct Tower: Codable, Equatable {
     var id: Int; var kind: TowerKind; var cell: Cell; var cooldownTicks: Int; var spent: Int
     var builtTick: Int               // ab hier zählt die Verzögerung der Bank (P2-5)
     var paid: Int                    // von der Bank ausgezahlt, höchstens `cap`
+    var level: Int                   // 1 oder 2 (P2-6); ältere Stände lesen sich mit 1
+    var targetMode: TargetMode       // .first, .last, .strongest; ältere Stände .first
 }
 struct Enemy: Codable, Equatable {
     var id: Int; var kind: EnemyKind
@@ -110,6 +123,7 @@ Fortschritt aus.
 enum Command: Codable, Equatable {
     case build(TowerKind, Cell), sell(towerID: Int), callNextWave
     case useAbility(Point)                                // Fähigkeit des Volks, rastet am Weg ein
+    case upgrade(towerID: Int), setTargetMode(towerID: Int, TargetMode)   // P2-6
 }
 
 enum Event: Equatable {
@@ -125,6 +139,7 @@ enum Event: Equatable {
     case barrierRaised(distance: Double, untilTick: Int), barrierFell   // Bollwerk (R-4)
     case bankPaid(towerID: Int, gold: Int, paid: Int), bankEmptied(towerID: Int)   // Zwergenbank (P2-5)
     case earlyCallBonus(gold: Int)                        // frühes Rufen der nächsten Welle
+    case towerUpgraded(id: Int, level: Int), targetModeChanged(id: Int, mode: TargetMode)   // P2-6
 }
 
 func step(_ state: inout GameState, commands: [Command], config: BalanceConfig) -> [Event]
@@ -146,6 +161,13 @@ und `paid` lesen sich mit 0. Bau über der Höchstzahl lehnt die Simulation mit
 `Rejection.limitReached` ab, vor der Goldprüfung. Der Bonus fürs frühe Rufen ist
 eingesparte Sekunden mal `earlyCallBonus`, abgerundet;
 `Simulation.earlyCallBonus(in:)` liefert dieselbe Zahl für den Knopf.
+
+Aufwerten (P2-6): `upgrade` lehnt mit `notUpgradable` ab, wenn die Mission
+keine Stufe 2 für den Turm kennt oder er schon oben ist, sonst mit
+`notEnoughGold`; der Takt läuft weiter, `spent` wächst um den Preis.
+`setTargetMode` lehnt auf Stufe 1 und beim Sporenturm mit `targetModeLocked` ab;
+dieselbe Wahl noch einmal meldet nichts. Die Zielwahl rechnet
+`Simulation.target(in:around:range:mode:)`, ohne Iteration über ein Wörterbuch.
 
 **Völker (R-4):** `AbilityConfig.kind` ist `stoneRain`, `bulwark` oder
 `moonMark`. Fehlt `kind`, gilt `stoneRain`. `issues()` verlangt genau die Felder

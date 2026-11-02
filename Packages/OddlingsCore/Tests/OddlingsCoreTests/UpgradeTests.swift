@@ -124,7 +124,7 @@ struct UpgradeTests {
         #expect(state.gold == 6 && state.towers.first?.level == 1)
     }
 
-    @Test("Zustände ohne Stufe und Zielwahl (vor 0.17.0) bleiben lesbar")
+    @Test("Zustände ohne Stufe und Zielwahl (vor 0.18.0) bleiben lesbar")
     func oldStateReadable() throws {
         let json = #"{"id":1,"kind":"watch","cell":{"x":1,"y":2},"cooldownTicks":0,"spent":50}"#
         let tower = try JSONDecoder().decode(Tower.self, from: Data(json.utf8))

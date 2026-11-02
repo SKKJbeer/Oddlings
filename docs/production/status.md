@@ -5,8 +5,8 @@ ergänzt, D-067). Reihenfolge, Pakete und alles, was auf dich wartet, stehen in 
 [Roadmap](roadmap.md); Einzelheiten im [Backlog](backlog.md), offene Fragen im
 [Register](offene-fragen.md).
 
-**Stand: 01.11.2026** · Neueste Version **0.16.1** (gemalte Kampfplätze für Mission 2 bis 4), Bau 37 VALID;
-davor 0.16.0 (Mission 2 mit Zwergenbank, Bau 36 VALID), 0.15.0 (Ton und Musik), 0.13.0 (Plünderer mit Gliedmaßen). Der Spielrahmen R-1 bis R-6 steht. Spielbar sind Mission 1 und Mission 2.
+**Stand: 02.11.2026** · Neueste Version **0.18.0** (Mission 3 mit Aufwertungen), Bau folgt;
+davor 0.16.1 (gemalte Kampfplätze für Mission 2 bis 4, Bau 37 VALID), 0.16.0 (Mission 2 mit Zwergenbank), 0.15.0 (Ton und Musik). Der Spielrahmen R-1 bis R-6 steht. Spielbar sind Mission 1 bis 3.
 
 ## Wartet auf dich
 
@@ -16,6 +16,8 @@ davor 0.16.0 (Mission 2 mit Zwergenbank, Bau 36 VALID), 0.15.0 (Ton und Musik), 
    [Beobachtungsbogen](playtests/beobachtungsbogen.md). Davon hängen Phase 2 und die
    Werte von Mission 1 ab.
 3. Ohne Eile: Messung des Spikes auf dem iPhone (WP-01).
+4. Bleiben Zwergenbank und Bonus fürs frühe Rufen in Mission 3? Entscheidungskarte im
+   Thread „Mission 3 mit Aufwertungen bauen“. Blockiert nichts, gebaut ist „beides bleibt“.
 
 ## Fertig
 
@@ -30,7 +32,13 @@ davor 0.16.0 (Mission 2 mit Zwergenbank, Bau 36 VALID), 0.15.0 (Ton und Musik), 
   Bank als vierter Knopf im Kreismenü (zahlt nach 20 s alle 4 s Gold bis 300, höchstens
   zwei), Gold fürs frühe Rufen der Welle. Nach dem Sieg in Mission 1 auf der Karte
   offen. Werte sind Hypothesen bis zum Spieltest. Gemalter Kampfplatz am Zwergenstollen (0.16.1);
-  die Kampfplätze für Mission 3 (Pilzhain) und 4 (Ruinenrand) liegen bereit.
+  der Kampfplatz für Mission 4 (Ruinenrand) liegt bereit.
+- **Mission 3 „Pilzhain“ mit Aufwertungen** (P2-6, 0.18.0): Türme lassen sich einmal
+  auf Stufe 2 aufwerten (zweimal tippen, etwa 70 % des Turmpreises, eigenes Bild und
+  Schild „II“), danach wählen Wach- und Blitzturm ihr Ziel: Erster, Letzter oder
+  Stärkster. Der Weg mit der Haarnadel belohnt tiefe Plätze, breit bauen gewinnt aber
+  auch. Bank und Bonus wie in Mission 2. Nach dem Sieg in Mission 2 offen; Werte sind
+  Hypothesen bis zum Spieltest.
 - **Grafik und Bewegung**: gemalte Figuren, Türme, Symbole, Titelbild, Kampfplatz als
   Waldlichtung mit Zwergenfeste, Porträts (Grafik 01 bis 05); Laufen, Treffer, Tod,
   Turmangriffe und Fähigkeiten als Effekte (FX 01, 0.10.0); der Plünderer geht,
@@ -49,6 +57,7 @@ davor 0.16.0 (Mission 2 mit Zwergenbank, Bau 36 VALID), 0.15.0 (Ton und Musik), 
 |---|---|---|
 | Haupt-Thread | [Konzept R-7 Ausrüstung](../konzepte/r-7-ausruestung.md) steht: höchstens +10 % (D-069), feste Belohnungen und Schmiede (D-070) | R-7a feste Belohnungen umsetzen |
 | Mission 2 mit Zwergenbank | 0.16.0, Bau 36 in TestFlight | Werte nach dem Spieltest nachziehen |
+| Mission 3 mit Aufwertungen | 0.18.0 im PR | zusammenführen, Bau in TestFlight, danach Mission 4 |
 | Plünderer-3D-Modell | 0.13.0 in TestFlight | Flitzer und Panzerbestie, wenn dir der Plünderer im Spiel gefällt |
 | Ton und Musik | 0.15.0 in Bau 35 | Hörprobe beim Spieltest |
 

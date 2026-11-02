@@ -15,8 +15,9 @@ final class BattleController {
         /// gezeigt wird; ein zweiter Tipp auf ihn baut.
         case cell(Cell, choice: TowerKind?)
         /// Gebauter Turm. `sellArmed`: Verkaufen wurde einmal angetippt, das
-        /// zweite Tippen verkauft (07-ui-ux.md, Grundsatz 4).
-        case tower(id: Int, sellArmed: Bool = false)
+        /// zweite Tippen verkauft (07-ui-ux.md, Grundsatz 4). `upgradeArmed`
+        /// ebenso fürs Aufwerten, weil es Gold kostet (P2-6).
+        case tower(id: Int, sellArmed: Bool = false, upgradeArmed: Bool = false)
         /// Steinregen ist gewählt; der nächste Tipp auf die Karte wirft (07).
         case aiming
     }
@@ -61,6 +62,8 @@ final class BattleController {
     private(set) var lastBonus = 0
     /// Steigt, wenn ein Kauf an der Höchstzahl scheitert.
     private(set) var limitWarnings = 0
+    /// Steigt mit jeder Aufwertung, für Tests und die Ergebnistafel.
+    private(set) var towersUpgraded = 0
 
     /// Rückmeldung an den Finger. Austauschbar, damit Tests mitschreiben können.
     @ObservationIgnored var haptics: @MainActor (Haptic) -> Void
@@ -109,7 +112,12 @@ final class BattleController {
     }
 
     var sellArmed: Bool {
-        if case .tower(_, true) = selection { return true }
+        if case .tower(_, true, _) = selection { return true }
+        return false
+    }
+
+    var upgradeArmed: Bool {
+        if case .tower(_, _, true) = selection { return true }
         return false
     }
 
@@ -145,11 +153,52 @@ final class BattleController {
     }
 
     var selectedTower: Tower? {
-        guard case .tower(let id, _) = selection else { return nil }
+        guard case .tower(let id, _, _) = selection else { return nil }
         return model.state.towers.first { $0.id == id }
     }
 
     func refund(for tower: Tower) -> Int { model.sim.refund(for: tower.spent) }
+
+    // MARK: Aufwerten und Zielwahl (P2-6)
+
+    /// Preis der nächsten Stufe, nil, wenn der Turm nicht weiter kann oder die
+    /// Mission keine Aufwertung kennt (Mission 1 und 2).
+    func upgradeCost(for tower: Tower) -> Int? {
+        guard tower.level < model.sim.config.maxLevel(of: tower.kind) else { return nil }
+        return model.sim.config.upgradeCost(of: tower.kind)
+    }
+
+    /// Zielwahl ab Stufe 2 und nur bei Türmen mit Einzelziel (07, „Zielwahl“).
+    func hasTargetMode(_ tower: Tower) -> Bool {
+        tower.level >= 2 && model.sim.config.stats(of: tower)?.targeting == .first
+    }
+
+    /// Erstes Tippen zeigt Stufe 2 in Tafel und Kreis, zweites kauft. Die
+    /// Auswahl bleibt am Turm, damit man gleich die Zielwahl sieht.
+    func upgrade() {
+        guard interactive, case .tower(let id, _, let armed) = selection, let tower = selectedTower,
+              let cost = upgradeCost(for: tower) else { return }
+        guard gold >= cost else {
+            goldWarnings += 1
+            feedback(.cannotAfford)
+            return
+        }
+        if armed {
+            model.enqueue(.upgrade(towerID: id))
+            selection = .tower(id: id)
+        } else {
+            selection = .tower(id: id, upgradeArmed: true)
+            feedback(.preview)
+        }
+    }
+
+    /// Schaltet weiter: Erster → Letzter → Stärkster. Kostet nichts, also
+    /// ohne zweites Tippen.
+    func cycleTargetMode() {
+        guard interactive, let tower = selectedTower, hasTargetMode(tower) else { return }
+        model.enqueue(.setTargetMode(towerID: tower.id, tower.targetMode.next))
+        feedback(.preview)
+    }
 
     /// Nur wenn die Mission eine Fähigkeit hat und man selbst spielt (03).
     var hasAbility: Bool { interactive && model.sim.config.ability != nil }
@@ -177,7 +226,10 @@ final class BattleController {
             guard let stats = model.sim.config.towers[kind] else { return nil }
             return (center: cell.center, range: stats.range)
         case .tower:
-            guard let tower = selectedTower, let stats = model.sim.config.towers[tower.kind] else { return nil }
+            // Beim ersten Tippen auf Aufwerten zeigt der Kreis schon Stufe 2 (07).
+            guard let tower = selectedTower,
+                  let stats = model.sim.config.stats(of: tower.kind, level: tower.level + (upgradeArmed ? 1 : 0))
+            else { return nil }
             return (center: tower.cell.center, range: stats.range)
         }
     }
@@ -187,7 +239,7 @@ final class BattleController {
     func tap(_ cell: Cell?) {
         guard interactive, !model.state.isOver, !surrendered, let cell else { return dismiss() }
         if let tower = model.state.towers.first(where: { $0.cell == cell }) {
-            if case .tower(tower.id, _) = selection {
+            if case .tower(tower.id, _, _) = selection {
                 selection = .none
             } else {
                 selection = .tower(id: tower.id)
@@ -235,7 +287,7 @@ final class BattleController {
 
     /// Erstes Tippen fragt „Sicher?“, zweites verkauft.
     func sell() {
-        guard interactive, case .tower(let id, let armed) = selection else { return }
+        guard interactive, case .tower(let id, let armed, _) = selection else { return }
         if armed {
             model.enqueue(.sell(towerID: id))
             selection = .none
@@ -347,6 +399,7 @@ final class BattleController {
         paused = false
         surrendered = false
         towersBuilt = 0
+        towersUpgraded = 0
         enemiesDefeated = 0
         model.paused = false
         refreshCopies()
@@ -362,6 +415,7 @@ final class BattleController {
         case .earlyCallBonus(let gold):
             lastBonus = gold
             bonusGains += 1
+        case .towerUpgraded: towersUpgraded += 1
         default: break
         }
         // Nur im eigenen Spiel: Beim Zuschauen baut der Mitspieler, und das

@@ -32,6 +32,9 @@ enum FeedbackPlayer {
         switch event {
         case .towerBuilt: .medium
         case .towerSold: .light
+        case .towerUpgraded: .medium
+        // Kostet nichts und kommt aus einem Tipp, der schon `preview` gespürt hat.
+        case .targetModeChanged: nil
         case .commandRejected: .warning
         case .enemyLeaked: .warning
         case .missionEnded(let won): won ? .success : .error

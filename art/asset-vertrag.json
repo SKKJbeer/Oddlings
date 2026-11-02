@@ -24,6 +24,21 @@
       "anker": 0.2,
       "alpha": true
     },
+    "tower_watch_2": {
+      "seiteZellen": 1.9,
+      "anker": 0.2,
+      "alpha": true
+    },
+    "tower_lightning_2": {
+      "seiteZellen": 1.9,
+      "anker": 0.2,
+      "alpha": true
+    },
+    "tower_spore_2": {
+      "seiteZellen": 1.9,
+      "anker": 0.2,
+      "alpha": true
+    },
     "fortress": {
       "seiteZellen": 2.4,
       "anker": 0.15,

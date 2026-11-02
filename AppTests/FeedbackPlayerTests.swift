@@ -24,6 +24,8 @@ final class FeedbackPlayerTests: XCTestCase {
         XCTAssertEqual(FeedbackPlayer.haptic(for: .abilityImpact(center: Point(x: 1, y: 1), hits: [])), .heavy)
         XCTAssertEqual(FeedbackPlayer.haptic(for: .barrierRaised(distance: 3, untilTick: 9)), .heavy)
         XCTAssertNil(FeedbackPlayer.haptic(for: .barrierFell), "das Ende der Mauer ist keine Handlung")
+        XCTAssertEqual(FeedbackPlayer.haptic(for: .towerUpgraded(id: 1, level: 2)), .medium)
+        XCTAssertNil(FeedbackPlayer.haptic(for: .targetModeChanged(id: 1, mode: .last)), "der Tipp hat schon geklickt")
     }
 
     /// Treffer und Tode kommen in Mengen; sie dürfen die eigene Handlung nicht übertönen.

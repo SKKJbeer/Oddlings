@@ -13,6 +13,8 @@ enum SoundMap {
     static func requests(for moment: SoundMoment) -> [Request] {
         switch moment {
         case .built: [Request(cue: .build)]
+        // Kein neuer Klang: der Bauklang höher, dazu die Münze für das Gold (P2-6).
+        case .upgraded: [Request(cue: .build, semitones: AudioStyle.upgradeSemitones), Request(cue: .coin)]
         case .sold: [Request(cue: .sell)]
         case .rejected: [Request(cue: .uiDeny)]
         case .fired(.watch, _, _): [Request(cue: .watchShot)]

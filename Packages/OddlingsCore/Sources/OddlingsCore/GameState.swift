@@ -68,7 +68,7 @@ public struct Tower: Codable, Equatable, Sendable {
         case id, kind, cell, cooldownTicks, spent, builtTick, paid, level, targetMode
     }
 
-    /// Zustände ohne Bankfelder (vor 0.16.0) und ohne Stufe (vor 0.17.0) bleiben lesbar.
+    /// Zustände ohne Bankfelder (vor 0.16.0) und ohne Stufe (vor 0.18.0) bleiben lesbar.
     public init(from decoder: any Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         id = try c.decode(Int.self, forKey: .id)
