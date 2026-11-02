@@ -83,7 +83,7 @@ Tests prüfen, dass die App genau so funktioniert wie gedacht. **[ENTSCHIEDEN]**
 
 Umgesetzt ab Version 0.5.1; Aufbau und Grundsätze: [e2e-tests.md](../konzepte/e2e-tests.md).
 
-**Stand 0.18.0: 32 Fälle** in `AppUITests/`:
+**Stand 0.19.0: 33 Fälle** in `AppUITests/`:
 
 | Datei | Fälle | Ablauf |
 |---|---|---|
@@ -91,7 +91,7 @@ Umgesetzt ab Version 0.5.1; Aufbau und Grundsätze: [e2e-tests.md](../konzepte/e
 | `CampaignE2ETests` | 2 | Sterne nach Sieg überstehen Neustart, Mission 2 danach offen und startbar, gesperrte Missionen nennen den Grund |
 | `UpgradeE2ETests` | 1 | Mission 3: Turm bauen, aufwerten (zweimal tippen, Preis abgezogen, „Wachturm II“), Zielwahl schaltet Erster → Letzter → Stärkster ohne Gold (P2-6) |
 | `BankE2ETests` | 2 | Mission 2: Bank im Kreismenü mit Warnung und Preis (P2-5), frühes Rufen schreibt Gold gut, Höchstzahl sperrt die dritte Bank |
-| `AvatarE2ETests` | 4 | Avatar einmal aufbauen (R-5), Zwerge mit Preis und Fähigkeit, Rang schaltet Talent frei (R-6), Aufbau und Menü passen auf den Schirm |
+| `AvatarE2ETests` | 5 | Avatar einmal aufbauen (R-5), Zwerge mit Preis und Fähigkeit, Rang schaltet Talent frei (R-6), Ausrüstung anlegen und ablegen übersteht den Neustart (R-7a), Aufbau und Menü passen auf den Schirm |
 | `BuildAndSellE2ETests` | 4 | Kreismenü, Vorschau, bauen, verkaufen, „fehlt N“, Schließen |
 | `HUDE2ETests` | 4 | Startwerte, Welle rufen, Pause hält Countdown, Tempo |
 | `TablesE2ETests` | 4 | Pausetafel (weiter, neu starten), Aufgeben, Bildschirmfotos zum Abgleich |

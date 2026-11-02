@@ -120,4 +120,58 @@ struct BalanceTests {
             #expect(abs(result.reserve - center) <= 0.06, "\(result.name): \(result.reserve) gegen Mitte \(center)")
         }
     }
+
+    /// D-066, D-069: Ausrüstung macht stärker, aber jede volle Belegung hebt die
+    /// Reserve um höchstens 10 % gegenüber demselben Avatar ohne Ausrüstung.
+    /// Gemessen am Schnitt über vier Mischungen, weil ein einzelner Lauf um
+    /// ±0,05 springt (siehe Talente); dazu mit jeder Talentwahl des höchsten Rangs,
+    /// denn eine Wahl kann zur Ausrüstung besser passen als die andere.
+    @Test("Volle Ausrüstung hilft, höchstens +10 %, und die Mischung bleibt vorn", arguments: Race.allCases)
+    func equipmentBounded(race: Race) throws {
+        let mixes = try ["Mix", "Wach + Blitz", "Wach + Sporen", "Blitz + Sporen"].map(order)
+        let mix = try order("Mix"), watchOnly = try order("Nur Wachtürme")
+        func average(_ config: BalanceConfig) -> Double {
+            let simulation = Simulation(config: config)
+            return mixes.map { simulation.reserve($0, castsAbility: true) }.reduce(0, +) / Double(mixes.count)
+        }
+        let config = try #require(try RaceTable.bundled()[race])
+        let table = try EquipmentTable.bundled()
+        let bare = average(sim.config.applying(config, talents: []))
+        var strongest: (reserve: Double, pieces: [EquipmentPiece]) = (0, [])
+        for pieces in table.fullLoadouts() {
+            let name = "\(race) \(pieces.map(\.id))"
+            let with = average(sim.config.applying(config, talents: [], equipment: pieces))
+            #expect(with > bare, "\(name) hilft")
+            #expect(with <= bare * 1.10, "\(name): \(with) gegen \(bare)")
+            if with > strongest.reserve { strongest = (with, pieces) }
+        }
+        let rows = (config.talents ?? []).count
+        for choice in config.allTalentChoices() where choice.count == rows {
+            let name = "\(race) \(choice.map(\.rawValue).joined()) \(strongest.pieces.map(\.id))"
+            let geared = Simulation(config: sim.config.applying(config, talents: choice, equipment: strongest.pieces))
+            let without = average(sim.config.applying(config, talents: choice))
+            let with = average(sim.config.applying(config, talents: choice, equipment: strongest.pieces))
+            #expect(with <= without * 1.10, "\(name): \(with) gegen \(without)")
+            #expect(geared.reserve(mix, castsAbility: true) > geared.reserve(watchOnly, castsAbility: true) + 0.05,
+                    "\(name): Mischung vor Monokultur")
+        }
+    }
+
+    /// Säule 1 beim ersten Spielen: Wer eine Mission zum ersten Mal spielt, hat
+    /// nur, was frühere Missionen gaben. Vor Mission 1 sind das weder Talente noch
+    /// Ausrüstung; Monokulturen aus Blitz oder Sporen verlieren dann mit jedem Volk.
+    @Test("Beim ersten Spielen verliert jede Monokultur außer Wachtürmen, mit jedem Volk", arguments: Race.allCases)
+    func monocultureLosesOnFirstPlay(race: Race) throws {
+        let config = try #require(try RaceTable.bundled()[race])
+        let table = try EquipmentTable.bundled()
+        let firstPlay = CampaignProgress()
+        let pieces = table.effective(EquipmentLoadout(banner: table.pieces(in: .banner).first?.id,
+                                                      amulet: table.pieces(in: .amulet).first?.id,
+                                                      seal: table.pieces(in: .seal).first?.id), progress: firstPlay)
+        #expect(pieces.isEmpty, "vor Mission 1 gibt es keine Ausrüstung")
+        let raced = Simulation(config: sim.config.applying(config, talents: [], equipment: pieces))
+        for name in ["Nur Blitztürme", "Nur Sporentürme"] {
+            #expect(raced.play(try order(name), castsAbility: true).state.outcome == .lost, "\(race): \(name)")
+        }
+    }
 }

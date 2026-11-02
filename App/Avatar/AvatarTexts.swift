@@ -96,6 +96,78 @@ enum AvatarTexts {
         }
     }
 
+    // MARK: Ausrüstung (R-7a)
+
+    static let equipment = "Ausrüstung"
+    static let newEquipment = "Neue Ausrüstung"
+    static let equipHint = "Tippen legt an oder ab und gilt ab der nächsten Mission."
+    static let equipped = "angelegt"
+
+    static func slot(_ slot: EquipmentSlot) -> String {
+        switch slot {
+        case .banner: "Banner"
+        case .amulet: "Amulett"
+        case .seal: "Siegel"
+        }
+    }
+
+    static func slotRole(_ slot: EquipmentSlot) -> String {
+        switch slot {
+        case .banner: "stärkt Türme"
+        case .amulet: "stärkt die Festungsfähigkeit"
+        case .seal: "stärkt Festung und Kasse"
+        }
+    }
+
+    static func piece(_ id: String) -> String {
+        switch id {
+        case "watch-banner": "Wachbanner"
+        case "storm-banner": "Sturmbanner"
+        case "purse-seal": "Beutelsiegel"
+        case "treasure-seal": "Schatzsiegel"
+        case "swift-amulet": "Flinkes Amulett"
+        case "moon-amulet": "Mondamulett"
+        default: id
+        }
+    }
+
+    /// Der Bonus in Prozent, aus derselben Datei wie die Simulation (Säule „fair“).
+    static func bonus(_ piece: EquipmentPiece) -> String {
+        EquipmentField.allCases.compactMap { field in
+            piece.bonus[field].map { factor in
+                let target: String
+                switch field {
+                case .towerDamage: target = "\(towers(piece)): Schaden"
+                case .towerRange: target = "\(towers(piece)): Reichweite"
+                case .towerCost: target = "\(towers(piece)): Preis"
+                case .startGold: target = "Startgold"
+                case .fortressLives: target = "Festungsleben"
+                case .abilityCooldown: target = "Abklingzeit"
+                }
+                return "\(target) \(percent(factor))"
+            }
+        }.joined(separator: " · ")
+    }
+
+    private static func towers(_ piece: EquipmentPiece) -> String {
+        piece.tower.map(BattleTexts.name) ?? "Alle Türme"
+    }
+
+    /// +3 % oder −5 %, gerundet auf ganze Prozent; das Minus als echtes Minuszeichen.
+    static func percent(_ factor: Double) -> String {
+        let value = Int(((factor - 1) * 100).rounded())
+        return value < 0 ? "−\(-value)\u{00A0}%" : "+\(value)\u{00A0}%"
+    }
+
+    static func source(_ source: EquipmentSource) -> String {
+        if let mission = source.mission {
+            return "\(CampaignTexts.name(mission)) mit \(source.stars) ★"
+        }
+        return "\(source.stars) ★ in der Region"
+    }
+
+    static func locked(_ source: EquipmentSource) -> String { "Frei: \(self.source(source))" }
+
     /// Vorschläge, damit niemand an der Tastatur hängen bleibt. Höchstens
     /// `Avatar.maxNameLength` Zeichen; `AvatarSetupTests` prüft das.
     static func suggestions(_ race: Race) -> [String] {

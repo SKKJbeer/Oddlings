@@ -40,6 +40,14 @@ final class AppFlow {
     /// Werte der Völker. Die Kerntests laden dieselbe Datei und fangen einen
     /// Fehler vor der Auslieferung; fehlt sie trotzdem, spielt die Mission ohne Volk.
     let races: RaceTable?
+    /// Ausrüstung (R-7a). Fehlt die Datei, spielt jede Mission ohne Ausrüstung.
+    let equipment: EquipmentTable?
+    /// Ein Sieg hat ein Stück gebracht, und das Avatar-Menü war seitdem nicht offen.
+    private(set) var newEquipmentWaiting = false
+    /// Welcher Abschnitt des Avatar-Menüs beim Öffnen vorn liegt.
+    private(set) var avatarSection: AvatarSection = .talents
+
+    enum AvatarSection: Equatable { case talents, equipment }
 
     @ObservationIgnored private let store: SaveStore?
     @ObservationIgnored private var save: SaveGame
@@ -68,6 +76,12 @@ final class AppFlow {
         } catch {
             races = nil
             Self.log.error("Völker nicht geladen: \(String(describing: error), privacy: .public)")
+        }
+        do {
+            equipment = try EquipmentTable.bundled(campaign: campaign)
+        } catch {
+            equipment = nil
+            Self.log.error("Ausrüstung nicht geladen: \(String(describing: error), privacy: .public)")
         }
         selectedNode = campaign.continueNode(progress: loadedSave.progress)?.id ?? campaign.nodes.first?.id ?? ""
         self.screen = screen
@@ -109,7 +123,7 @@ final class AppFlow {
     func battleMission(for nodeID: String) -> BalanceConfig? {
         guard let mission = mission(for: nodeID) else { return nil }
         guard let race, let config = races?[race] else { return mission }
-        return mission.applying(config, talents: talents)
+        return mission.applying(config, talents: talents, equipment: equippedPieces)
     }
 
     // MARK: Avatar
@@ -161,6 +175,53 @@ final class AppFlow {
         return true
     }
 
+    // MARK: Ausrüstung (R-7a, D-066, D-070)
+
+    /// Was in der Mission gilt: nur Stücke, die es gibt und die erhalten sind.
+    var equippedPieces: [EquipmentPiece] {
+        guard let avatar, let equipment else { return [] }
+        return equipment.effective(avatar.equipment, progress: progress)
+    }
+
+    /// Hinweis am Avatarschild; das neue Talent geht vor.
+    var avatarNews: String? {
+        newTalentWaiting ? AvatarTexts.newTalent : newEquipmentWaiting ? AvatarTexts.newEquipment : nil
+    }
+
+    func owns(_ id: String) -> Bool { equipment?.owns(id, progress: progress) ?? false }
+
+    func isEquipped(_ id: String) -> Bool { equippedPieces.contains { $0.id == id } }
+
+    private var ownedIDs: [String] { equipment?.pieces.map(\.id).filter(owns) ?? [] }
+
+    /// Anlegen kostet nichts und gilt ab der nächsten Mission. `nil` legt ab.
+    /// Ein Stück, das noch nicht erhalten ist, lässt sich nicht anlegen.
+    @discardableResult
+    func equip(_ id: String?, in slot: EquipmentSlot) -> Bool {
+        guard var changed = avatar else { return false }
+        if let id {
+            guard let piece = equipment?.piece(id), piece.slot == slot, owns(id) else { return false }
+        }
+        changed.equipment[slot] = id
+        avatar = changed
+        save.avatar = changed
+        persist()
+        return true
+    }
+
+    /// Neu erhaltene Stücke wandern auf einen freien Platz, damit eine
+    /// Belohnung sofort wirkt; ein belegter Platz bleibt, wie er ist.
+    private func receive(_ ids: [String]) {
+        guard !ids.isEmpty, var changed = avatar, let equipment else { return }
+        newEquipmentWaiting = true
+        for id in ids {
+            guard let piece = equipment.piece(id), changed.equipment[piece.slot] == nil else { continue }
+            changed.equipment[piece.slot] = id
+        }
+        avatar = changed
+        save.avatar = changed
+    }
+
     /// Wohin „Zurück“ im Avatar-Menü führt: dorthin, wo es geöffnet wurde.
     private(set) var avatarReturn: Screen = .menu
 
@@ -168,7 +229,9 @@ final class AppFlow {
     func openAvatar() {
         guard avatar != nil, screen == .menu || screen == .map else { return }
         avatarReturn = screen
+        avatarSection = newEquipmentWaiting && !newTalentWaiting ? .equipment : .talents
         newTalentWaiting = false
+        newEquipmentWaiting = false
         screen = .avatar
     }
 
@@ -187,9 +250,10 @@ final class AppFlow {
         let stars = StarRating.stars(outcome: outcome, livesLeft: livesLeft, thresholds: thresholds)
         let next = progress.recording(stars: stars, for: nodeID)
         guard next != progress else { return stars }
-        let before = rank
+        let before = rank, ownedBefore = ownedIDs
         progress = next
         if rank > before, unlockedTalentRows > 0 { newTalentWaiting = true }
+        receive(ownedIDs.filter { !ownedBefore.contains($0) })
         justImproved = nodeID
         save.progress = next
         persist()

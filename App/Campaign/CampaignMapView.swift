@@ -324,7 +324,7 @@ private struct AvatarSummary: View {
                 .tracking(1.5)
                 .foregroundStyle(CampaignStyle.gold)
             Button { flow.openAvatar() } label: {
-                AvatarBadge(avatar: avatar, rank: flow.rank, size: 40, newTalent: flow.newTalentWaiting)
+                AvatarBadge(avatar: avatar, rank: flow.rank, size: 40, news: flow.avatarNews)
             }
             .buttonStyle(.plain)
             .accessibilityIdentifier("map.avatar")

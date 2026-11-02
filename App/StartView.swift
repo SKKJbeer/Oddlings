@@ -76,7 +76,7 @@ struct StartView: View {
                 onContinue: { if let node = flow.continueNode { flow.start(node.id) } },
                 onPlay: { flow.showMap() }, onWatch: { flow.showWatch() }, onSpike: { flow.showSpike() },
                 onSettings: { showsSettings = true },
-                avatar: flow.avatar, rank: flow.rank, newTalent: flow.newTalentWaiting,
+                avatar: flow.avatar, rank: flow.rank, news: flow.avatarNews,
                 onAvatar: { flow.openAvatar() })
             .overlay { if showsSettings { SettingsCard { showsSettings = false } } }
         case .setup:

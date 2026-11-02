@@ -191,6 +191,16 @@ nur freie Reihen (Rang aus `RaceTable.rankStars` und den besten Sternen), fehlen
 Seite = A. `RaceConfig.talents` hält je Reihe zwei `TalentOption` mit Faktoren auf
 Felder der Fähigkeit; `ConfigValidation` prüft jede Kombination wie ein eigenes Volk.
 
+**Ausrüstung (R-7a):** `Balance/equipment.json` → `EquipmentTable { pieces }`, je Stück
+`id`, `slot` (`banner`, `amulet`, `seal`), `source` (`mission` + `stars` = beste Sterne
+dort, nur `stars` = Sternsumme der Region), `bonus` (Faktoren auf `towerDamage`,
+`towerRange`, `towerCost`, `startGold`, `fortressLives`, `abilityCooldown`; jedes Feld
+gehört zu einem Platz) und optional `tower`. `Avatar.equipment: EquipmentLoadout {
+banner?, amulet?, seal? }` speichert nur die Belegung, Schema bleibt 2; Besitz wird
+aus dem Fortschritt abgeleitet und nie gespeichert. Eine kaputte Kennung kostet nur
+ihren Platz. `EquipmentTable.effective` lässt unbekannte, fremde oder noch nicht
+erhaltene Stücke weg.
+
 ## Kampagne (R-2)
 
 `Resources/Campaign/region-01.json` → `CampaignConfig { id, nodes: [CampaignNode] }`.

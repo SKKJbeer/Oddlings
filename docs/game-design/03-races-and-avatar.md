@@ -96,9 +96,10 @@ eine Talentreihe, vier Reihen je Volk. Der Avatar hat einen eigenen Schirm: link
 Charakter mit Porträt, Rang und Sternbalken, rechts seine Abschnitte. Heute gibt es
 einen (Talente); weitere kommen als Reiter daneben. Umgesetzt in 0.12.0.
 
-**Ausrüstung [ENTSCHIEDEN D-066, Ausgestaltung OFFEN].** Als nächster Abschnitt des
-Avatar-Menüs kommen Gegenstände mit kleinen Werteboni (Größenordnung +5 % auf Türme).
-Das ist die einzige Ausnahme von „anders, nicht stärker“; Talente bleiben ohne
-Mehrkraft. Offen und von Steffen zu entscheiden: woher die Gegenstände kommen und wie
-hoch die Boni höchstens gehen. Eigenes Paket mit Konzept nach R-6
-([Roadmap](../production/roadmap.md)).
+**Ausrüstung [ENTSCHIEDEN D-066, D-069, D-070].** Zweiter Reiter des Avatar-Menüs:
+Banner (Türme), Amulett (Festungsfähigkeit), Siegel (Kasse), je Platz ein Stück mit
+kleinen Werteboni. Das ist die einzige Ausnahme von „anders, nicht stärker“; Talente
+bleiben ohne Mehrkraft. Volle Ausrüstung macht höchstens 10 % stärker (D-069).
+Grundstücke kommen als feste Belohnung aus Missionen und Sternschwellen (R-7a,
+umgesetzt 0.19.0), bessere aus einer Schmiede mit Spielwährung (R-7b, D-070).
+Einzelheiten: [R-7](../konzepte/r-7-ausruestung.md).
