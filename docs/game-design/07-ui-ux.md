@@ -278,6 +278,14 @@ heißt dann „Wachturm II“, am Turm steht das Schild „II“ und das Bild de
 Reihenfolge Aufwerten, Zielwahl, Verkaufen im selben Bogen wie beim Bauen; die Lage
 prüft `HudLayoutTests` für jede Zelle von Mission 3.
 
+**Panzerung (P2-10, 0.20.0, Mission 4):** Gepanzerte Gegner tragen ein graues
+Schild links neben der Lebensleiste, von Anfang an, nicht erst bei Schaden (E3).
+Schluckt die Panzerung einen Treffer, prallt ein heller Funke ab und der Treffer
+klingt eine Quinte tiefer; beides höchstens einmal je Gegner und halbe Sekunde.
+Beim ersten gepanzerten Gegner einer Mission steht kurz „Gepanzert: Steine
+schlagen durch“ über ihm, einmal je Kampf, auch über einen Neustart hinweg. Keine
+Haptik: Treffer kommen in Mengen.
+
 ### Zielwahl
 
 Ein Knopf, der bei jedem Tippen weiterschaltet: **Erster → Letzter → Stärkster**.

@@ -176,8 +176,8 @@ public struct Simulation: Sendable {
         case .stoneRain:
             let until = state.tick + ticks(ability.stunDuration ?? 0)
             for hit in hits {
-                let dealt = hurt(&state.enemies[hit], by: ability.damage ?? 0, tick: state.tick)
                 // Kein Stapeln: Ein zweiter Treffer verlängert bis zu seinem Ende, nie darüber hinaus.
+                let dealt = hurt(&state.enemies[hit], by: ability.damage ?? 0, tick: state.tick, piercesArmor: true)
                 state.enemies[hit].stunUntilTick = max(state.enemies[hit].stunUntilTick ?? 0, until)
                 events.append(.enemyDamaged(id: state.enemies[hit].id, amount: dealt))
             }
@@ -191,13 +191,41 @@ public struct Simulation: Sendable {
         events.append(.abilityImpact(center: strike.center, hits: hits.map { state.enemies[$0].id }))
     }
 
-    /// Jeder Treffer läuft hier durch, damit Mondmal für alle Türme und den
-    /// Steinregen gleich wirkt. Gibt den verursachten Schaden zurück.
-    func hurt(_ enemy: inout Enemy, by amount: Double, tick: Int) -> Double {
-        var dealt = amount
-        if let mark = enemy.vulnerable, mark.untilTick > tick { dealt *= mark.factor }
-        enemy.hp -= dealt
-        return dealt
+    /// Ergebnis eines Treffers: was ankam und was die Rüstung geschluckt hat.
+    struct Hit: Equatable {
+        var dealt: Double
+        var absorbed: Double
+    }
+
+    /// Jeder Treffer läuft hier durch, damit Mondmal und Rüstung für alle Türme
+    /// und den Steinregen an einer Stelle gelten. Erst die Rüstung, dann das Mal:
+    /// Vor der Rüstung gerechnet, hob Mondmal die Elfen in Mission 4 über die
+    /// Grenze der Völker (03). Die Fähigkeit durchschlägt Rüstung (P2-10, K7).
+    /// `absorbed` ist in derselben Einheit wie `dealt`, also mit dem Mal.
+    func strike(_ enemy: inout Enemy, by amount: Double, tick: Int, piercesArmor: Bool = false) -> Hit {
+        var factor = 1.0
+        if let mark = enemy.vulnerable, mark.untilTick > tick { factor = mark.factor }
+        var passed = amount
+        if !piercesArmor, let stats = config.enemies[enemy.kind],
+           let armor = stats.armor, let share = stats.armorMinShare {
+            passed = max(amount - armor, amount * share)
+        }
+        enemy.hp -= passed * factor
+        return Hit(dealt: passed * factor, absorbed: (amount - passed) * factor)
+    }
+
+    func hurt(_ enemy: inout Enemy, by amount: Double, tick: Int, piercesArmor: Bool = false) -> Double {
+        strike(&enemy, by: amount, tick: tick, piercesArmor: piercesArmor).dealt
+    }
+
+    /// Trifft und meldet; `armorAbsorbed` nur, wenn die Rüstung wirklich etwas
+    /// geschluckt hat, damit Missionen ohne Rüstung dieselben Ereignisse liefern.
+    private func damage(_ index: Int, by amount: Double, piercesArmor: Bool = false,
+                        _ state: inout GameState, _ events: inout [Event]) {
+        let hit = strike(&state.enemies[index], by: amount, tick: state.tick, piercesArmor: piercesArmor)
+        let id = state.enemies[index].id
+        events.append(.enemyDamaged(id: id, amount: hit.dealt))
+        if hit.absorbed > 0 { events.append(.armorAbsorbed(id: id, amount: hit.absorbed)) }
     }
 
     /// Wie bei der Verlangsamung: der stärkste aktive Faktor, und ein neues Mal
@@ -272,9 +300,9 @@ public struct Simulation: Sendable {
                 guard let target = target(in: state.enemies, around: tower.cell.center, range: stats.range,
                                           mode: tower.targetMode)
                 else { continue }
-                let dealt = hurt(&state.enemies[target], by: stats.damage, tick: state.tick)
+                // Erst der Schuss, dann der Treffer: wie bisher, nur über eine Stelle.
                 events.append(.towerFired(towerID: tower.id, targets: [state.enemies[target].id]))
-                events.append(.enemyDamaged(id: state.enemies[target].id, amount: dealt))
+                damage(target, by: stats.damage, &state, &events)
             case .lightning:
                 guard let first = target(in: state.enemies, around: tower.cell.center, range: stats.range,
                                          mode: tower.targetMode)
@@ -282,8 +310,7 @@ public struct Simulation: Sendable {
                 let chain = chainTargets(in: state.enemies, from: first, stats: stats)
                 events.append(.towerFired(towerID: tower.id, targets: chain.map { state.enemies[$0.index].id }))
                 for hit in chain {
-                    let dealt = hurt(&state.enemies[hit.index], by: hit.damage, tick: state.tick)
-                    events.append(.enemyDamaged(id: state.enemies[hit.index].id, amount: dealt))
+                    damage(hit.index, by: hit.damage, &state, &events)
                 }
             case .spore:
                 let hits = enemiesInRange(state.enemies, around: tower.cell.center, range: stats.range)
@@ -291,9 +318,8 @@ public struct Simulation: Sendable {
                 guard !hits.isEmpty else { continue }
                 events.append(.towerFired(towerID: tower.id, targets: hits.map { state.enemies[$0].id }))
                 for hit in hits {
-                    let dealt = hurt(&state.enemies[hit], by: stats.damage, tick: state.tick)
+                    damage(hit, by: stats.damage, &state, &events)
                     applySlow(to: &state.enemies[hit], stats: stats, tick: state.tick)
-                    events.append(.enemyDamaged(id: state.enemies[hit].id, amount: dealt))
                     events.append(.enemySlowed(id: state.enemies[hit].id))
                 }
             }

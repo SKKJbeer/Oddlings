@@ -92,10 +92,11 @@ final class AppFlowTests: XCTestCase {
         flow.finish("m1", outcome: .won, livesLeft: 1)
         flow.finish("m2", outcome: .won, livesLeft: 1)
         flow.finish("m3", outcome: .won, livesLeft: 1)
-        flow.start("m4")
+        flow.finish("m4", outcome: .won, livesLeft: 1)
+        flow.start("m5a")
         XCTAssertEqual(flow.screen, .map, "in Arbeit: kein Start")
-        flow.start("m3")
-        XCTAssertEqual(flow.screen, .battle(node: "m3"), "Mission 3 hat eine Karte (P2-6)")
+        flow.start("m4")
+        XCTAssertEqual(flow.screen, .battle(node: "m4"), "Mission 4 hat eine Karte (P2-10)")
     }
 
     /// Weiter führt zur nächsten spielbaren Mission und bleibt auf der letzten,
@@ -109,7 +110,9 @@ final class AppFlowTests: XCTestCase {
         flow.finish("m2", outcome: .won, livesLeft: 1)
         XCTAssertEqual(flow.continueNode?.id, "m3", "Mission 3 ist gebaut (P2-6)")
         flow.finish("m3", outcome: .won, livesLeft: 1)
-        XCTAssertEqual(flow.continueNode?.id, "m3", "Mission 4 ist noch in Arbeit")
+        XCTAssertEqual(flow.continueNode?.id, "m4", "Mission 4 ist gebaut (P2-10)")
+        flow.finish("m4", outcome: .won, livesLeft: 1)
+        XCTAssertEqual(flow.continueNode?.id, "m4", "Mission 5 ist noch in Arbeit")
     }
 
     /// R-6: Alle sechs Sterne ein Rang. Ein Sieg, der die Summe auf sechs hebt,

@@ -31,6 +31,7 @@ final class FeedbackPlayerTests: XCTestCase {
     /// Treffer und Tode kommen in Mengen; sie dürfen die eigene Handlung nicht übertönen.
     func testCombatStaysSilent() {
         let silent: [Event] = [.towerFired(towerID: 1, targets: [2]), .enemyDamaged(id: 2, amount: 1),
+                               .armorAbsorbed(id: 2, amount: 6),
                                .enemySlowed(id: 2), .enemyKilled(id: 2, reward: 3),
                                .waveStarted(index: 0), .enemySpawned(id: 3)]
         for event in silent { XCTAssertNil(FeedbackPlayer.haptic(for: event), "\(event)") }

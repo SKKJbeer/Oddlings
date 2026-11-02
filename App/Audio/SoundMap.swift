@@ -24,6 +24,8 @@ enum SoundMap {
         // Die Bank schießt nicht; sie meldet sich nur beim Auszahlen.
         case .fired(.bank, _, _): []
         case .damaged: [Request(cue: .hit)]
+        // Kein neuer Klang: der Treffer tiefer, dumpf wie Metall statt Fleisch (P2-10).
+        case .armored: [Request(cue: .hit, semitones: AudioStyle.armorSemitones)]
         case .slowed: [Request(cue: .slowed)]
         case .killed: [Request(cue: .enemyPop), Request(cue: .coin)]
         case .leaked: [Request(cue: .leak)]

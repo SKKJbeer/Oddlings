@@ -21,6 +21,7 @@ Welle nicht die Lesbarkeit (Säule 2) zerstören.
 | `towerFired` Blitzturm | Zickzackblitz entlang der Kette in Trefferreihenfolge, Kristall leuchtet auf, Glieder nacheinander mit 40 ms Versatz | Knistern, je Sprung höher | – | 0,25 s |
 | `towerFired` Sporenturm | Sporenring breitet sich bis zur Reichweite aus, Hut pumpt | weiches „Puff" | – | 0,5 s |
 | `enemyDamaged` | Gegner blitzt weiß auf (1 Bild), kleiner Rückstoß, Lebensbalken erscheint (nur bei Schaden, E3) | Treffer je Turmtyp, Lautstärke gedeckelt | – | 0,1 s |
+| `armorAbsorbed` (P2-10) | Heller Funke prallt vom Gegner ab; ab Erscheinen ein graues Schild neben der Lebensleiste (E3) | Treffer eine Quinte tiefer, dumpf | – | 0,25 s, höchstens alle 0,5 s je Gegner |
 | `enemySlowed` | Grüner Sporenschleier am Gegner, Symbol `icon_slowed` über dem Kopf, Laufhüpfen halb so schnell | leises Blubbern beim ersten Mal | – | solange verlangsamt |
 | Blitz trifft verlangsamtes Ziel (E2) | **Sporenfunke:** größerer grün-blauer Funkenregen, Kettenglied dicker | eigener heller Klang | – | 0,3 s |
 | `enemyKilled` | Gegner zerplatzt in Rauch und Konfetti in seiner Farbe, Goldzahl `+n` steigt auf, Goldanzeige im HUD zählt hoch | Plopp plus Münze | – | 0,4 s |
