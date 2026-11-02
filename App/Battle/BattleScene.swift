@@ -245,6 +245,7 @@ final class BattleScene: SKScene {
             if pendingBuilds.remove(tower.id) != nil { fx.build(node) }
             node.idle(time: fx.time, still: fx.reduceMotion)
             if tower.kind == .bank, let bank = model.sim.config.bank { node.showBank(paid: tower.paid, cap: bank.cap) }
+            node.showLevel(tower.level, field: field)
         }
         for (id, node) in towerNodes where liveTowers[id] == nil {
             node.removeFromParent()
@@ -318,7 +319,7 @@ final class BattleScene: SKScene {
             switch tower.kind {
             case .watch: fx.arrow(from: tower, at: hit)
             case .lightning: fx.bolt(from: tower, through: hit)
-            case .spore: fx.spores(from: tower, range: model.sim.config.towers[.spore]?.range ?? 0)
+            case .spore: fx.spores(from: tower, range: model.sim.config.stats(of: .spore, level: tower.level)?.range ?? 0)
             case .bank: break
             }
         case .bankPaid(let towerID, let gold, _):
@@ -343,6 +344,16 @@ final class BattleScene: SKScene {
             pendingBuilds.insert(id)
         case .towerSold(let id, let refund):
             if let node = towerNodes.removeValue(forKey: id) { fx.sell(node, refund: refund) }
+        case .towerUpgraded(let id, let level):
+            if let node = towerNodes[id] {
+                node.showLevel(level, field: field)
+                fx.upgrade(node)
+            }
+        case .targetModeChanged(let id, let mode):
+            // Die Wahl steht auf dem Knopf; am Turm ein kurzer Hinweis, was sie heißt.
+            if let node = towerNodes[id] {
+                fx.hint(at: CGPoint(x: node.position.x, y: node.position.y + field * 0.9), text: BattleTexts.targetHint(mode))
+            }
         case .waveStarted(let index):
             fx.banner("Welle \(index + 1) von \(model.sim.config.waves.count)", size: size)
         case .missionEnded(let won):
@@ -380,6 +391,9 @@ final class BattleScene: SKScene {
             return .fired(kind, links: targets.count, combo: combo)
         case .towerBuilt: return .built
         case .towerSold: return .sold
+        case .towerUpgraded: return .upgraded
+        // Die Zielwahl hört man als Bedienton beim Tippen (`UserAction.preview`).
+        case .targetModeChanged: return nil
         case .commandRejected: return .rejected
         case .enemyDamaged: return .damaged
         case .enemySlowed: return .slowed
@@ -406,7 +420,8 @@ final class BattleScene: SKScene {
     private func position(of command: Command) -> CGPoint {
         switch command {
         case .build(_, let cell): return toScene(cell.center)
-        case .sell(let id): return towerNodes[id]?.position ?? CGPoint(x: size.width / 2, y: size.height / 2)
+        case .sell(let id), .upgrade(let id), .setTargetMode(let id, _):
+            return towerNodes[id]?.position ?? CGPoint(x: size.width / 2, y: size.height / 2)
         case .callNextWave: return CGPoint(x: size.width / 2, y: size.height / 2)
         case .useAbility(let point): return toScene(point)
         }

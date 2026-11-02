@@ -13,7 +13,7 @@ public struct BalanceConfig: Codable, Equatable, Sendable {
     public var waves: [WaveConfig]
     /// Bauweisen für Balancetests und Vorführung, keine Spielregel: Die
     /// Simulation liest sie nie. Nach Namen nachschlagen, nie darüber iterieren.
-    public var simStrategies: [String: [TowerKind]]?
+    public var simStrategies: [String: [StrategyStep]]?
     /// Name der Bauweise, mit der der Mitspieler die Mission vorführt.
     public var demoStrategy: String?
     /// Festungsfähigkeit der Mission (D-025). Fehlt sie, gibt es keinen Knopf,
@@ -22,12 +22,16 @@ public struct BalanceConfig: Codable, Equatable, Sendable {
     /// Zwergenbank (D-026, P2-5). Fehlt sie, bietet die Mission keine Bank an,
     /// und die Simulation lehnt den Bau ab.
     public var bank: BankConfig?
+    /// Aufwertung auf Stufe 2 je Kampfturm (D-024, P2-6). Fehlt der Abschnitt,
+    /// bietet die Mission keine Aufwertung an, und die Simulation lehnt sie ab.
+    /// Nur zum Nachschlagen, nie darüber iterieren (Architekturregel 6).
+    public var upgrades: [TowerKind: UpgradeConfig]?
 
     public init(
         simulation: SimulationConfig, mission: MissionConfig, map: MapConfig,
         towers: [TowerKind: TowerConfig], enemies: [EnemyKind: EnemyConfig], waves: [WaveConfig],
-        simStrategies: [String: [TowerKind]]? = nil, demoStrategy: String? = nil,
-        ability: AbilityConfig? = nil, bank: BankConfig? = nil
+        simStrategies: [String: [StrategyStep]]? = nil, demoStrategy: String? = nil,
+        ability: AbilityConfig? = nil, bank: BankConfig? = nil, upgrades: [TowerKind: UpgradeConfig]? = nil
     ) {
         self.simulation = simulation
         self.mission = mission
@@ -39,6 +43,7 @@ public struct BalanceConfig: Codable, Equatable, Sendable {
         self.demoStrategy = demoStrategy
         self.ability = ability
         self.bank = bank
+        self.upgrades = upgrades
     }
 
     /// Was die Mission zu bauen anbietet, in fester Reihenfolge: die
@@ -49,6 +54,93 @@ public struct BalanceConfig: Codable, Equatable, Sendable {
     /// Baupreis einer Turmart, nil, wenn die Mission sie nicht anbietet.
     public func cost(of kind: TowerKind) -> Int? {
         kind == .bank ? bank?.cost : towers[kind]?.cost
+    }
+
+    /// Preis der Aufwertung, nil, wenn die Mission diese Turmart nicht aufwertet.
+    public func upgradeCost(of kind: TowerKind) -> Int? { upgrades?[kind]?.cost }
+
+    /// Höchste Stufe eines Turms in dieser Mission: 2, wenn es für seine Art
+    /// eine Aufwertung gibt, sonst 1.
+    public func maxLevel(of kind: TowerKind) -> Int { upgrades?[kind] == nil ? 1 : 2 }
+
+    /// Die Werte, mit denen ein Turm auf seiner Stufe kämpft. Die einzige
+    /// Stelle, die Stufe 2 rechnet: Simulation, Bot und App fragen hier.
+    /// Stufe 2 multipliziert die Werte der Stufe 1 aus dieser Konfiguration,
+    /// damit Boni von Volk und Ausrüstung beim Aufwerten erhalten bleiben.
+    public func stats(of kind: TowerKind, level: Int) -> TowerConfig? {
+        guard let base = towers[kind] else { return nil }
+        guard level >= 2, let upgrade = upgrades?[kind] else { return base }
+        return upgrade.apply(to: base)
+    }
+
+    public func stats(of tower: Tower) -> TowerConfig? { stats(of: tower.kind, level: tower.level) }
+}
+
+/// Ein Wert eines Kampfturms, den eine Aufwertung skalieren darf.
+public enum TowerStat: String, Codable, CaseIterable, CodingKeyRepresentable, Sendable {
+    case range, damage, attackInterval, chainRadius, slowFactor, slowDuration
+}
+
+/// Aufwertung auf Stufe 2 (02, „Aufwertungen“): Preis und Faktoren auf die
+/// Werte der Stufe 1. Faktoren statt fester Werte, weil Volk und Ausrüstung
+/// die Stufe 1 schon verändert haben (D-084).
+public struct UpgradeConfig: Codable, Equatable, Sendable {
+    public var cost: Int
+    /// Nur zum Nachschlagen; `apply` geht über `TowerStat.allCases`.
+    public var scale: [TowerStat: Double]
+
+    public init(cost: Int, scale: [TowerStat: Double]) {
+        self.cost = cost
+        self.scale = scale
+    }
+
+    public func apply(to base: TowerConfig) -> TowerConfig {
+        var tower = base
+        for stat in TowerStat.allCases {
+            guard let factor = scale[stat] else { continue }
+            switch stat {
+            case .range: tower.range *= factor
+            case .damage: tower.damage *= factor
+            case .attackInterval: tower.attackInterval *= factor
+            case .chainRadius: tower.chainRadius = tower.chainRadius.map { $0 * factor }
+            case .slowFactor: tower.slowFactor = tower.slowFactor.map { $0 * factor }
+            case .slowDuration: tower.slowDuration = tower.slowDuration.map { $0 * factor }
+            }
+        }
+        return tower
+    }
+}
+
+/// Ein Schritt einer Bauweise der Balancetests und des Mitspielers: einen
+/// Turm bauen oder den ältesten Turm einer Art auf Stufe 1 aufwerten. In der
+/// Datei `"watch"` bzw. `"watch+"`, damit Bauweisen lesbar bleiben und alte
+/// Dateien gültig.
+public enum StrategyStep: Equatable, Sendable, Codable {
+    case build(TowerKind)
+    case upgrade(TowerKind)
+
+    public var kind: TowerKind {
+        switch self {
+        case .build(let kind), .upgrade(let kind): kind
+        }
+    }
+
+    public init(from decoder: any Decoder) throws {
+        let text = try decoder.singleValueContainer().decode(String.self)
+        let upgrade = text.hasSuffix("+")
+        guard let kind = TowerKind(rawValue: upgrade ? String(text.dropLast()) : text) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath,
+                                                    debugDescription: "Unbekannter Schritt \(text)"))
+        }
+        self = upgrade ? .upgrade(kind) : .build(kind)
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .build(let kind): try container.encode(kind.rawValue)
+        case .upgrade(let kind): try container.encode(kind.rawValue + "+")
+        }
     }
 }
 
@@ -255,6 +347,26 @@ public enum TowerKind: String, Codable, CaseIterable, CodingKeyRepresentable, Se
 
 public enum EnemyKind: String, Codable, CaseIterable, CodingKeyRepresentable, Sendable {
     case raider, runner, brute
+}
+
+/// Wen ein Turm mit Einzelziel zuerst nimmt (07, „Zielwahl“). Wählbar ab
+/// Stufe 2; bis dahin und ohne Wahl gilt `first`.
+public enum TargetMode: String, Codable, CaseIterable, Sendable {
+    /// Am weitesten auf dem Weg.
+    case first
+    /// Am wenigsten weit auf dem Weg.
+    case last
+    /// Größtes Höchstleben: die zäheste Art, nicht der gerade vollste.
+    case strongest
+
+    /// Reihenfolge des Knopfs: Erster → Letzter → Stärkster → Erster.
+    public var next: TargetMode {
+        switch self {
+        case .first: .last
+        case .last: .strongest
+        case .strongest: .first
+        }
+    }
 }
 
 public enum Targeting: String, Codable, Sendable {

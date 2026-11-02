@@ -29,6 +29,10 @@ public struct ConfigIssue: Hashable, Sendable, CustomStringConvertible {
         case fieldNotInAbility         // Spielart skaliert ein Feld, das die Fähigkeit nicht hat
         case bankNotATower             // Bank gehört in den Abschnitt `bank`, nicht in `towers`
         case strategyNeedsBank         // Bauweise nennt `bank`, die Mission hat keine
+        case upgradeNeedsCombatTower   // Aufwertung nur für Kampftürme
+        case emptyUpgrade              // Aufwertung ohne einen einzigen Faktor
+        case statNotInTower            // Faktor auf einen Wert, den der Turm nicht hat
+        case strategyNeedsUpgrades     // Bauweise wertet auf, die Mission bietet es nicht an
     }
 
     public init(field: String, rule: Rule) {
@@ -59,6 +63,10 @@ public struct ConfigIssue: Hashable, Sendable, CustomStringConvertible {
         case .fieldNotInAbility: "\(field) gibt es bei dieser Fähigkeit nicht"
         case .bankNotATower: "\(field) gehört in den Abschnitt bank"
         case .strategyNeedsBank: "\(field) nennt bank, die Mission hat keine"
+        case .upgradeNeedsCombatTower: "\(field) gibt es nur für watch, lightning und spore"
+        case .emptyUpgrade: "\(field) braucht mindestens einen Faktor in scale"
+        case .statNotInTower: "\(field) gibt es bei diesem Turm nicht"
+        case .strategyNeedsUpgrades: "\(field) wertet auf, die Mission hat dafür keine Werte"
         case .starsOutOfOrder: "\(field) braucht 0 < two ≤ three ≤ fortressLives"
         }
     }
@@ -206,9 +214,16 @@ extension BalanceConfig {
             positive(Double(bank.cap), "bank.cap")
             positive(Double(bank.limit), "bank.limit")
         }
+        found += upgradeIssues()
         // Nach Namen sortiert, damit die Meldungen bei gleicher Datei gleich sind.
-        for name in (simStrategies ?? [:]).keys.sorted() where bank == nil && simStrategies?[name]?.contains(.bank) == true {
-            found.append(.init(field: "simStrategies.\(name)", rule: .strategyNeedsBank))
+        for name in (simStrategies ?? [:]).keys.sorted() {
+            let steps = simStrategies?[name] ?? []
+            if bank == nil && steps.contains(where: { $0.kind == .bank }) {
+                found.append(.init(field: "simStrategies.\(name)", rule: .strategyNeedsBank))
+            }
+            if steps.contains(where: { if case .upgrade(let kind) = $0 { upgrades?[kind] == nil } else { false } }) {
+                found.append(.init(field: "simStrategies.\(name)", rule: .strategyNeedsUpgrades))
+            }
         }
 
         if waves.isEmpty { found.append(.init(field: "waves", rule: .noWaves)) }
@@ -224,6 +239,39 @@ extension BalanceConfig {
                 positive(Double(group.count), "\(groupField).count")
                 positive(group.interval, "\(groupField).interval")
                 if let delay = group.delay { nonNegative(delay, "\(groupField).delay") }
+            }
+        }
+        return found
+    }
+
+    /// Aufwertungen: nur Kampftürme, Preis und Faktoren positiv, nur Werte, die
+    /// der Turm hat, und Stufe 2 hält dieselben Grenzen wie Stufe 1.
+    private func upgradeIssues() -> [ConfigIssue] {
+        var found: [ConfigIssue] = []
+        guard let upgrades else { return found }
+        for kind in TowerKind.allCases {
+            guard let upgrade = upgrades[kind] else { continue }
+            let field = "upgrades.\(kind.rawValue)"
+            guard let base = towers[kind], kind != .bank else {
+                found.append(.init(field: field, rule: .upgradeNeedsCombatTower))
+                continue
+            }
+            if !(upgrade.cost > 0) { found.append(.init(field: "\(field).cost", rule: .mustBePositive)) }
+            if upgrade.scale.isEmpty { found.append(.init(field: "\(field).scale", rule: .emptyUpgrade)) }
+            for stat in TowerStat.allCases {
+                guard let factor = upgrade.scale[stat] else { continue }
+                let statField = "\(field).scale.\(stat.rawValue)"
+                if !(factor > 0) { found.append(.init(field: statField, rule: .mustBePositive)) }
+                let present = switch stat {
+                case .range, .damage, .attackInterval: true
+                case .chainRadius: base.chainRadius != nil
+                case .slowFactor, .slowDuration: base.slowFactor != nil
+                }
+                if !present { found.append(.init(field: statField, rule: .statNotInTower)) }
+            }
+            // Eine Verlangsamung über 1 wäre eine Beschleunigung.
+            if let slow = upgrade.apply(to: base).slowFactor, !(slow > 0 && slow <= 1) {
+                found.append(.init(field: "\(field).scale.slowFactor", rule: .mustBeFraction))
             }
         }
         return found

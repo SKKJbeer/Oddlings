@@ -46,9 +46,13 @@ public struct Tower: Codable, Equatable, Sendable {
     public var builtTick: Int = 0
     /// Gold, das eine Bank schon ausgezahlt hat. Erreicht es den Deckel, ist sie leer.
     public var paid: Int = 0
+    /// Stufe 1 nach dem Bau, 2 nach der Aufwertung (P2-6).
+    public var level: Int = 1
+    /// Zielwahl, ab Stufe 2 umschaltbar. Bis dahin `first` wie in Mission 1.
+    public var targetMode: TargetMode = .first
 
     public init(id: Int, kind: TowerKind, cell: Cell, cooldownTicks: Int, spent: Int,
-                builtTick: Int = 0, paid: Int = 0) {
+                builtTick: Int = 0, paid: Int = 0, level: Int = 1, targetMode: TargetMode = .first) {
         self.id = id
         self.kind = kind
         self.cell = cell
@@ -56,11 +60,15 @@ public struct Tower: Codable, Equatable, Sendable {
         self.spent = spent
         self.builtTick = builtTick
         self.paid = paid
+        self.level = level
+        self.targetMode = targetMode
     }
 
-    private enum CodingKeys: String, CodingKey { case id, kind, cell, cooldownTicks, spent, builtTick, paid }
+    private enum CodingKeys: String, CodingKey {
+        case id, kind, cell, cooldownTicks, spent, builtTick, paid, level, targetMode
+    }
 
-    /// Zustände ohne die Bankfelder (vor 0.16.0) bleiben lesbar.
+    /// Zustände ohne Bankfelder (vor 0.16.0) und ohne Stufe (vor 0.18.0) bleiben lesbar.
     public init(from decoder: any Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         id = try c.decode(Int.self, forKey: .id)
@@ -70,6 +78,8 @@ public struct Tower: Codable, Equatable, Sendable {
         spent = try c.decode(Int.self, forKey: .spent)
         builtTick = try c.decodeIfPresent(Int.self, forKey: .builtTick) ?? 0
         paid = try c.decodeIfPresent(Int.self, forKey: .paid) ?? 0
+        level = try c.decodeIfPresent(Int.self, forKey: .level) ?? 1
+        targetMode = try c.decodeIfPresent(TargetMode.self, forKey: .targetMode) ?? .first
     }
 }
 
@@ -158,6 +168,10 @@ public enum Command: Codable, Equatable, Sendable {
     case callNextWave
     /// Festungsfähigkeit auf eine Stelle (Felder); wird auf den Weg gezogen.
     case useAbility(Point)
+    /// Hebt einen Turm auf die nächste Stufe (P2-6).
+    case upgrade(towerID: Int)
+    /// Zielwahl eines Turms ab Stufe 2; kostet nichts.
+    case setTargetMode(towerID: Int, TargetMode)
 }
 
 public enum Rejection: Equatable, Sendable {
@@ -172,6 +186,11 @@ public enum Rejection: Equatable, Sendable {
     case noAbility
     /// So viele Banken stehen schon, wie die Mission erlaubt.
     case limitReached
+    /// Die Mission wertet diese Turmart nicht auf, oder der Turm steht schon
+    /// auf der höchsten Stufe.
+    case notUpgradable
+    /// Zielwahl erst ab Stufe 2 und nur für Türme mit Einzelziel.
+    case targetModeLocked
 }
 
 public enum Event: Equatable, Sendable {
@@ -200,4 +219,8 @@ public enum Event: Equatable, Sendable {
     case bankEmptied(towerID: Int)
     /// Die Welle kam früher; dafür gab es `gold`.
     case earlyCallBonus(gold: Int)
+    /// Ein Turm steht jetzt auf `level`.
+    case towerUpgraded(id: Int, level: Int)
+    /// Ein Turm nimmt ab jetzt seine Ziele nach `mode`.
+    case targetModeChanged(id: Int, mode: TargetMode)
 }

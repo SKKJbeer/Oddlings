@@ -42,6 +42,9 @@ enum AudioStyle {
         }
     }
 
+    /// Aufwerten klingt wie Bauen, eine Quarte höher: dasselbe Handwerk, mehr davon.
+    static let upgradeSemitones: Float = 5
+
     /// Tonhöhenstufe je Kettenglied des Blitzes („Knistern, je Sprung höher").
     static let boltStepSemitones: Float = 1
     /// Höchstens so viele Stufen, damit lange Ketten nicht quietschen.

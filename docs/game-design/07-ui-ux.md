@@ -268,6 +268,14 @@ klappt das Menü um (Kaufen unten, Verkaufen oben).
   die Information allein.
 - **Verkaufen** zeigt die Erstattung aus allem, was im Turm steckt (K1).
 
+**Umgesetzt (P2-6, 0.18.0, Mission 3):** Stufe 1 → Aufwerten (Preis, zweimal tippen,
+die Tafel nennt beim ersten Tippen, was Stufe 2 bringt, der Kreis zeigt schon die
+neue Reichweite), Verkaufen; Stufe 2 → Zielwahl, Verkaufen. Der Titel der Tafel
+heißt dann „Wachturm II“, am Turm steht das Schild „II“ und das Bild der Stufe 2
+(`tower_<art>_2`). Spezialisierungen (Stufe 3) kommen mit M5/M6. Knöpfe in der
+Reihenfolge Aufwerten, Zielwahl, Verkaufen im selben Bogen wie beim Bauen; die Lage
+prüft `HudLayoutTests` für jede Zelle von Mission 3.
+
 ### Zielwahl
 
 Ein Knopf, der bei jedem Tippen weiterschaltet: **Erster → Letzter → Stärkster**.

@@ -131,6 +131,25 @@ Ist eine nie die beste, ist sie falsch, nicht der Test.
 **Freischaltung.** In Region 1 kommen Stufe 2 und die Spezialisierungen nach und
 nach dazu ([05](05-campaign-and-progression.md#region-1-flüsterwald-kostenlos)), damit Mission 1 so einfach bleibt, wie sie ist.
 
+### Stufe 2 und Zielwahl, wie gebaut (P2-6, 0.18.0)
+
+Ab Mission 3. Konzept: [p2-6-mission-3-aufwerten](../konzepte/p2-6-mission-3-aufwerten.md).
+
+- Stufe 2 ist ein **Satz Faktoren** auf die Werte der Stufe 1 (D-084): Wachturm und
+  Blitzturm mehr Schaden, Sporenturm größerer Kreis und stärkere Verlangsamung. Weil
+  die Faktoren auf die Werte nach Volk und Ausrüstung wirken, trägt jeder Bonus mit.
+- Der Takt läuft beim Aufwerten weiter; der Turm schießt sofort mit den neuen Werten.
+- Aufwerten kostet Gold, nichts sonst, und zählt zum Bezahlten; Verkaufen erstattet
+  den Anteil von allem, was im Turm steckt.
+- **Zielwahl** nur auf Stufe 2 und nur bei Türmen mit Einzelziel (Wach- und Blitzturm).
+  Der Sporenturm trifft alle im Kreis und hat keine. Umschalten kostet nichts.
+  - *Erster*: am weitesten auf dem Weg (wie Stufe 1).
+  - *Letzter*: am wenigsten weit; bei Gleichstand der ältere.
+  - *Stärkster*: höchste **Höchst**lebenspunkte, nicht Restleben, damit der Turm nicht
+    zwischen angeschossenen Gegnern springt; bei Gleichstand der weiter vorn.
+  - Der Blitz beginnt seine Kette am gewählten Ziel.
+- Die Bank hat keine Stufe 2. Mission 1 und 2 bieten kein Aufwerten an.
+
 **Verworfen:** eine lineare dritte
 Stufe ohne Wahl: halb so viel Grafik, aber nur „mehr Zahl", das widerspricht
 Säule 1 und 3.

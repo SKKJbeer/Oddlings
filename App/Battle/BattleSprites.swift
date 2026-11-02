@@ -8,6 +8,10 @@ import UIKit
 @MainActor
 enum BattleSprites {
     static func towerName(_ kind: TowerKind) -> String { "tower_\(kind.rawValue)" }
+    /// Stufe 2 hat ein eigenes Bild (`tower_watch_2`); Stufe 1 den Grundnamen.
+    static func towerName(_ kind: TowerKind, level: Int) -> String {
+        level >= 2 ? "tower_\(kind.rawValue)_\(level)" : towerName(kind)
+    }
     static func enemyName(_ kind: EnemyKind) -> String { "enemy_\(kind.rawValue)" }
     static let fortressName = "fortress"
     /// `mission-01` → `map_mission01_ground`.
@@ -378,6 +382,37 @@ final class TowerNode: SKNode {
             sprite.color = .gray
             sprite.colorBlendFactor = empty ? 0.8 : 0
         }
+    }
+
+    /// Stufe aus dem Zustand: Bild der Stufe, wenn es im Katalog liegt, und
+    /// ein Schild „II“ oben rechts, damit man es auch ohne neues Bild sieht (07).
+    private(set) var level = 1
+    private var badge: SKNode?
+
+    func showLevel(_ newLevel: Int, field: CGFloat) {
+        guard newLevel != level else { return }
+        level = newLevel
+        if let texture = BattleSprites.texture(named: BattleSprites.towerName(kind, level: newLevel)) {
+            for case let sprite as SKSpriteNode in art.children { sprite.texture = texture }
+        }
+        badge?.removeFromParent()
+        badge = nil
+        guard newLevel >= 2 else { return }
+        let plate = SKShapeNode(rectOf: CGSize(width: field * 0.36, height: field * 0.24), cornerRadius: field * 0.08)
+        plate.fillColor = BattleStyle.levelBadgeFill
+        plate.strokeColor = BattleStyle.levelBadgeStroke
+        plate.lineWidth = 1.5
+        let text = SKLabelNode(text: BattleTexts.levelTag)
+        text.fontName = BattleStyle.font
+        text.fontSize = field * 0.2
+        text.fontColor = BattleStyle.levelBadgeStroke
+        text.verticalAlignmentMode = .center
+        plate.addChild(text)
+        plate.position = CGPoint(x: field * 0.38, y: field * 1.15)
+        plate.zPosition = 3
+        plate.name = "level.badge"
+        addChild(plate)
+        badge = plate
     }
 
     @available(*, unavailable)

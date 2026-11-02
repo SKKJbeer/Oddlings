@@ -12,7 +12,7 @@ final class SoundMapTests: XCTestCase {
             .fired(.spore, links: 3, combo: false), .damaged, .slowed, .killed, .leaked,
             .waveStarted(index: 0, count: 5), .abilityCast, .abilityImpact(moon: false), .abilityImpact(moon: true),
             .wallRaised, .wallFell, .user(.selectCell), .user(.callWave), .user(.cannotAfford),
-            .bankPaid, .earlyCallBonus,
+            .bankPaid, .earlyCallBonus, .upgraded,
         ]
         for moment in moments { XCTAssertFalse(cues(moment).isEmpty, "\(moment) klingt") }
         // Das Ende trägt die Musik, nicht ein Klang.
@@ -28,6 +28,13 @@ final class SoundMapTests: XCTestCase {
         XCTAssertTrue(cues(.fired(.bank, links: 0, combo: false)).isEmpty)
         XCTAssertEqual(cues(.bankPaid), [.coin])
         XCTAssertEqual(cues(.earlyCallBonus), [.coin])
+    }
+
+    /// Aufwerten klingt wie Bauen, nur höher, und das Gold geht hörbar weg (P2-6).
+    func testUpgradeIsAHigherBuild() {
+        let requests = SoundMap.requests(for: .upgraded)
+        XCTAssertEqual(requests.map(\.cue), [.build, .coin])
+        XCTAssertGreaterThan(requests[0].semitones, SoundMap.requests(for: .built)[0].semitones)
     }
 
     func testSporeSparkHasItsOwnSound() {

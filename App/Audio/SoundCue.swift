@@ -5,6 +5,8 @@ import OddlingsCore
 /// Momente; `SoundMap` wählt den Klang.
 enum SoundMoment: Equatable, Sendable {
     case built, sold, rejected
+    /// Turm auf Stufe 2 (P2-6).
+    case upgraded
     /// `links` = Ziele in der Kette (Blitz), `combo` = ein Ziel war verlangsamt (E2).
     case fired(TowerKind, links: Int, combo: Bool)
     case damaged, slowed, killed, leaked
