@@ -90,6 +90,35 @@ public struct Simulation: Sendable {
             state.towers.remove(at: index)
             events.append(.towerSold(id: towerID, refund: refund))
 
+        case .upgrade(let towerID):
+            guard let index = state.towers.firstIndex(where: { $0.id == towerID }) else {
+                return events.append(.commandRejected(command, reason: .unknownTower))
+            }
+            let tower = state.towers[index]
+            guard tower.level < config.maxLevel(of: tower.kind), let cost = config.upgradeCost(of: tower.kind) else {
+                return events.append(.commandRejected(command, reason: .notUpgradable))
+            }
+            guard state.gold >= cost else {
+                return events.append(.commandRejected(command, reason: .notEnoughGold))
+            }
+            state.gold -= cost
+            // Der Takt läuft weiter: Aufwerten mitten im Kampf kostet keinen Schuss.
+            state.towers[index].level += 1
+            state.towers[index].spent += cost
+            events.append(.towerUpgraded(id: towerID, level: state.towers[index].level))
+
+        case .setTargetMode(let towerID, let mode):
+            guard let index = state.towers.firstIndex(where: { $0.id == towerID }) else {
+                return events.append(.commandRejected(command, reason: .unknownTower))
+            }
+            let tower = state.towers[index]
+            guard tower.level >= 2, config.stats(of: tower)?.targeting == .first else {
+                return events.append(.commandRejected(command, reason: .targetModeLocked))
+            }
+            guard tower.targetMode != mode else { return }
+            state.towers[index].targetMode = mode
+            events.append(.targetModeChanged(id: towerID, mode: mode))
+
         case .callNextWave:
             guard state.nextWaveTick != nil else {
                 return events.append(.commandRejected(command, reason: .noWaveLeft))
@@ -235,18 +264,20 @@ public struct Simulation: Sendable {
             if state.towers[index].cooldownTicks > 0 { state.towers[index].cooldownTicks -= 1 }
             guard state.towers[index].cooldownTicks == 0 else { continue }
             let tower = state.towers[index]
-            guard let stats = config.towers[tower.kind] else { continue }
+            guard let stats = config.stats(of: tower) else { continue }
             switch tower.kind {
             case .bank:
                 continue
             case .watch:
-                guard let target = firstTarget(in: state.enemies, around: tower.cell.center, range: stats.range)
+                guard let target = target(in: state.enemies, around: tower.cell.center, range: stats.range,
+                                          mode: tower.targetMode)
                 else { continue }
                 let dealt = hurt(&state.enemies[target], by: stats.damage, tick: state.tick)
                 events.append(.towerFired(towerID: tower.id, targets: [state.enemies[target].id]))
                 events.append(.enemyDamaged(id: state.enemies[target].id, amount: dealt))
             case .lightning:
-                guard let first = firstTarget(in: state.enemies, around: tower.cell.center, range: stats.range)
+                guard let first = target(in: state.enemies, around: tower.cell.center, range: stats.range,
+                                         mode: tower.targetMode)
                 else { continue }
                 let chain = chainTargets(in: state.enemies, from: first, stats: stats)
                 events.append(.towerFired(towerID: tower.id, targets: chain.map { state.enemies[$0.index].id }))
@@ -274,11 +305,29 @@ public struct Simulation: Sendable {
     /// Schon tödlich getroffene Gegner zählen nicht, damit kein zweiter Turm im
     /// selben Tick seinen Schuss an einen Toten verschwendet.
     func firstTarget(in enemies: [Enemy], around center: Point, range: Double) -> Int? {
+        target(in: enemies, around: center, range: range, mode: .first)
+    }
+
+    /// Erstes Ziel nach der Zielwahl des Turms (07, „Zielwahl“). Bei
+    /// Gleichstand gewinnt immer der ältere Gegner (kleinere ID), weil die
+    /// Liste nach ID sortiert ist und nur ein strikt besserer ersetzt.
+    func target(in enemies: [Enemy], around center: Point, range: Double, mode: TargetMode) -> Int? {
         var best: Int?
         for (index, enemy) in enemies.enumerated() where enemy.hp > 0 {
             guard map.path.position(at: enemy.distance).distance(to: center) <= range else { continue }
-            if let current = best, enemies[current].distance >= enemy.distance { continue }
-            best = index
+            guard let current = best else {
+                best = index
+                continue
+            }
+            let other = enemies[current]
+            let better = switch mode {
+            case .first: enemy.distance > other.distance
+            case .last: enemy.distance < other.distance
+            // Nach Höchstleben, damit der Turm an der Panzerbestie bleibt; dann
+            // wie „erster“.
+            case .strongest: enemy.maxHP > other.maxHP || (enemy.maxHP == other.maxHP && enemy.distance > other.distance)
+            }
+            if better { best = index }
         }
         return best
     }

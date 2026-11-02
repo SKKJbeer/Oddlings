@@ -5,11 +5,11 @@ import Foundation
 /// Feld nicht: Es ist Prüfwerkzeug, keine Spielregel.
 enum Strategies {
     /// Nach Namen sortiert, weil ein Dictionary keine Reihenfolge hat.
-    static func missionOne() throws -> [(name: String, order: [TowerKind])] {
+    static func missionOne() throws -> [(name: String, order: [StrategyStep])] {
         try of(BalanceConfig.missionOne())
     }
 
-    static func of(_ config: BalanceConfig) -> [(name: String, order: [TowerKind])] {
+    static func of(_ config: BalanceConfig) -> [(name: String, order: [StrategyStep])] {
         let strategies = config.simStrategies ?? [:]
         return strategies.keys.sorted().map { ($0, strategies[$0]!) }
     }
@@ -21,7 +21,7 @@ enum Strategies {
 /// Blitze in die Nähe von Sporen. Die Gewichte sind die des Skripts.
 struct BalanceBot {
     let sim: Simulation
-    var order: [TowerKind]
+    var order: [StrategyStep]
     /// Setzt die Fähigkeit, sobald sie bereit ist und mindestens zwei Gegner
     /// zusammenstehen (03: „Bot wirft auf die dichteste Stelle"). Das Bollwerk
     /// setzt er dorthin, wo die meisten Türme hinreichen und eine Traube
@@ -33,7 +33,7 @@ struct BalanceBot {
     private let candidates: [Cell]
     private let samples: [Point]
 
-    init(sim: Simulation, order: [TowerKind]) {
+    init(sim: Simulation, order: [StrategyStep]) {
         self.sim = sim
         self.order = order
         candidates = sim.map.buildableCells.sorted { ($0.x, $0.y) < ($1.x, $1.y) }
@@ -50,7 +50,27 @@ struct BalanceBot {
         var gold = state.gold
         var placed = state.towers.map { (kind: $0.kind, cell: $0.cell) }
         var commands: [Command] = []
-        while let kind = order.first, let cost = sim.config.cost(of: kind), gold >= cost {
+        var upgraded: [Int] = []
+        while let step = order.first {
+            let kind = step.kind
+            if case .upgrade = step {
+                // Wie der Mitspieler der App: der älteste Turm der Art auf Stufe 1.
+                // Steht er erst im Bau, wartet der Schritt einen Tick.
+                guard let tower = state.towers.first(where: {
+                    $0.kind == kind && $0.level < sim.config.maxLevel(of: kind) && !upgraded.contains($0.id)
+                }), let cost = sim.config.upgradeCost(of: kind) else {
+                    if commands.contains(where: { if case .build(kind, _) = $0 { true } else { false } }) { break }
+                    order.removeFirst()
+                    continue
+                }
+                guard gold >= cost else { break }
+                order.removeFirst()
+                gold -= cost
+                upgraded.append(tower.id)
+                commands.append(.upgrade(towerID: tower.id))
+                continue
+            }
+            guard let cost = sim.config.cost(of: kind), gold >= cost else { break }
             order.removeFirst()
             let found = kind == .bank ? quietCell(placed: placed)
                 : sim.config.towers[kind].flatMap { bestCell(for: kind, stats: $0, placed: placed) }
@@ -81,7 +101,7 @@ struct BalanceBot {
             let d = Double(index) * Self.sampleStep
             guard distances.filter({ $0 <= d && $0 > d - Self.wallApproach }).count >= 2 else { continue }
             let cover = state.towers.filter { tower in
-                tower.kind != .spore && tower.kind != .bank && p.distance(to: tower.cell.center) <= sim.config.towers[tower.kind]!.range
+                tower.kind != .spore && tower.kind != .bank && p.distance(to: tower.cell.center) <= sim.config.stats(of: tower)!.range
             }.count
             if cover > bestCover {
                 best = p
@@ -160,7 +180,7 @@ struct BotRun {
 extension Simulation {
     /// Spielt eine Mission mit dem Bot zu Ende. Gedeckelt, damit ein Fehler
     /// den Test rot macht statt ihn hängen zu lassen.
-    func play(_ order: [TowerKind], seed: UInt64 = 1, until stopTick: Int = 200_000,
+    func play(_ order: [StrategyStep], seed: UInt64 = 1, until stopTick: Int = 200_000,
               castsAbility: Bool = false) -> BotRun {
         var bot = BalanceBot(sim: self, order: order)
         bot.castsAbility = castsAbility
@@ -177,7 +197,7 @@ extension Simulation {
 
     /// Größter Faktor auf das Leben aller Gegner, bei dem die Bauweise noch
     /// gewinnt. Gleiche Suche wie im Prüfskript: 0,5 bis 4, neun Halbierungen.
-    func reserve(_ order: [TowerKind], castsAbility: Bool = false) -> Double {
+    func reserve(_ order: [StrategyStep], castsAbility: Bool = false) -> Double {
         func wins(_ factor: Double) -> Bool {
             var scaled = config
             for kind in EnemyKind.allCases { scaled.enemies[kind]?.hp *= factor }

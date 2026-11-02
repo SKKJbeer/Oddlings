@@ -7,9 +7,9 @@ import Foundation
 /// soll nur zeigen, dass das Spiel läuft. Er schickt Befehle wie ein Mensch
 /// und ändert den Zustand nie selbst (Architekturregel 2).
 public struct Autoplayer: Sendable {
-    public private(set) var order: [TowerKind]
+    public private(set) var order: [StrategyStep]
 
-    public init(order: [TowerKind]) { self.order = order }
+    public init(order: [StrategyStep]) { self.order = order }
 
     /// Ein Kampfturm reicht etwa so weit; so weit vom Weg weg steht die Bank
     /// niemandem im Weg. Bedienung des Mitspielers, kein Balancewert.
@@ -25,7 +25,28 @@ public struct Autoplayer: Sendable {
         var gold = state.gold
         var occupied = state.towers.map(\.cell)
         var commands: [Command] = []
-        while let kind = order.first, let cost = sim.config.cost(of: kind), gold >= cost {
+        var upgraded: [Int] = []
+        while let step = order.first {
+            let kind = step.kind
+            if case .upgrade = step {
+                // Der älteste Turm der Art auf Stufe 1. Wird er gerade erst gebaut,
+                // wartet der Schritt bis zum nächsten Tick; gibt es keinen, entfällt
+                // er, damit die Liste nicht hängen bleibt.
+                guard let tower = state.towers.first(where: {
+                    $0.kind == kind && $0.level < sim.config.maxLevel(of: kind) && !upgraded.contains($0.id)
+                }), let cost = sim.config.upgradeCost(of: kind) else {
+                    if commands.contains(where: { if case .build(kind, _) = $0 { true } else { false } }) { break }
+                    order.removeFirst()
+                    continue
+                }
+                guard gold >= cost else { break }
+                order.removeFirst()
+                gold -= cost
+                upgraded.append(tower.id)
+                commands.append(.upgrade(towerID: tower.id))
+                continue
+            }
+            guard let cost = sim.config.cost(of: kind), gold >= cost else { break }
             // Eine Bank braucht keinen Weg in Reichweite: Sie kommt dorthin, wo
             // kein Kampfturm hinwill.
             let range = sim.config.towers[kind]?.range ?? 0

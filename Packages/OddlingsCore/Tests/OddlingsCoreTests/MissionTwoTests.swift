@@ -6,7 +6,7 @@ import Testing
 @Suite("Mission 2")
 struct MissionTwoTests {
     let sim: Simulation
-    let strategies: [(name: String, order: [TowerKind])]
+    let strategies: [(name: String, order: [StrategyStep])]
 
     init() throws {
         let config = try BalanceConfig.bundledMission(named: "mission-02")
@@ -14,7 +14,7 @@ struct MissionTwoTests {
         strategies = Strategies.of(config)
     }
 
-    private func order(_ name: String) throws -> [TowerKind] {
+    private func order(_ name: String) throws -> [StrategyStep] {
         try #require(strategies.first { $0.name == name }).order
     }
 

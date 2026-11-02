@@ -50,7 +50,7 @@ struct AutoplayerTests {
     @Test("Baut nur, was er bezahlen kann, und nie auf belegte Zellen")
     func respectsGoldAndCells() throws {
         let sim = Simulation(config: try BalanceConfig.missionOne())
-        var player = Autoplayer(order: [.watch, .watch, .watch, .watch])
+        var player = Autoplayer(order: [.build(.watch), .build(.watch), .build(.watch), .build(.watch)])
         let state = sim.newGame(seed: 1)
         let commands = player.commands(for: state, in: sim)
         // Startgold 150, Wachturm 50: genau drei.
