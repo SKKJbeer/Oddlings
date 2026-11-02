@@ -22,12 +22,14 @@ final class FxDirector {
         var dropped = 0
         /// Auszahlungen und leer gewordene Banken (P2-5).
         var payouts = 0, empties = 0
+        /// Aufgewertete Türme (P2-6).
+        var upgrades = 0
 
         var summary: String {
             "arrows=\(arrows) bolts=\(bolts) combos=\(combos) spores=\(spores) hits=\(hits) deaths=\(deaths) "
                 + "coins=\(coins) builds=\(builds) sells=\(sells) leaks=\(leaks) spawns=\(spawns) "
                 + "casts=\(casts) impacts=\(impacts) walls=\(walls) flinches=\(flinches) falls=\(falls) dropped=\(dropped)"
-                + " payouts=\(payouts) empties=\(empties)"
+                + " payouts=\(payouts) empties=\(empties) upgrades=\(upgrades)"
         }
     }
 
@@ -372,6 +374,21 @@ final class FxDirector {
         label("+\(refund)", at: CGPoint(x: top.x, y: top.y + field * 0.4), color: FxStyle.gold)
     }
 
+    /// Aufwerten: der Turm federt hoch, ein Ring in Gold und „II“ darüber.
+    /// Das neue Bild setzt `TowerNode.showLevel`; hier nur der Augenblick.
+    func upgrade(_ tower: TowerNode) {
+        stats.upgrades += 1
+        animate(tower.lift, key: "lift", duration: FxStyle.buildLife) { node, t in
+            let spring = 1 - Ease.elasticOut(t)
+            node.position = .zero
+            node.alpha = 1
+            node.xScale = CGFloat(1 - 0.18 * spring)
+            node.yScale = CGFloat(1 + 0.28 * spring)
+        }
+        ring(at: tower.position, radius: 1.0, color: FxStyle.gold, duration: 0.45, flatten: 0.38)
+        label(BattleTexts.levelTag, at: CGPoint(x: tower.position.x, y: tower.position.y + field * 1.1), color: FxStyle.gold)
+    }
+
     /// Zwergenbank zahlt: kurzes Nicken und die Summe in Gold. Keine Münzen,
     /// die gehören den Kills; so bleibt `coins` je Kill zählbar.
     func bankPaid(_ tower: TowerNode, gold: Int) {
@@ -619,6 +636,11 @@ final class FxDirector {
             }
         }
         label(text, at: CGPoint(x: position.x, y: position.y + field * 0.6), color: FxStyle.reject, wiggle: true)
+    }
+
+    /// Kurzer Hinweis am Turm, ohne Warnfarbe (Zielwahl, P2-6).
+    func hint(at position: CGPoint, text: String) {
+        label(text, at: position, color: .white)
     }
 
     /// Wellenbanner: springt mit Überschwingen ein, bleibt, steigt und verblasst.

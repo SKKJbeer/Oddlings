@@ -38,7 +38,7 @@ struct RingMenu: View {
             ZStack {
                 if let choice {
                     let rect = hud.panel(for: cell, avoiding: points)
-                    InfoPanel(kind: choice, lines: previewLines(choice), action: BattleTexts.tapAgainToBuild, actionID: nil)
+                    InfoPanel(title: BattleTexts.name(choice), lines: previewLines(choice), action: BattleTexts.tapAgainToBuild, actionID: nil)
                         .frame(width: rect.width, height: rect.height)
                         .position(x: rect.midX, y: rect.midY)
                 }
@@ -49,18 +49,32 @@ struct RingMenu: View {
                     }
                 }
             }
-        case .tower(_, let armed):
+        case .tower(_, let armed, let upgradeArmed):
             if let tower = controller.selectedTower {
-                let points = hud.ring(at: cell, count: 1)
+                let upgradeCost = controller.upgradeCost(for: tower)
+                let targets = controller.hasTargetMode(tower)
+                // Reihenfolge im Bogen: Aufwerten, Zielwahl, Verkaufen (07, „Turm antippen“).
+                let count = 1 + (upgradeCost == nil ? 0 : 1) + (targets ? 1 : 0)
+                let points = hud.ring(at: cell, count: count)
                 let rect = hud.panel(for: cell, avoiding: points)
                 let refund = controller.refund(for: tower)
                 ZStack {
-                    InfoPanel(kind: tower.kind, lines: towerLines(tower),
-                              action: armed ? BattleTexts.confirmSell(refund: refund) : BattleTexts.refundLine(refund),
-                              actionID: armed ? "sell.confirm" : nil)
+                    InfoPanel(title: BattleTexts.name(tower.kind, level: tower.level),
+                              lines: towerLines(tower, upgradeArmed: upgradeArmed),
+                              action: actionLine(tower, armed: armed, upgradeArmed: upgradeArmed, refund: refund),
+                              actionID: armed ? "sell.confirm" : upgradeArmed ? "upgrade.confirm" : nil)
                         .frame(width: rect.width, height: rect.height)
                         .position(x: rect.midX, y: rect.midY)
-                    if let point = points.first {
+                    if let upgradeCost, let point = points.first {
+                        UpgradeRingButton(cost: upgradeCost, armed: upgradeArmed,
+                                          affordable: controller.gold >= upgradeCost, action: controller.upgrade)
+                            .position(point)
+                    }
+                    if targets, points.count >= 2 {
+                        TargetRingButton(mode: tower.targetMode, action: controller.cycleTargetMode)
+                            .position(points[points.count - 2])
+                    }
+                    if let point = points.last {
                         SellRingButton(refund: refund, armed: armed, action: controller.sell)
                             .position(point)
                     }
@@ -81,12 +95,28 @@ extension RingMenu {
     }
 
     /// Bei einem gebauten Turm; die Bank zeigt, wie viel sie ausgezahlt hat.
-    fileprivate func towerLines(_ tower: Tower) -> InfoLines {
+    /// Vor dem Aufwerten sagt die Tafel, was Stufe 2 bringt, danach die Zielwahl.
+    fileprivate func towerLines(_ tower: Tower, upgradeArmed: Bool) -> InfoLines {
+        if upgradeArmed {
+            return InfoLines(first: BattleTexts.upgradeArmed,
+                             second: tower.kind == .spore ? BattleTexts.upgradeUnlocksNothing : BattleTexts.upgradeUnlocks)
+        }
+        if controller.hasTargetMode(tower) {
+            return InfoLines(first: BattleTexts.role(tower.kind), second: BattleTexts.targetLine(tower.targetMode))
+        }
         guard tower.kind == .bank, let bank = controller.bank else {
             return InfoLines(first: BattleTexts.role(tower.kind), second: BattleTexts.combo(tower.kind))
         }
         if controller.isEmpty(tower) { return InfoLines(first: BattleTexts.bankEmpty, second: BattleTexts.role(.bank)) }
         return InfoLines(first: BattleTexts.bankPaid(tower.paid, of: bank.cap), second: BattleTexts.bankIncome(bank))
+    }
+
+    /// Was das nächste Tippen tut: verkaufen, aufwerten oder der Erlös.
+    fileprivate func actionLine(_ tower: Tower, armed: Bool, upgradeArmed: Bool, refund: Int) -> String {
+        if armed { return BattleTexts.confirmSell(refund: refund) }
+        if upgradeArmed, let cost = controller.upgradeCost(for: tower) { return BattleTexts.confirmUpgrade(cost) }
+        if let cost = controller.upgradeCost(for: tower) { return BattleTexts.upgradeLine(cost) }
+        return BattleTexts.refundLine(refund)
     }
 }
 
@@ -164,16 +194,70 @@ private struct SellRingButton: View {
     }
 }
 
+/// Aufwerten: Pfeil nach oben mit Preis, beim ersten Tippen „Sicher?“ wie
+/// beim Verkaufen, damit kein Gold aus Versehen weg ist (07, Grundsatz 4).
+private struct UpgradeRingButton: View {
+    let cost: Int
+    let armed: Bool
+    let affordable: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            RingButtonFace(highlighted: armed, tint: UITheme.fresh, size: BattleStyle.ringButton) {
+                VStack(spacing: 0) {
+                    Image(systemName: "chevron.up.2").font(.system(size: 15, weight: .heavy))
+                    Text(armed ? BattleTexts.levelTag : "\(cost)").font(UITheme.display(15))
+                }
+                .foregroundStyle(armed ? UITheme.outline : affordable ? UITheme.cream : UITheme.danger)
+                .minimumScaleFactor(0.6)
+                .lineLimit(1)
+                .padding(4)
+            }
+        }
+        .buttonStyle(RingPressStyle())
+        .accessibilityLabel(armed ? BattleTexts.confirmUpgrade(cost)
+                                  : affordable ? BattleTexts.upgradeLine(cost) : "\(BattleTexts.upgrade), \(BattleTexts.notEnoughGold)")
+        .accessibilityIdentifier("upgrade")
+    }
+}
+
+/// Zielwahl: zeigt die aktuelle Wahl, jedes Tippen schaltet weiter.
+private struct TargetRingButton: View {
+    let mode: TargetMode
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            RingButtonFace(highlighted: false, tint: UITheme.heart, size: BattleStyle.ringButton) {
+                VStack(spacing: 0) {
+                    Image(systemName: "scope").font(.system(size: 15, weight: .heavy))
+                    Text(BattleTexts.targetMode(mode)).font(UITheme.display(12))
+                }
+                .foregroundStyle(UITheme.cream)
+                .minimumScaleFactor(0.5)
+                .lineLimit(1)
+                .padding(4)
+            }
+        }
+        .buttonStyle(RingPressStyle())
+        .accessibilityLabel(BattleTexts.targetLine(mode))
+        .accessibilityValue(BattleTexts.targetMode(mode))
+        .accessibilityIdentifier("target")
+    }
+}
+
 /// Name, Rolle, Zusammenspiel und was das nächste Tippen tut.
 private struct InfoPanel: View {
-    let kind: TowerKind
+    let title: String
     let lines: InfoLines
     let action: String
     let actionID: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text(BattleTexts.name(kind)).font(UITheme.display(19))
+            Text(title).font(UITheme.display(19))
+                .accessibilityIdentifier("panel.title")
             Text(lines.first).font(UITheme.body(13)).foregroundStyle(UITheme.parchment)
                 .accessibilityIdentifier("panel.first")
             Text(lines.second).font(lines.warn ? UITheme.bodyHeavy(13) : UITheme.body(13))

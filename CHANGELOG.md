@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.17.0 – 02.11.2026 (R-7a: Ausrüstung aus festen Belohnungen), Bau offen
+## 0.19.0 – 02.11.2026 (R-7a: Ausrüstung aus festen Belohnungen), Bau offen
 
 **Neu**
 - Das Avatar-Menü hat Reiter: „Talente“ und neu „Ausrüstung“. Drei Plätze (Banner für
@@ -38,6 +38,32 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   Monokultur beim ersten Spielen (alle rot gesehen).
 - App: Belohnung, Anlegen, Ablegen, Neustart, Texte. E2E: Reiter „Ausrüstung“,
   Anlegen und Ablegen, Belegung übersteht den Neustart, nichts überlappt.
+
+## 0.18.0 – 02.11.2026 (P2-6: Mission 3 mit Aufwertungen)
+
+- **Mission 3 „Pilzhain“** spielbar, nach dem Sieg in Mission 2 auf der Kampagnenkarte
+  offen: Weg mit Haarnadel auf dem gemalten Kampfplatz (D-081), zehn Wellen etwas
+  härter als in Mission 2, Welle 6 mit zwei Panzerbestien. Zwergenbank und Bonus fürs
+  frühe Rufen wie in Mission 2.
+- **Aufwerten auf Stufe 2**: Turm antippen, Aufwerten zweimal tippen. Die Tafel sagt,
+  was Stufe 2 bringt, der Kreis zeigt schon die neue Reichweite. Wach- und Blitzturm
+  treffen härter, der Sporenturm verlangsamt stärker in größerem Kreis. Eigenes Bild
+  für jeden Turm der Stufe 2, Schild „II“, Klang und Stoß beim Aufwerten.
+- **Zielwahl** ab Stufe 2 für Wach- und Blitzturm: Erster, Letzter, Stärkster, ein
+  Tippen schaltet weiter, kostet nichts. Der Blitz beginnt seine Kette am gewählten Ziel.
+- Stufe 2 steht als Faktoren in der Missionsdatei (D-084), damit Volk und Ausrüstung
+  in beiden Stufen wirken. Mission 1 und 2 bleiben unverändert.
+- Tests: Aufwerten, Zielwahl und Mission 3 im Kern, `UpgradeControllerTests` und
+  Kreismenü auf jeder Zelle von Mission 3 in der App, `UpgradeE2ETests` mit echtem Tippen.
+
+## Dokumente, kein Bau – 02.11.2026 (Mission 3 nach R-7a, D-085)
+
+- Steffen hat Karte S7 entschieden: nach der Ausrüstung kommt Mission 3 mit
+  Aufwertungen (D-085). Karte aus Roadmap und Stand gestrichen.
+
+## Dokumente, kein Bau – 02.11.2026 (Karte S7: was nach R-7a kommt)
+
+- Neue Entscheidungskarte für Steffen in Roadmap und Stand eingetragen (D-067).
 
 ## Dokumente, kein Bau – 01.11.2026 (Bau 37)
 

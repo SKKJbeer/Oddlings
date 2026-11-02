@@ -341,6 +341,36 @@ Bank beim Bot schlechter abschneidet als die späte, liegt an seiner starren
 Reihenfolge; ob Menschen sie früh lohnend finden, zeigt erst der Spieltest
 (WP-15, D-080).
 
+### Mission 3 – Aufwerten, Ergebnis der Prüfung (0.18.0) [HYPOTHESE]
+
+Werte in `mission-03.json` (Abschnitt `upgrades`, D-084). Startgold 200, Bank und
+Bonus fürs frühe Rufen wie in Mission 2 (D-086, Steffen).
+Wellen gegenüber Mission 2: Anzahl ×1,1, Lebenspunkte ×1,29; Welle 6 bringt zwei
+Panzerbestien. Stufe 2: Wach- und Sporenturm 35 Gold, Blitzturm 56 (70 % des
+Grundturms, D-024); Schaden ×1,5, beim Sporenturm Kreis ×1,15 und Verlangsamung ×0,8.
+
+| Bauweise | Reserve | Ergebnis |
+|---|---|---|
+| Wenige Plätze, tief | 1,42 | Sieg |
+| Mix ohne Aufwertung | 1,40 | Sieg |
+| Mix mit Aufwertung | 1,38 | Sieg |
+| Mix mit Bank und Aufwertung (Vorführung) | 1,29 | Sieg |
+| Nur Wachtürme | 0,94 | Niederlage |
+| Nur Wachtürme, aufgewertet | 0,84 | Niederlage |
+
+**Kennzahl:** Die beste Bauweise mit Aufwertung liegt vor der ohne, höchstens 0,15
+darüber (`MissionThreeTests.upgradingIsAChoice`): Vertiefen lohnt sich an den
+Plätzen der Haarnadel, ist aber nie Pflicht. Die Monokultur verliert auch
+aufgewertet (D-071). Der beste Platz sieht 9,8 Felder Weg, in Mission 2 9,0.
+
+**Völker.** Gemessen wie in Mission 1 und 2 an der Vorführbauweise, die alles nutzt:
+Zwerge 1,33, Elfen 1,33 gegen 1,29 ohne Volk, also innerhalb der Grenze +0,1. An
+einzelnen Bauweisen liegt der Abstand höher: „Mix ohne Aufwertung“ mit Zwergen
+1,525 (+0,12), „Wenige Plätze, tief“ mit Elfen 1,51 (+0,09). Bemerkt, nicht
+geändert: Die Grenze gilt für die Vorführbauweise, und die Zahlen sind Hypothesen
+bis zum Spieltest (WP-15). Fällt der Abstand dort auf, zuerst Bollwerk und Mondmal
+ansehen, nicht die Türme.
+
 ### Bonus für frühes Rufen (D-009, E8)
 
 

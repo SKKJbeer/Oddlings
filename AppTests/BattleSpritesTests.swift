@@ -24,6 +24,15 @@ final class BattleSpritesTests: XCTestCase {
         XCTAssertNotNil(BattleSprites.fortress(field: field))
     }
 
+    /// Stufe 2 hat für jeden Kampfturm ein eigenes Bild (P2-6), Stufe 1 den Grundnamen.
+    func testEveryCombatTowerHasALevelTwoPicture() {
+        for kind in TowerKind.combat {
+            XCTAssertEqual(BattleSprites.towerName(kind, level: 1), BattleSprites.towerName(kind))
+            XCTAssertEqual(BattleSprites.towerName(kind, level: 2), "tower_\(kind.rawValue)_2")
+            XCTAssertNotNil(BattleSprites.texture(named: BattleSprites.towerName(kind, level: 2)), "\(kind)")
+        }
+    }
+
     func testPaintedTowerIsSquareWithFootOnCellCenter() throws {
         for kind in TowerKind.allCases {
             let node = BattleSprites.tower(kind, field: field)

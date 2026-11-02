@@ -6,14 +6,14 @@ import Testing
 @Suite("Balance Mission 1")
 struct BalanceTests {
     let sim: Simulation
-    let strategies: [(name: String, order: [TowerKind])]
+    let strategies: [(name: String, order: [StrategyStep])]
 
     init() throws {
         sim = Simulation(config: try BalanceConfig.missionOne())
         strategies = try Strategies.missionOne()
     }
 
-    private func order(_ prefix: String) throws -> [TowerKind] {
+    private func order(_ prefix: String) throws -> [StrategyStep] {
         try #require(strategies.first { $0.name.hasPrefix(prefix) }).order
     }
 

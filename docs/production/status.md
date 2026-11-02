@@ -5,8 +5,8 @@ ergänzt, D-067). Reihenfolge, Pakete und alles, was auf dich wartet, stehen in 
 [Roadmap](roadmap.md); Einzelheiten im [Backlog](backlog.md), offene Fragen im
 [Register](offene-fragen.md).
 
-**Stand: 02.11.2026** · Neueste Version **0.17.0** (Ausrüstung im Avatar-Menü), Bau läuft;
-davor 0.16.1 (gemalte Kampfplätze für Mission 2 bis 4, Bau 37 VALID), 0.16.0 (Mission 2 mit Zwergenbank), 0.15.0 (Ton und Musik), 0.13.0 (Plünderer mit Gliedmaßen). Der Spielrahmen R-1 bis R-6 steht. Spielbar sind Mission 1 und Mission 2.
+**Stand: 02.11.2026** · Neueste Version **0.19.0** (Ausrüstung im Avatar-Menü), Bau läuft;
+davor 0.18.0 (Mission 3 mit Aufwertungen), 0.16.1 (gemalte Kampfplätze für Mission 2 bis 4, Bau 37 VALID), 0.16.0 (Mission 2 mit Zwergenbank), 0.15.0 (Ton und Musik). Der Spielrahmen R-1 bis R-6 steht. Spielbar sind Mission 1 bis 3.
 
 ## Wartet auf dich
 
@@ -26,12 +26,18 @@ davor 0.16.1 (gemalte Kampfplätze für Mission 2 bis 4, Bau 37 VALID), 0.16.0 (
 - **Avatar** (D-063 bis D-065): einmal am Anfang Volk, Porträt und Name (0.11.0); Rang aus
   Sternen, vier Talentreihen je Volk, eigenes Avatar-Menü (0.12.0). Die erste Talentwahl
   kommt mit Mission 2 (ab 6 Sternen). Ausrüstung mit drei Plätzen, Grundstücke als
-  feste Belohnung aus Mission 1 und Sternschwellen, höchstens +10 % (0.17.0).
+  feste Belohnung aus Mission 1 und Sternschwellen, höchstens +10 % (0.19.0).
 - **Mission 2 mit Zwergenbank** (P2-5, 0.16.0): neuer Weg, zehn härtere Wellen, die
   Bank als vierter Knopf im Kreismenü (zahlt nach 20 s alle 4 s Gold bis 300, höchstens
   zwei), Gold fürs frühe Rufen der Welle. Nach dem Sieg in Mission 1 auf der Karte
   offen. Werte sind Hypothesen bis zum Spieltest. Gemalter Kampfplatz am Zwergenstollen (0.16.1);
-  die Kampfplätze für Mission 3 (Pilzhain) und 4 (Ruinenrand) liegen bereit.
+  der Kampfplatz für Mission 4 (Ruinenrand) liegt bereit.
+- **Mission 3 „Pilzhain“ mit Aufwertungen** (P2-6, 0.18.0): Türme lassen sich einmal
+  auf Stufe 2 aufwerten (zweimal tippen, etwa 70 % des Turmpreises, eigenes Bild und
+  Schild „II“), danach wählen Wach- und Blitzturm ihr Ziel: Erster, Letzter oder
+  Stärkster. Der Weg mit der Haarnadel belohnt tiefe Plätze, breit bauen gewinnt aber
+  auch. Bank und Bonus wie in Mission 2 (deine Wahl, D-086). Nach dem Sieg in Mission 2 offen; Werte sind
+  Hypothesen bis zum Spieltest.
 - **Grafik und Bewegung**: gemalte Figuren, Türme, Symbole, Titelbild, Kampfplatz als
   Waldlichtung mit Zwergenfeste, Porträts (Grafik 01 bis 05); Laufen, Treffer, Tod,
   Turmangriffe und Fähigkeiten als Effekte (FX 01, 0.10.0); der Plünderer geht,
@@ -39,7 +45,7 @@ davor 0.16.1 (gemalte Kampfplätze für Mission 2 bis 4, Bau 37 VALID), 0.16.0 (
 - **Ton und Musik** (P2-3, 0.15.0): 30 Klänge an den Spielereignissen, fünf Musikstücke
   (Menü, Kampf, letzte Welle, Sieg, Niederlage), Regler für Klänge und Musik in den
   Einstellungen. Nur CC0-Quellen, jede mit Herkunft in `art/ton/` (D-082).
-- **Qualität**: rund 190 Kerntests, 122 App-Tests, 32 Ende-zu-Ende-Fälle, Probelauf im
+- **Qualität**: rund 190 Kerntests, 122 App-Tests, 33 Ende-zu-Ende-Fälle, Probelauf im
   Simulator, alles bei jedem PR in der CI.
 - **Doku nachgezogen** (27.10.2026): Architektur, Datenmodelle, Teststrategie,
   Oberfläche, Art, Roadmap; die CI prüft seitdem, dass der Doku-Stand mitwächst (D-067).
@@ -48,8 +54,9 @@ davor 0.16.1 (gemalte Kampfplätze für Mission 2 bis 4, Bau 37 VALID), 0.16.0 (
 
 | Thread | Woran | Nächster Schritt |
 |---|---|---|
-| Haupt-Thread | 0.17.0 Ausrüstung (R-7a) in TestFlight | Konzept R-7b Schmiede mit Spielwährung, Karten an dich |
+| Haupt-Thread | 0.19.0 Ausrüstung (R-7a) in TestFlight | Konzept R-7b Schmiede mit Spielwährung, Karten an dich |
 | Mission 2 mit Zwergenbank | 0.16.0, Bau 36 in TestFlight | Werte nach dem Spieltest nachziehen |
+| Mission 3 mit Aufwertungen | 0.18.0 im PR | zusammenführen, Bau in TestFlight, danach Mission 4 |
 | Plünderer-3D-Modell | 0.13.0 in TestFlight | Flitzer und Panzerbestie, wenn dir der Plünderer im Spiel gefällt |
 | Ton und Musik | 0.15.0 in Bau 35 | Hörprobe beim Spieltest |
 

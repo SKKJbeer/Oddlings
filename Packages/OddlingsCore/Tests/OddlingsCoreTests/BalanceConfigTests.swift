@@ -140,6 +140,41 @@ struct ValidationTests {
         ])
     }
 
+    // Aufwertungen (P2-6): Mission 1 hat keine, also je Fall eine gültige dazu.
+    private func withUpgrades(_ change: (inout BalanceConfig) -> Void) -> [ConfigIssue] {
+        var config = valid
+        config.upgrades = [.watch: UpgradeConfig(cost: 35, scale: [.damage: 1.5]),
+                           .spore: UpgradeConfig(cost: 35, scale: [.slowFactor: 0.8])]
+        change(&config)
+        return config.issues()
+    }
+    @Test func upgradesValid() { #expect(withUpgrades { _ in }.isEmpty) }
+    @Test func upgradeCost() {
+        #expect(withUpgrades { $0.upgrades?[.watch]?.cost = 0 } == [ConfigIssue(field: "upgrades.watch.cost", rule: .mustBePositive)])
+    }
+    @Test func upgradeFactor() {
+        #expect(withUpgrades { $0.upgrades?[.watch]?.scale[.damage] = 0 }
+                == [ConfigIssue(field: "upgrades.watch.scale.damage", rule: .mustBePositive)])
+    }
+    @Test func upgradeEmpty() {
+        #expect(withUpgrades { $0.upgrades?[.watch]?.scale = [:] } == [ConfigIssue(field: "upgrades.watch.scale", rule: .emptyUpgrade)])
+    }
+    @Test func upgradeBank() {
+        #expect(withUpgrades { $0.upgrades?[.bank] = UpgradeConfig(cost: 5, scale: [.damage: 2]) }
+                == [ConfigIssue(field: "upgrades.bank", rule: .upgradeNeedsCombatTower)])
+    }
+    @Test func upgradeStatNotInTower() {
+        #expect(withUpgrades { $0.upgrades?[.watch]?.scale[.slowFactor] = 0.5 }
+                == [ConfigIssue(field: "upgrades.watch.scale.slowFactor", rule: .statNotInTower)])
+    }
+    @Test func upgradeSlowAboveOne() {
+        #expect(withUpgrades { $0.upgrades?[.spore]?.scale[.slowFactor] = 3 }
+                == [ConfigIssue(field: "upgrades.spore.scale.slowFactor", rule: .mustBeFraction)])
+    }
+    @Test func strategyNeedsUpgrades() {
+        expectOnly("simStrategies.Probe", .strategyNeedsUpgrades) { $0.simStrategies?["Probe"] = [.build(.watch), .upgrade(.watch)] }
+    }
+
     @Test("Mehrere Verstöße kommen alle auf einmal")
     func collectsAll() {
         var config = valid

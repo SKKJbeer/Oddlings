@@ -14,8 +14,7 @@ bis 05 (zuletzt Kampfplatz und Zwergenfeste, 0.11.1), Effekte an Ereignissen üb
 `App/Battle/Fx/FxDirector` (FX 01, D-050). Der Plünderer
 läuft mit Gliedmaßen aus 3D (FX 02, 0.13.0). Ton und Musik (P2-3, 0.15.0):
 Klänge an Ereignissen über `App/Audio/AudioDirector`, nur CC0-Quellen (D-082, `art/ton/`). Mission 2 mit Zwergenbank und Bonus
-fürs frühe Rufen ist spielbar (P2-5, 0.16.0, D-080), mit gemaltem Kampfplatz; Kampfplätze für M3 und M4 liegen bereit (Grafik 06, 0.16.1). Ausrüstung aus festen Belohnungen im
-Avatar-Menü (R-7a, 0.17.0); als Nächstes R-7b Schmiede mit Spielwährung (D-070). Reihenfolge und was
+fürs frühe Rufen ist spielbar (P2-5, 0.16.0, D-080), mit gemaltem Kampfplatz; Kampfplätze für M3 und M4 liegen bereit (Grafik 06, 0.16.1). Mission 3 „Pilzhain“ mit Aufwerten auf Stufe 2 und Zielwahl ist spielbar (P2-6, 0.18.0, D-084). Ausrüstung aus festen Belohnungen im Avatar-Menü (R-7a, 0.19.0); als Nächstes R-7b Schmiede mit Spielwährung (D-070) und Mission 4. Reihenfolge und was
 auf Steffen wartet: [Roadmap](docs/production/roadmap.md), Kurzstand:
 [status.md](docs/production/status.md), Versionen: [CHANGELOG.md](CHANGELOG.md).
 Projekt erzeugen: `xcodegen generate` (Xcode-Projekt ist nicht eingecheckt).

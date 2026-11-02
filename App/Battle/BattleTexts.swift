@@ -24,6 +24,8 @@ enum BattleTexts {
         case .notOnPath: "Nur auf den Weg"
         case .noAbility: "Hier nicht verfügbar"
         case .limitReached: "Höchstzahl erreicht"
+        case .notUpgradable: "Nicht weiter aufwertbar"
+        case .targetModeLocked: "Zielwahl ab Stufe 2"
         }
     }
 
@@ -105,6 +107,33 @@ enum BattleTexts {
     static func seconds(_ value: Double) -> String {
         let tenths = Int((value * 10).rounded())
         return tenths % 10 == 0 ? "\(tenths / 10)" : "\(tenths / 10),\(abs(tenths % 10))"
+    }
+
+    // MARK: Aufwerten und Zielwahl (P2-6)
+
+    /// Name mit Stufe, wie auf dem Schild am Turm: „Wachturm II“.
+    static func name(_ kind: TowerKind, level: Int) -> String { level >= 2 ? "\(name(kind)) II" : name(kind) }
+    static let levelTag = "II"
+    static let upgrade = "Aufwerten"
+    static let upgradeArmed = "Stufe 2: gleiche Rolle, spürbar stärker."
+    static let upgradeUnlocks = "Schaltet die Zielwahl frei."
+    static let upgradeUnlocksNothing = "Größere Wirkung im selben Kreis."
+    static func confirmUpgrade(_ cost: Int) -> String { "Nochmal tippen: aufwerten für \(cost) Gold" }
+    static func upgradeLine(_ cost: Int) -> String { "Aufwerten für \(cost) Gold" }
+    static func targetMode(_ mode: TargetMode) -> String {
+        switch mode {
+        case .first: "Erster"
+        case .last: "Letzter"
+        case .strongest: "Stärkster"
+        }
+    }
+    static func targetLine(_ mode: TargetMode) -> String { "Ziel: \(targetMode(mode))" }
+    static func targetHint(_ mode: TargetMode) -> String {
+        switch mode {
+        case .first: "Ziel: wer am weitesten ist"
+        case .last: "Ziel: wer zuletzt kam"
+        case .strongest: "Ziel: der Zäheste"
+        }
     }
 
     static func missing(_ gold: Int) -> String { "fehlt \(gold)" }

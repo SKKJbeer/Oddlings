@@ -12,7 +12,7 @@ Entscheidungskarte beantwortet. Alles, was auf ihn wartet, steht unter
 zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzelnen:
 [backlog.md](backlog.md), offene Fragen: [offene-fragen.md](offene-fragen.md).
 
-**Stand: 02.11.2026** · neueste Version 0.17.0 (Ausrüstung, Bau läuft), neuester VALID-Bau 37 (0.16.1)
+**Stand: 02.11.2026** · neueste Version 0.19.0 (Ausrüstung, Bau läuft), davor 0.18.0 (Mission 3 mit Aufwertungen), neuester VALID-Bau 37 (0.16.1)
 
 ## Phasen
 
@@ -20,9 +20,9 @@ zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzeln
 |---|---|---|---|
 | **0 – Design und Planung** | Konsistenter Designstand, MVP abgegrenzt, Backlog | Steffen gibt Dokumente und offene Entscheidungen frei | ✓ 25.10.2026 |
 | **1 – Spielbarer Kampfprototyp** | Eine Karte, ein Weg, drei Türme, Gegner, Gold, Wellen, Sieg/Niederlage, Neustart, Tests | Mission 1 auf dem iPhone spielbar, Regeltests grün, drei Personen haben gespielt | Technik ✓, **Spieltest WP-15 offen** |
-| **Spielrahmen (vorgezogen, D-060)** | Hauptmenü, Kampagnenkarte, Festungsfähigkeit, Völker, Avatar | Pakete R-1 bis R-7 in TestFlight | ✓ bis R-7a (0.17.0), R-7b Schmiede folgt |
+| **Spielrahmen (vorgezogen, D-060)** | Hauptmenü, Kampagnenkarte, Festungsfähigkeit, Völker, Avatar | Pakete R-1 bis R-7 in TestFlight | ✓ bis R-7a (0.19.0), R-7b Schmiede folgt |
 | **2 – Vertical Slice** | Zwergenbank, spürbare Synergie, Ton, Animation, Grafik, Fortsetzen | Eine Mission wirkt wie das fertige Spiel; Spieler finden die Synergie ohne Erklärung | Grafik und Effekte laufen, Rest wartet auf den Schnitt nach WP-15 |
-| **3 – Kleine Kampagne** | Region 1 mit sieben Haupt- und zwei Nebenmissionen, Boss | Spieler wollen nach Mission 1 weiterspielen (gemessen) | Karte steht, Missionen 2 bis 7 fehlen |
+| **3 – Kleine Kampagne** | Region 1 mit sieben Haupt- und zwei Nebenmissionen, Boss | Spieler wollen nach Mission 1 weiterspielen (gemessen) | Karte steht, Mission 2 und 3 gebaut, 4 bis 7 fehlen |
 | **4 – Qualität und Balancing** | Echte Geräte, Leistung, externe Spieltests, Balance-Labor | Absturzfrei, 60 Bilder/s auf dem ältesten Zielgerät | – |
 | **5 – Produktentscheidung** | Weiter investieren? Monetarisierung? Koop? | Entscheidung mit Daten aus Phase 4 | – |
 
@@ -37,17 +37,18 @@ zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzeln
 ## Als Nächstes
 
 Reihenfolge entschieden (D-080, Steffen 01.11.2026): Mission 2 kommt jetzt, der
-Spieltest läuft parallel. Was davor steht, wird zuerst gebaut. Steffen kann umsortieren.
+Spieltest läuft parallel. Nach R-7a kommt Mission 3 mit Aufwertungen (D-085, 02.11.2026). Was davor steht, wird zuerst gebaut. Steffen kann umsortieren.
 
 | # | Paket | Thread | Abh. | Stand |
 |---|---|---|---|---|
 | 1 | ~~FX 02 Plünderer mit Gliedmaßen~~ ([Konzept](../konzepte/fx-02-figuren-in-3d.md)) | Plünderer-3D-Modell | – | ✓ 0.13.0 |
 | 2 | ~~P2-5 **Mission 2 mit Zwergenbank**~~ ([Konzept](../konzepte/p2-5-mission-2-zwergenbank.md)); Rang II und die erste Talentwahl werden spielbar. Werte [HYPOTHESE], nach WP-15 nachgezogen. Gemalter Boden kommt aus „Kampfplätze für Mission 2 bis 4 malen“ | Mission 2 mit Zwergenbank | – | ✓ 0.16.0 |
-| 3 | ~~R-7a Ausrüstung~~ im Avatar-Menü (D-066, D-069, D-070, D-071), danach **R-7b Schmiede** mit Spielwährung: Konzept und Karten zur Währung | Haupt-Thread | R-6 | ✓ R-7a 0.17.0, R-7b Konzept als Nächstes |
+| 3 | ~~R-7a Ausrüstung~~ im Avatar-Menü (D-066, D-069, D-070, D-071), danach **R-7b Schmiede** mit Spielwährung: Konzept und Karten zur Währung | Haupt-Thread | R-6 | ✓ R-7a 0.19.0, R-7b Konzept als Nächstes |
 | 4 | **WP-15 Spieltest** parallel, danach Werte von Mission 1 und 2 nachziehen und Phase 2 schneiden | Steffen | S3 | wartet |
 | 5 | ~~P2-3 Ton und Musik~~ ([Konzept](../konzepte/p2-3-ton-und-musik.md)) | Ton und Musik | – | ✓ 0.15.0 |
 | 6 | FX 02 Flitzer und Panzerbestie | Plünderer-3D-Modell | Steffens Urteil am Plünderer im Spiel | – |
-| 7 | P2-6 Mission 3 mit Aufwertungen, P2-6b Balance-Labor, P2-2 Fortsetzen, P2-8 Synergie sichtbar, P2-9 Abstimmung | – | 2 | Konzepte K1, K6, K8, K11 |
+| 7 | ~~P2-6 **Mission 3 mit Aufwertungen**~~ ([Konzept](../konzepte/p2-6-mission-3-aufwerten.md)): Stufe 2 und Zielwahl, Weg „Pilzhain“ (D-081, D-084); Mission 4 folgt danach, nicht parallel | Mission 3 mit Aufwertungen bauen | 2 | ✓ 0.18.0 |
+| 8 | P2-6b Balance-Labor, P2-2 Fortsetzen, P2-8 Synergie sichtbar, P2-9 Abstimmung | – | 2 | Konzepte K1, K6, K8, K11 |
 
 ## Ausgeliefert
 
@@ -75,8 +76,9 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | FX 02: Plünderer mit Gliedmaßen aus 3D (D-051, D-052) | 0.13.0 | 34 | [Konzept](../konzepte/fx-02-figuren-in-3d.md) |
 | P2-5: Mission 2 mit Zwergenbank und Bonus für frühes Rufen (D-026, D-083) | 0.16.0 | 36 | [Konzept](../konzepte/p2-5-mission-2-zwergenbank.md) |
 | Grafik 06: gemalte Kampfplätze M2 (Zwergenstollen), M3 (Pilzhain), M4 (Ruinenrand), Wege M3/M4 als Vorschlag (D-081) | 0.16.1 | 37 | [Konzept](../konzepte/grafik-06-kampfplaetze-m2-m4.md) |
+| P2-6: Mission 3 mit Aufwerten auf Stufe 2 und Zielwahl (D-024, D-084) | 0.18.0 | – | [Konzept](../konzepte/p2-6-mission-3-aufwerten.md) |
 | P2-3: Ton und Musik, nur CC0 (D-082) | 0.15.0 | 35 | [Konzept](../konzepte/p2-3-ton-und-musik.md) |
-| R-7a: Ausrüstung aus festen Belohnungen (D-066, D-069 bis D-071) | 0.17.0 | läuft | [Konzept](../konzepte/r-7-ausruestung.md) |
+| R-7a: Ausrüstung aus festen Belohnungen (D-066, D-069 bis D-071) | 0.19.0 | läuft | [Konzept](../konzepte/r-7-ausruestung.md) |
 
 ## Gilt für jedes Paket
 
@@ -112,7 +114,7 @@ Spieltest WP-15 wartet nicht darauf.
 | R-4 | Völker Zwerge (Bollwerk, Wachtürme billiger D-062) und Elfen (Mondmal) | R-1, R-3 | ✓ 0.9.0, 0.10.1 |
 | R-5 | Avatar einmal am Anfang: Volk, Porträt, Name (D-063) | R-4 | ✓ 0.11.0, Porträts 0.11.1 |
 | R-6 | Avatarrang mit Talentwahl, eigenes Avatar-Menü (D-064, D-065) | R-5 | ✓ 0.12.0 |
-| R-7a | Ausrüstung mit kleinen Boni im Avatar-Menü, feste Belohnungen (D-066, D-069 bis D-071) | R-6 | ✓ 0.17.0 |
+| R-7a | Ausrüstung mit kleinen Boni im Avatar-Menü, feste Belohnungen (D-066, D-069 bis D-071) | R-6 | ✓ 0.19.0 |
 | R-7b | **Schmiede** mit Spielwährung im Avatar-Menü (D-070) | R-7a | Konzept offen |
 
 ## Parallel: Grafik und Bewegung
@@ -137,7 +139,7 @@ Phase wie oben: Eine Mission wirkt wie das fertige Spiel.
 | P2-3 | Ton und Haptik: Klänge, Musik, Regler ✓ 0.15.0 (nur CC0, D-082) | P2-1 (Rückmeldeliste) | K9 | ✓ 0.15.0 |
 | P2-4 | Menüs, Pause, Einstellungen, Ergebnis im Stil: ✓ 0.6.0 und 0.7.0 | M1.3, Oberflächen-Thread | [07](../game-design/07-ui-ux.md) | D-031, D-032 |
 | P2-5 | Zwergenbank und Bonus für frühes Rufen: ✓ 0.16.0 (Mission 2) | – (D-080: startet vor dem Spieltest, Werte nach M1.4 nachziehen) | K3 | D-026, D-083 |
-| P2-6 | Aufwertungen mit Gabelung, Zielwahl | P2-5 (gleiche Wirtschaftsrechnung) | K1 | D-024 |
+| P2-6 | Aufwertungen mit Gabelung, Zielwahl: Stufe 2 und Zielwahl ✓ 0.18.0 (Mission 3), Spezialisierungen mit M5/M6 | P2-5 (gleiche Wirtschaftsrechnung) | K1 | D-024, D-084 |
 | P2-6b | **Balance-Labor, Grundstock:** Lauf-Werkzeug, Zufalls- und Menschenbot, Zielwerte, PR-Stufe in der CI | P2-5, P2-6 | K11 | D-028 |
 | P2-7 | ~~Festungsfähigkeit Steinregen~~ vorgezogen als R-3 | – | K2a | D-025, D-060 |
 | P2-8 | Synergie sichtbar („Sporenfunke", E2), Einstieg ohne Erklärtext | P2-1, P2-3 | K8 | – |

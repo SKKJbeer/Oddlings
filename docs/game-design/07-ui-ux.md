@@ -157,7 +157,7 @@ Einmal beim ersten „Spielen“: links die beiden Völker mit Fähigkeit und Zu
 Porträt und Name. Danach ist das Volk gesetzt (D-063). Einzelheiten:
 [R-5](../konzepte/r-5-avatar.md).
 
-### Avatar-Menü (umgesetzt 0.12.0, R-6; Ausrüstung 0.17.0, R-7a)
+### Avatar-Menü (umgesetzt 0.12.0, R-6; Ausrüstung 0.19.0, R-7a)
 Eigener Schirm, erreichbar über das Avatarschild im Hauptmenü und auf der Karte.
 Links der Charakter (Porträt, Name, Rang als römische Ziffer, Sternbalken bis zum
 nächsten Rang), rechts die Abschnitte als Reiter: „Talente“ mit je zwei Spielarten je Reihe und
@@ -269,6 +269,14 @@ klappt das Menü um (Kaufen unten, Verkaufen oben).
   Turmfarbe. Bis die Grafik (sechs neue Turmbilder, K1) da ist, trägt das Schild
   die Information allein.
 - **Verkaufen** zeigt die Erstattung aus allem, was im Turm steckt (K1).
+
+**Umgesetzt (P2-6, 0.18.0, Mission 3):** Stufe 1 → Aufwerten (Preis, zweimal tippen,
+die Tafel nennt beim ersten Tippen, was Stufe 2 bringt, der Kreis zeigt schon die
+neue Reichweite), Verkaufen; Stufe 2 → Zielwahl, Verkaufen. Der Titel der Tafel
+heißt dann „Wachturm II“, am Turm steht das Schild „II“ und das Bild der Stufe 2
+(`tower_<art>_2`). Spezialisierungen (Stufe 3) kommen mit M5/M6. Knöpfe in der
+Reihenfolge Aufwerten, Zielwahl, Verkaufen im selben Bogen wie beim Bauen; die Lage
+prüft `HudLayoutTests` für jede Zelle von Mission 3.
 
 ### Zielwahl
 

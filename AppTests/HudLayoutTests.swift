@@ -48,6 +48,13 @@ final class HudLayoutTests: XCTestCase {
         checkRing(counts: 4...4)
     }
 
+    /// Mission 3: Kampfplatz mit Haarnadel, vier Knöpfe zum Bauen, am Turm
+    /// höchstens drei (Aufwerten, Zielwahl, Verkaufen; P2-6).
+    func testRingFitsEveryCellOfMissionThree() throws {
+        map = Simulation(config: try BalanceConfig.bundledMission(named: "mission-03")).map
+        checkRing(counts: 1...4)
+    }
+
     private func checkRing(counts: ClosedRange<Int>) {
         for device in devices {
             let hud = layout(device)
