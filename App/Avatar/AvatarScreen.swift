@@ -3,7 +3,7 @@ import SwiftUI
 
 /// Avatar-Menü (R-6, r-6-avatarrang.md): links der Charakter mit Rang und
 /// Fortschritt, rechts seine Abschnitte als Reiter: Talente (R-6) und
-/// Ausrüstung (R-7a). Ein weiterer Abschnitt ist ein weiterer Reiter.
+/// Ausrüstung (R-7a) und Schmiede (R-7b). Ein weiterer Abschnitt ist ein weiterer Reiter.
 struct AvatarScreen: View {
     let flow: AppFlow
     @State private var section: AppFlow.AvatarSection
@@ -24,6 +24,7 @@ struct AvatarScreen: View {
                         switch section {
                         case .talents: talents
                         case .equipment: EquipmentPanel(flow: flow)
+                        case .forge: ForgePanel(flow: flow)
                         }
                     }
                     .woodPanel(padding: 14)
@@ -82,6 +83,7 @@ struct AvatarScreen: View {
         HStack(spacing: 18) {
             tab(AvatarTexts.talents, .talents, id: "avatar.tab.talents")
             tab(AvatarTexts.equipment, .equipment, id: "avatar.tab.equipment")
+            if flow.hasForge { tab(AvatarTexts.forge, .forge, id: "avatar.tab.forge") }
             Spacer(minLength: 0)
         }
     }
@@ -165,7 +167,9 @@ private struct EquipmentPanel: View {
         }
     }
 
-    private func card(_ piece: EquipmentPiece) -> some View {
+    private func card(_ base: EquipmentPiece) -> some View {
+        // Der Bonus der geschmiedeten Stufe, nicht der von Stufe I (R-7b).
+        let piece = base.at(level: flow.level(of: base.id))
         let owned = flow.owns(piece.id)
         let equipped = flow.isEquipped(piece.id)
         return Button { flow.equip(equipped ? nil : piece.id, in: piece.slot) } label: {
@@ -201,6 +205,101 @@ private struct EquipmentPanel: View {
                                   : "\(AvatarTexts.piece(piece.id)). \(AvatarTexts.locked(piece.source))")
         .accessibilityAddTraits(equipped ? [.isButton, .isSelected] : .isButton)
         .accessibilityIdentifier("equip.\(piece.id)")
+    }
+}
+
+/// Schmiede (R-7b): Erz oben, darunter jedes erhaltene Stück mit Stufe, Bonus
+/// jetzt und nach der nächsten Stufe. Der Knopf zeigt den Preis und ist gesperrt,
+/// wenn das Erz nicht reicht; die Rechnung macht der Kern, nicht die Ansicht.
+private struct ForgePanel: View {
+    let flow: AppFlow
+
+    var body: some View {
+        let owned = flow.equipment?.pieces.filter { flow.owns($0.id) } ?? []
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(alignment: .firstTextBaseline) {
+                Label(AvatarTexts.ore(flow.ore), systemImage: "hammer.fill")
+                    .font(UITheme.display(22))
+                    .foregroundStyle(UITheme.coin)
+                    .shadow(color: UITheme.outline, radius: 0, x: 0, y: 2)
+                    .accessibilityIdentifier("forge.ore")
+                Spacer(minLength: 8)
+                Text(AvatarTexts.forgeHint)
+                    .font(UITheme.body(12))
+                    .foregroundStyle(UITheme.parchment)
+                    .multilineTextAlignment(.trailing)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            if owned.isEmpty {
+                Text(AvatarTexts.forgeEmpty)
+                    .font(UITheme.body(14))
+                    .foregroundStyle(UITheme.parchment)
+                    .accessibilityIdentifier("forge.empty")
+            }
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(owned, id: \.id) { piece in row(piece) }
+                }
+                .padding(.bottom, 8)
+            }
+        }
+    }
+
+    private func row(_ piece: EquipmentPiece) -> some View {
+        let level = flow.level(of: piece.id)
+        let cost = flow.upgradeCost(of: piece.id)
+        let affordable = cost.map { $0 <= flow.ore } ?? false
+        return HStack(spacing: 10) {
+            VStack(alignment: .leading, spacing: 2) {
+                HStack(spacing: 8) {
+                    Text(AvatarTexts.piece(piece.id))
+                        .font(UITheme.display(19))
+                        .foregroundStyle(UITheme.cream)
+                    Text(AvatarTexts.level(level))
+                        .font(UITheme.bodyHeavy(13))
+                        .foregroundStyle(UITheme.coin)
+                        .accessibilityIdentifier("forge.\(piece.id).level")
+                }
+                Text(AvatarTexts.bonus(piece.at(level: level)))
+                    .font(UITheme.body(12))
+                    .foregroundStyle(UITheme.parchment)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                if cost != nil {
+                    Text(AvatarTexts.nextLevel(piece.at(level: level + 1)))
+                        .font(UITheme.body(12))
+                        .foregroundStyle(UITheme.parchment.opacity(0.8))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            if let cost {
+                Button(AvatarTexts.forgeAction(level: level + 1, cost: cost)) { flow.forge(piece.id) }
+                    .buttonStyle(ChunkyButtonStyle(kind: affordable ? .gold : .wood, height: 44, fontSize: 15,
+                                                   minWidth: 150))
+                    .disabled(!affordable)
+                    .accessibilityIdentifier("forge.\(piece.id)")
+            } else {
+                Text(AvatarTexts.maxLevel)
+                    .font(UITheme.bodyHeavy(14))
+                    .foregroundStyle(UITheme.coin)
+                    .frame(minWidth: 150)
+                    .accessibilityIdentifier("forge.\(piece.id).max")
+            }
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .background(
+            RoundedRectangle(cornerRadius: UITheme.panelRadius, style: .continuous)
+                .fill(LinearGradient(colors: [UITheme.woodFace, UITheme.wood], startPoint: .top, endPoint: .bottom))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: UITheme.panelRadius, style: .continuous)
+                .stroke(UITheme.outline, lineWidth: UITheme.line)
+        )
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("forge.row.\(piece.id)")
     }
 }
 

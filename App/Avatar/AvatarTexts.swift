@@ -153,10 +153,14 @@ enum AvatarTexts {
         piece.tower.map(BattleTexts.name) ?? "Alle Türme"
     }
 
-    /// +3 % oder −5 %, gerundet auf ganze Prozent; das Minus als echtes Minuszeichen.
+    /// +3 % oder −4,5 %, auf eine Nachkommastelle; das Minus als echtes
+    /// Minuszeichen. Ganze Prozent reichten nicht mehr, seit Schmiedestufen
+    /// halbe Prozent auseinanderliegen (R-7b): Zwei Stufen sähen gleich aus.
     static func percent(_ factor: Double) -> String {
-        let value = Int(((factor - 1) * 100).rounded())
-        return value < 0 ? "−\(-value)\u{00A0}%" : "+\(value)\u{00A0}%"
+        let tenths = Int(((factor - 1) * 1000).rounded())
+        let magnitude = abs(tenths)
+        let text = magnitude % 10 == 0 ? "\(magnitude / 10)" : "\(magnitude / 10),\(magnitude % 10)"
+        return tenths < 0 ? "−\(text)\u{00A0}%" : "+\(text)\u{00A0}%"
     }
 
     static func source(_ source: EquipmentSource) -> String {
@@ -167,6 +171,23 @@ enum AvatarTexts {
     }
 
     static func locked(_ source: EquipmentSource) -> String { "Frei: \(self.source(source))" }
+
+    // MARK: Schmiede (R-7b)
+
+    static let forge = "Schmiede"
+    static let forgeHint = "Erz gibt jeder Sieg, neue Sterne mehr. Eine Stufe gilt ab der nächsten Mission."
+    static let maxLevel = "Höchste Stufe"
+    static let forgeEmpty = "Noch kein Stück erhalten. Gewinne Missionen, um Ausrüstung zu bekommen."
+
+    static func ore(_ amount: Int) -> String { "\(amount) Erz" }
+
+    static func oreGain(_ amount: Int) -> String { "+\(amount) Erz" }
+
+    static func level(_ level: Int) -> String { "Stufe \(roman(level))" }
+
+    static func nextLevel(_ piece: EquipmentPiece) -> String { "Nächste: \(bonus(piece))" }
+
+    static func forgeAction(level: Int, cost: Int) -> String { "\(self.level(level)) · \(ore(cost))" }
 
     /// Vorschläge, damit niemand an der Tastatur hängen bleibt. Höchstens
     /// `Avatar.maxNameLength` Zeichen; `AvatarSetupTests` prüft das.

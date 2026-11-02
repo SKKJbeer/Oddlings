@@ -20,7 +20,7 @@ zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzeln
 |---|---|---|---|
 | **0 – Design und Planung** | Konsistenter Designstand, MVP abgegrenzt, Backlog | Steffen gibt Dokumente und offene Entscheidungen frei | ✓ 25.10.2026 |
 | **1 – Spielbarer Kampfprototyp** | Eine Karte, ein Weg, drei Türme, Gegner, Gold, Wellen, Sieg/Niederlage, Neustart, Tests | Mission 1 auf dem iPhone spielbar, Regeltests grün, drei Personen haben gespielt | Technik ✓, **Spieltest WP-15 offen** |
-| **Spielrahmen (vorgezogen, D-060)** | Hauptmenü, Kampagnenkarte, Festungsfähigkeit, Völker, Avatar | Pakete R-1 bis R-7 in TestFlight | ✓ bis R-7a (0.19.0), R-7b Schmiede folgt |
+| **Spielrahmen (vorgezogen, D-060)** | Hauptmenü, Kampagnenkarte, Festungsfähigkeit, Völker, Avatar | Pakete R-1 bis R-7 in TestFlight | ✓ bis R-7b (0.21.0) |
 | **2 – Vertical Slice** | Zwergenbank, spürbare Synergie, Ton, Animation, Grafik, Fortsetzen | Eine Mission wirkt wie das fertige Spiel; Spieler finden die Synergie ohne Erklärung | Grafik und Effekte laufen, Rest wartet auf den Schnitt nach WP-15 |
 | **3 – Kleine Kampagne** | Region 1 mit sieben Haupt- und zwei Nebenmissionen, Boss | Spieler wollen nach Mission 1 weiterspielen (gemessen) | Karte steht, Mission 2 und 3 gebaut, 4 bis 7 fehlen |
 | **4 – Qualität und Balancing** | Echte Geräte, Leistung, externe Spieltests, Balance-Labor | Absturzfrei, 60 Bilder/s auf dem ältesten Zielgerät | – |
@@ -34,7 +34,7 @@ zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzeln
 | S3 | **Spieltest mit drei Personen** auf dem neuesten Bau, [Beobachtungsbogen](playtests/beobachtungsbogen.md) | WP-15 | Abschluss Phase 1, Schnitt Phase 2, D-030, Werte D-007 | so bald wie möglich |
 | S4 | Leistung des Spikes auf dem iPhone messen | WP-01 | nichts Akutes; D-002 gilt bis dahin | ohne Eile |
 | S8 | Was Mission 4 Neues bringt (Entscheidungskarte seit 02.11.) | Thread „Mission 3 mit Aufwertungen bauen“ | nichts, Mission 4 wird mit der Empfehlung gebaut | Panzerbestie mit Rüstung als fester Abzug je Treffer |
-| S9 | R-7b Schmiede: woher die Währung kommt, was die Schmiede macht, wie die Währung heißt (drei Karten seit 02.11.) | Haupt-Thread, [Konzept](../konzepte/r-7b-schmiede.md) | nur R-7b; es kommt ohnehin erst nach Mission 3 (D-085) | ohne Eile |
+| S9 | R-7b Schmiede: woher die Währung kommt, was die Schmiede macht, wie die Währung heißt (drei Karten seit 02.11.) | Haupt-Thread, [Konzept](../konzepte/r-7b-schmiede.md) | nichts, gebaut sind die Empfehlungen (D-072); eine andere Wahl wird umgebaut | Erz aus jedem Sieg, mehr für neue Sterne; Stufen I bis III; Name Erz |
 
 ## Als Nächstes
 
@@ -45,7 +45,7 @@ Spieltest läuft parallel. Nach R-7a kommt Mission 3 mit Aufwertungen (D-085, 02
 |---|---|---|---|---|
 | 1 | ~~FX 02 Plünderer mit Gliedmaßen~~ ([Konzept](../konzepte/fx-02-figuren-in-3d.md)) | Plünderer-3D-Modell | – | ✓ 0.13.0 |
 | 2 | ~~P2-5 **Mission 2 mit Zwergenbank**~~ ([Konzept](../konzepte/p2-5-mission-2-zwergenbank.md)); Rang II und die erste Talentwahl werden spielbar. Werte [HYPOTHESE], nach WP-15 nachgezogen. Gemalter Boden kommt aus „Kampfplätze für Mission 2 bis 4 malen“ | Mission 2 mit Zwergenbank | – | ✓ 0.16.0 |
-| 3 | ~~R-7a Ausrüstung~~ im Avatar-Menü (D-066, D-069, D-070, D-071), danach **R-7b Schmiede** mit Spielwährung: Konzept und Karten zur Währung | Haupt-Thread | R-6 | ✓ R-7a 0.19.0, R-7b Konzept als Nächstes |
+| 3 | ~~R-7a Ausrüstung~~ im Avatar-Menü (D-066, D-069, D-070, D-071), danach **R-7b Schmiede** mit Spielwährung: Konzept und Karten zur Währung | Haupt-Thread | R-6 | ✓ R-7a 0.19.0, R-7b 0.21.0 |
 | 4 | **WP-15 Spieltest** parallel, danach Werte von Mission 1 und 2 nachziehen und Phase 2 schneiden | Steffen | S3 | wartet |
 | 5 | ~~P2-3 Ton und Musik~~ ([Konzept](../konzepte/p2-3-ton-und-musik.md)) | Ton und Musik | – | ✓ 0.15.0 |
 | 6 | FX 02 Flitzer und Panzerbestie | Plünderer-3D-Modell | Steffens Urteil am Plünderer im Spiel | – |
@@ -83,6 +83,7 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | P2-10: Mission 4 mit gepanzerter Panzerbestie (K7, D-087) | 0.20.0 | – | [Konzept](../konzepte/p2-10-mission-4-ruestung.md) |
 | P2-3: Ton und Musik, nur CC0 (D-082) | 0.15.0 | 35 | [Konzept](../konzepte/p2-3-ton-und-musik.md) |
 | R-7a: Ausrüstung aus festen Belohnungen (D-066, D-069 bis D-071) | 0.19.0 | 39 | [Konzept](../konzepte/r-7-ausruestung.md) |
+| R-7b: Schmiede mit Erz, Stufen I bis III (D-070, D-072) | 0.21.0 | folgt | [Konzept](../konzepte/r-7b-schmiede.md) |
 
 ## Gilt für jedes Paket
 
@@ -119,7 +120,7 @@ Spieltest WP-15 wartet nicht darauf.
 | R-5 | Avatar einmal am Anfang: Volk, Porträt, Name (D-063) | R-4 | ✓ 0.11.0, Porträts 0.11.1 |
 | R-6 | Avatarrang mit Talentwahl, eigenes Avatar-Menü (D-064, D-065) | R-5 | ✓ 0.12.0 |
 | R-7a | Ausrüstung mit kleinen Boni im Avatar-Menü, feste Belohnungen (D-066, D-069 bis D-071) | R-6 | ✓ 0.19.0 |
-| R-7b | **Schmiede** mit Spielwährung im Avatar-Menü (D-070) | R-7a | [Konzept](../konzepte/r-7b-schmiede.md) steht, wartet auf S9 |
+| R-7b | **Schmiede** mit Spielwährung im Avatar-Menü (D-070) | R-7a | ✓ 0.21.0 mit den Empfehlungen (D-072), S9 offen |
 
 ## Parallel: Grafik und Bewegung
 

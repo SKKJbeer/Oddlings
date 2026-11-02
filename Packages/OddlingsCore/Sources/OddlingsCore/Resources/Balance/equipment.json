@@ -1,6 +1,6 @@
 {
-  "_status": "Ausrüstung des Avatars (D-066, D-069, D-070; R-7a feste Belohnungen). HYPOTHESE bis zum Spieltest; die Obergrenze von +10 % Reserve je voller Belegung halten die Balancetests fest.",
-  "_einheiten": "bonus: Faktoren auf Felder der Mission (Preis, Startgold und Festungsleben auf ganze Werte gerundet). source: mission + stars = beste Sterne dort, nur stars = Sternsumme der Region. tower: nur diese Turmart.",
+  "_status": "Ausrüstung des Avatars (D-066, D-069, D-070; R-7a feste Belohnungen, R-7b Schmiede). HYPOTHESE bis zum Spieltest; die Obergrenze von +10 % Reserve je voller Belegung auf höchster Stufe halten die Balancetests fest.",
+  "_einheiten": "bonus: Faktoren auf Felder der Mission (Preis, Startgold und Festungsleben auf ganze Werte gerundet). source: mission + stars = beste Sterne dort, nur stars = Sternsumme der Region. tower: nur diese Turmart. levels: Boni der Stufen II und III, dieselben Felder wie bonus, jede stärker als die vorige. forge: Erz je Sieg (winOre) und je neuem Stern (newStarOre), Truhe höchstens maxOre, levelCosts[0] kostet Stufe II, levelCosts[1] Stufe III.",
   "pieces": [
     {
       "id": "watch-banner",
@@ -11,8 +11,16 @@
       },
       "tower": "watch",
       "bonus": {
-        "towerRange": 1.03
-      }
+        "towerRange": 1.02
+      },
+      "levels": [
+        {
+          "towerRange": 1.03
+        },
+        {
+          "towerRange": 1.04
+        }
+      ]
     },
     {
       "id": "storm-banner",
@@ -21,8 +29,16 @@
         "stars": 9
       },
       "bonus": {
-        "towerDamage": 1.02
-      }
+        "towerDamage": 1.01
+      },
+      "levels": [
+        {
+          "towerDamage": 1.015
+        },
+        {
+          "towerDamage": 1.02
+        }
+      ]
     },
     {
       "id": "purse-seal",
@@ -32,8 +48,16 @@
         "stars": 2
       },
       "bonus": {
-        "startGold": 1.02
-      }
+        "startGold": 1.01
+      },
+      "levels": [
+        {
+          "startGold": 1.02
+        },
+        {
+          "startGold": 1.03
+        }
+      ]
     },
     {
       "id": "treasure-seal",
@@ -42,8 +66,16 @@
         "stars": 21
       },
       "bonus": {
-        "startGold": 1.04
-      }
+        "startGold": 1.02
+      },
+      "levels": [
+        {
+          "startGold": 1.03
+        },
+        {
+          "startGold": 1.04
+        }
+      ]
     },
     {
       "id": "swift-amulet",
@@ -53,8 +85,16 @@
         "stars": 3
       },
       "bonus": {
-        "abilityCooldown": 0.95
-      }
+        "abilityCooldown": 0.97
+      },
+      "levels": [
+        {
+          "abilityCooldown": 0.955
+        },
+        {
+          "abilityCooldown": 0.94
+        }
+      ]
     },
     {
       "id": "moon-amulet",
@@ -63,8 +103,25 @@
         "stars": 15
       },
       "bonus": {
-        "abilityCooldown": 0.92
-      }
+        "abilityCooldown": 0.95
+      },
+      "levels": [
+        {
+          "abilityCooldown": 0.935
+        },
+        {
+          "abilityCooldown": 0.92
+        }
+      ]
     }
-  ]
+  ],
+  "forge": {
+    "winOre": 4,
+    "newStarOre": 7,
+    "maxOre": 999,
+    "levelCosts": [
+      20,
+      40
+    ]
+  }
 }

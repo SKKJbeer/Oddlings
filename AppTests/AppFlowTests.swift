@@ -219,7 +219,64 @@ final class AppFlowTests: XCTestCase {
         XCTAssertEqual(AvatarTexts.source(EquipmentSource(mission: "m1", stars: 2)), "Mission 1 mit 2 ★")
         XCTAssertEqual(AvatarTexts.source(EquipmentSource(stars: 9)), "9 ★ in der Region")
         let banner = try XCTUnwrap(table.piece("watch-banner"))
-        XCTAssertEqual(AvatarTexts.bonus(banner), "Wachturm: Reichweite +3\u{00A0}%")
+        XCTAssertEqual(AvatarTexts.bonus(banner), "Wachturm: Reichweite +2\u{00A0}%")
+        XCTAssertEqual(AvatarTexts.percent(1.015), "+1,5\u{00A0}%", "Stufen liegen halbe Prozent auseinander")
+        XCTAssertEqual(AvatarTexts.percent(0.955), "−4,5\u{00A0}%")
+        for piece in table.pieces where piece.maxLevel > 1 {
+            let texts = (1...piece.maxLevel).map { AvatarTexts.bonus(piece.at(level: $0)) }
+            XCTAssertEqual(Set(texts).count, texts.count, "\(piece.id): jede Stufe liest sich anders, \(texts)")
+        }
+    }
+
+    /// R-7b: Jeder Sieg gibt Erz, neue Sterne mehr, eine Niederlage nichts. Die
+    /// Ergebnistafel nennt den Ertrag. Schmieden zieht ab, steht in der Datei
+    /// und prägt die nächste Mission; ohne genug Erz geht es nicht.
+    @MainActor
+    func testForgeTurnsWinsIntoLevelsThatShapeTheBattle() throws {
+        let table = try EquipmentTable.bundled()
+        let forge = try XCTUnwrap(table.forge)
+        let flow = try makeFlow()
+        flow.showMap()
+        XCTAssertTrue(flow.createAvatar(race: .dwarves, name: "Brokk", portrait: "dwarf-1"))
+        XCTAssertTrue(flow.hasForge)
+        XCTAssertEqual(flow.ore, 0)
+
+        flow.finish("m1", outcome: .lost, livesLeft: 0)
+        XCTAssertEqual(flow.ore, 0, "eine Niederlage gibt nichts")
+        XCTAssertNil(flow.lastReward)
+
+        flow.finish("m1", outcome: .won, livesLeft: try fullLives())
+        let first = forge.winOre + StarRating.maximum * forge.newStarOre
+        XCTAssertEqual(flow.ore, first)
+        XCTAssertEqual(flow.lastReward, AvatarTexts.oreGain(first))
+        flow.finish("m1", outcome: .won, livesLeft: try fullLives())
+        XCTAssertEqual(flow.ore, first + forge.winOre, "Wiederholen gibt nur den Sieg")
+        XCTAssertEqual(flow.lastReward, AvatarTexts.oreGain(forge.winOre))
+        XCTAssertEqual(try makeFlow().ore, flow.ore, "auch der wiederholte Sieg steht in der Datei")
+
+        let cost = try XCTUnwrap(flow.upgradeCost(of: "watch-banner"))
+        XCTAssertEqual(cost, forge.levelCosts[0])
+        XCTAssertFalse(flow.forge("storm-banner"), "nicht erhalten, nicht schmiedbar")
+        let before = try XCTUnwrap(flow.battleMission(for: "m1"))
+        let oreBefore = flow.ore
+        XCTAssertTrue(flow.forge("watch-banner"))
+        XCTAssertEqual(flow.level(of: "watch-banner"), 2)
+        XCTAssertEqual(flow.ore, oreBefore - cost)
+        XCTAssertNotEqual(flow.battleMission(for: "m1"), before, "die Stufe wirkt in der Mission")
+        let dwarves = try XCTUnwrap(try RaceTable.bundled()[.dwarves])
+        let pieces = try ["watch-banner", "swift-amulet", "purse-seal"].map { try XCTUnwrap(table.piece($0)) }
+        let leveled = [pieces[0].at(level: 2)] + pieces.dropFirst()
+        let mission = try XCTUnwrap(flow.mission(for: "m1"))
+        XCTAssertEqual(flow.battleMission(for: "m1"), mission.applying(dwarves, talents: [], equipment: leveled))
+
+        let poor = flow.ore
+        XCTAssertLessThan(poor, try XCTUnwrap(flow.upgradeCost(of: "watch-banner")))
+        XCTAssertFalse(flow.forge("watch-banner"), "zu wenig Erz")
+        XCTAssertEqual(flow.ore, poor)
+
+        let reopened = try makeFlow()
+        XCTAssertEqual(reopened.level(of: "watch-banner"), 2, "die Stufe steht in der Datei")
+        XCTAssertEqual(reopened.ore, poor)
     }
 
     @MainActor

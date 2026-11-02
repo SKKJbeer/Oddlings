@@ -55,6 +55,20 @@ final class SaveGameTests: XCTestCase {
         XCTAssertEqual(kept.save.avatar?.equipment, EquipmentLoadout(seal: "purse-seal"))
     }
 
+    /// R-7b: Erz und Stufen stehen im Avatar; ein kaputter Schmiedeteil kostet nur sich.
+    func testForgeSurvivesTheSaveFile() throws {
+        var lyra = try avatar()
+        lyra.forge = ForgeState(ore: 12, levels: [EquipmentLevel(piece: "watch-banner", level: 2)])
+        let save = SaveGame(progress: CampaignProgress(), avatar: lyra)
+        XCTAssertEqual(try SaveGameCodec.decode(try SaveGameCodec.encode(save), campaign: campaign).save.avatar?.forge,
+                       lyra.forge)
+        let broken = try decode(#"{"schemaVersion":2,"avatar":{"race":"elves","name":"Lyra","portrait":"elf-1","forge":7}}"#)
+        XCTAssertEqual(broken.save.avatar?.name, "Lyra")
+        XCTAssertEqual(broken.save.avatar?.forge, ForgeState())
+        let old = try decode(#"{"schemaVersion":2,"avatar":{"race":"elves","name":"Lyra","portrait":"elf-1"}}"#)
+        XCTAssertEqual(old.save.avatar?.forge, ForgeState(), "Spielstände vor R-7b")
+    }
+
     func testDropsUnknownEntriesOneByOne() throws {
         let decoded = try decode("""
         {"schemaVersion":2,"avatar":{"race":"goblins","name":"Grok","portrait":"elf-1"},"progress":{"records":[

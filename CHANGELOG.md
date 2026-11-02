@@ -11,6 +11,19 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.21.0 – 02.11.2026 (R-7b: Schmiede mit Erz)
+
+- **Erz**: Jeder Sieg gibt 4, jeder neue Stern 7 dazu, eine Niederlage nichts. Die
+  Ergebnistafel nennt den Ertrag („+25 Erz“). Gebaut mit den drei Empfehlungen (D-072),
+  die Karten an Steffen sind noch offen.
+- **Schmiede** als dritter Reiter im Avatar-Menü: erhaltene Stücke auf Stufe II
+  (20 Erz) und III (40 Erz), jede Stufe mit etwas mehr Bonus. Die Stufe gilt ab der
+  nächsten Mission, Bestand und Stufen stehen im Spielstand und werden beim Laden geprüft.
+- Stufe I ist etwas schwächer als die Stücke aus 0.19.0, damit Stufe III unter
+  +10 % bleibt (D-069); Prozente stehen jetzt mit einer Nachkommastelle.
+- Tests: `ForgeTests` und Spielstand im Kern, Balance mit Stufe III, Erz und Schmieden
+  in `AppFlowTests`, Schmiede und Ergebnistafel in den E2E-Tests.
+
 ## 0.20.0 – 02.11.2026 (P2-10: Mission 4 mit gepanzerter Panzerbestie)
 
 - **Mission 4 „Ruinenrand“** spielbar, nach dem Sieg in Mission 3 offen: U-förmiger

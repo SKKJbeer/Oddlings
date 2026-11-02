@@ -21,6 +21,8 @@ public struct Avatar: Codable, Equatable, Sendable {
     /// Angelegte Stücke je Platz (R-7). Ob sie gelten, entscheidet erst die
     /// Tabelle mit dem Fortschritt (`EquipmentTable.effective`).
     public var equipment = EquipmentLoadout()
+    /// Erz und geschmiedete Stufen (R-7b).
+    public var forge = ForgeState()
 
     /// Nur gültige Werte: ein Name, den `validName` annimmt, und eine Kennung,
     /// die `isValidPortrait` annimmt. Sonst `nil`.
@@ -59,6 +61,7 @@ public struct Avatar: Codable, Equatable, Sendable {
         valid.talents = Self.validTalents((try? container.decodeIfPresent([String].self, forKey: .talents)) ?? nil)
         valid.equipment = (try? container.decodeIfPresent(EquipmentLoadout.self, forKey: .equipment)) ?? nil
             ?? EquipmentLoadout()
+        valid.forge = (try? container.decodeIfPresent(ForgeState.self, forKey: .forge)) ?? nil ?? ForgeState()
         self = valid
     }
 

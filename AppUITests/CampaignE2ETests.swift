@@ -19,6 +19,11 @@ final class CampaignE2ETests: XCTestCase {
         let lives = try XCTUnwrap(Int(e2e.resultValue("result.lives")))
         let stars = StarRating.stars(outcome: .won, livesLeft: lives, thresholds: e2e.config.mission.stars)
         let earned = "gewonnen, \(stars) von \(StarRating.maximum) Sternen"
+        // R-7b: Die Tafel nennt das Erz des Siegs, gerechnet aus derselben Datei.
+        let forge = try XCTUnwrap(try EquipmentTable.bundled().forge)
+        let reward = e2e.app.descendants(matching: .any).matching(identifier: "result.reward").firstMatch
+        XCTAssertTrue(reward.waitForExistence(timeout: 5))
+        XCTAssertTrue(reward.label.contains("+\(forge.winOre + stars * forge.newStarOre) Erz"), reward.label)
 
         e2e.app.buttons["result.back"].tap()
         XCTAssertTrue(e2e.mapStart.waitForExistence(timeout: 5), "nach dem Ergebnis zur Karte")

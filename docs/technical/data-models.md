@@ -212,6 +212,16 @@ aus dem Fortschritt abgeleitet und nie gespeichert. Eine kaputte Kennung kostet 
 ihren Platz. `EquipmentTable.effective` lässt unbekannte, fremde oder noch nicht
 erhaltene Stücke weg.
 
+**Schmiede (R-7b):** je Stück optional `levels` (Bonus von Stufe II und III, dieselben
+Felder wie `bonus`, jede Stufe stärker als die davor), dazu `forge: ForgeConfig {
+winOre, newStarOre, maxOre, levelCosts }` in derselben Datei; `levelCosts` hat einen
+Preis je Stufe über I. `Avatar.forge: ForgeState { ore, levels: [EquipmentLevel {
+piece, level }] }` ist optional, Schema bleibt 2. Gespeichert wird nur Stufe 2 und
+mehr, sortiert nach Kennung, keine Doppelten. Beim Laden wird ein negativer oder
+unsinniger Bestand zu 0, eine kaputte Stufe fällt einzeln weg; was über die Datei
+hinausgeht, kappt `EquipmentTable.level`. Erz wird gespeichert, weil auch der
+wiederholte Sieg welches gibt; geschützt wird gegen Unsinn, nicht gegen Absicht.
+
 ## Kampagne (R-2)
 
 `Resources/Campaign/region-01.json` → `CampaignConfig { id, nodes: [CampaignNode] }`.

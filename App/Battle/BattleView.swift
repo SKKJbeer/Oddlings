@@ -16,11 +16,12 @@ struct BattleView: View {
     var onClose: () -> Void
 
     /// Meldet ein Ergebnis an den Aufrufer (Fortschritt, R-1), mit den Leben,
-    /// die übrig sind. Beim Zuschauen bleibt es leer: Eine Vorführung ist kein Sieg.
-    var onFinish: ((Outcome, Int) -> Void)?
+    /// die übrig sind, und bekommt die Zeile für die Ergebnistafel zurück (Erz, R-7b).
+    /// Beim Zuschauen bleibt es leer: Eine Vorführung ist kein Sieg.
+    var onFinish: ((Outcome, Int) -> String?)?
 
     init(mission config: BalanceConfig, mode: Mode, onClose: @escaping () -> Void,
-         onFinish: ((Outcome, Int) -> Void)? = nil) {
+         onFinish: ((Outcome, Int) -> String?)? = nil) {
         self.onClose = onClose
         self.onFinish = onFinish
         var autoplay = mode == .watch
@@ -85,7 +86,7 @@ struct BattleView: View {
         .onAppear { AudioDirector.shared.startBattle() }
         .onChange(of: controller.paused) { _, paused in AudioDirector.shared.setPaused(paused) }
         .onChange(of: controller.shownOutcome) { _, outcome in
-            if let outcome { onFinish?(outcome, controller.lives) }
+            if let outcome { controller.reward = onFinish?(outcome, controller.lives) }
         }
     }
 

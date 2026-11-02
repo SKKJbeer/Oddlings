@@ -5,8 +5,8 @@ ergänzt, D-067). Reihenfolge, Pakete und alles, was auf dich wartet, stehen in 
 [Roadmap](roadmap.md); Einzelheiten im [Backlog](backlog.md), offene Fragen im
 [Register](offene-fragen.md).
 
-**Stand: 02.11.2026** · Neueste Version **0.20.0** (Mission 4 mit gepanzerter Panzerbestie), Bau folgt;
-davor 0.19.0 (Ausrüstung im Avatar-Menü, Bau 39 VALID), 0.18.0 (Mission 3 mit Aufwertungen, Bau 38 VALID), 0.16.1 (gemalte Kampfplätze für Mission 2 bis 4), 0.16.0 (Mission 2 mit Zwergenbank). Der Spielrahmen R-1 bis R-6 steht. Spielbar sind Mission 1 bis 4.
+**Stand: 02.11.2026** · Neueste Version **0.21.0** (Schmiede mit Erz im Avatar-Menü), Bau folgt;
+davor 0.20.0 (Mission 4 mit gepanzerter Panzerbestie, Bau 40), 0.19.0 (Ausrüstung im Avatar-Menü, Bau 39 VALID), 0.18.0 (Mission 3 mit Aufwertungen, Bau 38 VALID), 0.16.1 (gemalte Kampfplätze für Mission 2 bis 4), 0.16.0 (Mission 2 mit Zwergenbank). Der Spielrahmen R-1 bis R-6 steht. Spielbar sind Mission 1 bis 4.
 
 ## Wartet auf dich
 
@@ -18,7 +18,8 @@ davor 0.19.0 (Ausrüstung im Avatar-Menü, Bau 39 VALID), 0.18.0 (Mission 3 mit 
 3. Was Mission 4 Neues bringt: Entscheidungskarte im Thread „Mission 3 mit
    Aufwertungen bauen“. Gebaut ist die Empfehlung, Panzerbestie mit Rüstung.
 4. Ohne Eile: drei Karten zur Schmiede (R-7b) im Haupt-Thread: woher die Spielwährung
-   kommt, was die Schmiede macht, wie die Währung heißt. Gebaut wird sie später (D-085).
+   kommt, was die Schmiede macht, wie die Währung heißt. Gebaut sind die Empfehlungen
+   (0.21.0, D-072); entscheidest du anders, wird umgebaut.
 5. Ohne Eile: Messung des Spikes auf dem iPhone (WP-01).
 
 ## Fertig
@@ -30,7 +31,8 @@ davor 0.19.0 (Ausrüstung im Avatar-Menü, Bau 39 VALID), 0.18.0 (Mission 3 mit 
 - **Avatar** (D-063 bis D-065): einmal am Anfang Volk, Porträt und Name (0.11.0); Rang aus
   Sternen, vier Talentreihen je Volk, eigenes Avatar-Menü (0.12.0). Die erste Talentwahl
   kommt mit Mission 2 (ab 6 Sternen). Ausrüstung mit drei Plätzen, Grundstücke als
-  feste Belohnung aus Mission 1 und Sternschwellen, höchstens +10 % (0.19.0).
+  feste Belohnung aus Mission 1 und Sternschwellen, höchstens +10 % (0.19.0). Schmiede:
+  Erz aus jedem Sieg, neue Sterne mehr, Stücke auf Stufe II und III (0.21.0).
 - **Mission 2 mit Zwergenbank** (P2-5, 0.16.0): neuer Weg, zehn härtere Wellen, die
   Bank als vierter Knopf im Kreismenü (zahlt nach 20 s alle 4 s Gold bis 300, höchstens
   zwei), Gold fürs frühe Rufen der Welle. Nach dem Sieg in Mission 1 auf der Karte
@@ -63,7 +65,7 @@ davor 0.19.0 (Ausrüstung im Avatar-Menü, Bau 39 VALID), 0.18.0 (Mission 3 mit 
 
 | Thread | Woran | Nächster Schritt |
 |---|---|---|
-| Haupt-Thread | 0.19.0 Ausrüstung (R-7a) in TestFlight (Bau 39) | [Konzept R-7b Schmiede](../konzepte/r-7b-schmiede.md) steht, wartet auf deine drei Karten |
+| Haupt-Thread | 0.21.0 Schmiede (R-7b) mit Erz und Stufen I bis III im PR | zusammenführen, Bau in TestFlight, Antwort auf die drei Karten |
 | Mission 2 mit Zwergenbank | 0.16.0, Bau 36 in TestFlight | Werte nach dem Spieltest nachziehen |
 | Mission 3 mit Aufwertungen | 0.18.0 in Bau 38; Mission 4 (0.20.0) im PR | zusammenführen, Bau in TestFlight, Antwort auf die Karte zu Mission 4 |
 | Plünderer-3D-Modell | 0.13.0 in TestFlight | Flitzer und Panzerbestie, wenn dir der Plünderer im Spiel gefällt |

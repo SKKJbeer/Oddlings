@@ -34,6 +34,9 @@ public struct ConfigIssue: Hashable, Sendable, CustomStringConvertible {
         case fieldNotInSlot            // Stück verschiebt ein Feld eines anderen Platzes
         case noBonus
         case emptySlot
+        case levelNotStronger          // höhere Stufe ist nicht besser als die vorige
+        case levelFieldsDiffer         // Stufe verschiebt andere Felder als Stufe I
+        case levelWithoutCost          // Stufe, für die die Schmiede keinen Preis kennt
         case bankNotATower             // Bank gehört in den Abschnitt `bank`, nicht in `towers`
         case strategyNeedsBank         // Bauweise nennt `bank`, die Mission hat keine
         case upgradeNeedsCombatTower   // Aufwertung nur für Kampftürme
@@ -84,6 +87,9 @@ public struct ConfigIssue: Hashable, Sendable, CustomStringConvertible {
         case .fieldNotInSlot: "\(field) gehört zu einem anderen Platz"
         case .noBonus: "\(field) braucht mindestens einen Bonus"
         case .emptySlot: "\(field) braucht mindestens ein Stück"
+        case .levelNotStronger: "\(field) muss stärker sein als die Stufe davor"
+        case .levelFieldsDiffer: "\(field) muss dieselben Felder verschieben wie Stufe I"
+        case .levelWithoutCost: "\(field) hat mehr Stufen, als die Schmiede Preise kennt"
         }
     }
 }

@@ -47,7 +47,7 @@ final class AppFlow {
     /// Welcher Abschnitt des Avatar-Menüs beim Öffnen vorn liegt.
     private(set) var avatarSection: AvatarSection = .talents
 
-    enum AvatarSection: Equatable { case talents, equipment }
+    enum AvatarSection: Equatable { case talents, equipment, forge }
 
     @ObservationIgnored private let store: SaveStore?
     @ObservationIgnored private var save: SaveGame
@@ -180,7 +180,7 @@ final class AppFlow {
     /// Was in der Mission gilt: nur Stücke, die es gibt und die erhalten sind.
     var equippedPieces: [EquipmentPiece] {
         guard let avatar, let equipment else { return [] }
-        return equipment.effective(avatar.equipment, progress: progress)
+        return equipment.effective(avatar.equipment, progress: progress, forge: avatar.forge)
     }
 
     /// Hinweis am Avatarschild; das neue Talent geht vor.
@@ -222,6 +222,34 @@ final class AppFlow {
         save.avatar = changed
     }
 
+    // MARK: Schmiede (R-7b, D-070)
+
+    var ore: Int { avatar?.forge.ore ?? 0 }
+
+    /// Ohne Schmiedewerte gibt es den Reiter nicht.
+    var hasForge: Bool { equipment?.forge != nil }
+
+    func level(of id: String) -> Int {
+        guard let avatar, let equipment else { return 1 }
+        return equipment.level(of: id, in: avatar.forge)
+    }
+
+    func upgradeCost(of id: String) -> Int? {
+        guard let avatar, let equipment else { return nil }
+        return equipment.upgradeCost(of: id, in: avatar.forge)
+    }
+
+    /// Eine Stufe schmieden; gilt ab der nächsten Mission wie das Anlegen.
+    @discardableResult
+    func forge(_ id: String) -> Bool {
+        guard var changed = avatar, let equipment,
+              equipment.upgrade(id, in: &changed.forge, progress: progress) else { return false }
+        avatar = changed
+        save.avatar = changed
+        persist()
+        return true
+    }
+
     /// Wohin „Zurück“ im Avatar-Menü führt: dorthin, wo es geöffnet wurde.
     private(set) var avatarReturn: Screen = .menu
 
@@ -242,6 +270,12 @@ final class AppFlow {
 
     // MARK: Ergebnis
 
+    /// Erz aus dem letzten Ergebnis, für die Ergebnistafel.
+    private(set) var lastOre = 0
+
+    /// Zeile der Ergebnistafel, `nil` ohne Erz.
+    var lastReward: String? { lastOre > 0 ? AvatarTexts.oreGain(lastOre) : nil }
+
     /// Gespeichert wird hier, beim Ergebnis, nicht beim Verlassen der App: Beendet
     /// das System die App danach, ist der Sieg trotzdem da.
     @discardableResult
@@ -249,7 +283,20 @@ final class AppFlow {
         let thresholds = mission(for: nodeID)?.mission.stars
         let stars = StarRating.stars(outcome: outcome, livesLeft: livesLeft, thresholds: thresholds)
         let next = progress.recording(stars: stars, for: nodeID)
-        guard next != progress else { return stars }
+        // Erz gibt auch der wiederholte Sieg, deshalb vor dem Vergleich der Sterne.
+        lastOre = 0
+        if var changed = avatar, let equipment {
+            lastOre = equipment.credit(won: outcome == .won, starsBefore: progress.stars(for: nodeID),
+                                       starsAfter: stars, to: &changed.forge)
+            if lastOre > 0 {
+                avatar = changed
+                save.avatar = changed
+            }
+        }
+        guard next != progress else {
+            if lastOre > 0 { persist() }
+            return stars
+        }
         let before = rank, ownedBefore = ownedIDs
         progress = next
         if rank > before, unlockedTalentRows > 0 { newTalentWaiting = true }
@@ -270,6 +317,15 @@ final class AppFlow {
         guard next != progress else { return }
         progress = next
         save.progress = next
+        persist()
+    }
+
+    /// `--e2e-erz N`: Erz für den Schmiede-Test, ohne erst Missionen zu spielen.
+    func seedOreForTests(_ amount: Int) {
+        guard var changed = avatar, let equipment, let forge = equipment.forge else { return }
+        changed.forge = ForgeState(ore: min(amount, forge.maxOre), levels: changed.forge.levels)
+        avatar = changed
+        save.avatar = changed
         persist()
     }
     #endif

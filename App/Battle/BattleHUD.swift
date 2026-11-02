@@ -275,6 +275,12 @@ private struct ResultCard: View {
                              text: { "\($0)" }, id: "result.defeated")
                 }
             }
+            if let reward = controller.reward {
+                Label(reward, systemImage: "hammer.fill")
+                    .font(UITheme.bodyHeavy(17))
+                    .foregroundStyle(UITheme.coin)
+                    .accessibilityIdentifier("result.reward")
+            }
             HStack(spacing: 12) {
                 Button(BattleTexts.menu, action: onClose)
                     .buttonStyle(ChunkyButtonStyle(kind: .wood, height: 48, fontSize: 18, minWidth: 120))
