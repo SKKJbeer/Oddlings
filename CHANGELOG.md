@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.20.0 – 02.11.2026 (P2-10: Mission 4 mit gepanzerter Panzerbestie)
+## 0.20.0 – 02.11.2026 (P2-10: Mission 4 mit gepanzerter Panzerbestie) · Bau 40
 
 - **Mission 4 „Ruinenrand“** spielbar, nach dem Sieg in Mission 3 offen: U-förmiger
   Weg auf dem gemalten Kampfplatz (D-081), zehn Wellen mit Panzerbestien ab Welle 2,
