@@ -36,7 +36,7 @@ public struct Simulation: Sendable {
 
     /// Ein Tick. Die Reihenfolge ist festgeschrieben, weil sie Ergebnisse
     /// ändert (data-models.md): Befehle → Mauer fällt, Einschlag der Fähigkeit → Wellen/Spawns → Türme feuern (nach ID)
-    /// → Tote auswerten und Gold gutschreiben → Bewegung → Durchbrüche → Ende.
+    /// → Tote auswerten und Gold gutschreiben → Banken zahlen → Bewegung → Durchbrüche → Ende.
     /// Befehle laufen in der übergebenen Reihenfolge.
     @discardableResult
     public func step(_ state: inout GameState, commands: [Command] = []) -> [Event] {
@@ -48,6 +48,7 @@ public struct Simulation: Sendable {
         spawnDue(&state, &events)
         fireTowers(&state, &events)
         collectKills(&state, &events)
+        payBanks(&state, &events)
         move(&state)
         leak(&state, &events)
         checkVictory(&state, &events)
@@ -58,7 +59,7 @@ public struct Simulation: Sendable {
     private func apply(_ command: Command, to state: inout GameState, _ events: inout [Event]) {
         switch command {
         case .build(let kind, let cell):
-            guard let tower = config.towers[kind] else {
+            guard let cost = config.cost(of: kind) else {
                 return events.append(.commandRejected(command, reason: .unknownTower))
             }
             switch map.placement(of: cell, occupied: state.towers.map(\.cell)) {
@@ -67,13 +68,17 @@ public struct Simulation: Sendable {
             case .occupied: return events.append(.commandRejected(command, reason: .cellOccupied))
             case .free: break
             }
-            guard state.gold >= tower.cost else {
+            if kind == .bank, let bank = config.bank, banks(in: state) >= bank.limit {
+                return events.append(.commandRejected(command, reason: .limitReached))
+            }
+            guard state.gold >= cost else {
                 return events.append(.commandRejected(command, reason: .notEnoughGold))
             }
-            state.gold -= tower.cost
+            state.gold -= cost
             let id = state.nextEntityID
             state.nextEntityID += 1
-            state.towers.append(Tower(id: id, kind: kind, cell: cell, cooldownTicks: 0, spent: tower.cost))
+            state.towers.append(Tower(id: id, kind: kind, cell: cell, cooldownTicks: 0, spent: cost,
+                                      builtTick: state.tick))
             events.append(.towerBuilt(id: id))
 
         case .sell(let towerID):
@@ -88,6 +93,11 @@ public struct Simulation: Sendable {
         case .callNextWave:
             guard state.nextWaveTick != nil else {
                 return events.append(.commandRejected(command, reason: .noWaveLeft))
+            }
+            let bonus = earlyCallBonus(in: state)
+            if bonus > 0 {
+                state.gold += bonus
+                events.append(.earlyCallBonus(gold: bonus))
             }
             // Der Plan verschiebt sich mit: Der Takt zur übernächsten Welle läuft
             // ab dem letzten Erscheinen dieser, wie bei einem regulären Start.
@@ -227,6 +237,8 @@ public struct Simulation: Sendable {
             let tower = state.towers[index]
             guard let stats = config.towers[tower.kind] else { continue }
             switch tower.kind {
+            case .bank:
+                continue
             case .watch:
                 guard let target = firstTarget(in: state.enemies, around: tower.cell.center, range: stats.range)
                 else { continue }
@@ -317,6 +329,39 @@ public struct Simulation: Sendable {
             enemy.slow = SlowEffect(factor: min(active.factor, factor), untilTick: max(active.untilTick, until))
         } else {
             enemy.slow = SlowEffect(factor: factor, untilTick: until)
+        }
+    }
+
+    /// Stehende Banken; eine verkaufte zählt nicht mehr.
+    public func banks(in state: GameState) -> Int { state.towers.filter { $0.kind == .bank }.count }
+
+    /// Gold, das Rufen der nächsten Welle jetzt brächte: eingesparte Sekunden
+    /// mal `earlyCallBonus`, abgerundet. Öffentlich, damit der Welle-Knopf
+    /// dieselbe Zahl zeigt, die die Simulation gutschreibt.
+    public func earlyCallBonus(in state: GameState) -> Int {
+        guard let rate = config.mission.earlyCallBonus, rate > 0, let due = state.nextWaveTick else { return 0 }
+        let saved = Double(max(0, due - state.tick)) / Double(config.simulation.ticksPerSecond)
+        // Wie beim Erstatten: 15 × 0,5 soll 7 ergeben, nicht 7 mit Rundungsrest darunter.
+        let exact = saved * rate
+        return Int((exact + exact.ulp * 4).rounded(.down))
+    }
+
+    /// Ertrag der Banken (04): ab `delay + interval` nach dem Bau alle
+    /// `interval` Sekunden `payout`, bis der Deckel erreicht ist. Rein aus Tick
+    /// und Bau-Tick, damit eine Wiederholung genau gleich zahlt.
+    private func payBanks(_ state: inout GameState, _ events: inout [Event]) {
+        guard let bank = config.bank else { return }
+        let delay = ticks(bank.delay), interval = max(1, ticks(bank.interval))
+        for index in state.towers.indices where state.towers[index].kind == .bank {
+            let tower = state.towers[index]
+            guard tower.paid < bank.cap else { continue }
+            let elapsed = state.tick - tower.builtTick - delay
+            guard elapsed > 0, elapsed % interval == 0 else { continue }
+            let gold = min(bank.payout, bank.cap - tower.paid)
+            state.gold += gold
+            state.towers[index].paid += gold
+            events.append(.bankPaid(towerID: tower.id, gold: gold, paid: state.towers[index].paid))
+            if state.towers[index].paid >= bank.cap { events.append(.bankEmptied(towerID: tower.id)) }
         }
     }
 

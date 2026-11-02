@@ -53,9 +53,20 @@ final class BattleController {
     /// Ladeanteil des Steinregens, 0 bis 1. In Hundertsteln, damit der Knopf
     /// nicht in jedem Bild neu zeichnet.
     private(set) var abilityCharge = 1.0
+    /// Gold, das Rufen der nächsten Welle jetzt brächte (P2-5). Ganze Zahl aus
+    /// der Simulation, damit der Knopf nie mehr verspricht, als gutgeschrieben wird.
+    private(set) var callBonus = 0
+    /// Steigt mit jeder Gutschrift fürs frühe Rufen; die Goldanzeige zeigt `lastBonus`.
+    private(set) var bonusGains = 0
+    private(set) var lastBonus = 0
+    /// Steigt, wenn ein Kauf an der Höchstzahl scheitert.
+    private(set) var limitWarnings = 0
 
     /// Rückmeldung an den Finger. Austauschbar, damit Tests mitschreiben können.
     @ObservationIgnored var haptics: @MainActor (Haptic) -> Void
+    /// Ton zur eigenen Handlung (P2-3). Stumm, bis die Ansicht ihn verbindet,
+    /// damit Tests ohne Lautsprecher laufen.
+    @ObservationIgnored var sounds: @MainActor (SoundMoment) -> Void = { _ in }
 
     init(model: BattleModel, interactive: Bool) {
         self.model = model
@@ -107,9 +118,31 @@ final class BattleController {
 
     var map: MissionMap { model.sim.map }
 
-    func cost(of kind: TowerKind) -> Int { model.sim.config.towers[kind]?.cost ?? 0 }
+    func cost(of kind: TowerKind) -> Int { model.sim.config.cost(of: kind) ?? 0 }
 
     func canAfford(_ kind: TowerKind) -> Bool { gold >= cost(of: kind) }
+
+    // MARK: Zwergenbank (P2-5)
+
+    /// Was das Kreismenü anbietet: die drei Kampftürme, in Mission 2 die Bank dazu.
+    var buildable: [TowerKind] { model.sim.config.buildable }
+    var bank: BankConfig? { model.sim.config.bank }
+    var banksStanding: Int { model.sim.banks(in: model.state) }
+
+    /// Höchstzahl erreicht? Nur die Bank hat eine.
+    func atLimit(_ kind: TowerKind) -> Bool {
+        guard kind == .bank, let bank else { return false }
+        return banksStanding >= bank.limit
+    }
+
+    var limitTag: String { BattleTexts.limit(banksStanding, of: bank?.limit ?? 0) }
+    var limitReachedText: String { BattleTexts.limitReached(bank?.limit ?? 0) }
+
+    /// Hat die Bank alles ausgezahlt? Dann steht sie nur noch im Weg.
+    func isEmpty(_ tower: Tower) -> Bool {
+        guard tower.kind == .bank, let bank else { return false }
+        return tower.paid >= bank.cap
+    }
 
     var selectedTower: Tower? {
         guard case .tower(let id, _) = selection else { return nil }
@@ -158,14 +191,14 @@ final class BattleController {
                 selection = .none
             } else {
                 selection = .tower(id: tower.id)
-                haptics(FeedbackPlayer.haptic(for: .selectCell))
+                feedback(.selectCell)
             }
         } else if map.isBuildable(cell) {
             if case .cell(cell, _) = selection {
                 selection = .none
             } else {
                 selection = .cell(cell, choice: nil)
-                haptics(FeedbackPlayer.haptic(for: .selectCell))
+                feedback(.selectCell)
             }
         } else {
             // Weg oder Rand: Dort kann nie etwas stehen, also kein Menü und keine
@@ -178,11 +211,17 @@ final class BattleController {
     /// Bezahlen, was der Turm abdeckt (01-core-gameplay.md, Bedienung).
     func choose(_ kind: TowerKind) {
         guard interactive, case .cell(let cell, let choice) = selection else { return }
+        guard !atLimit(kind) else {
+            // Wie beim Gold: kein Befehl, nur spürbar, warum nichts geschieht.
+            limitWarnings += 1
+            haptics(FeedbackPlayer.haptic(for: .cannotAfford))
+            return
+        }
         guard canAfford(kind) else {
             // Gedimmt, aber antippbar: Man soll spüren, warum nichts geschieht
             // (07-ui-ux.md, „Bauen“). Es geht kein Befehl hinaus.
             goldWarnings += 1
-            haptics(FeedbackPlayer.haptic(for: .cannotAfford))
+            feedback(.cannotAfford)
             return
         }
         if choice == kind {
@@ -190,7 +229,7 @@ final class BattleController {
             selection = .none
         } else {
             selection = .cell(cell, choice: kind)
-            haptics(FeedbackPlayer.haptic(for: .preview))
+            feedback(.preview)
         }
     }
 
@@ -202,7 +241,7 @@ final class BattleController {
             selection = .none
         } else {
             selection = .tower(id: id, sellArmed: true)
-            haptics(FeedbackPlayer.haptic(for: .armSell))
+            feedback(.armSell)
         }
     }
 
@@ -214,9 +253,9 @@ final class BattleController {
             selection = .none
         } else if abilityReady {
             selection = .aiming
-            haptics(FeedbackPlayer.haptic(for: .selectCell))
+            feedback(.selectCell)
         } else {
-            haptics(FeedbackPlayer.haptic(for: .cannotAfford))
+            feedback(.cannotAfford)
         }
     }
 
@@ -225,7 +264,7 @@ final class BattleController {
     func cast(at point: Point?) {
         guard aiming else { return }
         guard let point, let target = snappedTarget(for: point) else {
-            haptics(FeedbackPlayer.haptic(for: .cannotAfford))
+            feedback(.cannotAfford)
             return
         }
         model.enqueue(.useAbility(target))
@@ -235,7 +274,7 @@ final class BattleController {
     func callNextWave() {
         guard canCallNextWave else { return }
         model.enqueue(.callNextWave)
-        haptics(FeedbackPlayer.haptic(for: .callWave))
+        feedback(.callWave)
     }
 
     /// Beendet die Mission aus der Pause heraus und zeigt die Niederlage-Tafel
@@ -247,6 +286,14 @@ final class BattleController {
         paused = false
         model.paused = true
         haptics(.error)
+        // Aufgeben endet wie eine Niederlage, auch in der Musik.
+        sounds(.missionEnded(won: false))
+    }
+
+    /// Eine Bedienhandlung: spüren und hören.
+    private func feedback(_ action: UserAction) {
+        haptics(FeedbackPlayer.haptic(for: action))
+        sounds(.user(action))
     }
 
     /// Pause hält nur die Uhr an; der Zustand bleibt unberührt, deshalb gehört
@@ -311,6 +358,10 @@ final class BattleController {
         case .enemyKilled: enemiesDefeated += 1
         case .enemyLeaked: leaks += 1
         case .commandRejected(_, reason: .notEnoughGold): goldWarnings += 1
+        case .commandRejected(_, reason: .limitReached): limitWarnings += 1
+        case .earlyCallBonus(let gold):
+            lastBonus = gold
+            bonusGains += 1
         default: break
         }
         // Nur im eigenen Spiel: Beim Zuschauen baut der Mitspieler, und das
@@ -330,6 +381,8 @@ final class BattleController {
             let charge = ((1 - left / max(total, 1)) * 100).rounded(.down) / 100
             if abilityCharge != charge { abilityCharge = charge }
         }
+        let bonus = model.sim.earlyCallBonus(in: state)
+        if callBonus != bonus { callBonus = bonus }
         if wave != state.waveIndex + 1 { wave = state.waveIndex + 1 }
         if outcome != state.outcome {
             outcome = state.outcome

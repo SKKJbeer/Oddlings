@@ -86,7 +86,7 @@ Ergebnis sind Überlagerungen der Schlacht, keine eigenen Schirme.
 ### Hauptmenü
 Gemaltes Bild links, Knöpfe rechts im Daumenbereich: großes „Spielen" (64 pt
 hoch), darüber eine Karte „Weiter mit Mission 1" mit Wellenzahl und Dauer, darunter
-Einstellungen (Klänge, Musik, Vibration) und Mitwirkende. Unten links „Offline ·
+Einstellungen (Regler für Klänge und Musik, Schalter Vibration; P2-3) und Mitwirkende. Unten links „Offline ·
 ohne Konto" (Lücke 5 der Marktanalyse). Kein Ladebildschirm, kein Anmeldefenster.
 
 ### Schlacht und HUD
@@ -157,7 +157,7 @@ Einmal beim ersten „Spielen“: links die beiden Völker mit Fähigkeit und Zu
 Porträt und Name. Danach ist das Volk gesetzt (D-063). Einzelheiten:
 [R-5](../konzepte/r-5-avatar.md).
 
-### Avatar-Menü (umgesetzt 0.12.0, R-6; Ausrüstung 0.14.0, R-7a)
+### Avatar-Menü (umgesetzt 0.12.0, R-6; Ausrüstung 0.17.0, R-7a)
 Eigener Schirm, erreichbar über das Avatarschild im Hauptmenü und auf der Karte.
 Links der Charakter (Porträt, Name, Rang als römische Ziffer, Sternbalken bis zum
 nächsten Rang), rechts die Abschnitte als Reiter: „Talente“ mit je zwei Spielarten je Reihe und
@@ -196,7 +196,8 @@ BattleView (SwiftUI, ZStack)
 | `HudLayout` | vorhanden (0.6.0), reine Funktion neben `BoardLayout` | Bildschirmgröße + sichere Ränder + `BoardLayout` → Rechtecke der vier Ecken, Lage des Kreismenüs zu einer Zelle (Umklappen an Rändern und Ecken) | Für SE, 13 mini, 15, 16 Pro Max: Tippziele ≥ 44 pt, Knöpfe im sicheren Bereich, Kreismenü vollständig sichtbar, keine Überlappung mit Ecken |
 | `BattleController` | vorhanden | Auswahl (Zelle, Vorschau, Turm), beobachtete Kopien von Gold, Leben, Welle, Countdown, Ergebnis, Pause, Tempo; setzt nur bei Änderung | vorhanden; neu: zweites Tippen beim Verkaufen |
 | `UITheme` | vorhanden (0.6.0) | Farben, Schriften, Radien, Kontur an einer Stelle; Farben laut `art-direction.md`. Löst die UI-Farben in `BattleStyle` ab, Szenenfarben bleiben dort | Farben gleich der Art-Direction |
-| `FeedbackPlayer` | vorhanden (0.6.0, nur Haptik; Ton mit P2-3) | Haptik und Ton laut Tabelle 5, hängt an Ereignissen und an Controller-Handlungen | Jede Zeile der Tabelle hat einen Eintrag |
+| `FeedbackPlayer` | vorhanden (0.6.0) | Haptik laut Tabelle 5, hängt an Ereignissen und an Controller-Handlungen | Jede Zeile der Tabelle hat einen Eintrag |
+| `AudioDirector` | vorhanden (0.15.0, P2-3) | Ton laut Tabelle 5 und [Konzept](../konzepte/p2-3-ton-und-musik.md), Musik nach Lage, Regler in den Einstellungen | `SoundMapTests`, `AudioDirectorTests`, E2E `SoundE2ETests` |
 | Hauptmenü, Kampagnenkarte, Avatar | vorhanden (`AppFlow`, `MainMenuView`, `CampaignMapView`, `Avatar/`) | Navigation; Ergebnis und Pause bleiben Überlagerungen der Schlacht | E2E `NavigationE2ETests`, `CampaignE2ETests`, `AvatarE2ETests` |
 
 Abgelehnte Befehle (zu wenig Gold, Feld belegt) meldet die Simulation als
@@ -209,11 +210,11 @@ Die Mission läuft weiter, während das Kreismenü offen ist (D-019).
 | Handlung | Bild | Ton | Haptik |
 |---|---|---|---|
 | Feld antippen | Umrandung, Bogen springt auf | leises Klicken | Auswahl (`selectionChanged`) |
-| Turm vorwählen | Reichweitenkreis, Vorschau | Holzklopfen | Auswahl |
-| Bauen | Turm wächst aus dem Boden, Staub, Gold zählt runter | Aufbau je Turm eigen | Stoß mittel |
+| Turm vorwählen | Reichweitenkreis, Vorschau | leises Klicken | Auswahl |
+| Bauen | Turm wächst aus dem Boden, Staub, Gold zählt runter | Stein setzt auf | Stoß mittel |
 | Zu wenig Gold | Knopf wackelt, Gold blinkt orange, Hinweis | dumpfer Ton | Warnung |
 | Verkaufen | Turm sinkt ein, Münzen fliegen zum Goldzähler | Münzen | Stoß leicht |
-| Welle rufen | Band „Welle 5", Ring leert sich | Horn | Stoß schwer |
+| Welle rufen | Band „Welle 5", Ring leert sich | Bestätigung, dann Gong zum Wellenstart | Stoß schwer |
 | Durchbruch | Festung blitzt rot, Leben wackeln | Einschlag | Warnung |
 | Sieg / Niederlage | Tafel mit Band | Fanfare / tiefer Akkord | Erfolg / Fehler |
 
@@ -287,10 +288,15 @@ häufigste Handlung.
   beim Kauf in Worten dastehen.
 - **Höchstzahl erreicht:** Knopf gedimmt, Schild „2/2" statt Preis.
 - **Auf der Karte:** ein Füllbalken unter der Bank zeigt, wie viel vom Deckel
-  ausgezahlt ist. Jede Auszahlung (`bankPaid`) lässt „+10" aufsteigen, die
-  Münzen fliegen zum Goldzähler, der Zähler zählt hoch (E1).
-- **Leer:** Bank wird grau, Schild „leer", kein Balken. Antippen zeigt nur
-  „Verkaufen" und den Satz „Leer. Verkaufen gibt den Platz frei."
+  ausgezahlt ist. Jede Auszahlung (`bankPaid`) lässt die Summe in Gold aufsteigen
+  („+5“), die Bank nickt, der Goldzähler zählt hoch (E1). Keine Münzen: Die
+  gehören den Kills, sonst sähe eine Bank alle vier Sekunden wie ein Treffer aus.
+  Keine Vibration, aus demselben Grund.
+- **Leer:** Bank wird grau und blass, „leer“ steigt einmal auf, der Balken bleibt
+  voll und grau. Antippen zeigt nur „Verkaufen" und den Satz „Leer. Verkaufen
+  gibt den Platz frei."
+- **Infotafel einer stehenden Bank:** „Ausgezahlt 120 von 300 Gold“ und der
+  Ertrag in einer Zeile. Umgesetzt in 0.16.0.
 - Keine Aufwertung, keine Zielwahl (K3).
 
 ### Bonus für frühes Rufen
@@ -299,6 +305,8 @@ Der Knopf „Welle rufen" trägt neben der Wellennummer ein kleines Goldschild m
 dem Bonus, den Rufen **jetzt** brächte. Es sinkt mit dem Countdown. Beim Rufen
 zählt das Gold hoch und der Hinweis nennt den Betrag. Mehr braucht es nicht: Der
 Spieler sieht den Preis des Wartens, ohne dass ein Text ihn erklärt.
+Umgesetzt in 0.16.0: Schild „+12“ am Knopf, beim Rufen steigt „+12“ an der
+Goldanzeige auf; VoiceOver liest „Nächste Welle · 25 s · +12 Gold“.
 
 ### Festungsfähigkeit (Steinregen)
 

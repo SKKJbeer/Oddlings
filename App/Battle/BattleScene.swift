@@ -14,6 +14,8 @@ final class BattleScene: SKScene {
     private(set) var towerNodes: [Int: TowerNode] = [:]
     private(set) var enemyNodes: [Int: EnemyNode] = [:]
     let fx: FxDirector
+    /// Ton hängt wie das Bild an Ereignissen (P2-3). Nil in Tests ohne Ton.
+    var audio: AudioDirector?
 
     /// Alles, was beim Bildschirmwackeln mitwackelt. Die Szene selbst bleibt
     /// stehen, damit Tippen und Lagerechnung unberührt sind.
@@ -97,6 +99,7 @@ final class BattleScene: SKScene {
 
     func restart() {
         model.restart()
+        audio?.startBattle()
         fx.reset()
         clearPieces()
         controller?.restart()
@@ -241,6 +244,7 @@ final class BattleScene: SKScene {
             let node = towerNodes[tower.id] ?? makeTowerNode(tower)
             if pendingBuilds.remove(tower.id) != nil { fx.build(node) }
             node.idle(time: fx.time, still: fx.reduceMotion)
+            if tower.kind == .bank, let bank = model.sim.config.bank { node.showBank(paid: tower.paid, cap: bank.cap) }
         }
         for (id, node) in towerNodes where liveTowers[id] == nil {
             node.removeFromParent()
@@ -306,6 +310,7 @@ final class BattleScene: SKScene {
     // MARK: Ereignisse
 
     private func play(_ event: Event) {
+        if let moment = soundMoment(for: event) { audio?.play(moment) }
         switch event {
         case .towerFired(let towerID, let targets):
             guard let tower = towerNodes[towerID] else { return }
@@ -314,7 +319,15 @@ final class BattleScene: SKScene {
             case .watch: fx.arrow(from: tower, at: hit)
             case .lightning: fx.bolt(from: tower, through: hit)
             case .spore: fx.spores(from: tower, range: model.sim.config.towers[.spore]?.range ?? 0)
+            case .bank: break
             }
+        case .bankPaid(let towerID, let gold, _):
+            if let tower = towerNodes[towerID] { fx.bankPaid(tower, gold: gold) }
+        case .bankEmptied(let towerID):
+            if let tower = towerNodes[towerID] { fx.bankEmptied(tower) }
+        case .earlyCallBonus:
+            // Die Gutschrift zeigt die Goldanzeige der Oberfläche.
+            break
         case .enemyDamaged(let id, _):
             if let node = enemyNodes[id] { fx.hit(node) }
         case .enemyKilled(let id, let reward):
@@ -354,6 +367,38 @@ final class BattleScene: SKScene {
         case .enemySlowed:
             // Verlangsamung zeigt sich über den Zustand (Farbton am Gegner).
             break
+        }
+    }
+
+    /// Was zu hören ist. Der Sporenfunke (E2) gilt wie im Bild, wenn ein Ziel der
+    /// Kette gerade verlangsamt ist; das zeigt die Node des Gegners.
+    private func soundMoment(for event: Event) -> SoundMoment? {
+        switch event {
+        case .towerFired(let towerID, let targets):
+            guard let kind = towerNodes[towerID]?.kind else { return nil }
+            let combo = kind == .lightning && targets.contains { enemyNodes[$0]?.isSlowed == true }
+            return .fired(kind, links: targets.count, combo: combo)
+        case .towerBuilt: return .built
+        case .towerSold: return .sold
+        case .commandRejected: return .rejected
+        case .enemyDamaged: return .damaged
+        case .enemySlowed: return .slowed
+        case .enemyKilled: return .killed
+        case .enemyLeaked: return .leaked
+        case .enemySpawned: return nil
+        case .waveStarted(let index): return .waveStarted(index: index, count: model.sim.config.waves.count)
+        case .missionEnded(let won): return .missionEnded(won: won)
+        case .abilityCast:
+            // Das Bollwerk steht sofort und klingt mit `barrierRaised`.
+            guard let ability = model.sim.config.ability, ability.kind != .bulwark else { return nil }
+            return .abilityCast
+        case .abilityImpact: return .abilityImpact(moon: model.sim.config.ability?.kind == .moonMark)
+        case .barrierRaised: return .wallRaised
+        case .barrierFell: return .wallFell
+        case .bankPaid: return .bankPaid
+        // Die leere Bank wird nur grau; ein Klang dafür wäre ein Fehlalarm.
+        case .bankEmptied: return nil
+        case .earlyCallBonus: return .earlyCallBonus
         }
     }
 

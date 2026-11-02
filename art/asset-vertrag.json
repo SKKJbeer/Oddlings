@@ -19,6 +19,11 @@
       "anker": 0.2,
       "alpha": true
     },
+    "tower_bank": {
+      "seiteZellen": 1.9,
+      "anker": 0.2,
+      "alpha": true
+    },
     "fortress": {
       "seiteZellen": 2.4,
       "anker": 0.15,
@@ -68,7 +73,8 @@
       "rand": [
         4,
         2
-      ]
+      ],
+      "mission": "Packages/OddlingsCore/Sources/OddlingsCore/Resources/Balance/mvp-mission-01.json"
     },
     "fx_glow": {
       "alpha": true,
@@ -159,6 +165,11 @@
       "alpha": true,
       "ordner": "App/Assets.xcassets/UI"
     },
+    "ui_tower_bank": {
+      "punkte": 40,
+      "alpha": true,
+      "ordner": "App/Assets.xcassets/UI"
+    },
     "ui_keyart_menu": {
       "pixel": [
         2796,
@@ -176,6 +187,48 @@
       "alpha": false,
       "ordner": "App/Assets.xcassets/Maps",
       "format": "jpg"
+    },
+    "map_mission02_ground": {
+      "zellen": [
+        24,
+        13
+      ],
+      "alpha": false,
+      "ordner": "App/Assets.xcassets/Maps",
+      "format": "jpg",
+      "rand": [
+        4,
+        2
+      ],
+      "mission": "Packages/OddlingsCore/Sources/OddlingsCore/Resources/Balance/mission-02.json"
+    },
+    "map_mission03_ground": {
+      "zellen": [
+        24,
+        13
+      ],
+      "alpha": false,
+      "ordner": "App/Assets.xcassets/Maps",
+      "format": "jpg",
+      "rand": [
+        4,
+        2
+      ],
+      "mission": "art/karten/wegvorschlaege/mission-03.json"
+    },
+    "map_mission04_ground": {
+      "zellen": [
+        24,
+        13
+      ],
+      "alpha": false,
+      "ordner": "App/Assets.xcassets/Maps",
+      "format": "jpg",
+      "rand": [
+        4,
+        2
+      ],
+      "mission": "art/karten/wegvorschlaege/mission-04.json"
     }
   }
 }

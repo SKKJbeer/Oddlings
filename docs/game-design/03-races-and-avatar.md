@@ -101,5 +101,5 @@ Banner (Türme), Amulett (Festungsfähigkeit), Siegel (Kasse), je Platz ein Stü
 kleinen Werteboni. Das ist die einzige Ausnahme von „anders, nicht stärker“; Talente
 bleiben ohne Mehrkraft. Volle Ausrüstung macht höchstens 10 % stärker (D-069).
 Grundstücke kommen als feste Belohnung aus Missionen und Sternschwellen (R-7a,
-umgesetzt 0.14.0), bessere aus einer Schmiede mit Spielwährung (R-7b, D-070).
+umgesetzt 0.17.0), bessere aus einer Schmiede mit Spielwährung (R-7b, D-070).
 Einzelheiten: [R-7](../konzepte/r-7-ausruestung.md).

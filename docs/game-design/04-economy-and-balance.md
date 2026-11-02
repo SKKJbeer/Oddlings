@@ -317,12 +317,38 @@ In den `BalanceTests` heißt das: Die beste Bauweise mit Bank liegt höchstens
 0,05 Reserve über oder unter der besten ohne Bank. Liegt sie deutlich darüber,
 ist die Bank Pflicht; deutlich darunter, ist sie bedeutungslos.
 
+### Mission 2 – Ergebnis der Prüfung (0.16.0) [HYPOTHESE]
+
+Werte in `mission-02.json`, gerechnet mit den `BalanceTests` (Reserve der
+Festung am Ende, 1,0 = alle Leben). Die Startwerte oben gelten unverändert;
+Startgold 180, erste Welle nach 25 s, Bonus 0,5 Gold je eingesparter Sekunde.
+Wellen etwas härter als in Mission 1 (Lebenspunkte ×1,3, Anzahl ×1,15).
+
+| Bauweise | Reserve | Ergebnis |
+|---|---|---|
+| Mix ohne Bank | 1,382 | Sieg |
+| Mix, Bank spät | 1,348 | Sieg |
+| Mix mit Bank (früh) | 1,197 | Sieg |
+| Wach + Bank | 0,94 | Niederlage |
+| Nur Wachtürme | 0,92 | Niederlage |
+| Zwei Banken zuerst | 0,62 | Niederlage |
+
+Die beste Bauweise mit Bank liegt 0,034 unter der besten ohne: innerhalb der
+Kennzahl (±0,05), also weder Pflicht noch bedeutungslos. Wer zwei Banken vor dem
+ersten Turm baut oder nur auf Wachtürme setzt, verliert; das ist gewollt
+(„Ernten oder verteidigen“). Zum Vergleich Mission 1, Mix: 1,348. Dass die frühe
+Bank beim Bot schlechter abschneidet als die späte, liegt an seiner starren
+Reihenfolge; ob Menschen sie früh lohnend finden, zeigt erst der Spieltest
+(WP-15, D-080).
+
 ### Bonus für frühes Rufen (D-009, E8)
 
 
 Gehört zur selben Wirtschaftsrunde und wird mit der Bank zusammen gerechnet:
 Wer die nächste Welle früher ruft, bekommt einen kleinen Goldbetrag je
 eingesparter Sekunde. Klein genug, dass Abwarten nie ein Fehler ist.
+Umgesetzt ab Mission 2 als `mission.earlyCallBonus` (0,5 Gold je Sekunde,
+abgerundet); Mission 1 hat keinen, damit der Spieltest WP-15 unverändert läuft.
 
 ## Koop-Ressourcen [HYPOTHESE]
 

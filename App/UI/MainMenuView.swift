@@ -134,7 +134,7 @@ private struct MenuArt: View {
                 }
                 HStack(alignment: .bottom, spacing: -size.height * 0.06) {
                     figure(BattleSprites.fortressName, height: size.height * 0.62)
-                    ForEach(TowerKind.allCases, id: \.self) { kind in
+                    ForEach(TowerKind.combat, id: \.self) { kind in
                         figure(BattleSprites.towerName(kind), height: size.height * 0.34)
                     }
                 }

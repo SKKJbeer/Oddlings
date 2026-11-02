@@ -83,6 +83,12 @@ done < <(git ls-files -co --exclude-standard -- "$CORE/OddlingsCore/*.swift")
 
 # Dokumente verweisen aufeinander statt sich zu wiederholen. Ein toter Verweis
 # macht eine Entscheidung unauffindbar.
+# Konfliktmarken: #52 und #53 haben sie am 01.11.2026 unbemerkt auf main gebracht.
+if git grep -nIE '^(<<<<<<<|>>>>>>>) ' -- . ':!scripts/regeln-pruefen.sh' >/dev/null; then
+  git grep -nIE '^(<<<<<<<|>>>>>>>) ' -- . ':!scripts/regeln-pruefen.sh'
+  melde "Konfliktmarken in eingecheckten Dateien"
+fi
+
 python3 scripts/links-pruefen.py || melde "Tote Verweise oder doppelte Entscheidungsnummern (siehe oben)"
 
 if [ "$fehler" -eq 0 ]; then

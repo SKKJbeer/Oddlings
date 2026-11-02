@@ -29,12 +29,12 @@ struct LoadingTests {
     func unknownTowerKind() throws {
         var json = try missionOneJSON()
         var towers = json["towers"] as! [String: Any]
-        towers["bank"] = towers["watch"]
+        towers["catapult"] = towers["watch"]
         json["towers"] = towers
         let data = try JSONSerialization.data(withJSONObject: json)
         do {
             _ = try BalanceConfig.load(from: data)
-            Issue.record("bank ist kein Turm des MVP und darf nicht durchgehen")
+            Issue.record("catapult gibt es nicht und darf nicht durchgehen")
         } catch {
             guard case .unreadable = error else { Issue.record("erwartet unreadable, war \(error)"); return }
         }

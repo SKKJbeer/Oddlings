@@ -101,6 +101,8 @@ Oddlings/
 │   ├── Avatar/                  Avatar-Aufbau, Avatar-Menü, Porträtkatalog
 │   ├── Battle/                  Mission: Takt, Szene, Bedienung, HUD, Kreismenü
 │   │   └── Fx/                  Bewegung und Effekte an Ereignissen (D-050)
+│   ├── Audio/                   Klänge und Musik an Ereignissen (P2-3, D-082)
+│   │   └── Sounds/              erzeugt von tools/ton/ton_bauen.py aus art/ton/klaenge.json
 │   ├── Spike/                   Leistungsprobe WP-01, Wegwerfcode
 │   └── Assets.xcassets/         Battle.spriteatlas, Maps, UI, Avatar, AppIcon
 ├── AppTests/                    Darstellungstests (XCTest, nur macOS-CI)
@@ -131,7 +133,7 @@ ohne Simulator, und auch unter Linux (CI-Job `core-linux`, Cloud-Sitzungen).
 |---|---|
 | `BalanceConfig.swift`, `ConfigValidation.swift` | Werte einer Mission aus JSON lesen und **vollständig** prüfen, mit Ort jedes Verstoßes |
 | `MissionMap.swift`, `PathGeometry.swift` | Raster, Bauzonen, Weg als Polylinie; Position aus zurückgelegter Strecke |
-| `GameState.swift`, `Simulation.swift` | Zustand als Wert, `step` mit fester Reihenfolge (siehe [Datenmodelle](data-models.md#befehle-und-ereignisse)) |
+| `GameState.swift`, `Simulation.swift` | Zustand als Wert, `step` mit fester Reihenfolge (siehe [Datenmodelle](data-models.md#befehle-und-ereignisse)); Zwergenbank zahlt in `payBanks`, Bonus fürs frühe Rufen in `callNextWave` (P2-5) |
 | `SplitMix64.swift`, `Checksum.swift` | Einziger Zufall; Prüfsumme für Determinismus und Replays |
 | `Autoplayer.swift` | Mitspieler für Vorführung, Oberflächen- und Balancetests |
 | `Races.swift` | Völker aus `races.json`: Fähigkeit, Turmfaktoren, Ränge, Talente. `BalanceConfig.applying(race, talents:)` macht daraus eine zweite Missionskonfiguration, die Simulation kennt keine Völker |
@@ -139,6 +141,12 @@ ohne Simulator, und auch unter Linux (CI-Job `core-linux`, Cloud-Sitzungen).
 | `Equipment.swift` | Ausrüstung aus `equipment.json` (R-7a): Plätze, Stücke, Besitz aus Sternen, `BalanceConfig.applying(equipment:)`; die Simulation kennt keine Ausrüstung |
 | `Campaign.swift` | Region, Knoten, Sterne (`StarRating`), Fortschritt; Prüfung der Region beim Laden |
 | `SaveGame.swift`, `SaveStore.swift` | Spielstand mit Schema 2, atomar geschrieben, vorige Fassung bleibt, beim Laden geprüft (D-022) |
+
+Missionen liegen je als Datei in `Resources/Balance/` (`mvp-mission-01.json`,
+`mission-02.json`), die Regionsdatei nennt sie je Knoten. Die Bank hat einen
+eigenen Abschnitt `bank` mit eigenem Typ `BankConfig` statt `TowerConfig`
+(D-083); `TowerKind.combat` sind die drei Kampftürme, `config.buildable` was das
+Kreismenü anbietet.
 
 Regel dahinter: **Alles, was ein Ergebnis ändert, liegt im Kern und ist rein.** Volk,
 Talent und künftig Ausrüstung (D-066) wirken nur als Konfiguration, die vor dem
@@ -157,6 +165,7 @@ unberührt, und jede Kombination ist eine geprüfte Konfiguration.
 | `Avatar/` | `AvatarSetupView` (R-5), `AvatarScreen` (R-6, Reiter Talente und Ausrüstung, R-7a), `AvatarPortraits` | Avatar anlegen, Talent wählen, Ausrüstung anlegen (über `AppFlow`) | Talent- und Ausrüstungswerte kennen (stehen in `races.json`, `equipment.json`) |
 | `Battle/` | `BattleModel` (Takt), `BattleScene`, `BattleController` (Tippen → Befehle), `BattleHUD`, `RingMenu`, `BoardLayout`, `HudLayout` | Befehle erzeugen, Zustand und Ereignisse lesen | Gold, Leben oder Gegner direkt ändern (Regel 2) |
 | `Battle/Fx/` | `FxDirector` spielt Effekte an Ereignissen auf eigener Uhr, dazu Treffer- und Sturzbilder (FX 02); `FxMath` rein, auch die Bildwahl je Strecke (`walkFrame`); `FxProbe`, `FxStatsOverlay` nur für Messung und E2E | gepoolte Sprites, Tweens im Bildtakt | `SKAction`/`SKShapeNode` für flüchtige Effekte, Zustand anfassen (D-050) |
+| `Audio/` | `AudioDirector` nimmt `SoundMoment`s aus Szene und Bedienung und Lagen aus den Schirmen, `SoundMap` (rein: Moment → Klang, Lage), `SoundLimiter` (rein: Stimmen und Abstand je Klang), `AudioStyle` (Mischung), `AudioEngine` (AVAudioEngine für Klänge, AVAudioPlayer für Musik, Audiositzung `.ambient`), `AudioStatsOverlay` nur für E2E | Klänge und Musik spielen, Lautstärke aus `AppSettings` | Spielzustand lesen oder ändern, Netz, Fremdbibliotheken ([Konzept](../konzepte/p2-3-ton-und-musik.md)) |
 | `Spike/` | Leistungsprobe WP-01 | – | wird nach der Messung gelöscht |
 
 ### Datenfluss beim Missionsstart
@@ -168,7 +177,7 @@ Spielstand (SaveStore) ──▶ AppFlow: Avatar (Volk, Talente), Fortschritt (S
                                                                           │
                        BattleModel ── Befehle ──▶ Simulation.step ──▶ Zustand + Ereignisse
                             ▲                                              │
-                 BattleController (Tippen)            BattleScene, FxDirector, HUD, FeedbackPlayer
+                 BattleController (Tippen)     BattleScene, FxDirector, AudioDirector, HUD, FeedbackPlayer
                                                                           │
                                          Sieg ──▶ AppFlow trägt Sterne ein ──▶ SaveStore
 ```

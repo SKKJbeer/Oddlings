@@ -1,0 +1,129 @@
+{
+  "hinweis": "Einzige Quelle für Herkunft, Lizenz und Bearbeitung jeder Tondatei (P2-3, D-082). tools/ton/ton_bauen.py erzeugt daraus App/Audio/Sounds, tools/ton/ton_pruefen.py prüft in der CI, dass jede Datei hier steht und jede Quelle CC0 ist.",
+  "erlaubte_lizenzen": ["CC0"],
+  "quellen": {
+    "rpg80": {
+      "titel": "80 CC0 RPG SFX", "autor": "rubberduck", "lizenz": "CC0",
+      "seite": "https://opengameart.org/content/80-cc0-rpg-sfx",
+      "datei": "https://opengameart.org/sites/default/files/80-CC0-RPG-SFX_0.zip",
+      "sha256": "1c2f06ff4e8563b5b8b745b23cf213c1474142a69bb82bd8f5e10d9b3f7a7bbd"
+    },
+    "sfx100": {
+      "titel": "100 CC0 SFX", "autor": "rubberduck", "lizenz": "CC0",
+      "seite": "https://opengameart.org/content/100-cc0-sfx",
+      "datei": "https://opengameart.org/sites/default/files/100-CC0-SFX_0.zip",
+      "sha256": "a5c135878c132f1c59cca54e60061c296cd0ac27ad031ca2c41b8cd5cab3c706"
+    },
+    "brechen": {
+      "titel": "75 CC0 breaking/falling/hit sfx", "autor": "rubberduck", "lizenz": "CC0",
+      "seite": "https://opengameart.org/content/75-cc0-breaking-falling-hit-sfx",
+      "datei": "https://opengameart.org/sites/default/files/sfx_breaking_and_falling.zip",
+      "sha256": "e6ee04d91c5f4d30cfda1260d2c9d1faf96fda36319287215fbd07bcb1a80451"
+    },
+    "schleim": {
+      "titel": "40 CC0 water/splash/slime SFX", "autor": "rubberduck", "lizenz": "CC0",
+      "seite": "https://opengameart.org/content/40-cc0-water-splash-slime-sfx",
+      "datei": "https://opengameart.org/sites/default/files/water-splash-slime-sfx.zip",
+      "sha256": "7cd39abb49d4362a37ba18dc0e454c7dc1d08029d4e5b683149046bc237b2eba"
+    },
+    "oberflaeche": {
+      "titel": "Interface Sounds", "autor": "Kenney", "lizenz": "CC0",
+      "seite": "https://opengameart.org/content/interface-sounds",
+      "datei": "https://opengameart.org/sites/default/files/kenney_interfaceSounds.zip",
+      "sha256": "f2193d072726d6758a5f7871b2dcc54dcce0d5c35c6f0a62f92549b327c81232"
+    },
+    "zischen": {
+      "titel": "Swishes Sound Pack", "autor": "artisticdude", "lizenz": "CC0",
+      "seite": "https://opengameart.org/content/swishes-sound-pack",
+      "datei": "https://opengameart.org/sites/default/files/swishes.zip",
+      "sha256": "7980215241b739a787dcf26f660ce510bb237900968789395a86911619795693"
+    },
+    "plopp": {
+      "titel": "3 Pop Sounds", "autor": "wubitog", "lizenz": "CC0",
+      "seite": "https://opengameart.org/content/3-pop-sounds",
+      "datei": "https://opengameart.org/sites/default/files/3pops.zip",
+      "sha256": "b54c299913b6502e5d07ba62bcc6726f13498ee848d49f25fc4390e0b6103a82"
+    },
+    "funke": {
+      "titel": "Electricity Sound Effects (spark)", "autor": "BMacZero", "lizenz": "CC0",
+      "seite": "https://opengameart.org/content/electricity-sound-effects-0",
+      "datei": "https://opengameart.org/sites/default/files/spark.wav",
+      "sha256": "9a3d987bdf7f405570aa015f6da42596ce84c5073c18c0561be7cd3ae401bc97"
+    },
+    "strom": {
+      "titel": "Electricity Game Sound Pack (shieldhit)", "autor": "faxcorp", "lizenz": "CC0",
+      "seite": "https://opengameart.org/content/electricity-game-sound-pack",
+      "datei": "https://opengameart.org/sites/default/files/shieldhit.wav",
+      "sha256": "6213e372a3aaafa0a4b33cc04e2f62ca97d20f3d91cf3506464d8cc9dc899625"
+    },
+    "markttag": {
+      "titel": "Medieval: Market Day (Loop)", "autor": "RandomMind", "lizenz": "CC0",
+      "seite": "https://opengameart.org/content/medieval-market-day",
+      "datei": "https://opengameart.org/sites/default/files/Loop_Market_Day.wav",
+      "sha256": "6962bd27f75ebfdf773e3d541e7f21faa6de8974432ced2cd49c2594f7504f36"
+    },
+    "schlacht": {
+      "titel": "Medieval: Battle", "autor": "RandomMind", "lizenz": "CC0",
+      "seite": "https://opengameart.org/content/medieval-battle",
+      "datei": "https://opengameart.org/sites/default/files/battle_1.wav",
+      "sha256": "fd92173a70ef2412db138cb43829d91ed631ea433725e659b09548d39d165169"
+    },
+    "verfolgung": {
+      "titel": "Determined Pursuit (epic orchestra loop)", "autor": "Emma_MA", "lizenz": "CC0",
+      "seite": "https://opengameart.org/content/determined-pursuit-epic-orchestra-loop",
+      "datei": "https://opengameart.org/sites/default/files/determined_pursuit_loop.wav",
+      "sha256": "e4f3be098b50213b56a60aefe60fffae79cd9f7c9008088f93c187ef1bbc856b"
+    },
+    "sieg": {
+      "titel": "Medieval: Victory Theme", "autor": "RandomMind", "lizenz": "CC0",
+      "seite": "https://opengameart.org/content/medieval-victory-theme",
+      "datei": "https://opengameart.org/sites/default/files/victory.wav",
+      "sha256": "91f35879d31091cdeb38721fb4d985a0e7363c0caa97d738ec879bf96e8538f4"
+    },
+    "niederlage": {
+      "titel": "Medieval: Defeat Theme", "autor": "RandomMind", "lizenz": "CC0",
+      "seite": "https://opengameart.org/content/medieval-defeat-theme",
+      "datei": "https://opengameart.org/sites/default/files/defeat.wav",
+      "sha256": "832a9062921000cde7044f18838d11682c578067db0c60a124d95473bb122fc8"
+    }
+  },
+  "klaenge": [
+    {"datei": "ui_tap_1.caf", "quelle": "oberflaeche", "pfad": "Audio/select_001.ogg"},
+    {"datei": "ui_tap_2.caf", "quelle": "oberflaeche", "pfad": "Audio/select_002.ogg"},
+    {"datei": "ui_confirm_1.caf", "quelle": "oberflaeche", "pfad": "Audio/confirmation_001.ogg"},
+    {"datei": "ui_deny_1.caf", "quelle": "oberflaeche", "pfad": "Audio/error_004.ogg"},
+    {"datei": "build_1.caf", "quelle": "rpg80", "pfad": "item_stone_02.ogg"},
+    {"datei": "build_2.caf", "quelle": "rpg80", "pfad": "item_stone_01.ogg", "dauer": 0.45},
+    {"datei": "sell_1.caf", "quelle": "rpg80", "pfad": "item_coins_03.ogg"},
+    {"datei": "watch_shot_1.caf", "quelle": "zischen", "pfad": "swishes/swish-1.wav"},
+    {"datei": "watch_shot_2.caf", "quelle": "zischen", "pfad": "swishes/swish-2.wav"},
+    {"datei": "watch_shot_3.caf", "quelle": "zischen", "pfad": "swishes/swish-4.wav"},
+    {"datei": "bolt_shot_1.caf", "quelle": "funke", "pfad": ""},
+    {"datei": "bolt_shot_2.caf", "quelle": "strom", "pfad": "", "dauer": 0.45},
+    {"datei": "spore_puff_1.caf", "quelle": "schleim", "pfad": "slime_03.ogg"},
+    {"datei": "spore_puff_2.caf", "quelle": "schleim", "pfad": "slime_05.ogg"},
+    {"datei": "hit_1.caf", "quelle": "brechen", "pfad": "bfh1_wood_hit_01.ogg"},
+    {"datei": "hit_2.caf", "quelle": "sfx100", "pfad": "hit_01.ogg"},
+    {"datei": "slowed_1.caf", "quelle": "schleim", "pfad": "bubble_02.ogg"},
+    {"datei": "combo_1.caf", "quelle": "oberflaeche", "pfad": "Audio/glass_003.ogg"},
+    {"datei": "enemy_pop_1.caf", "quelle": "plopp", "pfad": "3pops/pop1.ogg"},
+    {"datei": "enemy_pop_2.caf", "quelle": "plopp", "pfad": "3pops/pop3.ogg"},
+    {"datei": "enemy_pop_3.caf", "quelle": "sfx100", "pfad": "plop_01.ogg"},
+    {"datei": "coin_1.caf", "quelle": "rpg80", "pfad": "item_coins_01.ogg", "dauer": 0.35},
+    {"datei": "leak_1.caf", "quelle": "sfx100", "pfad": "slam_01.ogg"},
+    {"datei": "wave_1.caf", "quelle": "sfx100", "pfad": "gong_01.ogg"},
+    {"datei": "ability_cast_1.caf", "quelle": "rpg80", "pfad": "spell_02.ogg"},
+    {"datei": "stone_impact_1.caf", "quelle": "brechen", "pfad": "bfh1_rock_falling_01.ogg"},
+    {"datei": "stone_impact_2.caf", "quelle": "brechen", "pfad": "bfh1_rock_breaking_02.ogg"},
+    {"datei": "moon_impact_1.caf", "quelle": "rpg80", "pfad": "spell_01.ogg"},
+    {"datei": "wall_up_1.caf", "quelle": "rpg80", "pfad": "stones_02.ogg"},
+    {"datei": "wall_down_1.caf", "quelle": "brechen", "pfad": "bfh1_rock_breaking_01.ogg"}
+  ],
+  "musik": [
+    {"datei": "music_menu.m4a", "quelle": "markttag", "pfad": "", "schleife": true},
+    {"datei": "music_battle.m4a", "quelle": "schlacht", "pfad": "", "schleife": true},
+    {"datei": "music_final_wave.m4a", "quelle": "verfolgung", "pfad": "", "schleife": true},
+    {"datei": "music_victory.m4a", "quelle": "sieg", "pfad": "", "schleife": false},
+    {"datei": "music_defeat.m4a", "quelle": "niederlage", "pfad": "", "schleife": false}
+  ]
+}

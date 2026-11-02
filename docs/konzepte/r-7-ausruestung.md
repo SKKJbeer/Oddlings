@@ -1,7 +1,7 @@
 # R-7 Ausrüstung des Avatars
 
 **Stand:** 01.11.2026 · Grundlage D-066 (Steffen, 27.10.2026: „Ausrüstung mit kleinen
-Boni“), Vorgänger [R-6](r-6-avatarrang.md). **R-7a umgesetzt in 0.14.0**, R-7b
+Boni“), Vorgänger [R-6](r-6-avatarrang.md). **R-7a umgesetzt in 0.17.0**, R-7b
 (Schmiede) folgt mit eigenem Konzept.
 
 ## Ziel

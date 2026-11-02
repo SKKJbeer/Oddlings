@@ -12,8 +12,10 @@ Kampagnenkarte Region 1 mit Sternen, Steinregen, Völker Zwerge/Elfen, Avatar ei
 Anfang (0.11.0), Avatarrang mit Talenten und eigenem Avatar-Menü (0.12.0). Grafik 01
 bis 05 (zuletzt Kampfplatz und Zwergenfeste, 0.11.1), Effekte an Ereignissen über
 `App/Battle/Fx/FxDirector` (FX 01, D-050). Der Plünderer
-läuft mit Gliedmaßen aus 3D (FX 02, 0.13.0). Ausrüstung aus festen Belohnungen im
-Avatar-Menü (R-7a, 0.14.0); als Nächstes R-7b Schmiede mit Spielwährung (D-070). Reihenfolge und was
+läuft mit Gliedmaßen aus 3D (FX 02, 0.13.0). Ton und Musik (P2-3, 0.15.0):
+Klänge an Ereignissen über `App/Audio/AudioDirector`, nur CC0-Quellen (D-082, `art/ton/`). Mission 2 mit Zwergenbank und Bonus
+fürs frühe Rufen ist spielbar (P2-5, 0.16.0, D-080), mit gemaltem Kampfplatz; Kampfplätze für M3 und M4 liegen bereit (Grafik 06, 0.16.1). Ausrüstung aus festen Belohnungen im
+Avatar-Menü (R-7a, 0.17.0); als Nächstes R-7b Schmiede mit Spielwährung (D-070). Reihenfolge und was
 auf Steffen wartet: [Roadmap](docs/production/roadmap.md), Kurzstand:
 [status.md](docs/production/status.md), Versionen: [CHANGELOG.md](CHANGELOG.md).
 Projekt erzeugen: `xcodegen generate` (Xcode-Projekt ist nicht eingecheckt).

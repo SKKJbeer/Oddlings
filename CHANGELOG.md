@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.14.0 – 01.11.2026 (R-7a: Ausrüstung aus festen Belohnungen), Bau offen
+## 0.17.0 – 02.11.2026 (R-7a: Ausrüstung aus festen Belohnungen), Bau offen
 
 **Neu**
 - Das Avatar-Menü hat Reiter: „Talente“ und neu „Ausrüstung“. Drei Plätze (Banner für
@@ -39,6 +39,87 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - App: Belohnung, Anlegen, Ablegen, Neustart, Texte. E2E: Reiter „Ausrüstung“,
   Anlegen und Ablegen, Belegung übersteht den Neustart, nichts überlappt.
 
+## Dokumente, kein Bau – 01.11.2026 (Bau 37)
+
+- Bau 37 (0.16.1) von Apple als VALID gemeldet, in Roadmap und Stand eingetragen.
+
+## 0.16.1 – 01.11.2026 (Grafik 06: Kampfplätze für Mission 2 bis 4) · Bau 37
+
+- **Mission 2 hat ihren gemalten Kampfplatz**: eine Lichtung am alten Zwergenstollen,
+  Morgenlicht, Lore, Holzstapel und Erz im Waldrand. Statt der gezeichneten Weglinie
+  liegt der Weg jetzt gemalt im Gras, wie in Mission 1.
+- **Kampfplätze für Mission 3 (Pilzhain) und Mission 4 (Ruinenrand)** liegen schon im
+  Katalog, auf den Wegen aus dem Vorschlag (D-081). Sie erscheinen, sobald die
+  Missionen gebaut sind.
+- Höhle der Goblins in jeder Mission dieselbe wie auf der Kampagnenkarte; Deko nur im
+  Wald, nie auf einem Bauplatz.
+- Werkzeug: `kampfplatz.py` mit Deko und Lichtton je Mission, `ebene.py` legt Höhle und
+  Deko nach dem Übermalen wieder auf, `ausgleichen.py` gleicht Flecken im Gras aus.
+  Kunstprüfung für jeden Kampfplatz, App-Test für den Boden jeder Mission.
+
+## Dokumente, kein Bau – 01.11.2026 (Bauten 34 und 35)
+
+- Bau 34 (0.13.0) und Bau 35 (0.15.0) von Apple als VALID gemeldet, in Roadmap
+  und Stand eingetragen.
+
+## 0.16.0 – 01.11.2026 (P2-5: Mission 2 mit Zwergenbank) · Bau 36
+
+- **Mission 2** spielbar, nach dem Sieg in Mission 1 auf der Kampagnenkarte offen:
+  eigener Weg mit ruhigen Feldern für Banken, zehn Wellen, etwas härter als
+  Mission 1. Alle Werte [HYPOTHESE] bis zum Spieltest (D-080).
+- **Zwergenbank** als vierter Knopf im Kreismenü, nur in Missionen mit Bank: zahlt
+  ab 20 s nach dem Bau alle 4 s 5 Gold, bis 300; höchstens zwei. Infotafel nennt
+  Ertrag und in Orange den Preis des Wartens; Füllbalken an der Bank, „+5“ bei
+  jeder Auszahlung, leer wird sie grau. An der Höchstzahl zeigt der Knopf „2/2“.
+- **Bonus fürs frühe Rufen** (D-009): Der Welle-Knopf trägt das Gold, das Rufen
+  jetzt bringt (0,5 je eingesparter Sekunde); beim Rufen steigt es an der
+  Goldanzeige auf. Mission 1 bleibt ohne Bonus und ohne Bank.
+- Kern: `BankConfig` als eigener Abschnitt (D-083), `TowerKind.bank` und
+  `.combat`, Ereignisse `bankPaid`, `bankEmptied`, `earlyCallBonus`, Ablehnung
+  `limitReached`, Prüfung der neuen Felder; alte Spielstände lesen sich weiter.
+- Tests: `BankTests`, `EarlyCallTests`, `MissionTwoTests` (Balance in
+  [04](docs/game-design/04-economy-and-balance.md#mission-2--ergebnis-der-prüfung-0160-hypothese)),
+  `BankControllerTests`, vier Knöpfe in `HudLayoutTests`, `BankE2ETests`;
+  `CampaignE2ETests` startet jetzt Mission 2. Testschalter `--e2e-knoten`.
+- Ton (mit 0.15.0 zusammengeführt): Auszahlung der Bank und Bonus fürs frühe Rufen
+  klingen als leise Münze, die leere Bank bleibt stumm (`SoundMapTests`).
+- `scripts/swift-linux.sh`: `/etc/os-release` überschrieb die Swift-Version.
+
+## 0.15.0 – 01.11.2026 (P2-3: Ton und Musik), Bau 35
+
+**Neu**
+- Klänge an den Spielereignissen: Bauen, Verkaufen, Schüsse je Turm (der Blitz
+  steigt mit jedem Sprung um einen Halbton), Treffer, Verlangsamung, Kombination,
+  Gegnersturz mit Münze, Durchbruch, Wellengong, Steinregen, Mondmal, Bollwerk.
+  30 Dateien, je Klang bis zu drei Fassungen und leicht gestreute Tonhöhe, damit
+  nichts maschinell klingt. Ein Begrenzer hält gleichzeitige Stimmen je Klang knapp.
+- Musik in fünf Lagen: Menü, Kampf, letzte Welle, Sieg, Niederlage, mit Überblendung.
+  Pause dämpft die Musik, eigene Musik vom iPhone hat Vorrang, der Stummschalter gilt.
+- Einstellungen: Regler für Klänge und Musik (statt „Ton folgt“), bleiben gespeichert.
+- Nur CC0-Quellen (Steffens Wahl, D-082). Herkunft, Lizenz und Prüfsumme jeder Quelle
+  in `art/ton/klaenge.json` und `art/ton/ENTSTEHUNG.md`; gebaut mit `tools/ton/ton_bauen.py`.
+
+**Architektur**
+- `App/Audio`: `SoundMap` (Moment → Klang, Musiklage), `SoundLimiter`, `AudioDirector`
+  (wie `FxDirector`, liest keinen Spielzustand), `AudioEngine` (AVAudioEngine, `.ambient`).
+  OddlingsCore unverändert. Konzept: [p2-3-ton-und-musik](docs/konzepte/p2-3-ton-und-musik.md).
+
+**Tests**
+- App-Tests für Zuordnung, Begrenzer, Regie, Dateien und Einstellungen; zwei
+  Ende-zu-Ende-Fälle (`SoundE2ETests`: Musiklage und alle Klanggruppen im Demo-Kampf,
+  Regler überleben den Neustart). CI: `tools/ton/ton_pruefen.py` lässt nur CC0 und
+  gelistete Dateien durch.
+
+## Dokumente, kein Bau – 01.11.2026 (Reihenfolge nach R-6: Mission 2 jetzt, D-080)
+
+- Steffen hat entschieden: Mission 2 mit Zwergenbank kommt jetzt, der Spieltest
+  WP-15 läuft parallel und korrigiert die Werte danach (D-080). Roadmap „Als
+  Nächstes“ und Stand umgestellt, Karte S6 erledigt.
+- Nummernblock D-080 bis D-089 an die Projektplanung vergeben.
+- Konfliktmarken aus dem Zusammenführen von #52 und #53 in `CHANGELOG.md` und im
+  Entscheidungsprotokoll entfernt; `scripts/regeln-pruefen.sh` bricht jetzt bei
+  Konfliktmarken in eingecheckten Textdateien.
+
 ## Dokumente, kein Bau – 01.11.2026 (Bau 33, Konzept R-7 Ausrüstung)
 
 - Bau 33 (0.12.0) von Apple als VALID gemeldet, in Roadmap und Stand eingetragen.
@@ -48,7 +129,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - D-070: Ausrüstung kommt aus festen Belohnungen (R-7a) und einer Schmiede mit
   Spielwährung (R-7b, eigenes Konzept).
 
-## 0.13.0 – 01.11.2026 (FX 02: Plünderer mit Gliedmaßen), Bau offen
+## 0.13.0 – 01.11.2026 (FX 02: Plünderer mit Gliedmaßen), Bau 34
 
 **Neu**
 - Der Plünderer geht, zuckt bei Treffern und stürzt als echte Figur mit Armen und

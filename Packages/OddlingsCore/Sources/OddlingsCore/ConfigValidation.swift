@@ -34,6 +34,8 @@ public struct ConfigIssue: Hashable, Sendable, CustomStringConvertible {
         case fieldNotInSlot            // Stück verschiebt ein Feld eines anderen Platzes
         case noBonus
         case emptySlot
+        case bankNotATower             // Bank gehört in den Abschnitt `bank`, nicht in `towers`
+        case strategyNeedsBank         // Bauweise nennt `bank`, die Mission hat keine
     }
 
     public init(field: String, rule: Rule) {
@@ -62,6 +64,8 @@ public struct ConfigIssue: Hashable, Sendable, CustomStringConvertible {
         case .ranksOutOfOrder: "\(field) braucht steigende Schwellen größer als 0"
         case .talentRowsDontMatchRanks: "\(field) braucht genau eine Reihe je Rang über I"
         case .fieldNotInAbility: "\(field) gibt es bei dieser Fähigkeit nicht"
+        case .bankNotATower: "\(field) gehört in den Abschnitt bank"
+        case .strategyNeedsBank: "\(field) nennt bank, die Mission hat keine"
         case .starsOutOfOrder: "\(field) braucht 0 < two ≤ three ≤ fortressLives"
         case .invalidID: "\(field) darf nur Kleinbuchstaben, Ziffern und Bindestriche enthalten"
         case .duplicateID: "\(field) ist doppelt vergeben"
@@ -151,6 +155,7 @@ extension BalanceConfig {
         nonNegative(Double(mission.startGold), "mission.startGold")
         nonNegative(mission.firstWaveDelay, "mission.firstWaveDelay")
         nonNegative(mission.timeBetweenWaves, "mission.timeBetweenWaves")
+        if let bonus = mission.earlyCallBonus { nonNegative(bonus, "mission.earlyCallBonus") }
         if !(mission.sellRefundRate >= 0 && mission.sellRefundRate <= 1) {
             found.append(.init(field: "mission.sellRefundRate", rule: .mustBeRate))
         }
@@ -166,7 +171,8 @@ extension BalanceConfig {
         nonNegative(map.minDistanceFromPath, "map.minDistanceFromPath")
         if map.path.count < 2 { found.append(.init(field: "map.path", rule: .pathTooShort)) }
 
-        for kind in TowerKind.allCases {
+        if towers[.bank] != nil { found.append(.init(field: "towers.bank", rule: .bankNotATower)) }
+        for kind in TowerKind.combat {
             let field = "towers.\(kind.rawValue)"
             guard let tower = towers[kind] else {
                 found.append(.init(field: field, rule: .missingTower))
@@ -205,6 +211,19 @@ extension BalanceConfig {
         }
 
         if let ability { found += ability.issues(field: "ability") }
+
+        if let bank {
+            positive(Double(bank.cost), "bank.cost")
+            nonNegative(bank.delay, "bank.delay")
+            positive(bank.interval, "bank.interval")
+            positive(Double(bank.payout), "bank.payout")
+            positive(Double(bank.cap), "bank.cap")
+            positive(Double(bank.limit), "bank.limit")
+        }
+        // Nach Namen sortiert, damit die Meldungen bei gleicher Datei gleich sind.
+        for name in (simStrategies ?? [:]).keys.sorted() where bank == nil && simStrategies?[name]?.contains(.bank) == true {
+            found.append(.init(field: "simStrategies.\(name)", rule: .strategyNeedsBank))
+        }
 
         if waves.isEmpty { found.append(.init(field: "waves", rule: .noWaves)) }
         for (w, wave) in waves.enumerated() {
