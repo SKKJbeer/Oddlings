@@ -33,12 +33,11 @@ zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzeln
 | S2 | Volk wechseln, bevor es eine Spielwährung gibt (Entscheidungskarte seit 26.10.) | Thread „Oddlings-Designstand und MVP-Plan aufsetzen“ | nichts, die Empfehlung gilt bis zur Antwort | Gar nicht |
 | S3 | **Spieltest mit drei Personen** auf dem neuesten Bau, [Beobachtungsbogen](playtests/beobachtungsbogen.md) | WP-15 | Abschluss Phase 1, Schnitt Phase 2, D-030, Werte D-007 | so bald wie möglich |
 | S4 | Leistung des Spikes auf dem iPhone messen | WP-01 | nichts Akutes; D-002 gilt bis dahin | ohne Eile |
-| S7 | **Was nach R-7a als Nächstes?** (Entscheidungskarte seit 02.11.) | Thread „Architektur, Doku und Roadmap nachziehen“ | Reihenfolge ab Platz 6 unter „Als Nächstes“ | Mission 3 mit Aufwertungen |
 
 ## Als Nächstes
 
 Reihenfolge entschieden (D-080, Steffen 01.11.2026): Mission 2 kommt jetzt, der
-Spieltest läuft parallel. Was davor steht, wird zuerst gebaut. Steffen kann umsortieren.
+Spieltest läuft parallel. Nach R-7a kommt Mission 3 mit Aufwertungen (D-085, 02.11.2026). Was davor steht, wird zuerst gebaut. Steffen kann umsortieren.
 
 | # | Paket | Thread | Abh. | Stand |
 |---|---|---|---|---|
