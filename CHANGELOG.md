@@ -11,7 +11,24 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.23.0 – 03.11.2026 (P2-11: Blitz allein verliert Mission 2 und 3)
+## 0.24.0 – 03.11.2026 (P2-8: Synergie sichtbar, Einstieg ohne Erklärtext)
+
+- **Sporenfunke sichtbar:** Trifft der Blitz einen verlangsamten Gegner, leuchtet das
+  Kettenglied grün-türkis und dicker, am Ziel platzen Sporenwölkchen mit Ring und
+  Lichtpunkt. Beim ersten Funken jeder Mission springt „Sporenfunke!“ auf, beim
+  allerersten einmal mit dem Satz „Gebremst rücken sie zusammen – der Blitz trifft mehr.“
+- **Verlangsamt lesbar:** grüner Sporenschimmer unter jedem gebremsten Gegner.
+- **Einstieg ohne Erklärtext** (Karte S13, Empfehlung „nur wenn man zögert“, D-076):
+  In Mission 1 zeigt eine Hand auf eine gute Bauzelle, wenn 6 s lang kein Turm steht,
+  danach ein Pfeil auf „Nächste Welle“, wenn der Knopf 5 s unberührt bleibt. Jedes
+  Zeichen einmal je Gerät, Tippen überspringt, nichts wird abgefangen. Wer Mission 1
+  schon gewonnen hat, sieht sie nicht. Neuer Schalter „Hinweise“ in den Einstellungen.
+- Kern: `MissionMap.bestCell` (vorher privat im Mitspieler), Hand und Mitspieler
+  wählen Zellen auf dieselbe Art.
+- Tests: `BattleGuideTests`, `BestCellTests`, neue Fälle in `FxDirectorTests` und
+  `BattleSpritesTests`, E2E `GuideE2ETests`; `EffectsE2ETests` zählt Funken und Wort.
+
+## 0.23.0 – 03.11.2026 (P2-11: Blitz allein verliert Mission 2 und 3) · Bau 44
 
 - **Mission 2 und 3:** Flitzer laufen 2,6 statt 2,2 Felder je Sekunde, Mission 2 hat
   dazu 10 % mehr Lebenspunkte je Welle. Wer nur Blitztürme baut, verliert jetzt beim

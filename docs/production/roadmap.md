@@ -12,7 +12,7 @@ Entscheidungskarte beantwortet. Alles, was auf ihn wartet, steht unter
 zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzelnen:
 [backlog.md](backlog.md), offene Fragen: [offene-fragen.md](offene-fragen.md).
 
-**Stand: 03.11.2026** · neueste Version 0.23.0 (Blitz allein verliert Mission 2 und 3), davor 0.22.0 (Fortsetzen nach Neustart, Bau 43), 0.21.1 (Balance-Labor, Bau 42), 0.21.0 (Schmiede, Bau 41), neuester VALID-Bau 43 (0.22.0)
+**Stand: 03.11.2026** · neueste Version 0.24.0 (Synergie sichtbar, Einstieg ohne Erklärtext), davor 0.23.0 (Blitz allein verliert Mission 2 und 3, Bau 44), 0.22.0 (Fortsetzen nach Neustart, Bau 43), neuester VALID-Bau 44 (0.23.0)
 
 ## Phasen
 
@@ -37,6 +37,7 @@ zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzeln
 | S9 | R-7b Schmiede: woher die Währung kommt, was die Schmiede macht, wie die Währung heißt (drei Karten seit 02.11.) | Haupt-Thread, [Konzept](../konzepte/r-7b-schmiede.md) | nichts, gebaut sind die Empfehlungen (D-072); eine andere Wahl wird umgebaut | Erz aus jedem Sieg, mehr für neue Sterne; Stufen I bis III; Name Erz |
 | S10 | Wie schwer Mission 1 bis 4 beim ersten Versuch sein sollen (Entscheidungskarte seit 03.11.) | Haupt-Thread, [Konzept](../konzepte/p2-6b-balance-labor.md) | nichts, das Labor warnt nach der Empfehlung (D-073) | Steigend: M1 ≥ 90 %, M2 ≥ 75 %, M3 ≥ 60 %, M4 ≥ 50 % |
 | S12 | Wo die App nach einem Neustart mitten in einer Mission öffnet (Entscheidungskarte seit 03.11.) | Thread „Fortsetzen nach App-Neustart bauen“, [Konzept](../konzepte/p2-2-fortsetzen.md) | nichts, gebaut ist die Empfehlung (D-074) | Direkt in der Mission, pausiert |
+| S13 | Wann die drei Einstiegshinweise erscheinen (Entscheidungskarte seit 03.11.) | Thread „Oddlings-Designstand und MVP-Plan aufsetzen“, [Konzept](../konzepte/p2-8-synergie-sichtbar.md) | nichts, gebaut ist die Empfehlung (P2-8, D-076) | Nur wenn man zögert |
 | S11 | Blitz allein gewinnt Mission 2 und 3 beim ersten Spielen: wann beheben (Entscheidungskarte seit 03.11.) | Haupt-Thread, [Labor](../konzepte/p2-6b-balance-labor.md#erster-lauf-03112026-stufe-pr-164-läufe-etwa-25-sekunden) | nichts, gebaut ist die Empfehlung (P2-11, D-075) | Jetzt, als eigenes Paket |
 
 ## Als Nächstes
@@ -53,7 +54,7 @@ Spieltest läuft parallel. Nach R-7a kommt Mission 3 mit Aufwertungen (D-085, 02
 | 5 | ~~P2-3 Ton und Musik~~ ([Konzept](../konzepte/p2-3-ton-und-musik.md)) | Ton und Musik | – | ✓ 0.15.0 |
 | 6 | FX 02 Flitzer und Panzerbestie | Plünderer-3D-Modell | Steffens Urteil am Plünderer im Spiel | – |
 | 7 | ~~P2-6 **Mission 3 mit Aufwertungen**~~ ([Konzept](../konzepte/p2-6-mission-3-aufwerten.md)): Stufe 2 und Zielwahl, Weg „Pilzhain“ (D-081, D-084); Mission 4 folgt danach, nicht parallel | Mission 3 mit Aufwertungen bauen | 2 | ✓ 0.18.0 |
-| 8 | ~~P2-6b Balance-Labor~~, ~~P2-2 Fortsetzen~~, ~~P2-11 Blitz-Monokultur~~, P2-8 Synergie sichtbar, P2-9 Abstimmung | – | 2 | ✓ P2-6b 0.21.1, P2-2 0.22.0, P2-11 0.23.0; Konzepte K1, K6, K8 |
+| 8 | ~~P2-6b Balance-Labor~~, ~~P2-2 Fortsetzen~~, ~~P2-11 Blitz-Monokultur~~, ~~P2-8 Synergie sichtbar~~ ([Konzept](../konzepte/p2-8-synergie-sichtbar.md)), P2-9 Abstimmung | – | 2 | ✓ P2-6b 0.21.1, P2-2 0.22.0, P2-11 0.23.0, P2-8 0.24.0; Konzepte K1, K6 |
 | 9 | ~~P2-10 **Mission 4 „Ruinenrand“**~~ ([Konzept](../konzepte/p2-10-mission-4-ruestung.md)): Panzerbestie mit Rüstung (K7, S8, D-087), Weg aus D-081 | Mission 3 mit Aufwertungen bauen | 7 | ✓ 0.20.0 |
 
 ## Ausgeliefert
@@ -89,7 +90,8 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | R-7b: Schmiede mit Erz, Stufen I bis III (D-070, D-072) | 0.21.0 | 41 | [Konzept](../konzepte/r-7b-schmiede.md) |
 | P2-6b: Balance-Labor, Grundstock (D-028, D-073) | 0.21.1 | 42 | [Konzept](../konzepte/p2-6b-balance-labor.md) |
 | P2-2: Fortsetzen nach App-Neustart (D-022, D-074) | 0.22.0 | 43 | [Konzept](../konzepte/p2-2-fortsetzen.md) |
-| P2-11: Blitz allein verliert Mission 2 und 3 (D-071, D-075) | 0.23.0 | – | [Konzept](../konzepte/p2-11-blitz-monokultur.md) |
+| P2-11: Blitz allein verliert Mission 2 und 3 (D-071, D-075) | 0.23.0 | 44 | [Konzept](../konzepte/p2-11-blitz-monokultur.md) |
+| P2-8: Synergie sichtbar, Einstieg ohne Erklärtext (E2, K8, D-076) | 0.24.0 | – | [Konzept](../konzepte/p2-8-synergie-sichtbar.md) |
 
 ## Gilt für jedes Paket
 
@@ -154,7 +156,7 @@ Phase wie oben: Eine Mission wirkt wie das fertige Spiel.
 | P2-6b | **Balance-Labor, Grundstock:** Lauf-Werkzeug, Zufalls- und Menschenbot, Zielwerte, PR-Stufe in der CI | P2-5, P2-6 | K11 | D-028, D-073; ✓ 0.21.1 |
 | P2-11 | **Blitz allein verliert Mission 2 und 3** beim ersten Spielen: Flitzer schneller, M2 etwas mehr Leben (Befund des Labors) | P2-6b | S11 | D-071, D-075; ✓ 0.23.0 |
 | P2-7 | ~~Festungsfähigkeit Steinregen~~ vorgezogen als R-3 | – | K2a | D-025, D-060 |
-| P2-8 | Synergie sichtbar („Sporenfunke", E2), Einstieg ohne Erklärtext | P2-1, P2-3 | K8 | – |
+| P2-8 | Synergie sichtbar („Sporenfunke", E2), Einstieg ohne Erklärtext | P2-1, P2-3 | K8 | D-076; ✓ 0.24.0 |
 | P2-9 | Mission 1 neu abstimmen, Spieltest 2 | alle | – | Abnahme Phase 2 |
 
 Panzerbestie und Rüstung (K7) kommen mit Phase 3, die Panzerbestie liegt in der

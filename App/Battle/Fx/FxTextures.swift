@@ -19,6 +19,8 @@ enum FxTextures {
         case star = "fx_star"
         case stone = "fx_stone"
         case wall = "fx_wall"
+        /// Hand des Einstiegs (P2-8), Zeigefinger oben links.
+        case hand = "fx_hand"
     }
 
     private static var cache: [Name: SKTexture] = [:]
@@ -60,6 +62,7 @@ enum FxTextures {
         case .star: return star(side: 32)
         case .stone: return stone(side: 48)
         case .wall: return wall(width: 32, height: 112)
+        case .hand: return hand(side: 96)
         case .confetti: return render(CGSize(width: 12, height: 8)) { context, size in
             context.setFillColor(UIColor.white.cgColor)
             context.addPath(CGPath(roundedRect: CGRect(origin: .zero, size: size), cornerWidth: 2, cornerHeight: 2, transform: nil))
@@ -75,6 +78,27 @@ enum FxTextures {
         format.scale = 2
         format.opaque = false
         return UIGraphicsImageRenderer(size: size, format: format).image { body($0.cgContext, size) }
+    }
+
+    /// Zeigende Hand aus dem Symbol des Systems, cremefarben mit dunkler Kontur
+    /// wie die gemalten Figuren. Platzhalter, bis ein gemaltes `fx_hand` im Atlas liegt.
+    private static func hand(side: CGFloat) -> UIImage {
+        let configuration = UIImage.SymbolConfiguration(pointSize: side * 0.78, weight: .black)
+        guard let symbol = UIImage(systemName: "hand.point.up.left.fill", withConfiguration: configuration) else {
+            return radial(side: 64, stops: [(0, 1), (1, 0)])
+        }
+        let fill = UIColor(red: 1.00, green: 0.96, blue: 0.86, alpha: 1)
+        return render(CGSize(width: side, height: side)) { _, size in
+            let rect = CGRect(x: (size.width - symbol.size.width) / 2, y: (size.height - symbol.size.height) / 2,
+                              width: symbol.size.width, height: symbol.size.height)
+            let dark = symbol.withTintColor(outline, renderingMode: .alwaysOriginal)
+            let width = side * 0.045
+            for step in 0..<12 {
+                let angle = Double(step) / 12 * 2 * Double.pi
+                dark.draw(in: rect.offsetBy(dx: CGFloat(cos(angle)) * width, dy: CGFloat(sin(angle)) * width))
+            }
+            symbol.withTintColor(fill, renderingMode: .alwaysOriginal).draw(in: rect)
+        }
     }
 
     /// Weicher Punkt: Helligkeit über dem Radius.

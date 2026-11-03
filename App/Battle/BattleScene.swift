@@ -35,6 +35,10 @@ final class BattleScene: SKScene {
     /// Der Hinweis auf die Panzerung kommt einmal je Mission, auch über einen
     /// Neustart hinweg: Wer neu anfängt, hat ihn schon gelesen (P2-10).
     private var armorHintShown = false
+    /// „Sporenfunke!“ springt beim ersten Funken jeder Mission auf (P2-8).
+    private var sparkCalloutShown = false
+    /// Was vom Einstieg gerade auf der Karte steht (Hand).
+    private var shownGuide: BattleGuide.Shown = .none
     private var pendingBuilds: Set<Int> = []
     private(set) var layout: BoardLayout
     private var field: CGFloat { layout.field }
@@ -66,6 +70,7 @@ final class BattleScene: SKScene {
             world.addChild(layer)
         }
         layoutMap()
+        fx.onCombo = { [weak self] point in self?.combo(at: point) }
     }
 
     @available(*, unavailable)
@@ -96,8 +101,9 @@ final class BattleScene: SKScene {
         for event in events { play(event) }
         sync(dt: fxTime)
         fx.advance(by: fxTime)
-        controller?.afterFrame(events: events)
+        controller?.afterFrame(events: events, dt: fxTime)
         showSelection()
+        showGuide()
     }
 
     func restart() {
@@ -105,9 +111,32 @@ final class BattleScene: SKScene {
         audio?.startBattle()
         fx.reset()
         clearPieces()
+        sparkCalloutShown = false
+        shownGuide = .none
         controller?.restart()
         sync(dt: 0)
         showSelection()
+    }
+
+    /// Hand des Einstiegs auf die Zelle, die der Guide nennt. Sie fängt kein
+    /// Tippen ab: Die Szene sucht die Zelle aus der Lage, nicht aus der Node.
+    private func showGuide() {
+        let now = controller?.guide.shown ?? .none
+        guard now != shownGuide else { return }
+        shownGuide = now
+        if case .build(let cell) = now {
+            fx.guideTap(at: toScene(cell.center))
+        } else {
+            fx.clearGuide()
+        }
+    }
+
+    /// Erster Sporenfunke der Mission: das Wort, beim ersten Mal überhaupt mit
+    /// dem Satz, der die Synergie benennt (K8).
+    private func combo(at point: CGPoint) {
+        guard !sparkCalloutShown else { return }
+        sparkCalloutShown = true
+        fx.sparkCallout(at: point, sentence: controller?.guide.takeSparkSentence() == true, bounds: size)
     }
 
     private func clearPieces() {
@@ -230,6 +259,8 @@ final class BattleScene: SKScene {
         fx.field = field
         clearPieces()
         shownSelection = .none
+        // Die Hand ging mit `fx.reset`; das nächste Bild stellt sie neu an ihre Zelle.
+        shownGuide = .none
         sync(dt: 0)
         // Die Mauer kommt sonst nur mit `barrierRaised`. Nach neuer Größe und in
         // einer fortgesetzten Mission (P2-2) steht sie schon im Zustand.

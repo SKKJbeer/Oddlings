@@ -24,7 +24,8 @@ struct BattleView: View {
     /// die Mission einen Neustart der App übersteht (P2-2).
     var onSuspend: ((UInt64, GameState) -> Void)?
 
-    init(mission config: BalanceConfig, mode: Mode, resume: AppFlow.ResumePlan? = nil,
+    /// `intro`: Diese Mission zeigt die stillen Zeichen des Einstiegs (P2-8).
+    init(mission config: BalanceConfig, mode: Mode, resume: AppFlow.ResumePlan? = nil, intro: Bool = false,
          onClose: @escaping () -> Void, onSuspend: ((UInt64, GameState) -> Void)? = nil,
          onFinish: ((Outcome, Int) -> String?)? = nil) {
         self.onClose = onClose
@@ -45,7 +46,7 @@ struct BattleView: View {
         #if DEBUG
         model.timeScale = Self.testTimeScale ?? 1
         #endif
-        let controller = BattleController(model: model, interactive: mode == .play)
+        let controller = BattleController(model: model, interactive: mode == .play, intro: intro)
         if let resume { controller.startPaused(notice: resume.notice) }
         let scene = BattleScene(model: model)
         scene.controller = controller
@@ -77,11 +78,13 @@ struct BattleView: View {
                     BattleOverlay(controller: controller, onRestart: { scene.restart() }, onClose: onClose)
                     #if DEBUG
                     FxStatsOverlay(scene: scene)
+                    GuideStateOverlay(guide: controller.guide)
                     #endif
                 }
                 .ignoresSafeArea(edges: [.horizontal, .bottom])
                 .accessibilityElement(children: .contain)
                 .accessibilityIdentifier("battle.board")
+                .accessibilityHint(controller.guide.shown.name == "build" ? BattleTexts.guideBuild : "")
             }
         }
         .onGeometryChange(for: EdgeInsets.self) { $0.safeAreaInsets } action: { safeArea = $0 }

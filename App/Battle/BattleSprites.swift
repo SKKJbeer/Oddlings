@@ -161,6 +161,10 @@ final class EnemyNode: SKNode {
     private(set) var armorBadge: SKShapeNode?
     var isArmored: Bool { armorBadge != nil }
     private let shadow = SKSpriteNode()
+    /// Sporenschimmer am Boden, solange verlangsamt (P2-8): Der Farbton allein
+    /// ging im Getümmel unter.
+    private let slowAura = SKSpriteNode()
+    private var auraTime: Double = 0
     private let health = SKSpriteNode()
     private let healthLag = SKSpriteNode()
     private let healthFill = SKSpriteNode()
@@ -200,6 +204,13 @@ final class EnemyNode: SKNode {
         shadow.alpha = FxStyle.shadowAlpha
         shadow.size = CGSize(width: height * 0.95, height: height * 0.32)
         addChild(shadow)
+        slowAura.texture = FxTextures.texture(.glow)
+        slowAura.color = FxStyle.sporeColor
+        slowAura.colorBlendFactor = 1
+        slowAura.blendMode = .add
+        slowAura.size = CGSize(width: height * FxStyle.slowAuraWidth, height: height * FxStyle.slowAuraWidth * 0.36)
+        slowAura.isHidden = true
+        addChild(slowAura)
         addChild(motion)
         motion.addChild(reaction)
         reaction.addChild(body)
@@ -291,7 +302,9 @@ final class EnemyNode: SKNode {
         flash?.texture = texture
     }
 
-    var isSlowed: Bool { (body as? SKSpriteNode)?.colorBlendFactor ?? 0 > 0 }
+    /// Verlangsamt im zuletzt gezeigten Zustand. Bild, Ton und Sporenfunke lesen
+    /// es hier, damit sie dasselbe meinen.
+    var isSlowed: Bool { !slowAura.isHidden }
 
     /// Lebensbalken und Verlangsamung aus dem Zustand; `dt` für das
     /// nachlaufende Schadensstück.
@@ -301,9 +314,15 @@ final class EnemyNode: SKNode {
         health.isHidden = fraction >= 1
         healthFill.size.width = healthWidth * CGFloat(fraction)
         healthLag.size.width = healthWidth * CGFloat(shownFraction)
+        let slowed = enemy.slow != nil
         if let sprite = body as? SKSpriteNode {
             sprite.color = FxStyle.slowTint
-            sprite.colorBlendFactor = enemy.slow == nil ? 0 : FxStyle.slowTintFactor
+            sprite.colorBlendFactor = slowed ? FxStyle.slowTintFactor : 0
+        }
+        slowAura.isHidden = !slowed
+        if slowed {
+            auraTime += dt
+            slowAura.alpha = FxStyle.slowAuraAlpha * CGFloat(0.8 + 0.2 * sin(auraTime * FxStyle.slowAuraBreath))
         }
         moonMark.isHidden = enemy.vulnerable == nil
         if !moonMark.isHidden {

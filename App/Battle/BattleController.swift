@@ -76,8 +76,11 @@ final class BattleController {
     /// Ton zur eigenen Handlung (P2-3). Stumm, bis die Ansicht ihn verbindet,
     /// damit Tests ohne Lautsprecher laufen.
     @ObservationIgnored var sounds: @MainActor (SoundMoment) -> Void = { _ in }
+    /// Stille Zeichen des Einstiegs (P2-8). Ohne `intro` zeigt es nur den Satz
+    /// zum ersten Sporenfunken.
+    @ObservationIgnored private(set) var guide: BattleGuide!
 
-    init(model: BattleModel, interactive: Bool) {
+    init(model: BattleModel, interactive: Bool, intro: Bool = false, memory: GuideMemory = GuideMemory()) {
         self.model = model
         self.interactive = interactive
         gold = model.state.gold
@@ -87,6 +90,16 @@ final class BattleController {
         secondsToNextWave = nil
         haptics = { FeedbackPlayer.play($0) }
         refreshCopies()
+        guide = BattleGuide(memory: memory, intro: intro, interactive: interactive) { [weak self] in self?.guideCell() }
+    }
+
+    /// Zelle für die Hand des Einstiegs: die, von der der günstigste Kampfturm
+    /// am meisten Weg abdeckt. Wer dort baut, hat einen guten ersten Turm.
+    private func guideCell() -> Cell? {
+        let kinds = buildable.filter { model.sim.config.stats(of: $0, level: 1)?.range ?? 0 > 0 }
+        guard let kind = kinds.min(by: { cost(of: $0) < cost(of: $1) }),
+              let range = model.sim.config.stats(of: kind, level: 1)?.range else { return nil }
+        return map.bestCell(radius: range, excluding: model.state.towers.map(\.cell))
     }
 
     var waveCount: Int { model.sim.config.waves.count }
@@ -250,6 +263,7 @@ final class BattleController {
     // MARK: Eingaben
 
     func tap(_ cell: Cell?) {
+        guide.skip()
         guard interactive, !model.state.isOver, !surrendered, let cell else { return dismiss() }
         if let tower = model.state.towers.first(where: { $0.cell == cell }) {
             if case .tower(tower.id, _, _) = selection {
@@ -339,6 +353,7 @@ final class BattleController {
     func callNextWave() {
         guard canCallNextWave else { return }
         model.enqueue(.callNextWave)
+        guide.playerCalledWave()
         feedback(.callWave)
     }
 
@@ -403,10 +418,13 @@ final class BattleController {
 
     /// Nach jedem Bild: Kopien nachziehen und eine Auswahl schließen, die es
     /// nicht mehr gibt (Turm verkauft, Zelle inzwischen belegt, Mission vorbei).
-    func afterFrame(events: [Event] = []) {
+    func afterFrame(events: [Event] = [], dt: Double = 0) {
         for event in events { count(event) }
         refreshCopies()
         let state = model.state
+        guide.update(BattleGuide.Situation(
+            dt: dt, towers: state.towers.count, firstWaveStarted: state.waveIndex >= 0,
+            canCallWave: canCallNextWave, halted: paused || isFinished || aiming || notice != nil))
         switch selection {
         case .none:
             break

@@ -117,6 +117,29 @@ enum FxStyle {
     /// Sporenfunke (Marktanalyse E2): Blitz trifft verlangsamtes Ziel.
     static let comboSparks = 14
     static let comboColor = SKColor(red: 0.45, green: 1.00, blue: 0.80, alpha: 1)
+    /// Das Glied in ein verlangsamtes Ziel ist dicker als ein normales (P2-8).
+    static let comboGlowWidth: CGFloat = 0.5
+    static let comboCoreWidth: CGFloat = 0.12
+    static let comboRing: Double = 0.7
+    static let comboPuffs = 6
+    /// „Sporenfunke!“ und der Satz darunter, Schrift in Feldern.
+    static let calloutSize: CGFloat = 0.55
+    static let sentenceSize: CGFloat = 0.34
+    static let calloutLife: TimeInterval = 1.2
+    static let sentenceLife: TimeInterval = 3.6
+    /// Sporenschimmer unter verlangsamten Gegnern: Breite in Gegnerhöhen, Atmen je Sekunde.
+    static let slowAuraWidth: CGFloat = 1.25
+    static let slowAuraAlpha: CGFloat = 0.55
+    static let slowAuraBreath: Double = 5
+
+    // MARK: Einstieg (P2-8)
+
+    /// Hand des Einstiegs: Breite und Hub in Feldern, eine Tippbewegung je Periode.
+    static let handSize: CGFloat = 0.95
+    static let handLift: CGFloat = 0.45
+    static let guideRipple: CGFloat = 1.3
+    static let guidePeriod: TimeInterval = 1.3
+    static let guideColor = SKColor(red: 1.00, green: 0.95, blue: 0.70, alpha: 1)
 
     static let sporeLife: TimeInterval = 0.55
     static let sporePuffs = 12

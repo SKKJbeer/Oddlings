@@ -14,7 +14,9 @@ final class EffectsE2ETests: XCTestCase {
         let stats = e2e.app.staticTexts["fx.stats"]
         XCTAssertTrue(stats.waitForExistence(timeout: 10), "Effektzähler da")
         // flinches und falls: Der Plünderer zuckt und stürzt als Bildfolge (FX 02).
-        let wanted = ["arrows", "bolts", "spores", "hits", "deaths", "coins", "builds", "spawns", "flinches", "falls"]
+        // combos und callouts: Sporenfunke mit dem Wort darüber (E2, P2-8).
+        let wanted = ["arrows", "bolts", "spores", "hits", "deaths", "coins", "builds", "spawns", "flinches", "falls",
+                      "combos", "callouts"]
         let end = Date().addingTimeInterval(120)
         var values: [String: Int] = [:]
         repeat {

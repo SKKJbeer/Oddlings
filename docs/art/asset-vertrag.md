@@ -27,7 +27,7 @@ Sie folgen den IDs der Simulation.
 | `fortress` | Festung am Wegende |
 | `map_mission01_ground` … `map_mission04_ground` | Boden der ganzen Karte je Mission (Name aus der Missionskennung), Weg eingemalt; Geometrie je Bild in `art/asset-vertrag.json` unter `mission` ([Grafik 06](../konzepte/grafik-06-kampfplaetze-m2-m4.md)) |
 | `buildzone_tile` | Markierung einer bebaubaren Zelle, Overlay |
-| `fx_glow`, `fx_spark`, `fx_ring`, `fx_puff`, `fx_coin`, `fx_arrow`, `fx_bolt`, `fx_confetti`, `fx_star`, `fx_stone`, `fx_wall` | Effekte, siehe „Effekte“ unten |
+| `fx_glow`, `fx_spark`, `fx_ring`, `fx_puff`, `fx_coin`, `fx_arrow`, `fx_bolt`, `fx_confetti`, `fx_star`, `fx_stone`, `fx_wall`, `fx_hand` | Effekte, siehe „Effekte“ unten |
 | `icon_slowed` | Zustandssymbol über dem Gegner (E3) |
 
 ## Kamera, Licht, Maße
@@ -73,6 +73,7 @@ Staub, Gegnerfarbe), damit ein Bild für alle Farben reicht.
 | `fx_star` | Betäubungssternchen, farbig mit Kontur | 1 : 1 |
 | `fx_stone` | Fels und Splitter des Steinregens, grau, wird getönt | 1 : 1 |
 | `fx_wall` | Bollwerk von oben, Länge quer zum Weg senkrecht | etwa 2 : 7 |
+| `fx_hand` | Zeigende Hand des Einstiegs (P2-8), cremefarben mit dunkler Kontur, Fingerspitze oben links bei etwa (28 %, 8 %) | Quadrat, farbig |
 
 ## Bewegung
 

@@ -111,6 +111,11 @@ enum BattleStyle {
         HudLayout.Metrics(button: ringButton, gap: ringGap, margin: screenMargin, panel: infoPanel)
     }
 
+    /// Einstieg (P2-8): so lange zögert der Spieler, bevor die Hand bzw. der
+    /// Pfeil kommt. Schätzung bis zum Spieltest (S3), Bedienung, kein Spielwert.
+    static let guideBuildDelay: Double = 6
+    static let guideWaveDelay: Double = 5
+
     /// Längste Bildzeit, die nachgeholt wird.
     static let maxCatchUp: TimeInterval = 0.25
 }

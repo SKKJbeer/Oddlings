@@ -49,7 +49,12 @@ struct BattleTopBar: View {
                            fraction: Double(seconds) / Double(max(1, controller.countdownTotal)),
                            bonus: controller.callBonus,
                            action: controller.callNextWave)
+                    // Einstieg (P2-8): Pfeil darunter, fängt kein Tippen ab.
+                    .overlay {
+                        if controller.guide.shown == .wave { GuideArrow() }
+                    }
                     .accessibilityLabel(BattleTexts.callWave(in: seconds, bonus: controller.callBonus))
+                    .accessibilityHint(controller.guide.shown == .wave ? BattleTexts.guideWave : "")
                     .accessibilityIdentifier("hud.nextWave")
             }
             Button(action: controller.toggleSpeed) {
@@ -184,6 +189,35 @@ private struct WaveButton: View {
             .background(BarBackground(fill: UITheme.goldFace))
         }
         .buttonStyle(.plain)
+    }
+}
+
+/// Pfeil des Einstiegs unter „Welle 1“ (P2-8): wippt nach oben zum Knopf, der
+/// Knopf glüht. Ohne Berührung und für VoiceOver unsichtbar; den Hinweis trägt
+/// der Knopf selbst.
+private struct GuideArrow: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var up = false
+
+    var body: some View {
+        ZStack {
+            Capsule()
+                .stroke(UITheme.cream, lineWidth: 3)
+                .shadow(color: UITheme.goldFace, radius: up ? 10 : 4)
+                .padding(-4)
+            Image(systemName: "arrowshape.up.fill")
+                .font(.system(size: 26, weight: .black))
+                .foregroundStyle(UITheme.cream)
+                .shadow(color: UITheme.outline, radius: 0, x: 0, y: 2)
+                .shadow(color: UITheme.outline.opacity(0.8), radius: 1)
+                .offset(y: BattleStyle.hudHeight / 2 + 22 + (up && !reduceMotion ? -6 : 0))
+        }
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+        .transition(.opacity)
+        .onAppear {
+            withAnimation(.easeInOut(duration: 0.55).repeatForever(autoreverses: true)) { up = true }
+        }
     }
 }
 

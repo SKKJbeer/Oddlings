@@ -151,4 +151,19 @@ final class BattleSpritesTests: XCTestCase {
             XCTAssertTrue(BattleSprites.frames(kind, .walk).isEmpty, "\(kind)")
         }
     }
+
+    /// Verlangsamt zeigt sich am Boden, nicht nur im Farbton (P2-8); Funke und
+    /// Ton lesen es dort.
+    func testSlowAuraFollowsTheSlow() {
+        var enemy = Enemy(id: 1, kind: .raider, hp: 10, maxHP: 10, distance: 2)
+        let node = EnemyNode(enemy: enemy, field: field)
+        node.show(enemy, dt: 0.1)
+        XCTAssertFalse(node.isSlowed)
+        enemy.slow = SlowEffect(factor: 0.5, untilTick: 99)
+        node.show(enemy, dt: 0.1)
+        XCTAssertTrue(node.isSlowed)
+        enemy.slow = nil
+        node.show(enemy, dt: 0.1)
+        XCTAssertFalse(node.isSlowed)
+    }
 }

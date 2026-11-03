@@ -26,6 +26,8 @@ final class FxDirector {
         var upgrades = 0
         /// Funken an der Panzerung und Hinweise auf sie (P2-10).
         var armorSparks = 0, armorHints = 0
+        /// „Sporenfunke!“ über dem Ziel und davon die mit Satz; Hände des Einstiegs (P2-8).
+        var callouts = 0, sentences = 0, guides = 0
 
         var summary: String {
             "arrows=\(arrows) bolts=\(bolts) combos=\(combos) spores=\(spores) hits=\(hits) deaths=\(deaths) "
@@ -33,6 +35,7 @@ final class FxDirector {
                 + "casts=\(casts) impacts=\(impacts) walls=\(walls) flinches=\(flinches) falls=\(falls) dropped=\(dropped)"
                 + " payouts=\(payouts) empties=\(empties) upgrades=\(upgrades)"
                 + " armorSparks=\(armorSparks) armorHints=\(armorHints)"
+                + " callouts=\(callouts) sentences=\(sentences) guides=\(guides)"
         }
     }
 
@@ -65,6 +68,9 @@ final class FxDirector {
     /// Wann der nächste Pfeil beim Gegner ankommt. Aufblitzen und Tod warten
     /// darauf, denn die Simulation trifft sofort.
     private var arrivals: [Int: Double] = [:]
+    /// Meldet jeden Sporenfunken mit seinem Ort. Ob es der erste der Mission
+    /// ist, weiß nur die Szene.
+    var onCombo: ((CGPoint) -> Void)?
 
     init(layer: SKNode, world: SKNode, field: CGFloat, reduceMotion: Bool = UIAccessibility.isReduceMotionEnabled) {
         self.layer = layer
@@ -463,7 +469,8 @@ final class FxDirector {
     }
 
     /// Blitzturm: Kristall leuchtet, Blitz springt Glied für Glied. Trifft er
-    /// ein verlangsamtes Ziel, sprüht der Sporenfunke (E2).
+    /// ein verlangsamtes Ziel, wird das Glied grün und dicker, und am Ziel
+    /// platzt der Sporenfunke (E2, P2-8): die Kernsynergie, ohne Text zu sehen.
     func bolt(from tower: TowerNode, through targets: [EnemyNode]) {
         guard !targets.isEmpty else { return }
         stats.bolts += 1
@@ -473,27 +480,163 @@ final class FxDirector {
         points += targets.map { vec(CGPoint(x: $0.position.x, y: $0.position.y + $0.height * 0.45)) }
         for index in 0..<(points.count - 1) {
             let delay = Double(index) * FxStyle.boltLinkDelay
+            // Wie der Ton: verlangsamt im Moment des Schusses, nicht erst beim Einschlag.
+            let combo = targets[index].isSlowed
             let zigzag = FxMath.boltPoints(from: points[index], to: points[index + 1], segments: FxStyle.boltSegments,
                                            jitter: FxStyle.boltJitter, using: &random)
+            let glow = combo ? FxStyle.comboColor : FxStyle.boltGlow
+            let glowWidth = combo ? FxStyle.comboGlowWidth : FxStyle.boltGlowWidth
+            let coreWidth = combo ? FxStyle.comboCoreWidth : FxStyle.boltCoreWidth
             for (a, b) in zip(zigzag, zigzag.dropFirst()) {
                 // Der Schein ist Zier: Unter Last bleibt der helle Kern, und Pfeile und
                 // Münzen behalten ihren Platz.
-                beam(from: a, to: b, width: FxStyle.boltGlowWidth, color: FxStyle.boltGlow, delay: delay, essential: false)
-                beam(from: a, to: b, width: FxStyle.boltCoreWidth, color: FxStyle.boltCore, delay: delay, essential: true)
+                beam(from: a, to: b, width: glowWidth, color: glow, delay: delay, essential: false)
+                beam(from: a, to: b, width: coreWidth, color: FxStyle.boltCore, delay: delay, essential: true)
             }
-            let target = targets[index]
             let hitPoint = point(points[index + 1])
-            after(delay) { [weak self, weak target] in
+            after(delay) { [weak self] in
                 guard let self else { return }
-                if target?.isSlowed == true {
+                if combo {
                     self.stats.combos += 1
-                    self.sparks(at: hitPoint, count: FxStyle.comboSparks, color: FxStyle.comboColor, speed: 3.2, size: 0.4)
-                    self.ring(at: hitPoint, radius: 0.55, color: FxStyle.comboColor, duration: 0.25, flatten: 1, additive: true)
+                    self.sparks(at: hitPoint, count: FxStyle.comboSparks, color: FxStyle.comboColor, speed: 3.6, size: 0.45)
+                    self.ring(at: hitPoint, radius: FxStyle.comboRing, color: FxStyle.comboColor, duration: 0.3,
+                              flatten: 1, additive: true)
+                    self.sporeBurst(at: hitPoint)
+                    self.glowPoint(at: hitPoint, color: FxStyle.comboColor, size: 1.4, duration: 0.24)
+                    self.onCombo?(hitPoint)
                 } else {
                     self.sparks(at: hitPoint, count: FxStyle.boltSparks, color: FxStyle.boltGlow, speed: 2.4, size: 0.3)
+                    self.glowPoint(at: hitPoint, color: FxStyle.boltGlow, size: 0.9, duration: 0.16)
                 }
-                self.glowPoint(at: hitPoint, color: FxStyle.boltGlow, size: 0.9, duration: 0.16)
             }
+        }
+    }
+
+    /// Sporenwölkchen platzen vom Ziel nach außen: Grün der Sporen im Licht des Blitzes.
+    private func sporeBurst(at position: CGPoint) {
+        for index in 0..<FxStyle.comboPuffs {
+            guard let puff = sprite(.puff, essential: false) else { return }
+            tinted(puff, FxStyle.sporeColor, additive: true)
+            let angle = Double(index) / Double(FxStyle.comboPuffs) * 2 * Double.pi + spread(-0.3...0.3)
+            let reach = Double(field) * spread(0.45...0.7)
+            let side = field * CGFloat(spread(0.28...0.38))
+            puff.size = CGSize(width: side, height: side)
+            puff.zPosition = 4
+            let life = spread(0.3...0.42)
+            animate(puff, duration: life, end: .recycle) { node, t in
+                let s = Ease.cubicOut(t)
+                node.position = CGPoint(x: position.x + CGFloat(cos(angle) * reach * s),
+                                        y: position.y + CGFloat(sin(angle) * reach * s))
+                node.setScale(CGFloat(0.5 + 0.9 * s))
+                node.alpha = CGFloat(0.9 * (1 - Ease.quadIn(t)))
+            }
+        }
+    }
+
+    /// „Sporenfunke!“ über dem Ziel, in der Farbe des Funkens. Mit `sentence`
+    /// darunter die eine Zeile, die die Synergie benennt (K8). Bleibt in `bounds`.
+    func sparkCallout(at position: CGPoint, sentence: Bool, bounds: CGSize) {
+        stats.callouts += 1
+        let node = SKNode()
+        node.name = "spark.callout"
+        let word = outlinedLabel(BattleTexts.sparkWord, fontSize: field * FxStyle.calloutSize, color: FxStyle.comboColor)
+        node.addChild(word)
+        if sentence {
+            stats.sentences += 1
+            let line = outlinedLabel(BattleTexts.sparkSentence, fontSize: field * FxStyle.sentenceSize, color: .white)
+            line.position = CGPoint(x: 0, y: -field * FxStyle.calloutSize * 0.95)
+            node.addChild(line)
+        }
+        let frame = node.calculateAccumulatedFrame()
+        let margin = field * 0.3
+        let rise = field * 0.5
+        let x = min(max(position.x, frame.width / 2 + margin), max(frame.width / 2 + margin, bounds.width - frame.width / 2 - margin))
+        let top = bounds.height - margin - frame.maxY - rise
+        let y = min(position.y + field * 0.9, max(top, -frame.minY + margin))
+        let base = CGPoint(x: x, y: y)
+        node.position = base
+        node.setScale(0.3)
+        node.alpha = 0
+        node.zPosition = 9
+        layer.addChild(node)
+        let life = sentence ? FxStyle.sentenceLife : FxStyle.calloutLife
+        let still = reduceMotion
+        animate(node, duration: life, end: .remove) { node, t in
+            let pop = t < 0.12 ? Ease.backOut(t / 0.12) : 1
+            node.setScale(CGFloat(0.3 + 0.7 * pop))
+            let drift = still ? 0 : rise * CGFloat(Ease.cubicOut(t))
+            node.position = CGPoint(x: base.x, y: base.y + drift)
+            node.alpha = CGFloat(t > 0.8 ? (1 - t) / 0.2 : min(1, t / 0.06))
+        }
+    }
+
+    // MARK: Einstieg (P2-8)
+
+    static let guideName = "guide.hand"
+
+    /// Hand tippt auf die Zelle, ein Kreis breitet sich vom Finger aus. Läuft in
+    /// Schleife auf der Effekt-Uhr, steht also in der Pause still.
+    func guideTap(at position: CGPoint) {
+        clearGuide()
+        stats.guides += 1
+        let node = SKNode()
+        node.name = Self.guideName
+        node.position = position
+        node.zPosition = 7
+        let ripple = SKSpriteNode(texture: FxTextures.texture(.ring))
+        ripple.name = "ripple"
+        ripple.color = FxStyle.guideColor
+        ripple.colorBlendFactor = 1
+        ripple.alpha = 0
+        node.addChild(ripple)
+        let hand = SKSpriteNode(texture: FxTextures.texture(.hand))
+        hand.name = "hand"
+        let side = field * FxStyle.handSize
+        hand.size = CGSize(width: side, height: side / FxTextures.aspect(.hand))
+        // Die Fingerspitze liegt oben links im Bild und soll die Zellmitte treffen.
+        hand.anchorPoint = CGPoint(x: 0.28, y: 0.92)
+        node.addChild(hand)
+        node.alpha = 0
+        layer.addChild(node)
+        animate(node, key: "guide.in", duration: 0.25) { node, t in node.alpha = CGFloat(Ease.quadOut(t)) }
+        loopGuide(node, hand: hand, ripple: ripple)
+    }
+
+    /// Nimmt die Hand weg, mit kurzem Ausblenden.
+    func clearGuide() {
+        guard let node = layer.childNode(withName: Self.guideName) else { return }
+        node.name = nil
+        tweens.removeAll { $0.node === node || $0.node.parent === node }
+        let start = node.alpha
+        animate(node, duration: 0.18, end: .remove) { node, t in node.alpha = start * CGFloat(1 - t) }
+    }
+
+    /// Ob die Hand gerade steht (für Tests).
+    var showsGuide: Bool { layer.childNode(withName: Self.guideName) != nil }
+
+    private func loopGuide(_ node: SKNode, hand: SKSpriteNode, ripple: SKSpriteNode) {
+        let lift = field * FxStyle.handLift
+        let diameter = field * FxStyle.guideRipple
+        let still = reduceMotion
+        animate(hand, key: "guide.loop", duration: FxStyle.guidePeriod, onEnd: { [weak self, weak node, weak hand, weak ripple] in
+            guard let self, let node, let hand, let ripple, node.name == Self.guideName else { return }
+            self.loopGuide(node, hand: hand, ripple: ripple)
+        }) { hand, t in
+            // Anheben, schräg herunter tippen, kurz drücken, wieder hoch.
+            let down: Double
+            switch t {
+            case ..<0.3: down = Ease.quadIn(t / 0.3)
+            case ..<0.5: down = 1
+            default: down = 1 - Ease.quadOut((t - 0.5) / 0.5)
+            }
+            let press = t >= 0.3 && t < 0.5 ? 0.9 : 1.0
+            let offset = still ? 0.35 : CGFloat(1 - down)
+            hand.position = CGPoint(x: lift * 0.6 * offset, y: lift * offset)
+            hand.setScale(CGFloat(still ? 1 : press))
+            let wave = t < 0.3 ? 0 : (t - 0.3) / 0.7
+            ripple.size = CGSize(width: diameter * CGFloat(0.3 + 0.7 * Ease.cubicOut(wave)),
+                                 height: diameter * CGFloat(0.3 + 0.7 * Ease.cubicOut(wave)))
+            ripple.alpha = t < 0.3 ? 0 : CGFloat(0.9 * (1 - Ease.quadIn(wave)))
         }
     }
 

@@ -105,6 +105,16 @@ Status: **gilt**, umgesetzt bis 0.12.0; Ende-zu-Ende-Tests **[ENTSCHIEDEN D-029]
   (`AppFlowTests`): gesichert und neu geöffnet startet angehalten mit Hinweis, geänderte
   Regeln und kaputter Stand beginnen neu, Ergebnis und „Zurück“ verwerfen, ein
   entschiedener Zustand wird nie gesichert.
+- Seit P2-8 (0.24.0): `BestCellTests` im Kern (meiste und wenigste Weglänge, belegte
+  Zellen, Gleichstand nach Kartenreihenfolge; der Mitspieler nutzt dieselbe Suche).
+  In der App `BattleGuideTests` (Hand erst nach dem Zögern, Pfeil erst nach dem ersten
+  Turm, selbst gebaut oder gerufen heißt gelernt, eine Welle von selbst nicht, einer zur
+  Zeit, Pause blendet aus und hält das Warten an, Tippen überspringt, Schalter aus,
+  Zuschauen und spätere Missionen zeigen nichts, Satz einmal je Gerät, fremde Werte in
+  den Voreinstellungen, Hand auf der besten Zelle des günstigsten Turms),
+  `FxDirectorTests` (grünes dickes Glied nur in das verlangsamte Ziel, Wort einmal je
+  Mission und Satz einmal je Gerät, Hand in Schleife bis zum Wegnehmen, Szene stellt
+  sie auf die Zelle des Guides) und Sporenschimmer in `BattleSpritesTests`.
 
 ## Ende-zu-Ende-Tests (D-029)
 
@@ -113,7 +123,7 @@ Tests prüfen, dass die App genau so funktioniert wie gedacht. **[ENTSCHIEDEN]**
 
 Umgesetzt ab Version 0.5.1; Aufbau und Grundsätze: [e2e-tests.md](../konzepte/e2e-tests.md).
 
-**Stand 0.22.0: 36 Fälle** in `AppUITests/`:
+**Stand 0.24.0: 39 Fälle** in `AppUITests/`:
 
 | Datei | Fälle | Ablauf |
 |---|---|---|
@@ -129,11 +139,12 @@ Umgesetzt ab Version 0.5.1; Aufbau und Grundsätze: [e2e-tests.md](../konzepte/e
 | `ResumeE2ETests` | 2 | Turm bauen, Home, App beenden, neu öffnen: direkt in der Mission, angehalten mit Hinweis, Gold und Turm wie vorher, Weiter läuft (P2-2); nach „Zurück“ startet die App im Menü |
 | `MissionE2ETests` | 2 | Niederlage und Nochmal setzt alles zurück, Sieg und zurück ins Menü |
 | `AbilityE2ETests` | 2 | Fähigkeit auf den Weg, Abklingzeit, Knopf verschwindet am Missionsende |
-| `EffectsE2ETests` | 1 | Vorführung spielt jede Effektart (FX 01) |
+| `EffectsE2ETests` | 1 | Vorführung spielt jede Effektart (FX 01), auch Sporenfunke und „Sporenfunke!“ (P2-8) |
+| `GuideE2ETests` | 3 | Mission 1 frisch: Hand erst beim Zögern, nach dem ersten Turm der Pfeil, nach dem Rufen nichts; nach Neustart der App keins mehr; Schalter aus zeigt nichts; Schalter „Hinweise“ in den Einstellungen (`guide.state`, P2-8) |
 | `SoundE2ETests` | 2 | Menümusik, Vorführung spielt jede Klanggruppe mit Kampfmusik und ohne Bedientöne, Lautstärkeregler überstehen Neustart (P2-3) |
 
 **Testschalter** (nur Debug-Bau, ändern keine Regel): `--play` (Mission direkt),
-`--demo`, `--e2e-frisch` (leerer Speicher), `--e2e-speicher`, `--e2e-avatar <volk>`
+`--demo`, `--e2e-frisch` (leerer Speicher, Hinweise des Einstiegs zurückgesetzt), `--e2e-ohne-hinweise` (Schalter „Hinweise“ aus), `--e2e-speicher`, `--e2e-avatar <volk>`
 (fertiger Avatar), `--e2e-volle-sterne`, `--e2e-erz N` (Erz für die Schmiede), `--e2e-knoten <id>` (mit `--play`: diese Mission statt M1), `--e2e-erste-welle` (erste Welle gehalten),
 `--e2e-zeitraffer N`, `--e2e-abklingzeit`, `--e2e-mitspieler`, `--e2e-fx`, `--e2e-ton` (Tonzähler `audio.stats`),
 `--fx-messung`. Ein neuer Schalter kommt hier in die Liste.

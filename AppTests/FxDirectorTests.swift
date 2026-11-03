@@ -341,4 +341,95 @@ final class FxDirectorTests: XCTestCase {
         run(scene, seconds: FxStyle.deathLife + 0.2)
         XCTAssertNil(raider.parent, "danach weg")
     }
+
+    // MARK: Sporenfunke und Einstieg (P2-8)
+
+    /// Ein Blitz in ein verlangsamtes Ziel: Das Glied leuchtet in der Farbe des
+    /// Funkens und ist dicker als ein normales.
+    func testSparkLinkIsGreenAndThicker() {
+        let scene = scene(autoplay: false)
+        let field = scene.layout.field
+        let tower = TowerNode(tower: Tower(id: 1, kind: .lightning, cell: Cell(x: 0, y: 0), cooldownTicks: 0, spent: 1),
+                              field: field)
+        let enemy = Enemy(id: 7, kind: .raider, hp: 10, maxHP: 10, distance: 3, slow: SlowEffect(factor: 0.5, untilTick: 99))
+        let slowed = EnemyNode(enemy: enemy, field: field)
+        slowed.show(enemy)
+        let plain = EnemyNode(enemy: Enemy(id: 8, kind: .raider, hp: 10, maxHP: 10, distance: 5), field: field)
+        plain.position = CGPoint(x: 200, y: 100)
+        for node in [tower, slowed, plain] { scene.effectLayer.addChild(node) }
+        scene.fx.bolt(from: tower, through: [slowed, plain])
+        scene.fx.advance(by: 0.001)
+        let glows = scene.effectLayer.children.compactMap { $0 as? SKSpriteNode }.filter { $0.zPosition == 3 }
+        XCTAssertTrue(glows.contains { $0.color == FxStyle.comboColor && abs($0.size.height - FxStyle.comboGlowWidth * field) < 0.01 },
+                      "grünes, dickes Glied in das verlangsamte Ziel")
+        XCTAssertFalse(glows.contains { $0.color == FxStyle.comboColor && abs($0.size.height - FxStyle.boltGlowWidth * field) < 0.01 })
+        var called: [CGPoint] = []
+        scene.fx.onCombo = { called.append($0) }
+        run(scene, seconds: 0.5)
+        XCTAssertEqual(scene.fx.stats.combos, 1, "nur das verlangsamte Ziel sprüht")
+        XCTAssertEqual(called.count, 1)
+    }
+
+    /// „Sporenfunke!“ springt je Mission einmal auf; der Satz darunter kommt nur
+    /// einmal je Gerät und nur im eigenen Spiel.
+    func testCalloutOncePerMissionSentenceOnceEver() {
+        let name = "FxDirectorTests-\(UUID().uuidString)"
+        addTeardownBlock { UserDefaults(suiteName: name)?.removePersistentDomain(forName: name) }
+        let memory = GuideMemory(defaults: UserDefaults(suiteName: name)!)
+        let scene = scene(autoplay: true)
+        scene.controller = BattleController(model: scene.model, interactive: true, memory: memory)
+        runMission(scene)
+        run(scene, seconds: 4)
+        XCTAssertGreaterThan(scene.fx.stats.combos, 1, scene.fx.stats.summary)
+        XCTAssertEqual(scene.fx.stats.callouts, 1, scene.fx.stats.summary)
+        XCTAssertEqual(scene.fx.stats.sentences, 1, scene.fx.stats.summary)
+        XCTAssertTrue(memory.seen(.spark))
+
+        scene.restart()
+        runMission(scene)
+        run(scene, seconds: 4)
+        XCTAssertEqual(scene.fx.stats.callouts, 2, "neue Mission, neues Wort")
+        XCTAssertEqual(scene.fx.stats.sentences, 1, "der Satz kommt nie wieder")
+        XCTAssertTrue(scene.effectLayer.children.isEmpty, "Wort und Satz sind weg")
+    }
+
+    /// Die Hand tippt in Schleife, bis sie weggenommen wird; danach läuft nichts weiter.
+    func testGuideHandLoopsUntilCleared() {
+        let scene = scene(autoplay: false)
+        scene.fx.guideTap(at: CGPoint(x: 100, y: 100))
+        run(scene, seconds: FxStyle.guidePeriod * 3.5)
+        XCTAssertTrue(scene.fx.showsGuide, "läuft nach drei Tippern weiter")
+        let before = scene.fx.runningTweens
+        XCTAssertGreaterThan(before, 0)
+        // Pause: Die Uhr steht, die Hand auch.
+        let hand = scene.effectLayer.childNode(withName: FxDirector.guideName)?.childNode(withName: "hand")
+        let position = hand?.position
+        scene.fx.advance(by: 0)
+        XCTAssertEqual(hand?.position, position)
+        scene.fx.clearGuide()
+        XCTAssertFalse(scene.fx.showsGuide)
+        run(scene, seconds: 1)
+        XCTAssertEqual(scene.fx.runningTweens, 0)
+        XCTAssertTrue(scene.effectLayer.children.isEmpty)
+        XCTAssertEqual(scene.fx.stats.guides, 1)
+    }
+
+    /// Die Szene stellt die Hand dorthin, wo der Guide sie will, und nimmt sie
+    /// mit dem ersten Turm weg.
+    func testSceneShowsHandFromGuideAndRemovesItAfterBuilding() throws {
+        let name = "FxDirectorTests-\(UUID().uuidString)"
+        addTeardownBlock { UserDefaults(suiteName: name)?.removePersistentDomain(forName: name) }
+        let scene = scene(autoplay: false)
+        let controller = BattleController(model: scene.model, interactive: true, intro: true,
+                                          memory: GuideMemory(defaults: UserDefaults(suiteName: name)!))
+        scene.controller = controller
+        run(scene, seconds: BattleStyle.guideBuildDelay + 0.5)
+        guard case .build(let cell) = controller.guide.shown else { return XCTFail("Hand erwartet") }
+        XCTAssertTrue(scene.fx.showsGuide)
+        let hand = try XCTUnwrap(scene.effectLayer.childNode(withName: FxDirector.guideName))
+        XCTAssertEqual(hand.position, scene.layout.scenePoint(cell.center))
+        scene.model.enqueue(.build(.watch, cell))
+        run(scene, seconds: 0.5)
+        XCTAssertFalse(scene.fx.showsGuide)
+    }
 }

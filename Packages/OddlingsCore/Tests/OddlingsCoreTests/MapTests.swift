@@ -95,3 +95,32 @@ struct MapZoneTests {
         #expect(map.buildableCells == sorted)
     }
 }
+
+@Suite("Beste Bauzelle")
+struct BestCellTests {
+    /// Kurzer Weg in Zeile 0, er endet bei x = 1. Die Zelle (0, 1) deckt davon
+    /// etwa 1,16 Felder ab, (1, 1) nur 0,16, alle anderen nichts. Keine
+    /// Gleichstände: Gleich lange Sehnen unterscheiden sich in der letzten Stelle.
+    let map = MissionMap(config: MapConfig(width: 5, height: 3, minDistanceFromPath: 0.9,
+                                           path: [Point(x: -1, y: 0.5), Point(x: 1, y: 0.5)]))
+
+    @Test("Meiste Weglänge gewinnt")
+    func most() {
+        #expect(map.bestCell(radius: 1.2, excluding: []) == Cell(x: 0, y: 1))
+    }
+
+    @Test("Belegte Zellen fallen weg")
+    func skipsOccupied() {
+        #expect(map.bestCell(radius: 1.2, excluding: [Cell(x: 0, y: 1)]) == Cell(x: 1, y: 1))
+    }
+
+    @Test("`least` sucht die Zelle mit dem wenigsten Weg, bei Gleichstand die erste der Karte")
+    func least() {
+        #expect(map.bestCell(radius: 1.2, excluding: [], least: true) == Cell(x: 2, y: 0))
+    }
+
+    @Test("Ohne freie Zelle nil")
+    func none() {
+        #expect(map.bestCell(radius: 1.2, excluding: map.buildableCells) == nil)
+    }
+}
