@@ -11,6 +11,7 @@ public struct ConfigIssue: Hashable, Sendable, CustomStringConvertible {
         case mustNotBeNegative
         case mustBeFraction            // in (0, 1]
         case mustBeRate                // in [0, 1]
+        case mustExceedOne             // > 1, ein Schadensfaktor, der etwas bewirkt
         case missingTower
         case missingEnemy
         case missingChainValues
@@ -59,6 +60,7 @@ public struct ConfigIssue: Hashable, Sendable, CustomStringConvertible {
         case .mustBePositive: "\(field) muss größer als 0 sein"
         case .mustNotBeNegative: "\(field) darf nicht negativ sein"
         case .mustBeFraction: "\(field) muss größer als 0 und höchstens 1 sein"
+        case .mustExceedOne: "\(field) muss größer als 1 sein"
         case .mustBeRate: "\(field) muss zwischen 0 und 1 liegen"
         case .missingTower: "\(field) fehlt"
         case .missingEnemy: "\(field) verweist auf einen Gegner ohne Werte"
@@ -83,7 +85,7 @@ public struct ConfigIssue: Hashable, Sendable, CustomStringConvertible {
         case .strategyNeedsUpgrades: "\(field) wertet auf, die Mission hat dafür keine Werte"
         case .armorNeedsBothValues: "\(field) braucht armor und armorMinShare zusammen"
         case .specializationNeedsUpgrade: "\(field) braucht eine Aufwertung auf Stufe 2 für diesen Turm"
-        case .emptySpecialization: "\(field) braucht scale, targets, extraJumps oder keepsDamageOnSlowed"
+        case .emptySpecialization: "\(field) braucht scale, targets, extraJumps, keepsDamageOnSlowed oder vulnerableFactor"
         case .strategyNeedsSpecialization: "\(field) spezialisiert, die Mission bietet es nicht an"
         case .starsOutOfOrder: "\(field) braucht 0 < two ≤ three ≤ fortressLives"
         case .invalidID: "\(field) darf nur Kleinbuchstaben, Ziffern und Bindestriche enthalten"
@@ -333,7 +335,8 @@ extension BalanceConfig {
             }
             if !(special.cost > 0) { found.append(.init(field: "\(field).cost", rule: .mustBePositive)) }
             let scale = special.scale ?? [:]
-            if scale.isEmpty && special.targets == nil && special.extraJumps == nil && special.keepsDamageOnSlowed == nil {
+            if scale.isEmpty && special.targets == nil && special.extraJumps == nil && special.keepsDamageOnSlowed == nil
+                && special.vulnerableFactor == nil {
                 found.append(.init(field: field, rule: .emptySpecialization))
             }
             for stat in TowerStat.allCases {
@@ -358,7 +361,17 @@ extension BalanceConfig {
             if special.extraJumps != nil || special.keepsDamageOnSlowed != nil, base.chainJumps == nil {
                 found.append(.init(field: "\(field).extraJumps", rule: .statNotInTower))
             }
-            if let jumps = special.extraJumps { nonNegativeInt(jumps, "\(field).extraJumps", into: &found) }
+            if let jumps = special.extraJumps, let chain = second.chainJumps {
+                nonNegativeInt(chain + jumps, "\(field).extraJumps", into: &found)
+            }
+            // Verwundbar macht nur, wer verlangsamt; ein Faktor ≤ 1 wäre keine Fäulnis.
+            if let factor = special.vulnerableFactor {
+                if base.slowFactor == nil {
+                    found.append(.init(field: "\(field).vulnerableFactor", rule: .statNotInTower))
+                } else if !(factor > 1) {
+                    found.append(.init(field: "\(field).vulnerableFactor", rule: .mustExceedOne))
+                }
+            }
             if let slow = special.apply(to: second).slowFactor, !(slow > 0 && slow <= 1) {
                 found.append(.init(field: "\(field).scale.slowFactor", rule: .mustBeFraction))
             }
