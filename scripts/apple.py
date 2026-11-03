@@ -38,16 +38,24 @@ def token() -> str:
                       os.environ["KEY_P8"], algorithm="ES256", headers={"kid": os.environ["KEY_ID"], "typ": "JWT"})
 
 
-def api(methode, pfad, daten=None):
-    req = urllib.request.Request(API + pfad, method=methode,
-                                 data=json.dumps(daten).encode() if daten is not None else None,
-                                 headers={"Authorization": f"Bearer {token()}", "Content-Type": "application/json"})
-    try:
-        with urllib.request.urlopen(req, timeout=60) as r:
-            text = r.read()
-            return json.loads(text) if text else {}
-    except urllib.error.HTTPError as e:
-        raise AppleFehler(e.code, e.read().decode())
+def api(methode, pfad, daten=None, versuche=3):
+    # Lesen wird bei einem Serverfehler wiederholt: Bau 47 war VALID, der Lauf
+    # scheiterte trotzdem an einem einzelnen HTTP 500 beim Lesen der Gruppen.
+    # Schreiben nicht, ein doppeltes POST könnte etwas zweimal anlegen.
+    for versuch in range(versuche if methode == "GET" else 1):
+        req = urllib.request.Request(API + pfad, method=methode,
+                                     data=json.dumps(daten).encode() if daten is not None else None,
+                                     headers={"Authorization": f"Bearer {token()}", "Content-Type": "application/json"})
+        try:
+            with urllib.request.urlopen(req, timeout=60) as r:
+                text = r.read()
+                return json.loads(text) if text else {}
+        except urllib.error.HTTPError as e:
+            fehler = AppleFehler(e.code, e.read().decode())
+            if e.code < 500 or versuch + 1 >= (versuche if methode == "GET" else 1):
+                raise fehler
+            print(f"::warning::Apple antwortet {e.code} auf {pfad}, neuer Versuch")
+            time.sleep(10 * (versuch + 1))
 
 
 def bundle_id():

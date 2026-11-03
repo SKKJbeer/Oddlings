@@ -355,9 +355,11 @@ class KampfplatzDeko(unittest.TestCase):
             baum.save(os.path.join(t, "baum0.png"))
             deko = os.path.join(t, "deko")
             os.makedirs(deko)
-            for i, g in enumerate((60, 40, 30)):
-                d = Image.new("RGBA", (g, g), (0, 0, 0, 0))
-                ImageDraw.Draw(d).rectangle((0, 0, g - 1, g - 1), fill=(0, 255, 255, 255))
+            # Das letzte Teil ist hoch (toter Baum, Saeule, Grafik 07): Es darf mit seiner
+            # Hoehe nicht aus dem unteren Rand ueber die Bauzellen ragen.
+            for i, (b, h) in enumerate(((60, 60), (40, 40), (30, 30), (20, 80))):
+                d = Image.new("RGBA", (b, h), (0, 0, 0, 0))
+                ImageDraw.Draw(d).rectangle((0, 0, b - 1, h - 1), fill=(0, 255, 255, 255))
                 d.save(os.path.join(deko, f"deko{i}.png"))
             aus = os.path.join(t, "k.png")
             umg = dict(os.environ, DEKO=deko, DEKO_ANZAHL="9", LICHT="255,255,255")
@@ -406,6 +408,30 @@ class Kampfplatzbild(unittest.TestCase):
             if os.path.exists(mission):
                 self.assertEqual(json.load(open(mission))["map"]["path"], karte["path"],
                                  f"{name}: Weg der Missionsdatei weicht vom gemalten ab, nachmalen")
+
+    def test_wegvorschlaege_sind_spielbar(self):
+        # Grafik 07: Ein Vorschlag muss ein Weg sein, den die Simulation laufen kann und
+        # zwischen dessen Bahnen gebaut werden kann. Sonst malt man einen Weg, den kein
+        # Missions-Thread uebernehmen kann.
+        ordner = os.path.join(WURZEL, "art/karten/wegvorschlaege")
+        for datei in sorted(os.listdir(ordner)):
+            with self.subTest(datei):
+                karte = json.load(open(os.path.join(ordner, datei)))["map"]
+                w, h, pfad = karte["width"], karte["height"], karte["path"]
+                self.assertEqual(pfad[0][0], -1)
+                self.assertEqual(pfad[-1][0], w + 1)
+                for x, y in pfad[1:-1]:
+                    self.assertTrue(0 < x < w and 0 < y < h, (x, y))
+                for (ax, ay), (bx, by) in zip(pfad, pfad[1:]):
+                    self.assertTrue(ax == bx or ay == by, ((ax, ay), (bx, by)))
+                # Parallele Bahnen: mindestens zwei Zellen Abstand, sonst passt kein Turm dazwischen.
+                strecken = list(zip(pfad, pfad[1:]))
+                for i, ((ax, ay), (bx, by)) in enumerate(strecken):
+                    for (cx, cy), (dx, dy) in strecken[i + 2:]:
+                        if ax == bx and cx == dx and min(max(ay, by), max(cy, dy)) > max(min(ay, by), min(cy, dy)):
+                            self.assertGreaterEqual(abs(ax - cx), 2, (ax, cx))
+                        if ay == by and cy == dy and min(max(ax, bx), max(cx, dx)) > max(min(ax, bx), min(cx, dx)):
+                            self.assertGreaterEqual(abs(ay - cy), 2, (ay, cy))
 
     def test_weg_und_wald_liegen_richtig(self):
         for name, regel, karte in kampfplatzkarten():

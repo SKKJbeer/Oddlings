@@ -11,6 +11,19 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.26.1 – 03.11.2026 (Grafik 07: Kampfplätze Sumpfpfad und Ruinen)
+
+- **Mission 5a „Sumpfpfad“ hat ihren gemalten Kampfplatz:** feuchte Moorinsel mit toten
+  Bäumen, Stümpfen, Tümpeln und einer Irrlicht-Laterne im Waldrand, grünliches
+  Dämmerlicht, olives Moorgras. Das Feld bleibt Gras und Weg, überall bebaubar.
+- **Mission 5b „Ruinen“ ebenso:** Ruinenhof mit Torbogen, Säulen und Steinbecken, kühles
+  Abendlicht, der Weg wie aus Steinplatten.
+- Werkzeug: `kampfplatz.py` mit `DEKO_BREITE`, hohe Deko wird nach ihrer Höhe bemessen
+  (ragte sonst über Bauzellen). Kunstprüfung: Wegvorschläge müssen spielbar sein.
+- Werkzeug: Apple-Lesezugriffe bei Serverfehlern wiederholt.
+- Tests: `test_wegvorschlaege_sind_spielbar`, hohe Deko in `test_deko_nur_im_rand`,
+  `testEveryBundledMissionHasItsPaintedGround` mit Mission 5a und 5b.
+
 ## 0.26.0 – 03.11.2026 (P3-2: Mission 5b „Ruinen“ mit Falkenhorst, Funkensäule, Fäulnis)
 
 - **Mission 5b „Ruinen“** ist spielbar, der zweite Weg nach Mission 4: Panzerbestien in
