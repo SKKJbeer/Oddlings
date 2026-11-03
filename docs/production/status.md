@@ -5,7 +5,7 @@ ergänzt, D-067). Reihenfolge, Pakete und alles, was auf dich wartet, stehen in 
 [Roadmap](roadmap.md); Einzelheiten im [Backlog](backlog.md), offene Fragen im
 [Register](offene-fragen.md).
 
-**Stand: 03.11.2026** · Neueste Version **0.23.0** (Blitz allein verliert Mission 2 und 3), Bau folgt;
+**Stand: 03.11.2026** · Neueste Version **0.23.0** (Blitz allein verliert Mission 2 und 3), Bau 44 VALID;
 davor 0.22.0 (Fortsetzen: eine laufende Mission übersteht das Beenden der App, Bau 43 VALID), 0.21.1 (Balance-Labor in der CI, Bau 42 VALID), 0.21.0 (Schmiede mit Erz im Avatar-Menü, Bau 41 VALID), 0.20.0 (Mission 4 mit gepanzerter Panzerbestie, Bau 40), 0.19.0 (Ausrüstung im Avatar-Menü, Bau 39 VALID), 0.18.0 (Mission 3 mit Aufwertungen, Bau 38 VALID), 0.16.1 (gemalte Kampfplätze für Mission 2 bis 4), 0.16.0 (Mission 2 mit Zwergenbank). Der Spielrahmen R-1 bis R-6 steht. Spielbar sind Mission 1 bis 4.
 
 ## Wartet auf dich
@@ -80,7 +80,7 @@ davor 0.22.0 (Fortsetzen: eine laufende Mission übersteht das Beenden der App, 
 
 | Thread | Woran | Nächster Schritt |
 |---|---|---|
-| Haupt-Thread | 0.23.0 Blitz-Monokultur (P2-11) im PR | zusammenführen, Bau in TestFlight; Antwort auf die Karten S10 und S11 |
+| Haupt-Thread | 0.23.0 Blitz-Monokultur (P2-11) in TestFlight (Bau 44) | deine Karten S10 und S11 |
 | Fortsetzen nach App-Neustart bauen | 0.22.0 (P2-2) in TestFlight (Bau 43) | deine Karte S12 (wo der Neustart landet) |
 | Mission 2 mit Zwergenbank | 0.16.0, Bau 36 in TestFlight | Werte nach dem Spieltest nachziehen |
 | Mission 3 mit Aufwertungen | 0.18.0 in Bau 38; Mission 4 (0.20.0) im PR | zusammenführen, Bau in TestFlight, Antwort auf die Karte zu Mission 4 |
