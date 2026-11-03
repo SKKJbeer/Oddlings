@@ -18,13 +18,9 @@ final class BattleSpritesTests: XCTestCase {
         for kind in TowerKind.allCases {
             XCTAssertNotNil(BattleSprites.texture(named: BattleSprites.towerName(kind)), "\(kind)")
         }
-        // Der Moorkönig (P3-4) leiht sich das Bild der Panzerbestie, bis er gemalt ist.
+        // Jede Gegnerart hat ihr eigenes Bild; seit FX 03 auch der Moorkönig.
         for kind in EnemyKind.allCases {
-            XCTAssertNotNil(BattleSprites.texture(named: BattleSprites.pictureName(kind)), "\(kind)")
-            if BattleSprites.texture(named: BattleSprites.enemyName(kind)) == nil {
-                XCTAssertEqual(kind, .moorKing, "nur der Boss darf einspringen lassen")
-                XCTAssertEqual(BattleSprites.pictureName(kind), BattleSprites.enemyName(.brute))
-            }
+            XCTAssertNotNil(BattleSprites.texture(named: BattleSprites.enemyName(kind)), "\(kind)")
         }
         XCTAssertNotNil(BattleSprites.fortress(field: field))
     }
