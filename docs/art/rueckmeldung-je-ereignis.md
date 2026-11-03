@@ -22,8 +22,8 @@ Welle nicht die Lesbarkeit (Säule 2) zerstören.
 | `towerFired` Sporenturm | Sporenring breitet sich bis zur Reichweite aus, Hut pumpt | weiches „Puff" | – | 0,5 s |
 | `enemyDamaged` | Gegner blitzt weiß auf (1 Bild), kleiner Rückstoß, Lebensbalken erscheint (nur bei Schaden, E3) | Treffer je Turmtyp, Lautstärke gedeckelt | – | 0,1 s |
 | `armorAbsorbed` (P2-10) | Heller Funke prallt vom Gegner ab; ab Erscheinen ein graues Schild neben der Lebensleiste (E3) | Treffer eine Quinte tiefer, dumpf | – | 0,25 s, höchstens alle 0,5 s je Gegner |
-| `enemySlowed` | Grüner Sporenschleier am Gegner, Symbol `icon_slowed` über dem Kopf, Laufhüpfen halb so schnell | leises Blubbern beim ersten Mal | – | solange verlangsamt |
-| Blitz trifft verlangsamtes Ziel (E2) | **Sporenfunke:** größerer grün-blauer Funkenregen, Kettenglied dicker | eigener heller Klang | – | 0,3 s |
+| `enemySlowed` | Grüner Farbton und atmender Sporenschimmer am Boden unter dem Gegner (P2-8), Symbol `icon_slowed` über dem Kopf, Laufhüpfen halb so schnell | leises Blubbern beim ersten Mal | – | solange verlangsamt |
+| Blitz trifft verlangsamtes Ziel (E2) | **Sporenfunke:** Kettenglied ins Ziel grün-türkis und dicker, größerer Funkenregen, Ring, Sporenwölkchen platzen nach außen; beim ersten Funken jeder Mission springt „Sporenfunke!“ auf, beim allerersten mit einem Satz darunter (P2-8) | eigener heller Klang | – | 0,3 s, Wort 1,2 s, mit Satz 3,6 s |
 | `enemyKilled` | Gegner zerplatzt in Rauch und Konfetti in seiner Farbe, Goldzahl `+n` steigt auf, Goldanzeige im HUD zählt hoch | Plopp plus Münze | – | 0,4 s |
 | `enemySpawned` | Gegner tritt am linken Rand aus einem Staubwölkchen | – | – | 0,2 s |
 | `enemyLeaked` | Festung bebt, rotes Aufblitzen am Rand, Lebensherz im HUD springt | dumpfer Schlag | mittel (`.medium`) | 0,5 s |

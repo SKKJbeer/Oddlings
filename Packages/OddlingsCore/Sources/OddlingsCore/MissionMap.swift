@@ -67,4 +67,22 @@ public struct MissionMap: Equatable, Sendable {
         guard isBuildable(cell) else { return .tooCloseToPath }
         return occupied.contains(cell) ? .occupied : .free
     }
+
+    /// Freie Bauzelle, von der ein Kreis mit `radius` am meisten Weg abdeckt;
+    /// `least` sucht die mit dem wenigsten. Strikt besser ersetzt, also gewinnt
+    /// bei Gleichstand die erste Zelle in Kartenreihenfolge. Eine Stelle für
+    /// den Mitspieler und die Hand des Einstiegs (P2-8), damit beide dieselbe
+    /// Zelle meinen.
+    public func bestCell(radius: Double, excluding occupied: [Cell], least: Bool = false) -> Cell? {
+        var best: Cell?, bestValue = -Double.infinity
+        for cell in buildableCells where !occupied.contains(cell) {
+            let cover = path.coverage(around: cell.center, radius: radius)
+            let value = least ? -cover : cover
+            if value > bestValue {
+                best = cell
+                bestValue = value
+            }
+        }
+        return best
+    }
 }

@@ -7,6 +7,7 @@ import SwiftUI
 struct SettingsCard: View {
     var onClose: () -> Void
     @State private var vibration = AppSettings.vibration()
+    @State private var guide = AppSettings.guide()
     @State private var sound = AppSettings.soundVolume()
     @State private var music = AppSettings.musicVolume()
 
@@ -29,14 +30,24 @@ struct SettingsCard: View {
                     AppSettings.setMusicVolume(music)
                     AudioDirector.shared.setMusicVolume(music)
                 } onRelease: {}
-                Toggle(isOn: $vibration) {
-                    Label(MenuTexts.vibration, systemImage: "iphone.radiowaves.left.and.right")
-                        .font(UITheme.bodyHeavy(18))
+                // Zwei Schalter in einer Zeile: Die Tafel muss im Querformat auch
+                // auf dem kleinsten iPhone ganz zu sehen sein.
+                HStack(spacing: 24) {
+                    Toggle(isOn: $vibration) {
+                        Label(MenuTexts.vibration, systemImage: "iphone.radiowaves.left.and.right")
+                            .font(UITheme.bodyHeavy(18))
+                    }
+                    .accessibilityIdentifier("settings.vibration")
+                    .onChange(of: vibration) { _, on in AppSettings.setVibration(on) }
+                    Toggle(isOn: $guide) {
+                        Label(MenuTexts.guide, systemImage: "hand.point.up.left.fill")
+                            .font(UITheme.bodyHeavy(18))
+                    }
+                    .accessibilityIdentifier("settings.guide")
+                    .onChange(of: guide) { _, on in AppSettings.setGuide(on) }
                 }
                 .tint(UITheme.goldFace)
                 .frame(minHeight: 44)
-                .accessibilityIdentifier("settings.vibration")
-                .onChange(of: vibration) { _, on in AppSettings.setVibration(on) }
                 Text(MenuTexts.offline)
                     .font(UITheme.body(14))
                     .foregroundStyle(UITheme.parchment)

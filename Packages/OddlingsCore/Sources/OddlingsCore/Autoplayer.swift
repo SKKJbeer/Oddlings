@@ -66,19 +66,8 @@ public struct Autoplayer: Sendable {
         return commands
     }
 
-    /// Strikt größer: Bei Gleichstand gewinnt die erste Zelle in Kartenreihenfolge.
     /// `least` sucht die Zelle, die am wenigsten Weg abdeckt (für die Bank).
     private func bestCell(range: Double, occupied: [Cell], sim: Simulation, least: Bool = false) -> Cell? {
-        var best: Cell?, bestValue = -Double.infinity
-        let radius = least ? Self.bankProbe : range
-        for cell in sim.map.buildableCells where !occupied.contains(cell) {
-            let cover = sim.map.path.coverage(around: cell.center, radius: radius)
-            let value = least ? -cover : cover
-            if value > bestValue {
-                best = cell
-                bestValue = value
-            }
-        }
-        return best
+        sim.map.bestCell(radius: least ? Self.bankProbe : range, excluding: occupied, least: least)
     }
 }

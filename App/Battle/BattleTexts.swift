@@ -120,6 +120,13 @@ enum BattleTexts {
     static let levelTag = "II"
     /// Beim ersten gepanzerten Gegner einer Mission (P2-10).
     static let armorHint = "Gepanzert: Steine schlagen durch"
+    /// Sporenfunke (E2, P2-8): Blitz trifft ein verlangsamtes Ziel.
+    static let sparkWord = "Sporenfunke!"
+    /// Einmal je Gerät unter dem ersten Funken (K8). Beschreibt die Regel, verspricht keinen Bonus.
+    static let sparkSentence = "Gebremst rücken sie zusammen – der Blitz trifft mehr."
+    /// VoiceOver, solange Hand bzw. Pfeil des Einstiegs stehen.
+    static let guideBuild = "Tippe auf ein helles Feld neben dem Weg, um einen Turm zu bauen."
+    static let guideWave = "Ruft die erste Welle jetzt."
     static let upgrade = "Aufwerten"
     static let upgradeArmed = "Stufe 2: gleiche Rolle, spürbar stärker."
     static let upgradeUnlocks = "Schaltet die Zielwahl frei."

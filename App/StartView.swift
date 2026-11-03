@@ -39,6 +39,10 @@ struct StartView: View {
         }
         if let node = SaveLocation.argument(after: "--e2e-volle-sterne") { flow.seedStarsForTests(StarRating.maximum, on: node) }
         if let ore = SaveLocation.argument(after: "--e2e-erz").flatMap(Int.init), ore > 0 { flow.seedOreForTests(ore) }
+        // Hinweise des Einstiegs (P2-8) liegen in den Voreinstellungen, nicht im
+        // Spielstand: Ein frischer Test beginnt auch dort wie eine neue App.
+        if arguments.contains("--e2e-frisch") { GuideMemory().reset() }
+        if arguments.contains("--e2e-ohne-hinweise") { AppSettings.setGuide(false) }
         #endif
         _flow = State(initialValue: flow)
     }
@@ -89,6 +93,7 @@ struct StartView: View {
         case .battle(let node):
             if let mission = flow.battleMission(for: node) {
                 BattleView(mission: mission, mode: .play, resume: flow.resume?.node == node ? flow.resume : nil,
+                           intro: flow.showsIntro(for: node),
                            onClose: { flow.leaveBattle() },
                            onSuspend: { seed, state in flow.suspend(node, seed: seed, state: state) }) { outcome, lives in
                     flow.finish(node, outcome: outcome, livesLeft: lives)
@@ -115,6 +120,7 @@ enum MenuTexts {
     static func waves(_ count: Int) -> String { "\(count) Wellen" }
     static let settings = "Einstellungen"
     static let vibration = "Vibration"
+    static let guide = "Hinweise"
     static let done = "Fertig"
     static let sound = "Klänge"
     static let music = "Musik"

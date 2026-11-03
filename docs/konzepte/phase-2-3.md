@@ -98,6 +98,8 @@ Architekturregeln; Einspruch jederzeit möglich)
 
 ## K8 · Einstieg ohne Erklärtext
 
+**Umgesetzt** in 0.24.0: [Konzept P2-8](p2-8-synergie-sichtbar.md), D-076. Der Text unten ist der ursprüngliche Vorschlag.
+
 Nicht in der Übergabe, aber Teil von „AAA-Anmutung" (Marktanalyse Abschnitt 3)
 und Risiko P1/P2.
 

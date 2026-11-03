@@ -6,6 +6,7 @@ enum AppSettings {
     static let vibrationKey = "settings.vibration"
     static let soundKey = "settings.sound"
     static let musicKey = "settings.music"
+    static let guideKey = "settings.guide"
 
     /// Ohne Eintrag an: Haptik ist Teil der Rückmeldung (07, Abschnitt 5).
     static func vibration(in defaults: UserDefaults = .standard) -> Bool {
@@ -14,6 +15,16 @@ enum AppSettings {
 
     static func setVibration(_ on: Bool, in defaults: UserDefaults = .standard) {
         defaults.set(on, forKey: vibrationKey)
+    }
+
+    /// Hinweise des Einstiegs (P2-8). Ohne Eintrag an: Wer neu ist, weiß nicht,
+    /// dass es sie gibt. Wer sie ausschaltet, sieht keins mehr.
+    static func guide(in defaults: UserDefaults = .standard) -> Bool {
+        defaults.object(forKey: guideKey) as? Bool ?? true
+    }
+
+    static func setGuide(_ on: Bool, in defaults: UserDefaults = .standard) {
+        defaults.set(on, forKey: guideKey)
     }
 
     /// Lautstärke der Klänge, 0…1 (P2-3).

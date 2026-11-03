@@ -93,7 +93,7 @@ danach gibt es nichts fortzusetzen. [Konzept](../konzepte/p2-2-fortsetzen.md)
 ### Hauptmenü
 Gemaltes Bild links, Knöpfe rechts im Daumenbereich: großes „Spielen" (64 pt
 hoch), darüber eine Karte „Weiter mit Mission 1" mit Wellenzahl und Dauer, darunter
-Einstellungen (Regler für Klänge und Musik, Schalter Vibration; P2-3) und Mitwirkende. Unten links „Offline ·
+Einstellungen (Regler für Klänge und Musik, Schalter Vibration und Hinweise in einer Zeile; P2-3, P2-8) und Mitwirkende. Unten links „Offline ·
 ohne Konto" (Lücke 5 der Marktanalyse). Kein Ladebildschirm, kein Anmeldefenster.
 
 ### Schlacht und HUD
@@ -107,6 +107,14 @@ Aufteilung siehe Abschnitt 2. Weitere Regeln:
   wenn ein Kauf daran scheitert; Leben wackeln bei Durchbruch.
 - Lebensbalken an Gegnern nur bei Schaden, Verlangsamung als grüner Ring
   (Marktanalyse E3).
+- **Einstieg ohne Erklärtext** (P2-8, K8, D-076, umgesetzt 0.24.0): Mission 1 zeigt,
+  solange sie nie gewonnen wurde, zwei stille Zeichen, nur wenn der Spieler zögert:
+  eine Hand tippt auf die beste Bauzelle (nach 6 s ohne Turm), danach wippt ein Pfeil
+  unter „Welle 1“ und der Knopf glüht (nach 5 s am Knopf). Beim ersten Sporenfunken
+  überhaupt steht unter „Sporenfunke!“ ein Satz. Jedes Zeichen einmal je Gerät, eins
+  zur Zeit, fängt kein Tippen ab; Tippen auf die Karte überspringt; Pause blendet aus;
+  Schalter „Hinweise“ in den Einstellungen. VoiceOver liest den Hinweis am Knopf bzw.
+  an der Karte. [Konzept](../konzepte/p2-8-synergie-sichtbar.md)
 
 ### Bauen
 

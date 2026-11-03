@@ -58,6 +58,8 @@ struct E2EApp {
     var speed: XCUIElement { app.buttons["hud.speed"] }
     var result: XCUIElement { app.staticTexts["result.title"] }
     var pausedHint: XCUIElement { app.staticTexts["hud.paused"] }
+    /// Was der Einstieg zeigt (P2-8): `none`, `build` oder `wave`. Nur im Debug-Bau.
+    var guideState: XCUIElement { app.staticTexts["guide.state"] }
     func build(_ kind: TowerKind) -> XCUIElement { app.buttons["build.\(kind.rawValue)"] }
     var sell: XCUIElement { app.buttons["sell"] }
     var sellConfirm: XCUIElement { app.staticTexts["sell.confirm"] }
