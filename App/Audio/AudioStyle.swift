@@ -48,6 +48,9 @@ enum AudioStyle {
     /// Ein Treffer an der Panzerung klingt eine Quinte tiefer als einer ins Fleisch.
     static let armorSemitones: Float = -7
 
+    /// Alles, was der Moorkönig auslöst, eine Quarte tiefer (P3-4): schwer und fremd.
+    static let bossSemitones: Float = -5
+
     /// Tonhöhenstufe je Kettenglied des Blitzes („Knistern, je Sprung höher").
     static let boltStepSemitones: Float = 1
     /// Höchstens so viele Stufen, damit lange Ketten nicht quietschen.

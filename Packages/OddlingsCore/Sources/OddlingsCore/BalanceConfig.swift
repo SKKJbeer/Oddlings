@@ -442,6 +442,8 @@ public enum TowerKind: String, Codable, CaseIterable, CodingKeyRepresentable, Se
 
 public enum EnemyKind: String, Codable, CaseIterable, CodingKeyRepresentable, Sendable {
     case raider, runner, brute
+    /// Boss von Region 1 (P3-4). Was er kann, steht in `EnemyConfig.boss`.
+    case moorKing
 }
 
 /// Wen ein Turm mit Einzelziel zuerst nimmt (07, „Zielwahl“). Wählbar ab
@@ -533,15 +535,45 @@ public struct EnemyConfig: Codable, Equatable, Sendable {
     public var armor: Double? = nil
     /// Anteil eines Treffers, den die Rüstung nie schluckt; nur zusammen mit `armor`.
     public var armorMinShare: Double? = nil
+    /// Anteil einer Verlangsamung, der wirkt (K7: Bosse halbieren sie). Fehlt er, wirkt sie ganz.
+    public var slowScale: Double? = nil
+    /// Schild und Ruf eines Bosses (P3-4). Fehlt es, ist der Gegner kein Boss.
+    public var boss: BossConfig? = nil
 
     public init(hp: Double, speed: Double, reward: Int, leakDamage: Int,
-                armor: Double? = nil, armorMinShare: Double? = nil) {
+                armor: Double? = nil, armorMinShare: Double? = nil,
+                slowScale: Double? = nil, boss: BossConfig? = nil) {
         self.hp = hp
         self.speed = speed
         self.reward = reward
         self.leakDamage = leakDamage
         self.armor = armor
         self.armorMinShare = armorMinShare
+        self.slowScale = slowScale
+        self.boss = boss
+    }
+}
+
+/// Zweite Phase eines Bosses (P3-4): Fällt sein Leben auf `shieldAt` (Anteil
+/// am Höchstleben), bleibt er `shieldDuration` Sekunden stehen, nimmt keinen
+/// Schaden und ruft alle `summonEvery` Sekunden `summonCount` Gegner der Art
+/// `summon` mit `summonHPScale` ihres Lebens an seiner Stelle.
+public struct BossConfig: Codable, Equatable, Sendable {
+    public var shieldAt: Double
+    public var shieldDuration: Double
+    public var summonEvery: Double
+    public var summon: EnemyKind
+    public var summonCount: Int
+    public var summonHPScale: Double
+
+    public init(shieldAt: Double, shieldDuration: Double, summonEvery: Double,
+                summon: EnemyKind, summonCount: Int, summonHPScale: Double) {
+        self.shieldAt = shieldAt
+        self.shieldDuration = shieldDuration
+        self.summonEvery = summonEvery
+        self.summon = summon
+        self.summonCount = summonCount
+        self.summonHPScale = summonHPScale
     }
 }
 

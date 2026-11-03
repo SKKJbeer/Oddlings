@@ -127,7 +127,9 @@ final class AppFlowTests: XCTestCase {
         flow.finish("m5b", outcome: .won, livesLeft: 1)
         XCTAssertEqual(flow.continueNode?.id, "m6b", "Mission 6b ist gebaut (P3-3)")
         flow.finish("m6b", outcome: .won, livesLeft: 1)
-        XCTAssertEqual(flow.continueNode?.id, "m6b", "der Endgegner ist noch in Arbeit")
+        XCTAssertEqual(flow.continueNode?.id, "m7", "der Moorkönig ist gebaut (P3-4)")
+        flow.finish("m7", outcome: .won, livesLeft: 1)
+        XCTAssertEqual(flow.continueNode?.id, "m7", "Region 1 geschafft: Weiter bleibt beim Boss")
     }
 
     /// R-6: Alle sechs Sterne ein Rang. Ein Sieg, der die Summe auf sechs hebt,

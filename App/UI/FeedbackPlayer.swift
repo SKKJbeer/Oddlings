@@ -42,6 +42,9 @@ enum FeedbackPlayer {
         case .abilityImpact: .heavy
         case .barrierRaised: .heavy
         case .barrierFell: nil
+        // Der Schild des Bosses ist ein Wendepunkt (P3-4); Ruf und Fall nicht.
+        case .bossShieldRaised: .heavy
+        case .bossSummoned, .bossShieldDropped, .shieldAbsorbed: nil
         // Banken zahlen alle paar Sekunden; das soll nicht in der Hand summen.
         case .bankPaid, .bankEmptied, .earlyCallBonus: nil
         case .towerFired, .enemyDamaged, .armorAbsorbed, .enemySlowed, .enemyKilled, .waveStarted, .enemySpawned: nil

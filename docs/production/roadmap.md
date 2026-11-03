@@ -12,7 +12,7 @@ Entscheidungskarte beantwortet. Alles, was auf ihn wartet, steht unter
 zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzelnen:
 [backlog.md](backlog.md), offene Fragen: [offene-fragen.md](offene-fragen.md).
 
-**Stand: 03.11.2026** · neueste Version 0.27.0 (Wahl zwischen zwei Spezialisierungen, Mission 6a und 6b, Bau folgt), davor 0.26.1 (gemalte Kampfplätze für M5a Sumpfpfad und M5b Ruinen), davor 0.26.0 (Mission 5b „Ruinen“, Bau 48), davor 0.25.0 (Spezialisierungen und Mission 5a „Sumpfpfad“, Bau 47), davor 0.24.1 (Korrektur für den Release-Bau, Bau 46), davor 0.24.0 (Synergie sichtbar, Einstieg ohne Erklärtext, Bau 45 gescheitert), davor 0.23.0 (Blitz allein verliert Mission 2 und 3, Bau 44), 0.22.0 (Fortsetzen nach Neustart, Bau 43), neuester VALID-Bau 48 (0.26.0)
+**Stand: 03.11.2026** · neueste Version 0.28.0 (Mission 7 „Der Moorkönig“, Bau folgt), davor 0.27.0 (Wahl zwischen zwei Spezialisierungen, Mission 6a und 6b), davor 0.26.1 (gemalte Kampfplätze für M5a Sumpfpfad und M5b Ruinen), davor 0.26.0 (Mission 5b „Ruinen“, Bau 48), davor 0.25.0 (Spezialisierungen und Mission 5a „Sumpfpfad“, Bau 47), davor 0.24.1 (Korrektur für den Release-Bau, Bau 46), davor 0.24.0 (Synergie sichtbar, Einstieg ohne Erklärtext, Bau 45 gescheitert), davor 0.23.0 (Blitz allein verliert Mission 2 und 3, Bau 44), 0.22.0 (Fortsetzen nach Neustart, Bau 43), neuester VALID-Bau 48 (0.26.0)
 
 ## Phasen
 
@@ -57,6 +57,7 @@ Spieltest läuft parallel. Nach R-7a kommt Mission 3 mit Aufwertungen (D-085, 02
 | 10 | ~~P3-1 **Spezialisierungen und Mission 5a „Sumpfpfad“**~~ ([Konzept](../konzepte/p3-1-spezialisierungen-sumpfpfad.md), S14, D-077) | Haupt-Thread | 9 | ✓ 0.25.0 |
 | 11 | ~~P3-2 **Mission 5b „Ruinen“** mit Falkenhorst, Funkensäule, Fäulnis~~ ([Konzept](../konzepte/p3-2-ruinen-spezialisierungen.md), D-078) | Haupt-Thread | 10 | ✓ 0.26.0 |
 | 12 | ~~P3-3 **Wahl zwischen zwei Spezialisierungen, Mission 6a und 6b**~~ ([Konzept](../konzepte/p3-3-wahl-zwischen-spezialisierungen.md), S15, S16, D-079); gemalte Kampfplätze M6 folgen (Grafik 08) | Haupt-Thread | 11 | ✓ 0.27.0 |
+| 13 | ~~P3-4 **Mission 7, der Moorkönig**~~ ([Konzept](../konzepte/p3-4-mission-7-boss.md), S17, D-090): Schild und Ruf bei halbem Leben, Ende von Region 1; gemalter Boss und Kampfplatz folgen (Grafik-Thread), eigene Bossmusik (Ton-Thread) | Haupt-Thread | 12 | ✓ 0.28.0 |
 | 9 | ~~P2-10 **Mission 4 „Ruinenrand“**~~ ([Konzept](../konzepte/p2-10-mission-4-ruestung.md)): Panzerbestie mit Rüstung (K7, S8, D-087), Weg aus D-081 | Mission 3 mit Aufwertungen bauen | 7 | ✓ 0.20.0 |
 
 ## Ausgeliefert
@@ -98,6 +99,7 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | P3-2: Mission 5b „Ruinen“, Falkenhorst, Funkensäule, Fäulnis (D-078) | 0.26.0 | 48 | [Konzept](../konzepte/p3-2-ruinen-spezialisierungen.md) |
 | Grafik 07: gemalte Kampfplätze M5a (Sumpfpfad) und M5b (Ruinenhof), Wege aus D-081 | 0.26.1 | folgt | [Konzept](../konzepte/grafik-07-kampfplaetze-m5.md) |
 | P3-3: Wahl zwischen zwei Spezialisierungen, Mission 6a und 6b, Gewitterkrone ohne Sporen-Vorteil (D-079) | 0.27.0 | folgt | [Konzept](../konzepte/p3-3-wahl-zwischen-spezialisierungen.md) |
+| P3-4: Mission 7, der Moorkönig mit Schild und Ruf (D-090) | 0.28.0 | folgt | [Konzept](../konzepte/p3-4-mission-7-boss.md) |
 
 ## Gilt für jedes Paket
 

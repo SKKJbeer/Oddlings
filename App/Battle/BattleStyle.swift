@@ -45,6 +45,7 @@ enum BattleStyle {
         case .raider: SKColor(red: 0.85, green: 0.30, blue: 0.25, alpha: 1)
         case .runner: SKColor(red: 0.95, green: 0.65, blue: 0.20, alpha: 1)
         case .brute: SKColor(red: 0.55, green: 0.25, blue: 0.55, alpha: 1)
+        case .moorKing: SKColor(red: 0.25, green: 0.40, blue: 0.25, alpha: 1)
         }
     }
 
@@ -64,7 +65,14 @@ enum BattleStyle {
     /// Festung unter dem Boden.
     static let groundZ: CGFloat = -1
     static let fortressZ: CGFloat = 1
-    static func enemyHeight(_ kind: EnemyKind) -> CGFloat { kind == .brute ? 1.2 : 0.9 }
+    static func enemyHeight(_ kind: EnemyKind) -> CGFloat {
+        switch kind {
+        case .raider, .runner: 0.9
+        case .brute: 1.2
+        // Der Boss soll sich wie ein Auftritt anfühlen (P3-4): deutlich größer als die Panzerbestie.
+        case .moorKing: 1.9
+        }
+    }
 
     static let healthBack = SKColor(white: 0, alpha: 0.6)
     static let healthFill = SKColor(red: 0.35, green: 0.90, blue: 0.40, alpha: 1)
@@ -103,6 +111,9 @@ enum BattleStyle {
     /// Knapp unter der Tippgröße: Im Querformat zählt jeder Punkt Höhe für die Karte.
     static let hudHeight: CGFloat = 40
     static let hudMargin: CGFloat = 6
+    /// Bossleiste über der Karte (P3-4).
+    static let bossBarWidth: CGFloat = 260
+    static let bossBarHeight: CGFloat = 14
     /// Kreismenü (07-ui-ux.md, Grundsatz 5): runde Knöpfe deutlich über 44 pt.
     static let ringButton: CGFloat = 54
     static let ringGap: CGFloat = 6
