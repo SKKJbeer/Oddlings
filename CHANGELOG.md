@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.24.1 – 03.11.2026 (Korrektur: 0.24.0 im Release-Bau)
+## 0.24.1 – 03.11.2026 (Korrektur: 0.24.0 im Release-Bau) · Bau 46
 
 - **0.24.0 ließ sich für TestFlight nicht übersetzen** (Bau 45 gescheitert): Die Prüfung
   „Mission 1 zeigt den Einstieg“ stand versehentlich im Teil, den es nur im Testbau gibt.
