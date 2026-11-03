@@ -128,6 +128,9 @@ enum BattleTexts {
         case .volley: "Salve"
         case .stormCrown: "Gewitterkrone"
         case .bogHeart: "Moorherz"
+        case .falconHold: "Falkenhorst"
+        case .sparkColumn: "Funkensäule"
+        case .rot: "Fäulnis"
         }
     }
     /// Ein Satz, was sie bringt, beim ersten Tippen auf der Tafel.
@@ -136,6 +139,9 @@ enum BattleTexts {
         case .volley: "Trifft zwei Ziele je Schuss."
         case .stormCrown: "Springt weiter, gebremste Ziele schwächen ihn nicht."
         case .bogHeart: "Größerer Kreis, bremst stärker und länger."
+        case .falconHold: "Sieht weit, schießt schwer, Rüstung hält wenig davon ab."
+        case .sparkColumn: "Ein schwerer Schlag, springt nur einmal weiter, lädt langsamer."
+        case .rot: "Gebremste nehmen von allen Türmen mehr Schaden."
         }
     }
     static let specialize = "Spezialisieren"

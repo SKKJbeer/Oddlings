@@ -1,6 +1,6 @@
 # Konzept: Kampfplätze für Mission 5a und 5b (Grafik 07)
 
-Status: **in Arbeit** · Stil D-016 · Thread „Kampfplätze für Mission 5a und 5b malen"
+Status: **umgesetzt in 0.26.1** · Stil D-016 · Thread „Kampfplätze für Mission 5a und 5b malen"
 Anlass: Roadmap, Region 1 weitere Missionen. Mission 5a „Sumpfpfad" entsteht parallel
 im Thread „Oddlings-Designstand und MVP-Plan aufsetzen" (P3-1, Spezialisierungen).
 Vorgehen wie [Grafik 06](grafik-06-kampfplaetze-m2-m4.md); dieses Dokument nennt nur,
@@ -17,7 +17,7 @@ der Qualität von M1 bis M4, gleiche Teile (Bäume, Höhle, Gras, Weg), eigener 
 | Was | Wer |
 |---|---|
 | Weg, Feldgröße, Bauzonen von M5a | `mission-05a.json` (P3-1, 0.25.0) hat den Vorschlag unten wörtlich übernommen (abgestimmt 03.11.2026). Ändert sich die Datei, wird nachgemalt; `MissionFiveATests` und `test_wegvorschlag_stimmt_mit_der_missionsdatei` schlagen dann an |
-| Weg von M5b | Vorschlag unten, bis eine Mission 5b gebaut wird |
+| Weg von M5b | `mission-05b.json` (P3-2, 0.26.0) hat den Vorschlag unten wörtlich übernommen |
 | Bild, Rand, Deko, Licht | dieser Thread |
 
 Simulation, Missionsdateien und App-Code ändern sich durch dieses Paket nicht.
@@ -30,12 +30,12 @@ Waldrand, im Licht und im angehängten Übermal-Prompt.
 | Mission | Gegner-Schwerpunkt | Ort | Rand-Deko (neues Teileblatt) | Licht |
 |---|---|---|---|---|
 | M5a | Flitzer | **Sumpfpfad**: der Weg führt über eine feuchte Insel im Moor | Schilfbüschel, kleine Moortümpel mit Seerosen, knorriger toter Baum, morsche Stümpfe, Irrlicht-Laterne | Abenddämmerung, grünlich-kühl, leichter Dunst |
-| M5b | Panzerbestie | **Ruinenhof**: mitten in den Ruinen, an denen M4 nur vorbeiführte | zerbrochener Torbogen, umgestürzte Statue, Steinbecken, Säulenstümpfe, Schuttfeld (neues Blatt, nicht das von M4) | kühles Grau mit violettem Abendlicht |
+| M5b | Panzerbestie | **Ruinenhof**: mitten in den Ruinen, an denen M4 nur vorbeiführte | zerbrochener Torbogen, Steinbecken, Säulenstümpfe, Schuttfeld (neues Blatt, nicht das von M4) | kühles Grau mit violettem Abendlicht |
 
 M4 (Ruinenrand) und M5b teilen das Thema. Deshalb bekommt M5b eigene, größere
 Ruinenteile und kühles statt warmes Licht, damit man die beiden nicht verwechselt.
 
-### Wege (M5a übernommen, M5b **[VORSCHLAG]**)
+### Wege (beide von den Missionsdateien übernommen)
 
 Feld 16 × 9, Eingang links (x = −1), Ausgang rechts (x = 17). Dateien unter
 `art/karten/wegvorschlaege/`.
@@ -58,7 +58,7 @@ Unverändert aus Grafik 06:
   sobald die Mission existiert.
 - 24 × 13 Zellen, 3096 × 1677 px @3x, JPEG in `App/Assets.xcassets/Maps`.
 - `art/asset-vertrag.json` je Karte mit `zellen`, `rand`, `mission` (M5a auf
-  `mission-05a.json`, M5b auf den Wegvorschlag, bis die Missionsdatei ihn übernimmt).
+  `mission-05a.json`, M5b auf `mission-05b.json`).
 - Werkzeug: `kampfplatz.py` bekommt `DEKO_BREITE=a,b`, denn Sumpf und Ruinenhof tragen
   den Ort fast nur über die Deko und brauchen sie größer. Hohe Teile (tote Bäume, Säulen)
   werden nach ihrer Höhe bemessen: In der ersten Collage ragten tote Bäume aus dem unteren

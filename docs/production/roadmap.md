@@ -12,7 +12,7 @@ Entscheidungskarte beantwortet. Alles, was auf ihn wartet, steht unter
 zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzelnen:
 [backlog.md](backlog.md), offene Fragen: [offene-fragen.md](offene-fragen.md).
 
-**Stand: 03.11.2026** · neueste Version 0.25.1 (gemalte Kampfplätze für M5a Sumpfpfad und M5b Ruinenhof, Bau folgt), davor 0.25.0 (Spezialisierungen und Mission 5a „Sumpfpfad“, Bau 47), davor 0.24.1 (Korrektur für den Release-Bau, Bau 46), davor 0.24.0 (Synergie sichtbar, Einstieg ohne Erklärtext, Bau 45 gescheitert), davor 0.23.0 (Blitz allein verliert Mission 2 und 3, Bau 44), 0.22.0 (Fortsetzen nach Neustart, Bau 43), neuester VALID-Bau 46 (0.24.1)
+**Stand: 03.11.2026** · neueste Version 0.26.1 (gemalte Kampfplätze für M5a Sumpfpfad und M5b Ruinen, Bau folgt), davor 0.26.0 (Mission 5b „Ruinen“), davor 0.25.0 (Spezialisierungen und Mission 5a „Sumpfpfad“, Bau 47), davor 0.24.1 (Korrektur für den Release-Bau, Bau 46), davor 0.24.0 (Synergie sichtbar, Einstieg ohne Erklärtext, Bau 45 gescheitert), davor 0.23.0 (Blitz allein verliert Mission 2 und 3, Bau 44), 0.22.0 (Fortsetzen nach Neustart, Bau 43), neuester VALID-Bau 47 (0.25.0)
 
 ## Phasen
 
@@ -22,7 +22,7 @@ zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzeln
 | **1 – Spielbarer Kampfprototyp** | Eine Karte, ein Weg, drei Türme, Gegner, Gold, Wellen, Sieg/Niederlage, Neustart, Tests | Mission 1 auf dem iPhone spielbar, Regeltests grün, drei Personen haben gespielt | Technik ✓, **Spieltest WP-15 offen** |
 | **Spielrahmen (vorgezogen, D-060)** | Hauptmenü, Kampagnenkarte, Festungsfähigkeit, Völker, Avatar | Pakete R-1 bis R-7 in TestFlight | ✓ bis R-7b (0.21.0) |
 | **2 – Vertical Slice** | Zwergenbank, spürbare Synergie, Ton, Animation, Grafik, Fortsetzen | Eine Mission wirkt wie das fertige Spiel; Spieler finden die Synergie ohne Erklärung | Grafik und Effekte laufen, Rest wartet auf den Schnitt nach WP-15 |
-| **3 – Kleine Kampagne** | Region 1 mit sieben Haupt- und zwei Nebenmissionen, Boss | Spieler wollen nach Mission 1 weiterspielen (gemessen) | Karte steht, Mission 2 bis 4 und 5a gebaut (Spezialisierungen ab 0.25.0), 5b bis 7 fehlen |
+| **3 – Kleine Kampagne** | Region 1 mit sieben Haupt- und zwei Nebenmissionen, Boss | Spieler wollen nach Mission 1 weiterspielen (gemessen) | Karte steht, Mission 2 bis 4, 5a und 5b gebaut (Spezialisierungen ab 0.25.0), 6 und 7 fehlen |
 | **4 – Qualität und Balancing** | Echte Geräte, Leistung, externe Spieltests, Balance-Labor | Absturzfrei, 60 Bilder/s auf dem ältesten Zielgerät | – |
 | **5 – Produktentscheidung** | Weiter investieren? Monetarisierung? Koop? | Entscheidung mit Daten aus Phase 4 | – |
 
@@ -55,7 +55,7 @@ Spieltest läuft parallel. Nach R-7a kommt Mission 3 mit Aufwertungen (D-085, 02
 | 7 | ~~P2-6 **Mission 3 mit Aufwertungen**~~ ([Konzept](../konzepte/p2-6-mission-3-aufwerten.md)): Stufe 2 und Zielwahl, Weg „Pilzhain“ (D-081, D-084); Mission 4 folgt danach, nicht parallel | Mission 3 mit Aufwertungen bauen | 2 | ✓ 0.18.0 |
 | 8 | ~~P2-6b Balance-Labor~~, ~~P2-2 Fortsetzen~~, ~~P2-11 Blitz-Monokultur~~, ~~P2-8 Synergie sichtbar~~ ([Konzept](../konzepte/p2-8-synergie-sichtbar.md)), P2-9 Abstimmung | – | 2 | ✓ P2-6b 0.21.1, P2-2 0.22.0, P2-11 0.23.0, P2-8 0.24.0; Konzepte K1, K6 |
 | 10 | ~~P3-1 **Spezialisierungen und Mission 5a „Sumpfpfad“**~~ ([Konzept](../konzepte/p3-1-spezialisierungen-sumpfpfad.md), S14, D-077) | Haupt-Thread | 9 | ✓ 0.25.0 |
-| 11 | P3-2 Mission 5b „Ruinen“ mit Falkenhorst, Funkensäule, Fäulnis (Zustand „verwundbar“), Weg vom Grafik-Thread liegt vor | Haupt-Thread | 10 | als Nächstes |
+| 11 | ~~P3-2 **Mission 5b „Ruinen“** mit Falkenhorst, Funkensäule, Fäulnis~~ ([Konzept](../konzepte/p3-2-ruinen-spezialisierungen.md), D-078) | Haupt-Thread | 10 | ✓ 0.26.0 |
 | 9 | ~~P2-10 **Mission 4 „Ruinenrand“**~~ ([Konzept](../konzepte/p2-10-mission-4-ruestung.md)): Panzerbestie mit Rüstung (K7, S8, D-087), Weg aus D-081 | Mission 3 mit Aufwertungen bauen | 7 | ✓ 0.20.0 |
 
 ## Ausgeliefert
@@ -94,7 +94,8 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | P2-11: Blitz allein verliert Mission 2 und 3 (D-071, D-075) | 0.23.0 | 44 | [Konzept](../konzepte/p2-11-blitz-monokultur.md) |
 | P2-8: Synergie sichtbar, Einstieg ohne Erklärtext (E2, K8, D-076) | 0.24.0, 0.24.1 | 46 (45 gescheitert) | [Konzept](../konzepte/p2-8-synergie-sichtbar.md) |
 | P3-1: Spezialisierungen, Mission 5a „Sumpfpfad“ (S14, D-077) | 0.25.0 | 47 | [Konzept](../konzepte/p3-1-spezialisierungen-sumpfpfad.md) |
-| Grafik 07: gemalte Kampfplätze M5a (Sumpfpfad) und M5b (Ruinenhof), Weg M5b als Vorschlag (D-081) | 0.25.1 | folgt | [Konzept](../konzepte/grafik-07-kampfplaetze-m5.md) |
+| P3-2: Mission 5b „Ruinen“, Falkenhorst, Funkensäule, Fäulnis (D-078) | 0.26.0 | folgt | [Konzept](../konzepte/p3-2-ruinen-spezialisierungen.md) |
+| Grafik 07: gemalte Kampfplätze M5a (Sumpfpfad) und M5b (Ruinenhof), Wege aus D-081 | 0.26.1 | folgt | [Konzept](../konzepte/grafik-07-kampfplaetze-m5.md) |
 
 ## Gilt für jedes Paket
 

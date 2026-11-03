@@ -93,8 +93,11 @@ final class AppFlowTests: XCTestCase {
         flow.finish("m2", outcome: .won, livesLeft: 1)
         flow.finish("m3", outcome: .won, livesLeft: 1)
         flow.finish("m4", outcome: .won, livesLeft: 1)
+        flow.start("m6a")
+        XCTAssertEqual(flow.screen, .map, "gesperrt: kein Start")
         flow.start("m5b")
-        XCTAssertEqual(flow.screen, .map, "in Arbeit: kein Start")
+        XCTAssertEqual(flow.screen, .battle(node: "m5b"), "die Ruinen haben eine Karte (P3-2)")
+        flow.showMap()
         flow.start("m5a")
         XCTAssertEqual(flow.screen, .battle(node: "m5a"), "der Sumpfpfad hat eine Karte (P3-1)")
     }
@@ -114,7 +117,9 @@ final class AppFlowTests: XCTestCase {
         flow.finish("m4", outcome: .won, livesLeft: 1)
         XCTAssertEqual(flow.continueNode?.id, "m5a", "der Sumpfpfad ist gebaut (P3-1)")
         flow.finish("m5a", outcome: .won, livesLeft: 1)
-        XCTAssertEqual(flow.continueNode?.id, "m5a", "Mission 6 ist noch in Arbeit")
+        XCTAssertEqual(flow.continueNode?.id, "m5b", "die Ruinen sind gebaut (P3-2)")
+        flow.finish("m5b", outcome: .won, livesLeft: 1)
+        XCTAssertEqual(flow.continueNode?.id, "m5b", "Mission 6 ist noch in Arbeit")
     }
 
     /// R-6: Alle sechs Sterne ein Rang. Ein Sieg, der die Summe auf sechs hebt,

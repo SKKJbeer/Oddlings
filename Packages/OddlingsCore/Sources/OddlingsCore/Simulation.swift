@@ -340,6 +340,12 @@ public struct Simulation: Sendable {
                 for hit in hits {
                     damage(hit, by: stats.damage, &state, &events)
                     applySlow(to: &state.enemies[hit], stats: stats, tick: state.tick)
+                    // Fäulnis nach dem Schaden: Der Puls selbst trifft nicht stärker.
+                    // Gleicher Zustand wie das Mondmal, also kein Stapeln mit ihm.
+                    if let factor = stats.vulnerableFactor, let duration = stats.slowDuration {
+                        applyVulnerable(VulnerableEffect(factor: factor, untilTick: state.tick + ticks(duration)),
+                                        to: &state.enemies[hit], tick: state.tick)
+                    }
                     events.append(.enemySlowed(id: state.enemies[hit].id))
                 }
             }

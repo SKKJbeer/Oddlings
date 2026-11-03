@@ -11,21 +11,35 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.25.1 – 03.11.2026 (Grafik 07: Kampfplätze Sumpfpfad und Ruinenhof)
+## 0.26.1 – 03.11.2026 (Grafik 07: Kampfplätze Sumpfpfad und Ruinen)
 
 - **Mission 5a „Sumpfpfad“ hat ihren gemalten Kampfplatz:** feuchte Moorinsel mit toten
   Bäumen, Stümpfen, Tümpeln und einer Irrlicht-Laterne im Waldrand, grünliches
-  Dämmerlicht. Das Feld bleibt Gras und Weg, überall bebaubar.
-- **Kampfplatz für Mission 5b „Ruinen“ liegt bereit** (Ruinenhof mit Torbogen, Säulen und
-  Steinbecken, kühles Abendlicht), auf dem vorgeschlagenen Weg (D-081); er erscheint,
-  sobald Mission 5b gebaut ist.
+  Dämmerlicht, olives Moorgras. Das Feld bleibt Gras und Weg, überall bebaubar.
+- **Mission 5b „Ruinen“ ebenso:** Ruinenhof mit Torbogen, Säulen und Steinbecken, kühles
+  Abendlicht, der Weg wie aus Steinplatten.
 - Werkzeug: `kampfplatz.py` mit `DEKO_BREITE`, hohe Deko wird nach ihrer Höhe bemessen
   (ragte sonst über Bauzellen). Kunstprüfung: Wegvorschläge müssen spielbar sein.
 - Werkzeug: Apple-Lesezugriffe bei Serverfehlern wiederholt.
 - Tests: `test_wegvorschlaege_sind_spielbar`, hohe Deko in `test_deko_nur_im_rand`,
-  `testEveryBundledMissionHasItsPaintedGround` mit Mission 5a.
+  `testEveryBundledMissionHasItsPaintedGround` mit Mission 5a und 5b.
 
-## 0.25.0 – 03.11.2026 (P3-1: Spezialisierungen und Mission 5a „Sumpfpfad“)
+## 0.26.0 – 03.11.2026 (P3-2: Mission 5b „Ruinen“ mit Falkenhorst, Funkensäule, Fäulnis)
+
+- **Mission 5b „Ruinen“** ist spielbar, der zweite Weg nach Mission 4: Panzerbestien in
+  jeder Welle, Weg durch das Becken, den der Grafik-Thread vorgeschlagen hat. Werte [HYPOTHESE].
+- **Drei neue Spezialisierungen** (D-078): **Falkenhorst** (Wachturm: weiter, schwerer Schuss,
+  langsamer), **Funkensäule** (Blitz: ein schwerer Schlag, springt nur einmal weiter, lädt
+  langsamer), **Fäulnis** (Sporen: was der Puls verlangsamt, nimmt so lange von allen Türmen
+  mehr Schaden). Die Fäulnis teilt sich den Zustand mit dem Mondmal der Elfen; beide
+  zusammen addieren sich nicht.
+- Kern: Feld `vulnerableFactor`, negative `extraJumps` (Kette bleibt ≥ 0), Prüfung beim Laden.
+- Tests: `RuinSpecializationTests`, `MissionFiveBTests`, App-Test für das Angebot in M5b,
+  E2E „Sporenturm zur Fäulnis“; Kampagne, Ablauf und Labor kennen Mission 5b.
+- Offen für den Spieltest (04): Funkensäule schwer abzustimmen, Bank lohnt in den Ruinen kaum,
+  Elfen passen besonders gut zur Fäulnis.
+
+## 0.25.0 – 03.11.2026 (P3-1: Spezialisierungen und Mission 5a „Sumpfpfad“) · Bau 47
 
 - **Stufe 3:** Ein Turm auf Stufe 2 lässt sich auf dem Sumpfpfad spezialisieren, je Turm
   eine Wahl (Steffens Karte S14 „Je Weg drei, Wahl ab M6“, D-077): **Salve** (Wachturm,
@@ -39,6 +53,9 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   Missionsdatei mit Prüfung beim Laden; Mitspieler und Labor spezialisieren mit.
 - Tests: `SpecializationTests`, `MissionFiveATests`, `SpecializationControllerTests`,
   E2E `SpecializationE2ETests`; Kampagne, Ablauf und Labor kennen Mission 5a.
+- Bau 47 ist VALID und in der Gruppe „Team“; der Lauf meldete trotzdem Rot, weil Apple
+  danach beim Lesen der Gruppen einmal mit HTTP 500 antwortete. Die Wiederholung dafür in
+  `scripts/apple.py` kommt mit der nächsten App-Änderung, weil sie sonst einen eigenen Bau auslöst.
 
 ## 0.24.1 – 03.11.2026 (Korrektur: 0.24.0 im Release-Bau) · Bau 46
 

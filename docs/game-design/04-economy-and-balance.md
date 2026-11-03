@@ -432,6 +432,45 @@ liegen die Elfen höher: „Mix mit Aufwertung“ +0,12, „Mix ohne Aufwertung�
 Mit dem Mondmal vor der Rüstung waren es +0,15; deshalb rechnet die Simulation
 erst die Rüstung, dann das Mal (02). Bemerkt, nicht weiter geändert, wie in M3.
 
+### Mission 5b – Ruinen, Ergebnis der Prüfung (0.26.0) [HYPOTHESE]
+
+Werte in `mission-05b.json`. Grundlage Mission 4, Startgold 240, Weg vom Grafik-Thread
+(Becken). Zehn Wellen, in jeder Panzerbestien, eine reine Panzerwelle, mehr als doppelt
+so viele Panzerbestien wie in M5a; Lebenspunkte ×0,85 bis ×1,9. Spezialisierungen:
+Falkenhorst 45 Gold (Reichweite ×1,3, Schaden ×2,5, Takt ×1,5), Funkensäule 50 (Schaden
+×1,8, Takt ×1,25, drei Sprünge weniger), Fäulnis 40 (verwundbar ×1,4 für die Dauer der
+Verlangsamung).
+
+Labor, Stufe pr:
+
+| Bauweise | Zwerge | Elfen |
+|---|---|---|
+| Funkensäulen mit Fäulnis | 1,40 | 1,41 |
+| Fäulnis mit Falkenhorsten | 1,27 | 1,48 |
+| Mix mit Spezialisierung (Vorführung) | 1,25 | 1,37 |
+| Mix mit Aufwertung | 1,11 | 1,14 |
+| Mix mit Bank und Spezialisierung | 0,92 (verliert) | 0,97 (verliert) |
+| Nur Blitz, spezialisiert | 0,94 | 0,92 |
+| Falkenhorste | 0,91 | 0,91 |
+| Nur Blitz | 0,86 | 0,88 |
+| Nur Wachtürme | 0,54 | 0,54 |
+
+Menschenbot gewinnt 92 %, alle Monokulturen verlieren, Abstand der besten Bauweise 0,12
+(Zwerge) und 0,08 (Elfen). Ohne Volk (`MissionFiveBTests`): Spezialisieren hebt die
+Mischung um 0,19; ohne Fäulnis sinkt „Fäulnis mit Falkenhorsten“ von 1,25 auf 1,05, ohne
+Falkenhorst auf 1,07; Falkenhorste liegen 0,37 vor „Nur Wachtürme“.
+
+**Offen für den Spieltest:**
+- Die **Funkensäule** ist schwer abzustimmen. Stärker (Schaden ×1,7 bis ×2 ohne
+  langsameren Takt) gewinnt der reine Blitz allein, schwächer lohnt sie nur im reinen Blitz.
+  In der Mischung kostet sie die Kette; dort ist sie gerade neutral.
+- Die **Bank** lohnt in den Ruinen nicht: Frühe Panzerbestien bestrafen das Sparen. Darum
+  führt der Mitspieler hier „Mix mit Spezialisierung“ vor, nicht die Mischung mit Bank.
+- **Elfen** passen zur Fäulnis: Ihre Sporentürme reichen weiter, die Mischung gewinnt
+  +0,16 Reserve (sonst höchstens 0,1). Unter der Dominanzgrenze, im Test mit 0,2 begrenzt.
+- Menschenbot 92 % wie die erste, zu leichte Fassung von M5a. Härter (Lebenspunkte) ließe
+  „Mix mit Aufwertung“ verlieren; erst der Spieltest zeigt, ob M5b zu leicht ist.
+
 ### Mission 5a – Spezialisierungen, Ergebnis der Prüfung (0.25.0) [HYPOTHESE]
 
 Werte in `mission-05a.json`. Grundlage Mission 4 (Türme, Aufwertung, Bank, Bonus,

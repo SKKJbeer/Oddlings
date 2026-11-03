@@ -73,6 +73,18 @@ final class SpecializationControllerTests: XCTestCase {
         XCTAssertNil(other.upgradeCost(for: tower))
     }
 
+    /// P3-2: Die Ruinen bieten den anderen Weg je Turm an.
+    func testRuinsOfferTheOtherSpecialization() throws {
+        let ruins = BattleController(model: BattleModel(config: try BalanceConfig.bundledMission(named: "mission-05b"),
+                                                        seed: 1, autoplay: false), interactive: true)
+        let expected: [(TowerKind, Specialization)] = [(.watch, .falconHold), (.lightning, .sparkColumn), (.spore, .rot)]
+        for (kind, specialization) in expected {
+            let tower = Tower(id: 1, kind: kind, cell: Cell(x: 0, y: 0), cooldownTicks: 0, spent: 1, level: 2)
+            XCTAssertEqual(ruins.specialization(for: tower), specialization, "\(kind)")
+            XCTAssertEqual(ruins.upgradeCost(for: tower), ruins.model.sim.config.specializations?[specialization]?.cost)
+        }
+    }
+
     func testBadgeAndNameShowLevelThree() {
         XCTAssertEqual(BattleTexts.levelTag(2), "II")
         XCTAssertEqual(BattleTexts.levelTag(3), "III")
@@ -81,6 +93,8 @@ final class SpecializationControllerTests: XCTestCase {
             XCTAssertFalse(BattleTexts.name(specialization).isEmpty)
             XCTAssertFalse(BattleTexts.effect(specialization).isEmpty)
         }
+        XCTAssertEqual(Set(Specialization.allCases.map(BattleTexts.name)).count, Specialization.allCases.count,
+                       "jede Spezialisierung hat ihren eigenen Namen")
         let node = TowerNode(tower: Tower(id: 1, kind: .watch, cell: Cell(x: 0, y: 0), cooldownTicks: 0, spent: 1), field: 40)
         node.showLevel(3, field: 40)
         let badge = node.childNode(withName: "level.badge")
