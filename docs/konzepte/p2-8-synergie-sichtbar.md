@@ -1,7 +1,7 @@
 # P2-8: Synergie sichtbar und Einstieg ohne Erklärtext
 
-Status: **[VORSCHLAG]**, gebaut mit der Empfehlung der Karte S13 („nur wenn man
-zögert“), solange Steffen nicht anders entscheidet (D-076). Die Wartezeiten
+Status: **[ENTSCHIEDEN]** „nur wenn man zögert“ (Steffen, 03.11.2026, Karte S13,
+D-076). Die Wartezeiten
 (`BattleStyle.guideBuildDelay` 6 s, `guideWaveDelay` 5 s) bleiben [HYPOTHESE] bis
 zum Spieltest (S3). Grundlage:
 [K8](phase-2-3.md#k8--einstieg-ohne-erklärtext), Marktanalyse E2

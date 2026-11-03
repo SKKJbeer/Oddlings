@@ -44,7 +44,7 @@ entscheidet selbst und hält es fest (klein, technisch, umkehrbar).
 | Tägliche Herausforderung (E10) | nach Release | [05](../game-design/05-campaign-and-progression.md#fortschritt) | S | Scope-Verbot, nicht vorgelegt |
 | Bestiarium (E11) | Phase 2–3 | [05](../game-design/05-campaign-and-progression.md#fortschritt) | C | mit D-027 entschieden |
 | Rüstung, Immunität, Bosse, Schattenflieger | Phase 3 | [K7](../konzepte/phase-2-3.md#k7--gegner-bosse-rüstung) | S | Vorschlag, wird mit Phase 3 vorgelegt |
-| Einstieg ohne Erklärtext | Phase 2 | [K8](../konzepte/phase-2-3.md#k8--einstieg-ohne-erklärtext) | C | umgesetzt 0.24.0 (D-076); Karte S13 „wann“ offen, gebaut „nur wenn man zögert“ |
+| Einstieg ohne Erklärtext | Phase 2 | [K8](../konzepte/phase-2-3.md#k8--einstieg-ohne-erklärtext) | C | umgesetzt 0.24.0 (D-076); entschieden „nur wenn man zögert“ (Karte S13, 03.11.) |
 | Ton und Haptik: Weg und Herkunft | Phase 2 | [K9](../konzepte/phase-2-3.md#k9--ton-und-haptik) | S | Vorschlag, neuer Thread zu Beginn Phase 2 |
 | Automatisierte Balance- und Stresstests | Phase 2 (Grundstock), Phase 4 (voll) | [K11](../konzepte/phase-2-3.md#k11--balance-labor-automatisierte-balance--und-stresstests) | S (Richtung), C (Umsetzung) | Richtung entschieden D-028 |
 | Ende-zu-Ende-Tests über die ganze App | ab WP-15 | [Teststrategie](../technical/testing-strategy.md#ende-zu-ende-tests-d-029) | S | entschieden D-029 |

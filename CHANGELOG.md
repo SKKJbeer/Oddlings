@@ -18,7 +18,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   Lichtpunkt. Beim ersten Funken jeder Mission springt „Sporenfunke!“ auf, beim
   allerersten einmal mit dem Satz „Gebremst rücken sie zusammen – der Blitz trifft mehr.“
 - **Verlangsamt lesbar:** grüner Sporenschimmer unter jedem gebremsten Gegner.
-- **Einstieg ohne Erklärtext** (Karte S13, Empfehlung „nur wenn man zögert“, D-076):
+- **Einstieg ohne Erklärtext** (Steffens Wahl auf Karte S13: „nur wenn man zögert“, D-076):
   In Mission 1 zeigt eine Hand auf eine gute Bauzelle, wenn 6 s lang kein Turm steht,
   danach ein Pfeil auf „Nächste Welle“, wenn der Knopf 5 s unberührt bleibt. Jedes
   Zeichen einmal je Gerät, Tippen überspringt, nichts wird abgefangen. Wer Mission 1

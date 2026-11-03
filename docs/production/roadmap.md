@@ -37,7 +37,6 @@ zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzeln
 | S9 | R-7b Schmiede: woher die Währung kommt, was die Schmiede macht, wie die Währung heißt (drei Karten seit 02.11.) | Haupt-Thread, [Konzept](../konzepte/r-7b-schmiede.md) | nichts, gebaut sind die Empfehlungen (D-072); eine andere Wahl wird umgebaut | Erz aus jedem Sieg, mehr für neue Sterne; Stufen I bis III; Name Erz |
 | S10 | Wie schwer Mission 1 bis 4 beim ersten Versuch sein sollen (Entscheidungskarte seit 03.11.) | Haupt-Thread, [Konzept](../konzepte/p2-6b-balance-labor.md) | nichts, das Labor warnt nach der Empfehlung (D-073) | Steigend: M1 ≥ 90 %, M2 ≥ 75 %, M3 ≥ 60 %, M4 ≥ 50 % |
 | S12 | Wo die App nach einem Neustart mitten in einer Mission öffnet (Entscheidungskarte seit 03.11.) | Thread „Fortsetzen nach App-Neustart bauen“, [Konzept](../konzepte/p2-2-fortsetzen.md) | nichts, gebaut ist die Empfehlung (D-074) | Direkt in der Mission, pausiert |
-| S13 | Wann die drei Einstiegshinweise erscheinen (Entscheidungskarte seit 03.11.) | Thread „Oddlings-Designstand und MVP-Plan aufsetzen“, [Konzept](../konzepte/p2-8-synergie-sichtbar.md) | nichts, gebaut ist die Empfehlung (P2-8, D-076) | Nur wenn man zögert |
 | S11 | Blitz allein gewinnt Mission 2 und 3 beim ersten Spielen: wann beheben (Entscheidungskarte seit 03.11.) | Haupt-Thread, [Labor](../konzepte/p2-6b-balance-labor.md#erster-lauf-03112026-stufe-pr-164-läufe-etwa-25-sekunden) | nichts, gebaut ist die Empfehlung (P2-11, D-075) | Jetzt, als eigenes Paket |
 
 ## Als Nächstes
