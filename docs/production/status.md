@@ -6,7 +6,7 @@ ergänzt, D-067). Reihenfolge, Pakete und alles, was auf dich wartet, stehen in 
 [Register](offene-fragen.md).
 
 **Stand: 03.11.2026** · Neueste Version **0.26.1** (gemalte Kampfplätze für Sumpfpfad und Ruinen), Bau folgt;
-davor 0.26.0 (Mission 5b „Ruinen“ mit Falkenhorst, Funkensäule, Fäulnis), 0.25.0 (Spezialisierungen: Salve, Gewitterkrone, Moorherz, dazu Mission 5a „Sumpfpfad“, Bau 47 VALID), 0.24.1 (Sporenfunke sichtbar, Einstieg ohne Erklärtext, Bau 46 VALID), 0.23.0 (Blitz allein verliert Mission 2 und 3, Bau 44), 0.22.0 (Fortsetzen: eine laufende Mission übersteht das Beenden der App, Bau 43 VALID), 0.21.1 (Balance-Labor in der CI, Bau 42 VALID), 0.21.0 (Schmiede mit Erz im Avatar-Menü, Bau 41 VALID), 0.20.0 (Mission 4 mit gepanzerter Panzerbestie, Bau 40), 0.19.0 (Ausrüstung im Avatar-Menü, Bau 39 VALID), 0.18.0 (Mission 3 mit Aufwertungen, Bau 38 VALID), 0.16.1 (gemalte Kampfplätze für Mission 2 bis 4), 0.16.0 (Mission 2 mit Zwergenbank). Der Spielrahmen R-1 bis R-6 steht. Spielbar sind Mission 1 bis 4, der Sumpfpfad (5a) und die Ruinen (5b).
+davor 0.26.0 (Mission 5b „Ruinen“ mit Falkenhorst, Funkensäule, Fäulnis, Bau 48 VALID), 0.25.0 (Spezialisierungen: Salve, Gewitterkrone, Moorherz, dazu Mission 5a „Sumpfpfad“, Bau 47 VALID), 0.24.1 (Sporenfunke sichtbar, Einstieg ohne Erklärtext, Bau 46 VALID), 0.23.0 (Blitz allein verliert Mission 2 und 3, Bau 44), 0.22.0 (Fortsetzen: eine laufende Mission übersteht das Beenden der App, Bau 43 VALID), 0.21.1 (Balance-Labor in der CI, Bau 42 VALID), 0.21.0 (Schmiede mit Erz im Avatar-Menü, Bau 41 VALID), 0.20.0 (Mission 4 mit gepanzerter Panzerbestie, Bau 40), 0.19.0 (Ausrüstung im Avatar-Menü, Bau 39 VALID), 0.18.0 (Mission 3 mit Aufwertungen, Bau 38 VALID), 0.16.1 (gemalte Kampfplätze für Mission 2 bis 4), 0.16.0 (Mission 2 mit Zwergenbank). Der Spielrahmen R-1 bis R-6 steht. Spielbar sind Mission 1 bis 4, der Sumpfpfad (5a) und die Ruinen (5b).
 
 ## Wartet auf dich
 
@@ -84,7 +84,7 @@ davor 0.26.0 (Mission 5b „Ruinen“ mit Falkenhorst, Funkensäule, Fäulnis), 
 
 | Thread | Woran | Nächster Schritt |
 |---|---|---|
-| Haupt-Thread | 0.26.0 Mission 5b „Ruinen“ (P3-2), Bau folgt; 0.25.0 Sumpfpfad in TestFlight (Bau 47) | nächstes Paket der Roadmap |
+| Haupt-Thread | 0.26.0 Mission 5b „Ruinen“ (P3-2) in TestFlight (Bau 48) | nächstes Paket der Roadmap |
 | Synergie sichtbar (P2-8) | 0.24.1 in TestFlight (Bau 46) | Eindruck beim Spieltest: Sieht man den Sporenfunken, kommen Hand und Pfeil zur rechten Zeit? |
 | Fortsetzen nach App-Neustart bauen | 0.22.0 (P2-2) in TestFlight (Bau 43) | deine Karte S12 (wo der Neustart landet) |
 | Mission 2 mit Zwergenbank | 0.16.0, Bau 36 in TestFlight | Werte nach dem Spieltest nachziehen |
