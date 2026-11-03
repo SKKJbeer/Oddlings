@@ -41,4 +41,36 @@ final class SpecializationE2ETests: XCTestCase {
         XCTAssertTrue(e2e.app.buttons["target"].exists, "die Zielwahl bleibt")
         e2e.screenshot("p3-1-salve", in: self)
     }
+
+    /// P3-2: In den Ruinen wird der Sporenturm zur Fäulnis.
+    @MainActor
+    func testRuinsTurnASporeTowerIntoRot() throws {
+        let e2e = try E2EApp(["--play", "--e2e-knoten", "m5b", "--e2e-erste-welle", E2EApp.wavesOnHold],
+                             mission: "mission-05b")
+        e2e.waitForBoard()
+        let start = e2e.config.mission.startGold
+        let upgradePrice = try XCTUnwrap(e2e.config.upgradeCost(of: .spore))
+        let rotPrice = try XCTUnwrap(e2e.config.specializations?[.rot]?.cost, "die Ruinen bieten die Fäulnis an")
+        let cell = try XCTUnwrap(e2e.map.buildableCells.first)
+        e2e.build(.spore, at: cell)
+        e2e.waitFor(e2e.gold, toBe: start - e2e.cost(.spore), "Bauen zieht den Preis ab")
+
+        e2e.tap(cell)
+        let upgrade = e2e.app.buttons["upgrade"]
+        XCTAssertTrue(upgrade.waitForExistence(timeout: 5), "erst aufwerten")
+        upgrade.tap()
+        upgrade.tap()
+        let afterUpgrade = start - e2e.cost(.spore) - upgradePrice
+        e2e.waitFor(e2e.gold, toBe: afterUpgrade, "Aufwerten zieht den Preis ab")
+
+        let specialize = e2e.app.buttons["specialize"]
+        XCTAssertTrue(specialize.waitForExistence(timeout: 5), "auf Stufe 2 steht die Spezialisierung")
+        specialize.tap()
+        XCTAssertTrue(e2e.app.staticTexts["specialize.confirm"].waitForExistence(timeout: 5), "erstes Tippen fragt")
+        specialize.tap()
+        e2e.waitFor(e2e.gold, toBe: afterUpgrade - rotPrice, "Spezialisieren zieht den Preis ab")
+        XCTAssertEqual(e2e.app.staticTexts["panel.title"].label, "Fäulnis")
+        XCTAssertFalse(specialize.exists, "Stufe 3 ist die letzte")
+        e2e.screenshot("p3-2-faeulnis", in: self)
+    }
 }

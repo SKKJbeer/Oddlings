@@ -11,6 +11,21 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.26.0 – 03.11.2026 (P3-2: Mission 5b „Ruinen“ mit Falkenhorst, Funkensäule, Fäulnis)
+
+- **Mission 5b „Ruinen“** ist spielbar, der zweite Weg nach Mission 4: Panzerbestien in
+  jeder Welle, Weg durch das Becken, den der Grafik-Thread vorgeschlagen hat. Werte [HYPOTHESE].
+- **Drei neue Spezialisierungen** (D-078): **Falkenhorst** (Wachturm: weiter, schwerer Schuss,
+  langsamer), **Funkensäule** (Blitz: ein schwerer Schlag, springt nur einmal weiter, lädt
+  langsamer), **Fäulnis** (Sporen: was der Puls verlangsamt, nimmt so lange von allen Türmen
+  mehr Schaden). Die Fäulnis teilt sich den Zustand mit dem Mondmal der Elfen; beide
+  zusammen addieren sich nicht.
+- Kern: Feld `vulnerableFactor`, negative `extraJumps` (Kette bleibt ≥ 0), Prüfung beim Laden.
+- Tests: `RuinSpecializationTests`, `MissionFiveBTests`, App-Test für das Angebot in M5b,
+  E2E „Sporenturm zur Fäulnis“; Kampagne, Ablauf und Labor kennen Mission 5b.
+- Offen für den Spieltest (04): Funkensäule schwer abzustimmen, Bank lohnt in den Ruinen kaum,
+  Elfen passen besonders gut zur Fäulnis.
+
 ## 0.25.0 – 03.11.2026 (P3-1: Spezialisierungen und Mission 5a „Sumpfpfad“) · Bau 47
 
 - **Stufe 3:** Ein Turm auf Stufe 2 lässt sich auf dem Sumpfpfad spezialisieren, je Turm

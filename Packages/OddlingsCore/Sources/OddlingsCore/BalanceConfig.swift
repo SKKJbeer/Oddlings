@@ -103,7 +103,7 @@ public struct BalanceConfig: Codable, Equatable, Sendable {
 
 /// Stufe 3 eines Kampfturms (02, „Spezialisierungen“). Jede gehört zu genau
 /// einem Turm; das steht hier und nicht in der Datei, weil eine Salve am
-/// Sporenturm keine Wertfrage ist. Mehr Fälle kommen mit Mission 5b (P3-2).
+/// Sporenturm keine Wertfrage ist. Sumpfpfad (P3-1) und Ruinen (P3-2) je drei.
 public enum Specialization: String, Codable, CaseIterable, CodingKeyRepresentable, Sendable {
     /// Salve: trifft mehrere Ziele je Schuss.
     case volley
@@ -111,12 +111,18 @@ public enum Specialization: String, Codable, CaseIterable, CodingKeyRepresentabl
     case stormCrown
     /// Moorherz: größerer Radius, stärkere Verlangsamung.
     case bogHeart
+    /// Falkenhorst: große Reichweite, schwerer Schuss, langsamer.
+    case falconHold
+    /// Funkensäule: erster Treffer stärker, weniger Sprünge.
+    case sparkColumn
+    /// Fäulnis: Verlangsamte nehmen von allen Türmen mehr Schaden.
+    case rot
 
     public var tower: TowerKind {
         switch self {
-        case .volley: .watch
-        case .stormCrown: .lightning
-        case .bogHeart: .spore
+        case .volley, .falconHold: .watch
+        case .stormCrown, .sparkColumn: .lightning
+        case .bogHeart, .rot: .spore
         }
     }
 }
@@ -128,18 +134,22 @@ public struct SpecializationConfig: Codable, Equatable, Sendable {
     public var scale: [TowerStat: Double]?
     /// Ziele je Schuss (Salve). Ersetzt die eins des Wachturms.
     public var targets: Int?
-    /// Sprünge zusätzlich zur Kette der Stufe 2 (Gewitterkrone).
+    /// Sprünge zusätzlich zur Kette der Stufe 2 (Gewitterkrone mehr,
+    /// Funkensäule weniger). Die Kette bleibt bei mindestens null.
     public var extraJumps: Int?
     /// Sprünge auf verlangsamte Ziele verlieren keinen Schaden (Gewitterkrone).
     public var keepsDamageOnSlowed: Bool?
+    /// Schadensfaktor auf alles, was der Sporenpuls verlangsamt (Fäulnis, P3-2).
+    public var vulnerableFactor: Double?
 
     public init(cost: Int, scale: [TowerStat: Double]? = nil, targets: Int? = nil, extraJumps: Int? = nil,
-                keepsDamageOnSlowed: Bool? = nil) {
+                keepsDamageOnSlowed: Bool? = nil, vulnerableFactor: Double? = nil) {
         self.cost = cost
         self.scale = scale
         self.targets = targets
         self.extraJumps = extraJumps
         self.keepsDamageOnSlowed = keepsDamageOnSlowed
+        self.vulnerableFactor = vulnerableFactor
     }
 
     public func apply(to second: TowerConfig) -> TowerConfig {
@@ -147,6 +157,7 @@ public struct SpecializationConfig: Codable, Equatable, Sendable {
         if let targets { tower.targets = targets }
         if let extraJumps { tower.chainJumps = (tower.chainJumps ?? 0) + extraJumps }
         if let keepsDamageOnSlowed { tower.keepsDamageOnSlowed = keepsDamageOnSlowed }
+        if let vulnerableFactor { tower.vulnerableFactor = vulnerableFactor }
         return tower
     }
 }
@@ -479,12 +490,15 @@ public struct TowerConfig: Codable, Equatable, Sendable {
     public var targets: Int?
     /// Kettensprünge auf verlangsamte Ziele ohne Abfall (Gewitterkrone, P3-1).
     public var keepsDamageOnSlowed: Bool?
+    /// Der Puls macht verlangsamte Gegner für die Dauer der Verlangsamung
+    /// verwundbar (Fäulnis, P3-2).
+    public var vulnerableFactor: Double?
 
     public init(
         cost: Int, range: Double, damage: Double, attackInterval: Double, targeting: Targeting,
         chainJumps: Int? = nil, chainRadius: Double? = nil, chainFalloff: Double? = nil,
         slowFactor: Double? = nil, slowDuration: Double? = nil, targets: Int? = nil,
-        keepsDamageOnSlowed: Bool? = nil
+        keepsDamageOnSlowed: Bool? = nil, vulnerableFactor: Double? = nil
     ) {
         self.cost = cost
         self.range = range
@@ -498,6 +512,7 @@ public struct TowerConfig: Codable, Equatable, Sendable {
         self.slowDuration = slowDuration
         self.targets = targets
         self.keepsDamageOnSlowed = keepsDamageOnSlowed
+        self.vulnerableFactor = vulnerableFactor
     }
 }
 
