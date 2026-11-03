@@ -171,7 +171,13 @@ public enum Lab {
             let kind = kinds[Int(rng.next() % UInt64(kinds.count))]
             let upgrade = config.upgradeCost(of: kind) != nil
                 && Double(rng.next() % 1000) / 1000 < lab.random.upgradeShare
-            return upgrade ? .upgrade(kind) : .build(kind)
+            guard upgrade else { return .build(kind) }
+            // Ein Teil der Aufwertungen geht weiter auf Stufe 3, wo die Mission sie anbietet (P3-1).
+            let offered = config.specializations(for: kind)
+            if !offered.isEmpty, Double(rng.next() % 1000) / 1000 < lab.random.upgradeShare {
+                return .specialize(offered[Int(rng.next() % UInt64(offered.count))])
+            }
+            return .upgrade(kind)
         }
         let sim = Simulation(config: config)
         return record(play, .random, String(seed), sim.play(order, castsAbility: true, lab: lab))

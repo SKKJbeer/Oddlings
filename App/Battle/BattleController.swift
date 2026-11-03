@@ -190,8 +190,20 @@ final class BattleController {
     /// Preis der nächsten Stufe, nil, wenn der Turm nicht weiter kann oder die
     /// Mission keine Aufwertung kennt (Mission 1 und 2).
     func upgradeCost(for tower: Tower) -> Int? {
+        if let specialization = specialization(for: tower) {
+            return model.sim.config.specializations?[specialization]?.cost
+        }
         guard tower.level < model.sim.config.maxLevel(of: tower.kind) else { return nil }
         return model.sim.config.upgradeCost(of: tower.kind)
+    }
+
+    /// Stufe 3 (P3-1): Auf Stufe 2 nimmt die Spezialisierung den Platz von
+    /// „Aufwerten“ ein, mit demselben zweimaligen Tippen. Auf dem Sumpfpfad gibt
+    /// es je Turm eine (S14); bietet eine spätere Mission zwei, braucht das
+    /// Kreismenü eine zweite Karte, das ist P3-2.
+    func specialization(for tower: Tower) -> Specialization? {
+        guard tower.level == 2, tower.specialization == nil else { return nil }
+        return model.sim.config.specializations(for: tower.kind).first
     }
 
     /// Zielwahl ab Stufe 2 und nur bei Türmen mit Einzelziel (07, „Zielwahl“).
@@ -210,7 +222,11 @@ final class BattleController {
             return
         }
         if armed {
-            model.enqueue(.upgrade(towerID: id))
+            if let specialization = specialization(for: tower) {
+                model.enqueue(.specialize(towerID: id, specialization))
+            } else {
+                model.enqueue(.upgrade(towerID: id))
+            }
             selection = .tower(id: id)
         } else {
             selection = .tower(id: id, upgradeArmed: true)
@@ -252,12 +268,19 @@ final class BattleController {
             guard let stats = model.sim.config.towers[kind] else { return nil }
             return (center: cell.center, range: stats.range)
         case .tower:
-            // Beim ersten Tippen auf Aufwerten zeigt der Kreis schon Stufe 2 (07).
-            guard let tower = selectedTower,
-                  let stats = model.sim.config.stats(of: tower.kind, level: tower.level + (upgradeArmed ? 1 : 0))
-            else { return nil }
+            // Beim ersten Tippen auf Aufwerten zeigt der Kreis schon die nächste Stufe (07).
+            guard let tower = selectedTower, let stats = previewStats(of: tower) else { return nil }
             return (center: tower.cell.center, range: stats.range)
         }
+    }
+
+    private func previewStats(of tower: Tower) -> TowerConfig? {
+        let config = model.sim.config
+        guard upgradeArmed else { return config.stats(of: tower) }
+        if let specialization = specialization(for: tower) {
+            return config.stats(of: tower.kind, specialization: specialization)
+        }
+        return config.stats(of: tower.kind, level: tower.level + 1)
     }
 
     // MARK: Eingaben

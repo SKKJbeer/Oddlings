@@ -44,6 +44,9 @@ public struct ConfigIssue: Hashable, Sendable, CustomStringConvertible {
         case statNotInTower            // Faktor auf einen Wert, den der Turm nicht hat
         case strategyNeedsUpgrades     // Bauweise wertet auf, die Mission bietet es nicht an
         case armorNeedsBothValues      // Rüstung braucht armor und armorMinShare zusammen
+        case specializationNeedsUpgrade  // Stufe 3 ohne Stufe 2 für diesen Turm
+        case emptySpecialization       // Spezialisierung ohne jede Wirkung
+        case strategyNeedsSpecialization // Bauweise spezialisiert, die Mission bietet es nicht an
     }
 
     public init(field: String, rule: Rule) {
@@ -79,6 +82,9 @@ public struct ConfigIssue: Hashable, Sendable, CustomStringConvertible {
         case .statNotInTower: "\(field) gibt es bei diesem Turm nicht"
         case .strategyNeedsUpgrades: "\(field) wertet auf, die Mission hat dafür keine Werte"
         case .armorNeedsBothValues: "\(field) braucht armor und armorMinShare zusammen"
+        case .specializationNeedsUpgrade: "\(field) braucht eine Aufwertung auf Stufe 2 für diesen Turm"
+        case .emptySpecialization: "\(field) braucht scale, targets, extraJumps oder keepsDamageOnSlowed"
+        case .strategyNeedsSpecialization: "\(field) spezialisiert, die Mission bietet es nicht an"
         case .starsOutOfOrder: "\(field) braucht 0 < two ≤ three ≤ fortressLives"
         case .invalidID: "\(field) darf nur Kleinbuchstaben, Ziffern und Bindestriche enthalten"
         case .duplicateID: "\(field) ist doppelt vergeben"
@@ -246,6 +252,7 @@ extension BalanceConfig {
             positive(Double(bank.limit), "bank.limit")
         }
         found += upgradeIssues()
+        found += specializationIssues()
         // Nach Namen sortiert, damit die Meldungen bei gleicher Datei gleich sind.
         for name in (simStrategies ?? [:]).keys.sorted() {
             let steps = simStrategies?[name] ?? []
@@ -254,6 +261,9 @@ extension BalanceConfig {
             }
             if steps.contains(where: { if case .upgrade(let kind) = $0 { upgrades?[kind] == nil } else { false } }) {
                 found.append(.init(field: "simStrategies.\(name)", rule: .strategyNeedsUpgrades))
+            }
+            if steps.contains(where: { if case .specialize(let s) = $0 { specializations?[s] == nil } else { false } }) {
+                found.append(.init(field: "simStrategies.\(name)", rule: .strategyNeedsSpecialization))
             }
         }
 
@@ -306,6 +316,58 @@ extension BalanceConfig {
             }
         }
         return found
+    }
+
+    /// Spezialisierungen: nur auf einem Turm mit Stufe 2, Preis positiv, jede
+    /// Wirkung passt zum Turm, und Stufe 3 hält dieselben Grenzen wie Stufe 1.
+    private func specializationIssues() -> [ConfigIssue] {
+        var found: [ConfigIssue] = []
+        guard let specializations else { return found }
+        for specialization in Specialization.allCases {
+            guard let special = specializations[specialization] else { continue }
+            let field = "specializations.\(specialization.rawValue)"
+            let kind = specialization.tower
+            guard let base = towers[kind], upgrades?[kind] != nil, let second = stats(of: kind, level: 2) else {
+                found.append(.init(field: field, rule: .specializationNeedsUpgrade))
+                continue
+            }
+            if !(special.cost > 0) { found.append(.init(field: "\(field).cost", rule: .mustBePositive)) }
+            let scale = special.scale ?? [:]
+            if scale.isEmpty && special.targets == nil && special.extraJumps == nil && special.keepsDamageOnSlowed == nil {
+                found.append(.init(field: field, rule: .emptySpecialization))
+            }
+            for stat in TowerStat.allCases {
+                guard let factor = scale[stat] else { continue }
+                let statField = "\(field).scale.\(stat.rawValue)"
+                if !(factor > 0) { found.append(.init(field: statField, rule: .mustBePositive)) }
+                let present = switch stat {
+                case .range, .damage, .attackInterval: true
+                case .chainRadius: base.chainRadius != nil
+                case .slowFactor, .slowDuration: base.slowFactor != nil
+                }
+                if !present { found.append(.init(field: statField, rule: .statNotInTower)) }
+            }
+            // Mehrere Ziele hat nur der Einzelschuss, Sprünge nur die Kette.
+            if let targets = special.targets {
+                if base.targeting != .first || base.chainJumps != nil {
+                    found.append(.init(field: "\(field).targets", rule: .statNotInTower))
+                } else if !(targets > 0) {
+                    found.append(.init(field: "\(field).targets", rule: .mustBePositive))
+                }
+            }
+            if special.extraJumps != nil || special.keepsDamageOnSlowed != nil, base.chainJumps == nil {
+                found.append(.init(field: "\(field).extraJumps", rule: .statNotInTower))
+            }
+            if let jumps = special.extraJumps { nonNegativeInt(jumps, "\(field).extraJumps", into: &found) }
+            if let slow = special.apply(to: second).slowFactor, !(slow > 0 && slow <= 1) {
+                found.append(.init(field: "\(field).scale.slowFactor", rule: .mustBeFraction))
+            }
+        }
+        return found
+    }
+
+    private func nonNegativeInt(_ value: Int, _ field: String, into found: inout [ConfigIssue]) {
+        if value < 0 { found.append(.init(field: field, rule: .mustNotBeNegative)) }
     }
 
     public func validate() throws(ConfigError) {

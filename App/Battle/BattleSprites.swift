@@ -435,7 +435,7 @@ final class TowerNode: SKNode {
     }
 
     /// Stufe aus dem Zustand: Bild der Stufe, wenn es im Katalog liegt, und
-    /// ein Schild „II“ oben rechts, damit man es auch ohne neues Bild sieht (07).
+    /// ein Schild „II“ bzw. „III“ oben rechts, damit man es auch ohne neues Bild sieht (07).
     private(set) var level = 1
     private var badge: SKNode?
 
@@ -452,7 +452,7 @@ final class TowerNode: SKNode {
         plate.fillColor = BattleStyle.levelBadgeFill
         plate.strokeColor = BattleStyle.levelBadgeStroke
         plate.lineWidth = 1.5
-        let text = SKLabelNode(text: BattleTexts.levelTag)
+        let text = SKLabelNode(text: BattleTexts.levelTag(newLevel))
         text.fontName = BattleStyle.font
         text.fontSize = field * 0.2
         text.fontColor = BattleStyle.levelBadgeStroke

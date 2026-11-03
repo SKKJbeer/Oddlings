@@ -54,7 +54,13 @@ public struct SuspendedBattle: Codable, Equatable, Sendable {
             check(sim.map.isBuildable(tower.cell), "Turm \(tower.id) steht nicht auf einem Bauplatz")
             check(!cells.contains(tower.cell), "zwei Türme auf \(tower.cell.x),\(tower.cell.y)")
             cells.append(tower.cell)
-            check((1...config.maxLevel(of: tower.kind)).contains(tower.level), "Stufe \(tower.level)")
+            // Stufe 3 genau mit einer Spezialisierung, die die Mission dem Turm anbietet (P3-1).
+            if let specialization = tower.specialization {
+                check(tower.level == 3 && config.specializations(for: tower.kind).contains(specialization),
+                      "Spezialisierung \(specialization.rawValue) auf Stufe \(tower.level)")
+            } else {
+                check((1...config.maxLevel(of: tower.kind)).contains(tower.level), "Stufe \(tower.level)")
+            }
             check(tower.cooldownTicks >= 0 && tower.spent >= 0 && tower.paid >= 0, "Turm \(tower.id) mit negativen Werten")
             check(tower.builtTick >= 0 && tower.builtTick <= s.tick, "Bauzeit \(tower.builtTick)")
         }

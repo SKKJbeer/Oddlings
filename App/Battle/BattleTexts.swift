@@ -116,8 +116,37 @@ enum BattleTexts {
     // MARK: Aufwerten und Zielwahl (P2-6)
 
     /// Name mit Stufe, wie auf dem Schild am Turm: „Wachturm II“.
-    static func name(_ kind: TowerKind, level: Int) -> String { level >= 2 ? "\(name(kind)) II" : name(kind) }
-    static let levelTag = "II"
+    static func name(_ kind: TowerKind, level: Int) -> String { level >= 2 ? "\(name(kind)) \(levelTag(level))" : name(kind) }
+    /// Schild am Turm; Stufe 3 ist die Spezialisierung (P3-1).
+    static func levelTag(_ level: Int) -> String { level >= 3 ? "III" : "II" }
+
+    // MARK: Spezialisierungen (P3-1, D-077)
+
+    /// Name auf der Tafel: der Turm heißt dann so, wie er spezialisiert ist.
+    static func name(_ specialization: Specialization) -> String {
+        switch specialization {
+        case .volley: "Salve"
+        case .stormCrown: "Gewitterkrone"
+        case .bogHeart: "Moorherz"
+        }
+    }
+    /// Ein Satz, was sie bringt, beim ersten Tippen auf der Tafel.
+    static func effect(_ specialization: Specialization) -> String {
+        switch specialization {
+        case .volley: "Trifft zwei Ziele je Schuss."
+        case .stormCrown: "Springt weiter, gebremste Ziele schwächen ihn nicht."
+        case .bogHeart: "Größerer Kreis, bremst stärker und länger."
+        }
+    }
+    static let specialize = "Spezialisieren"
+    /// Spezialisieren lässt sich nicht zurücknehmen, nur durch Verkaufen (07).
+    static let specializeFinal = "Endgültig, nur Verkaufen nimmt es zurück."
+    static func specializeLine(_ specialization: Specialization, cost: Int) -> String {
+        "\(name(specialization)) für \(cost) Gold"
+    }
+    static func confirmSpecialize(_ specialization: Specialization, cost: Int) -> String {
+        "Nochmal tippen: \(name(specialization)) für \(cost) Gold"
+    }
     /// Beim ersten gepanzerten Gegner einer Mission (P2-10).
     static let armorHint = "Gepanzert: Steine schlagen durch"
     /// Sporenfunke (E2, P2-8): Blitz trifft ein verlangsamtes Ziel.

@@ -469,7 +469,7 @@ final class BattleScene: SKScene {
     private func position(of command: Command) -> CGPoint {
         switch command {
         case .build(_, let cell): return toScene(cell.center)
-        case .sell(let id), .upgrade(let id), .setTargetMode(let id, _):
+        case .sell(let id), .upgrade(let id), .setTargetMode(let id, _), .specialize(let id, _):
             return towerNodes[id]?.position ?? CGPoint(x: size.width / 2, y: size.height / 2)
         case .callNextWave: return CGPoint(x: size.width / 2, y: size.height / 2)
         case .useAbility(let point): return toScene(point)

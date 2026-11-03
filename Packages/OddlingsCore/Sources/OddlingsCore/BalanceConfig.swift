@@ -26,12 +26,17 @@ public struct BalanceConfig: Codable, Equatable, Sendable {
     /// bietet die Mission keine Aufwertung an, und die Simulation lehnt sie ab.
     /// Nur zum Nachschlagen, nie darüber iterieren (Architekturregel 6).
     public var upgrades: [TowerKind: UpgradeConfig]?
+    /// Spezialisierungen auf Stufe 3 (D-024, P3-1). Fehlt der Abschnitt, ist
+    /// Stufe 2 die höchste. Nur zum Nachschlagen; gefragt wird über
+    /// `specializations(for:)`, das `Specialization.allCases` durchgeht (Regel 6).
+    public var specializations: [Specialization: SpecializationConfig]?
 
     public init(
         simulation: SimulationConfig, mission: MissionConfig, map: MapConfig,
         towers: [TowerKind: TowerConfig], enemies: [EnemyKind: EnemyConfig], waves: [WaveConfig],
         simStrategies: [String: [StrategyStep]]? = nil, demoStrategy: String? = nil,
-        ability: AbilityConfig? = nil, bank: BankConfig? = nil, upgrades: [TowerKind: UpgradeConfig]? = nil
+        ability: AbilityConfig? = nil, bank: BankConfig? = nil, upgrades: [TowerKind: UpgradeConfig]? = nil,
+        specializations: [Specialization: SpecializationConfig]? = nil
     ) {
         self.simulation = simulation
         self.mission = mission
@@ -44,6 +49,7 @@ public struct BalanceConfig: Codable, Equatable, Sendable {
         self.ability = ability
         self.bank = bank
         self.upgrades = upgrades
+        self.specializations = specializations
     }
 
     /// Was die Mission zu bauen anbietet, in fester Reihenfolge: die
@@ -73,7 +79,76 @@ public struct BalanceConfig: Codable, Equatable, Sendable {
         return upgrade.apply(to: base)
     }
 
-    public func stats(of tower: Tower) -> TowerConfig? { stats(of: tower.kind, level: tower.level) }
+    /// Werte auf Stufe 3: die Spezialisierung auf den Werten der Stufe 2, wie
+    /// Stufe 2 auf denen der Stufe 1 (D-084). Nil, wenn die Mission sie nicht
+    /// anbietet oder sie zu einem anderen Turm gehört.
+    public func stats(of kind: TowerKind, specialization: Specialization) -> TowerConfig? {
+        guard specialization.tower == kind, let special = specializations?[specialization],
+              let second = stats(of: kind, level: 2) else { return nil }
+        return special.apply(to: second)
+    }
+
+    public func stats(of tower: Tower) -> TowerConfig? {
+        if let specialization = tower.specialization { return stats(of: tower.kind, specialization: specialization) }
+        return stats(of: tower.kind, level: tower.level)
+    }
+
+    /// Was ein Turm dieser Art auf Stufe 2 werden kann, in fester Reihenfolge.
+    /// Leer ohne Aufwertung: Stufe 3 setzt Stufe 2 voraus.
+    public func specializations(for kind: TowerKind) -> [Specialization] {
+        guard upgrades?[kind] != nil, let offered = specializations else { return [] }
+        return Specialization.allCases.filter { $0.tower == kind && offered[$0] != nil }
+    }
+}
+
+/// Stufe 3 eines Kampfturms (02, „Spezialisierungen“). Jede gehört zu genau
+/// einem Turm; das steht hier und nicht in der Datei, weil eine Salve am
+/// Sporenturm keine Wertfrage ist. Mehr Fälle kommen mit Mission 5b (P3-2).
+public enum Specialization: String, Codable, CaseIterable, CodingKeyRepresentable, Sendable {
+    /// Salve: trifft mehrere Ziele je Schuss.
+    case volley
+    /// Gewitterkrone: weitere Sprünge, kein Abfall auf verlangsamten Zielen.
+    case stormCrown
+    /// Moorherz: größerer Radius, stärkere Verlangsamung.
+    case bogHeart
+
+    public var tower: TowerKind {
+        switch self {
+        case .volley: .watch
+        case .stormCrown: .lightning
+        case .bogHeart: .spore
+        }
+    }
+}
+
+/// Preis und Wirkung einer Spezialisierung, gerechnet auf den Werten der Stufe 2.
+public struct SpecializationConfig: Codable, Equatable, Sendable {
+    public var cost: Int
+    /// Faktoren wie bei der Aufwertung; nur zum Nachschlagen.
+    public var scale: [TowerStat: Double]?
+    /// Ziele je Schuss (Salve). Ersetzt die eins des Wachturms.
+    public var targets: Int?
+    /// Sprünge zusätzlich zur Kette der Stufe 2 (Gewitterkrone).
+    public var extraJumps: Int?
+    /// Sprünge auf verlangsamte Ziele verlieren keinen Schaden (Gewitterkrone).
+    public var keepsDamageOnSlowed: Bool?
+
+    public init(cost: Int, scale: [TowerStat: Double]? = nil, targets: Int? = nil, extraJumps: Int? = nil,
+                keepsDamageOnSlowed: Bool? = nil) {
+        self.cost = cost
+        self.scale = scale
+        self.targets = targets
+        self.extraJumps = extraJumps
+        self.keepsDamageOnSlowed = keepsDamageOnSlowed
+    }
+
+    public func apply(to second: TowerConfig) -> TowerConfig {
+        var tower = UpgradeConfig(cost: cost, scale: scale ?? [:]).apply(to: second)
+        if let targets { tower.targets = targets }
+        if let extraJumps { tower.chainJumps = (tower.chainJumps ?? 0) + extraJumps }
+        if let keepsDamageOnSlowed { tower.keepsDamageOnSlowed = keepsDamageOnSlowed }
+        return tower
+    }
 }
 
 /// Ein Wert eines Kampfturms, den eine Aufwertung skalieren darf.
@@ -118,15 +193,23 @@ public struct UpgradeConfig: Codable, Equatable, Sendable {
 public enum StrategyStep: Equatable, Sendable, Codable {
     case build(TowerKind)
     case upgrade(TowerKind)
+    /// Spezialisiert den ältesten passenden Turm auf Stufe 2 (P3-1). In der
+    /// Datei der Name der Spezialisierung, etwa `"volley"`.
+    case specialize(Specialization)
 
     public var kind: TowerKind {
         switch self {
         case .build(let kind), .upgrade(let kind): kind
+        case .specialize(let specialization): specialization.tower
         }
     }
 
     public init(from decoder: any Decoder) throws {
         let text = try decoder.singleValueContainer().decode(String.self)
+        if let specialization = Specialization(rawValue: text) {
+            self = .specialize(specialization)
+            return
+        }
         let upgrade = text.hasSuffix("+")
         guard let kind = TowerKind(rawValue: upgrade ? String(text.dropLast()) : text) else {
             throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath,
@@ -140,6 +223,7 @@ public enum StrategyStep: Equatable, Sendable, Codable {
         switch self {
         case .build(let kind): try container.encode(kind.rawValue)
         case .upgrade(let kind): try container.encode(kind.rawValue + "+")
+        case .specialize(let specialization): try container.encode(specialization.rawValue)
         }
     }
 }
@@ -391,11 +475,16 @@ public struct TowerConfig: Codable, Equatable, Sendable {
     public var slowFactor: Double?
     /// Sekunden
     public var slowDuration: Double?
+    /// Ziele je Schuss eines Einzelziel-Turms; fehlt es, eines (Salve, P3-1).
+    public var targets: Int?
+    /// Kettensprünge auf verlangsamte Ziele ohne Abfall (Gewitterkrone, P3-1).
+    public var keepsDamageOnSlowed: Bool?
 
     public init(
         cost: Int, range: Double, damage: Double, attackInterval: Double, targeting: Targeting,
         chainJumps: Int? = nil, chainRadius: Double? = nil, chainFalloff: Double? = nil,
-        slowFactor: Double? = nil, slowDuration: Double? = nil
+        slowFactor: Double? = nil, slowDuration: Double? = nil, targets: Int? = nil,
+        keepsDamageOnSlowed: Bool? = nil
     ) {
         self.cost = cost
         self.range = range
@@ -407,6 +496,8 @@ public struct TowerConfig: Codable, Equatable, Sendable {
         self.chainFalloff = chainFalloff
         self.slowFactor = slowFactor
         self.slowDuration = slowDuration
+        self.targets = targets
+        self.keepsDamageOnSlowed = keepsDamageOnSlowed
     }
 }
 

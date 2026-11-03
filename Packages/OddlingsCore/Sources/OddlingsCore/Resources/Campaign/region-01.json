@@ -6,7 +6,7 @@
     { "id": "m2",  "kind": "main", "mission": "mission-02", "position": [0.22, 0.48], "requires": ["m1"], "novelty": "bank" },
     { "id": "m3",  "kind": "main", "mission": "mission-03", "position": [0.36, 0.58], "requires": ["m2"], "novelty": "upgrades" },
     { "id": "m4",  "kind": "main", "mission": "mission-04", "position": [0.48, 0.45], "requires": ["m3"], "novelty": "armor" },
-    { "id": "m5a", "kind": "main", "position": [0.60, 0.24], "requires": ["m4"], "novelty": "specializations" },
+    { "id": "m5a", "kind": "main", "mission": "mission-05a", "position": [0.60, 0.24], "requires": ["m4"], "novelty": "specializations" },
     { "id": "m6a", "kind": "main", "position": [0.74, 0.22], "requires": ["m5a"], "novelty": "specializations" },
     { "id": "m5b", "kind": "main", "position": [0.60, 0.68], "requires": ["m4"], "novelty": "specializations" },
     { "id": "m6b", "kind": "main", "position": [0.74, 0.70], "requires": ["m5b"], "novelty": "specializations" },

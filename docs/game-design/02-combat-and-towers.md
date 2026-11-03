@@ -131,6 +131,20 @@ Ist eine nie die beste, ist sie falsch, nicht der Test.
 **Freischaltung.** In Region 1 kommen Stufe 2 und die Spezialisierungen nach und
 nach dazu ([05](05-campaign-and-progression.md#region-1-flüsterwald-kostenlos)), damit Mission 1 so einfach bleibt, wie sie ist.
 
+### Stufe 3, wie gebaut (P3-1, 0.25.0)
+
+Ab Mission 5a. Konzept: [p3-1-spezialisierungen-sumpfpfad](../konzepte/p3-1-spezialisierungen-sumpfpfad.md), D-077.
+
+- Je Weg drei, die Wahl zwischen zweien ab M6 (Karte S14). Der Sumpfpfad bietet
+  Salve, Gewitterkrone und Moorherz; die Ruinen bringen die anderen drei mit P3-2.
+- Spezialisieren geht nur aus Stufe 2 und rechnet auf deren Werten: Salve trifft
+  zwei Ziele je Schuss nach der Zielwahl, Gewitterkrone springt zweimal mehr und
+  weiter und verliert auf verlangsamten Zielen keinen Schaden, Moorherz hat einen
+  größeren Kreis und bremst stärker und länger.
+- Bedienung: derselbe Knopf wie „Aufwerten“, mit Stern; zweimal tippen, die Tafel
+  warnt „Endgültig“. Schild „III“ am Turm, die Tafel trägt den Namen der
+  Spezialisierung. Zurück nur durch Verkaufen (70 % von allem).
+
 ### Stufe 2 und Zielwahl, wie gebaut (P2-6, 0.18.0)
 
 Ab Mission 3. Konzept: [p2-6-mission-3-aufwerten](../konzepte/p2-6-mission-3-aufwerten.md).

@@ -46,13 +46,16 @@ public struct Tower: Codable, Equatable, Sendable {
     public var builtTick: Int = 0
     /// Gold, das eine Bank schon ausgezahlt hat. Erreicht es den Deckel, ist sie leer.
     public var paid: Int = 0
-    /// Stufe 1 nach dem Bau, 2 nach der Aufwertung (P2-6).
+    /// Stufe 1 nach dem Bau, 2 nach der Aufwertung (P2-6), 3 nach der Spezialisierung (P3-1).
     public var level: Int = 1
     /// Zielwahl, ab Stufe 2 umschaltbar. Bis dahin `first` wie in Mission 1.
     public var targetMode: TargetMode = .first
+    /// Gesetzt genau auf Stufe 3 (P3-1).
+    public var specialization: Specialization? = nil
 
     public init(id: Int, kind: TowerKind, cell: Cell, cooldownTicks: Int, spent: Int,
-                builtTick: Int = 0, paid: Int = 0, level: Int = 1, targetMode: TargetMode = .first) {
+                builtTick: Int = 0, paid: Int = 0, level: Int = 1, targetMode: TargetMode = .first,
+                specialization: Specialization? = nil) {
         self.id = id
         self.kind = kind
         self.cell = cell
@@ -62,13 +65,15 @@ public struct Tower: Codable, Equatable, Sendable {
         self.paid = paid
         self.level = level
         self.targetMode = targetMode
+        self.specialization = specialization
     }
 
     private enum CodingKeys: String, CodingKey {
-        case id, kind, cell, cooldownTicks, spent, builtTick, paid, level, targetMode
+        case id, kind, cell, cooldownTicks, spent, builtTick, paid, level, targetMode, specialization
     }
 
-    /// Zustände ohne Bankfelder (vor 0.16.0) und ohne Stufe (vor 0.18.0) bleiben lesbar.
+    /// Zustände ohne Bankfelder (vor 0.16.0), ohne Stufe (vor 0.18.0) und ohne
+    /// Spezialisierung (vor P3-1) bleiben lesbar.
     public init(from decoder: any Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         id = try c.decode(Int.self, forKey: .id)
@@ -80,6 +85,7 @@ public struct Tower: Codable, Equatable, Sendable {
         paid = try c.decodeIfPresent(Int.self, forKey: .paid) ?? 0
         level = try c.decodeIfPresent(Int.self, forKey: .level) ?? 1
         targetMode = try c.decodeIfPresent(TargetMode.self, forKey: .targetMode) ?? .first
+        specialization = try c.decodeIfPresent(Specialization.self, forKey: .specialization)
     }
 }
 
@@ -179,6 +185,8 @@ public enum Command: Codable, Equatable, Sendable {
     case upgrade(towerID: Int)
     /// Zielwahl eines Turms ab Stufe 2; kostet nichts.
     case setTargetMode(towerID: Int, TargetMode)
+    /// Hebt einen Turm von Stufe 2 auf Stufe 3 mit dieser Spezialisierung (P3-1).
+    case specialize(towerID: Int, Specialization)
 }
 
 public enum Rejection: Equatable, Sendable {
@@ -194,7 +202,8 @@ public enum Rejection: Equatable, Sendable {
     /// So viele Banken stehen schon, wie die Mission erlaubt.
     case limitReached
     /// Die Mission wertet diese Turmart nicht auf, oder der Turm steht schon
-    /// auf der höchsten Stufe.
+    /// auf der höchsten Stufe. Beim Spezialisieren auch: Turm nicht auf Stufe 2,
+    /// Spezialisierung nicht angeboten oder für einen anderen Turm.
     case notUpgradable
     /// Zielwahl erst ab Stufe 2 und nur für Türme mit Einzelziel.
     case targetModeLocked
