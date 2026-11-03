@@ -279,6 +279,9 @@ private struct ResultCard: View {
                 Label(reward, systemImage: "hammer.fill")
                     .font(UITheme.bodyHeavy(17))
                     .foregroundStyle(UITheme.coin)
+                    // Sonst liest VoiceOver das Hammerbild als „Kompilieren“ vor.
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(reward)
                     .accessibilityIdentifier("result.reward")
             }
             HStack(spacing: 12) {

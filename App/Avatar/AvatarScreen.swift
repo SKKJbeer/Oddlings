@@ -222,6 +222,9 @@ private struct ForgePanel: View {
                     .font(UITheme.display(22))
                     .foregroundStyle(UITheme.coin)
                     .shadow(color: UITheme.outline, radius: 0, x: 0, y: 2)
+                    // Sonst liest VoiceOver das Hammerbild als „Kompilieren“ vor.
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(AvatarTexts.ore(flow.ore))
                     .accessibilityIdentifier("forge.ore")
                 Spacer(minLength: 8)
                 Text(AvatarTexts.forgeHint)
