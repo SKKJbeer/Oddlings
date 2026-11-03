@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.21.0 – 02.11.2026 (R-7b: Schmiede mit Erz)
+## 0.21.0 – 02.11.2026 (R-7b: Schmiede mit Erz) · Bau 41
 
 - **Erz**: Jeder Sieg gibt 4, jeder neue Stern 7 dazu, eine Niederlage nichts. Die
   Ergebnistafel nennt den Ertrag („+25 Erz“). Gebaut mit den drei Empfehlungen (D-072),
