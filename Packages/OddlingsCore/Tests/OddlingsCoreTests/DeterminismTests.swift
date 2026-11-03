@@ -1,6 +1,7 @@
 import Foundation
 import Testing
 @testable import OddlingsCore
+import OddlingsLab
 
 @Suite("Determinismus")
 struct DeterminismTests {

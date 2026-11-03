@@ -46,7 +46,7 @@ jobs:
   # versehentlicher Apple-Import sofort rot wird, nicht erst im Mac-Lauf.
   core-linux:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     container: swift:6.2-noble
     steps:
       - uses: actions/checkout@v4
@@ -54,6 +54,19 @@ jobs:
         # Release mit Testzugriff: Die Balancetests rechnen jede Talentkombination
         # (D-065), im Debug-Bau dauerte das über 20 Minuten.
         run: swift test -c release -Xswiftc -enable-testing --package-path Packages/OddlingsCore
+      - name: Balance-Labor (Stufe pr)
+        # P2-6b: Bots spielen jede Mission beim ersten Spielen. Rot bei einer neuen
+        # Verletzung der Zielwerte, bekannte Befunde stehen in labor.json mit Grund.
+        run: |
+          swift run -c release --package-path Packages/OddlingsCore oddlings-balance --stufe pr --ausgabe build/balance
+          cat build/balance/bericht.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Laborbericht sichern
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: balance-labor
+          path: build/balance
+          if-no-files-found: ignore
 
   iphone:
     runs-on: macos-15

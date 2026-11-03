@@ -1,6 +1,7 @@
 import Foundation
 import Testing
 @testable import OddlingsCore
+import OddlingsLab
 
 /// Mission 3 „Pilzhain“ (P2-6). Werte sind Hypothese bis nach WP-15; die Tests
 /// halten Beziehungen fest, keine genauen Zahlen (testing-strategy.md).

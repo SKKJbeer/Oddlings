@@ -10,6 +10,7 @@ Status: **gilt**, umgesetzt bis 0.12.0; Ende-zu-Ende-Tests **[ENTSCHIEDEN D-029]
 | Konfigurationstests | JSON lädt, Validierung greift, ungültige Werte werden abgewiesen | Paket | bei jeder Änderung |
 | Determinismus | Gleiche Befehlsfolge → gleiche Prüfsumme des Endzustands; 1× = 2×; Speichern/Laden mitten in der Welle ändert das Ergebnis nicht | Paket | bei jeder Änderung |
 | Balancetests | Bot-Bauweisen aus der Konfiguration: „Mischung gewinnt", „nur Sporen verliert", Reserve-Grenzen | Paket | bei jeder Änderung an Werten |
+| Balance-Labor | Gierige, zufällige und menschenähnliche Bots spielen jede Mission beim ersten Spielen; rot bei Dominanz, siegreicher Monokultur, ungenutztem Turm, verletzter Invariante; Bericht als Artefakt ([P2-6b](../konzepte/p2-6b-balance-labor.md)) | `oddlings-balance --stufe pr` im Job `core-linux` | bei jedem PR |
 | Architekturtest | `OddlingsCore` importiert kein SpriteKit/SwiftUI/UIKit | Paket | bei jeder Änderung |
 | Darstellung | Szene startet, Knotenzahl folgt dem Zustand | XCTest in der App | im CI auf macOS |
 | Oberfläche | Mission starten, Turm bauen, Mission zu Ende spielen (2× Tempo, Bot-Befehle) | XCUITest | im CI, vor TestFlight |
@@ -56,6 +57,13 @@ Status: **gilt**, umgesetzt bis 0.12.0; Ende-zu-Ende-Tests **[ENTSCHIEDEN D-029]
   mit Prüfsumme, 1× = 2×, Speichern/Laden mitten in der Welle, feste Prüfsumme
   einer kleinen Mission, die Linux und macOS gleich liefern müssen) und Balance
   (`BalanceTests`) ab. Das Python-Prüfskript der Phase 0 ist gelöscht.
+- Seit P2-6b (0.21.1): `LabTests` (Konfiguration deckt jede Mission, Unsinn abgewiesen,
+  Menschenbot gesät und langsamer, Bericht unabhängig von der Reihenfolge der Kerne,
+  kaputte Balance wird rot, bekannte Befunde nur als Sperrklinke, Invarianten fangen
+  kaputten Zustand, zufällige auch ungültige Befehle in allen vier Missionen verletzen
+  keine). Der gierige Bot der `BalanceTests` lebt jetzt in `OddlingsLab`. CI-Schritt
+  „Balance-Labor (Stufe pr)“ in `core-linux`, Bericht in der Zusammenfassung und im
+  Artefakt `balance-labor`.
 - Seit P2-5 (0.16.0): `BankTests` (Auszahlung, Deckel, Höchstzahl, Verkauf,
   alter Spielstand), `EarlyCallTests` (Bonus abgerundet, Ereignis, ohne Bonus
   nichts) und `MissionTwoTests` (Karte mit ruhigen Zellen, Bauweisen mit und ohne

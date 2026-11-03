@@ -13,8 +13,14 @@ CORE=Packages/OddlingsCore/Sources
 
 # Regel 1: Die Simulation importiert nur Foundation. Ein Apple-Rahmenwerk dort
 # würde Linux-Tests und Wiederholbarkeit kosten.
-treffer=$(grep -rnE '^\s*(@testable\s+)?import\s+' "$CORE" | grep -vE 'import\s+Foundation\s*$')
+treffer=$(grep -rnE '^\s*(@testable\s+)?import\s+' "$CORE/OddlingsCore" | grep -vE 'import\s+Foundation\s*$')
 [ -n "$treffer" ] && melde "Simulation importiert mehr als Foundation:
+$treffer"
+# Labor und Kommandozeile (P2-6b) dürfen zusätzlich die eigenen Module des Pakets
+# laden, sonst nichts: Sie rechnen dieselbe Simulation und laufen in der Linux-CI.
+treffer=$(grep -rnE '^\s*(@testable\s+)?import\s+' "$CORE" --include='*.swift' | grep -v "^$CORE/OddlingsCore/" \
+  | grep -vE 'import\s+(Foundation|OddlingsCore|OddlingsLab)\s*$')
+[ -n "$treffer" ] && melde "Labor importiert mehr als Foundation und das eigene Paket:
 $treffer"
 
 # Regel 6: kein Uhrzeit-, Zufalls- oder Umgebungszugriff in der Simulation.

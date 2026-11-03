@@ -11,6 +11,22 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.21.1 – 03.11.2026 (P2-6b: Balance-Labor, Grundstock)
+
+- **Werkzeug, die App spielt sich unverändert.** `oddlings-balance` lässt gierige,
+  zufällige und menschenähnliche Bots alle vier Missionen beim ersten Spielen durchspielen
+  und schreibt einen Bericht (Markdown, CSV). Bot-Eigenschaften und Zielwerte in
+  `labor.json`, vorläufig nach D-073.
+- **CI**: Stufe pr im Linux-Job, rot bei neuer Dominanz, siegreicher Monokultur,
+  ungenutztem Turm oder verletzter Invariante; Bericht in der Zusammenfassung und als
+  Artefakt `balance-labor`.
+- **Erster Befund**: Blitz allein gewinnt Mission 2 und 3 beim ersten Spielen (gegen
+  D-071), Blitz + Sporen dominiert Mission 1 bei Elfen. Stehen als bekannte Befunde mit
+  Grund im Labor; Karte an Steffen, wie behoben wird.
+- Tests: `LabTests` (8, jeder einmal rot gesehen); der Bot der `BalanceTests` lebt jetzt
+  im Labor, keine zweite Umsetzung. `regeln-pruefen.sh` erlaubt dem Labor nur die
+  eigenen Module.
+
 ## 0.21.0 – 02.11.2026 (R-7b: Schmiede mit Erz) · Bau 41
 
 - **Erz**: Jeder Sieg gibt 4, jeder neue Stern 7 dazu, eine Niederlage nichts. Die
