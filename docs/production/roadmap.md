@@ -45,7 +45,7 @@ Spieltest läuft parallel. Nach R-7a kommt Mission 3 mit Aufwertungen (D-085, 02
 |---|---|---|---|---|
 | 1 | ~~FX 02 Plünderer mit Gliedmaßen~~ ([Konzept](../konzepte/fx-02-figuren-in-3d.md)) | Plünderer-3D-Modell | – | ✓ 0.13.0 |
 | 2 | ~~P2-5 **Mission 2 mit Zwergenbank**~~ ([Konzept](../konzepte/p2-5-mission-2-zwergenbank.md)); Rang II und die erste Talentwahl werden spielbar. Werte [HYPOTHESE], nach WP-15 nachgezogen. Gemalter Boden kommt aus „Kampfplätze für Mission 2 bis 4 malen“ | Mission 2 mit Zwergenbank | – | ✓ 0.16.0 |
-| 3 | ~~R-7a Ausrüstung~~ im Avatar-Menü (D-066, D-069, D-070, D-071), danach **R-7b Schmiede** mit Spielwährung: Konzept und Karten zur Währung | Haupt-Thread | R-6 | ✓ R-7a 0.19.0, R-7b 0.21.0 |
+| 3 | ~~R-7a Ausrüstung~~ im Avatar-Menü (D-066, D-069, D-070, D-071), danach **R-7b Schmiede** mit Spielwährung: Konzept und Karten zur Währung | Haupt-Thread | R-6 | ✓ R-7a 0.19.0, R-7b 0.21.0 (Bau 41) |
 | 4 | **WP-15 Spieltest** parallel, danach Werte von Mission 1 und 2 nachziehen und Phase 2 schneiden | Steffen | S3 | wartet |
 | 5 | ~~P2-3 Ton und Musik~~ ([Konzept](../konzepte/p2-3-ton-und-musik.md)) | Ton und Musik | – | ✓ 0.15.0 |
 | 6 | FX 02 Flitzer und Panzerbestie | Plünderer-3D-Modell | Steffens Urteil am Plünderer im Spiel | – |
@@ -83,7 +83,7 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | P2-10: Mission 4 mit gepanzerter Panzerbestie (K7, D-087) | 0.20.0 | – | [Konzept](../konzepte/p2-10-mission-4-ruestung.md) |
 | P2-3: Ton und Musik, nur CC0 (D-082) | 0.15.0 | 35 | [Konzept](../konzepte/p2-3-ton-und-musik.md) |
 | R-7a: Ausrüstung aus festen Belohnungen (D-066, D-069 bis D-071) | 0.19.0 | 39 | [Konzept](../konzepte/r-7-ausruestung.md) |
-| R-7b: Schmiede mit Erz, Stufen I bis III (D-070, D-072) | 0.21.0 | folgt | [Konzept](../konzepte/r-7b-schmiede.md) |
+| R-7b: Schmiede mit Erz, Stufen I bis III (D-070, D-072) | 0.21.0 | 41 | [Konzept](../konzepte/r-7b-schmiede.md) |
 
 ## Gilt für jedes Paket
 
