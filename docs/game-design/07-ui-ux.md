@@ -83,6 +83,13 @@ Hauptmenü ──Spielen──▶ Avatar-Aufbau ──▶ Kampagnenkarte ──S
 Ohne Avatar führt jeder Weg zur Karte erst durch den Aufbau (D-063). Pause und
 Ergebnis sind Überlagerungen der Schlacht, keine eigenen Schirme.
 
+**Fortsetzen (P2-2, 0.22.0, D-074):** Lief beim Beenden der App eine Mission, öffnet
+die App nicht im Hauptmenü, sondern direkt in dieser Mission, angehalten, mit der
+Zeile „Hier warst du stehen geblieben.“ auf der Pausentafel (Karte S12, Empfehlung).
+Hat ein Update die Mission geändert oder ist der Stand beschädigt, beginnt sie neu,
+ebenfalls angehalten und mit Hinweis. „Zurück“ aus der Schlacht beendet die Mission;
+danach gibt es nichts fortzusetzen. [Konzept](../konzepte/p2-2-fortsetzen.md)
+
 ### Hauptmenü
 Gemaltes Bild links, Knöpfe rechts im Daumenbereich: großes „Spielen" (64 pt
 hoch), darüber eine Karte „Weiter mit Mission 1" mit Wellenzahl und Dauer, darunter
@@ -124,7 +131,9 @@ die Kernsynergie in Worten steht; gelernt wird sie aber im Spiel (02).
 ### Pause
 Karte abgedunkelt, Tafel mit Stand (Welle, Leben, Gold). Großer Knopf „Weiter"
 rechts im Daumenbereich, links Neu starten, Einstellungen, Aufgeben.
-Die App pausiert selbst, sobald sie in den Hintergrund geht.
+Die App pausiert selbst, sobald sie in den Hintergrund geht, und sichert die Mission
+(P2-2). Nach einem Neustart der App steht über dem Stand eine Zeile, warum die Tafel
+offen ist; sie verschwindet mit dem ersten „Weiter“.
 
 ### Ergebnis
 Erscheint als Tafel über der stehenden Karte, ohne Ladezeit.

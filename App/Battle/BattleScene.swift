@@ -231,6 +231,9 @@ final class BattleScene: SKScene {
         clearPieces()
         shownSelection = .none
         sync(dt: 0)
+        // Die Mauer kommt sonst nur mit `barrierRaised`. Nach neuer Größe und in
+        // einer fortgesetzten Mission (P2-2) steht sie schon im Zustand.
+        if let barrier = model.state.ability.barrier { raiseWall(at: barrier.distance) }
         showSelection()
     }
 

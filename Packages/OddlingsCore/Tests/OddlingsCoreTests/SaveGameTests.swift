@@ -82,8 +82,8 @@ final class SaveGameTests: XCTestCase {
     }
 
     func testSchemaOutsideThisAppIsRefused() {
-        XCTAssertThrowsError(try decode(#"{"schemaVersion":3}"#)) {
-            XCTAssertEqual($0 as? SaveGameCodec.Failure, .newerSchema(3))
+        XCTAssertThrowsError(try decode(#"{"schemaVersion":4}"#)) {
+            XCTAssertEqual($0 as? SaveGameCodec.Failure, .newerSchema(4))
         }
         XCTAssertThrowsError(try decode(#"{"schemaVersion":0}"#)) {
             XCTAssertEqual($0 as? SaveGameCodec.Failure, .unknownSchema(0))
@@ -98,7 +98,7 @@ final class SaveGameTests: XCTestCase {
     }
 
     /// R-5: Schema 1 kannte nur das Volk. Der Fortschritt bleibt, der Avatar
-    /// wird einmal neu aufgebaut, und geschrieben wird Schema 2.
+    /// wird einmal neu aufgebaut, und geschrieben wird das aktuelle Schema.
     func testSchemaOneKeepsProgressAndAsksForAnAvatar() throws {
         for race in [#","race":"elves""#, #","race":"goblins""#, ""] {
             let decoded = try decode("""
@@ -106,10 +106,10 @@ final class SaveGameTests: XCTestCase {
             """)
             XCTAssertEqual(decoded.save.progress.records, [MissionRecord(mission: "a", bestStars: 3)], race)
             XCTAssertNil(decoded.save.avatar, race)
-            XCTAssertEqual(decoded.save.schemaVersion, 2)
+            XCTAssertEqual(decoded.save.schemaVersion, SaveGame.currentSchema)
             XCTAssertEqual(decoded.dropped, [], "das alte Volk ist kein Fehler: \(race)")
             let written = String(decoding: try SaveGameCodec.encode(decoded.save), as: UTF8.self)
-            XCTAssertTrue(written.contains(#""schemaVersion" : 2"#), written)
+            XCTAssertTrue(written.contains(#""schemaVersion" : \#(SaveGame.currentSchema)"#), written)
         }
     }
 

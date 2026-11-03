@@ -224,6 +224,13 @@ private struct PauseCard: View {
                 Spacer()
                 Text(BattleTexts.mission).font(UITheme.body(15)).foregroundStyle(UITheme.parchment)
             }
+            if let notice = controller.notice {
+                Text(notice)
+                    .font(UITheme.body(16))
+                    .foregroundStyle(UITheme.cream)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier("pause.notice")
+            }
             HStack(spacing: 10) {
                 StatTile(title: "Welle", value: Double(controller.wave), text: { "\($0)/\(controller.waveCount)" },
                          countUp: false, id: "pause.wave")

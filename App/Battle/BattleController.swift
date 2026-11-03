@@ -41,6 +41,9 @@ final class BattleController {
     /// Schlacht rechnet sie nicht selbst: Erz ist Sache des Fortschritts.
     var reward: String?
     private(set) var paused = false
+    /// Zeile auf der Pausentafel nach einem Neustart der App (P2-2): fortgesetzt
+    /// oder, nach einem Update, neu begonnen. Verschwindet mit dem ersten „Weiter“.
+    private(set) var notice: String?
     private(set) var speed = 1
     /// „Aufgeben“ in der Pause: Die Mission bleibt angehalten, die Tafel zeigt
     /// die Niederlage. Die Simulation bekommt dafür keinen Befehl und meldet
@@ -364,7 +367,21 @@ final class BattleController {
         guard !isFinished else { return }
         paused.toggle()
         model.paused = paused
+        if !paused { notice = nil }
     }
+
+    /// Beginnt angehalten mit Hinweis: Wer die App wieder öffnet, soll nicht
+    /// mitten in eine laufende Welle fallen (P2-2).
+    func startPaused(notice: String) {
+        guard !isFinished else { return }
+        paused = true
+        model.paused = true
+        self.notice = notice
+    }
+
+    /// Darf der Stand jetzt gesichert werden? Nur das eigene Spiel und nur, solange
+    /// es läuft: Ein Ergebnis hat der Fortschritt schon, eine Vorführung ist keins.
+    var isSuspendable: Bool { interactive && !isFinished }
 
     /// Hält an, wenn die App in den Hintergrund geht. Wer zurückkommt, soll
     /// keine Welle verpasst haben.
@@ -406,6 +423,7 @@ final class BattleController {
 
     func restart() {
         selection = .none
+        notice = nil
         paused = false
         surrendered = false
         towersBuilt = 0

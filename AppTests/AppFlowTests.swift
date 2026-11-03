@@ -299,4 +299,96 @@ final class AppFlowTests: XCTestCase {
         XCTAssertEqual(AvatarTexts.progress(stars: 3, next: 12, rank: 2), "3 von 12 Sternen bis Rang III")
         XCTAssertEqual(AvatarTexts.progress(stars: 30, next: nil, rank: 3), "Höchster Rang erreicht")
     }
+
+    // MARK: Fortsetzen (P2-2)
+
+    /// Mission 1 mit Avatar, ein paar Sekunden gespielt, mit einem Turm.
+    @MainActor
+    private func runningBattle(_ flow: AppFlow) throws -> GameState {
+        if flow.avatar == nil { XCTAssertTrue(flow.createAvatar(race: .dwarves, name: "Brokk", portrait: "dwarf-1")) }
+        flow.start("m1")
+        let sim = Simulation(config: try XCTUnwrap(flow.battleMission(for: "m1")))
+        var state = sim.newGame(seed: 1)
+        let cell = try XCTUnwrap(sim.map.buildableCells.first)
+        sim.step(&state, commands: [.build(.watch, cell)])
+        for _ in 0..<90 { sim.step(&state) }
+        XCTAssertEqual(state.towers.count, 1)
+        return state
+    }
+
+    @MainActor
+    func testSuspendedBattleOpensPausedAfterRestart() throws {
+        let flow = try makeFlow()
+        let state = try runningBattle(flow)
+        flow.suspend("m1", seed: 1, state: state)
+
+        let reopened = try makeFlow()
+        XCTAssertEqual(reopened.screen, .battle(node: "m1"), "direkt in die Mission (S12)")
+        XCTAssertEqual(reopened.resume?.state, state)
+        XCTAssertEqual(reopened.resume?.notice, BattleTexts.resumed)
+
+        let model = BattleModel(config: try XCTUnwrap(reopened.battleMission(for: "m1")), seed: 1, autoplay: false,
+                                resume: reopened.resume?.state)
+        let controller = BattleController(model: model, interactive: true)
+        controller.startPaused(notice: BattleTexts.resumed)
+        XCTAssertTrue(controller.paused)
+        XCTAssertEqual(model.advance(by: 1), [], "angehalten läuft nichts")
+        XCTAssertEqual(controller.gold, state.gold)
+        controller.togglePause()
+        XCTAssertNil(controller.notice, "der Hinweis geht mit dem ersten Weiter")
+    }
+
+    @MainActor
+    func testChangedRulesRestartTheMissionWithANotice() throws {
+        let flow = try makeFlow()
+        let state = try runningBattle(flow)
+        flow.suspend("m1", seed: 1, state: state)
+        // Ein Update ändert die Mission: Der gesicherte Abdruck passt nicht mehr.
+        var save = SaveStore(directory: directory).load(campaign: flow.campaign).save
+        save.battle?.rules = "0000000000000000"
+        try SaveStore(directory: directory).save(save)
+
+        let reopened = try makeFlow()
+        XCTAssertEqual(reopened.screen, .battle(node: "m1"))
+        XCTAssertNil(reopened.resume?.state, "neu, nicht unter fremden Regeln")
+        XCTAssertEqual(reopened.resume?.notice, BattleTexts.restartedAfterUpdate)
+        XCTAssertNil(SaveStore(directory: directory).load(campaign: flow.campaign).save.battle, "verworfen")
+    }
+
+    @MainActor
+    func testDamagedStateRestartsAndKeepsProgress() throws {
+        let flow = try makeFlow()
+        flow.finish("m1", outcome: .won, livesLeft: try fullLives())
+        var state = try runningBattle(flow)
+        state.gold = -5
+        flow.suspend("m1", seed: 1, state: state)
+
+        let reopened = try makeFlow()
+        XCTAssertNil(reopened.resume?.state)
+        XCTAssertEqual(reopened.resume?.notice, BattleTexts.restartedAfterDamage)
+        XCTAssertEqual(reopened.progress.stars(for: "m1"), 3, "der Fortschritt bleibt")
+    }
+
+    @MainActor
+    func testFinishingOrLeavingDiscardsTheSuspendedBattle() throws {
+        let flow = try makeFlow()
+        let state = try runningBattle(flow)
+        flow.suspend("m1", seed: 1, state: state)
+        flow.finish("m1", outcome: .lost, livesLeft: 0)
+        XCTAssertEqual(try makeFlow().screen, .menu, "nach dem Ergebnis gibt es nichts fortzusetzen")
+
+        flow.suspend("m1", seed: 1, state: state)
+        flow.leaveBattle()
+        XCTAssertEqual(flow.screen, .map)
+        XCTAssertEqual(try makeFlow().screen, .menu, "Zurück beendet die Mission")
+    }
+
+    @MainActor
+    func testFinishedStateIsNeverSuspended() throws {
+        let flow = try makeFlow()
+        var state = try runningBattle(flow)
+        state.outcome = .won
+        flow.suspend("m1", seed: 1, state: state)
+        XCTAssertEqual(try makeFlow().screen, .menu)
+    }
 }

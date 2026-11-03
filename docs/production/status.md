@@ -5,8 +5,8 @@ ergänzt, D-067). Reihenfolge, Pakete und alles, was auf dich wartet, stehen in 
 [Roadmap](roadmap.md); Einzelheiten im [Backlog](backlog.md), offene Fragen im
 [Register](offene-fragen.md).
 
-**Stand: 03.11.2026** · Neueste Version **0.21.1** (Balance-Labor in der CI, die App spielt sich gleich), Bau 42 VALID;
-davor 0.21.0 (Schmiede mit Erz im Avatar-Menü, Bau 41 VALID), 0.20.0 (Mission 4 mit gepanzerter Panzerbestie, Bau 40), 0.19.0 (Ausrüstung im Avatar-Menü, Bau 39 VALID), 0.18.0 (Mission 3 mit Aufwertungen, Bau 38 VALID), 0.16.1 (gemalte Kampfplätze für Mission 2 bis 4), 0.16.0 (Mission 2 mit Zwergenbank). Der Spielrahmen R-1 bis R-6 steht. Spielbar sind Mission 1 bis 4.
+**Stand: 03.11.2026** · Neueste Version **0.22.0** (Fortsetzen: eine laufende Mission übersteht das Beenden der App), Bau folgt;
+davor 0.21.1 (Balance-Labor in der CI, Bau 42 VALID), 0.21.0 (Schmiede mit Erz im Avatar-Menü, Bau 41 VALID), 0.20.0 (Mission 4 mit gepanzerter Panzerbestie, Bau 40), 0.19.0 (Ausrüstung im Avatar-Menü, Bau 39 VALID), 0.18.0 (Mission 3 mit Aufwertungen, Bau 38 VALID), 0.16.1 (gemalte Kampfplätze für Mission 2 bis 4), 0.16.0 (Mission 2 mit Zwergenbank). Der Spielrahmen R-1 bis R-6 steht. Spielbar sind Mission 1 bis 4.
 
 ## Wartet auf dich
 
@@ -25,6 +25,9 @@ davor 0.21.0 (Schmiede mit Erz im Avatar-Menü, Bau 41 VALID), 0.20.0 (Mission 4
 6. Das Labor hat gefunden: Blitz allein gewinnt Mission 2 und 3 beim ersten Spielen,
    gegen D-071. Karte im Haupt-Thread, wann es behoben wird (Empfehlung: jetzt).
 7. Ohne Eile: Messung des Spikes auf dem iPhone (WP-01).
+8. Wo die App nach einem Neustart mitten in einer Mission öffnet: Entscheidungskarte
+   im Thread „Fortsetzen nach App-Neustart bauen“. Gebaut ist die Empfehlung, direkt in
+   der Mission, angehalten (0.22.0, D-074).
 
 ## Fertig
 
@@ -60,8 +63,11 @@ davor 0.21.0 (Schmiede mit Erz im Avatar-Menü, Bau 41 VALID), 0.20.0 (Mission 4
 - **Ton und Musik** (P2-3, 0.15.0): 30 Klänge an den Spielereignissen, fünf Musikstücke
   (Menü, Kampf, letzte Welle, Sieg, Niederlage), Regler für Klänge und Musik in den
   Einstellungen. Nur CC0-Quellen, jede mit Herkunft in `art/ton/` (D-082).
-- **Qualität**: rund 250 Kerntests, rund 125 App-Tests, 34 Ende-zu-Ende-Fälle, Probelauf im
+- **Qualität**: rund 250 Kerntests, rund 125 App-Tests, 36 Ende-zu-Ende-Fälle, Probelauf im
   Simulator, alles bei jedem PR in der CI.
+- **Fortsetzen** (P2-2, 0.22.0): Geht die App mitten in einer Mission in den
+  Hintergrund und wird beendet, öffnet sie beim nächsten Mal direkt in dieser Mission,
+  angehalten. Nach einem Update, das die Mission ändert, beginnt sie neu, mit Hinweis.
 - **Balance-Labor** (P2-6b, 0.21.1): Bots spielen bei jedem PR alle vier Missionen beim
   ersten Spielen, gierig, zufällig und menschenähnlich; Bericht im Artefakt der CI.
 - **Doku nachgezogen** (27.10.2026): Architektur, Datenmodelle, Teststrategie,
@@ -72,6 +78,7 @@ davor 0.21.0 (Schmiede mit Erz im Avatar-Menü, Bau 41 VALID), 0.20.0 (Mission 4
 | Thread | Woran | Nächster Schritt |
 |---|---|---|
 | Haupt-Thread | 0.21.1 Balance-Labor (P2-6b) in TestFlight (Bau 42) | nach deinen Karten Blitz-Monokultur in M2/M3 beheben |
+| Fortsetzen nach App-Neustart bauen | 0.22.0 (P2-2) im PR | zusammenführen, Bau in TestFlight |
 | Mission 2 mit Zwergenbank | 0.16.0, Bau 36 in TestFlight | Werte nach dem Spieltest nachziehen |
 | Mission 3 mit Aufwertungen | 0.18.0 in Bau 38; Mission 4 (0.20.0) im PR | zusammenführen, Bau in TestFlight, Antwort auf die Karte zu Mission 4 |
 | Plünderer-3D-Modell | 0.13.0 in TestFlight | Flitzer und Panzerbestie, wenn dir der Plünderer im Spiel gefällt |
