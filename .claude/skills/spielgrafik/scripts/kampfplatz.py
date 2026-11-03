@@ -19,7 +19,8 @@ weniger als eine Viertelzelle ab, und eckige Wege sahen gezeichnet aus.
 Umgebung (fuer die Missionen ab M2, Grafik 06; ohne beide rechnet es wie fuer M1):
   DEKO=<ordner>   freigestellte Teile deko*.png, die in den Waldrand gesetzt werden
                   (Stollen, Pilze, Ruinen). Nie auf Bauzellen, nicht vor die Hoehle.
-                  DEKO_ANZAHL (Standard 9) Versuche, Zufall eigener Seed DEKO_SEED.
+                  DEKO_ANZAHL (Standard 9) Versuche, Zufall eigener Seed DEKO_SEED,
+                  DEKO_BREITE=a,b Breite der kleineren Teile in Zellen (Standard 1.6,2.2).
   LICHT=r,g,b     Toenung des ganzen Bilds statt des warmen Nachmittags (255,238,210).
   Mit DEKO entsteht zusaetzlich <ausgabe>-ebene.png: nur Hoehle und Deko, freigestellt,
   getoent wie das Bild. Sie kommt nach dem Uebermalen wieder obenauf, denn FLUX macht aus
@@ -192,13 +193,16 @@ if os.environ.get("DEKO"):
     rnd_deko = random.Random(int(os.environ.get("DEKO_SEED", "11")))
     deko = [Image.open(p).convert("RGBA") for p in sorted(glob.glob(os.path.join(os.environ["DEKO"], "deko*.png")))]
     # Das flaechengroesste Teil (Stolleneingang, grosse Mauer) bekommt den meisten Platz.
+    # DEKO_BREITE=a,b (Zellen): Sumpf und Ruinenhof (Grafik 07) tragen den Ort fast nur ueber
+    # die Deko und brauchen sie groesser als Stollen und Pilze; Standard wie in Grafik 06.
+    deko_breite = tuple(float(v) for v in os.environ.get("DEKO_BREITE", "1.6,2.2").split(","))
     groesse = sorted(deko, key=lambda t: -t.getchannel("A").point(lambda v: 255 if v > 40 else 0).histogram()[255])
     for i in range(int(os.environ.get("DEKO_ANZAHL", "9")) * 40):
         if len(deko_lagen) >= int(os.environ.get("DEKO_ANZAHL", "9")):
             break
         # Das groesste Teil genau einmal (ein Stollen, nicht drei), die uebrigen reihum.
         teil = groesse[0] if not deko_lagen else groesse[1 + (len(deko_lagen) - 1) % max(1, len(groesse) - 1)]
-        breite = (3.0 if teil is groesse[0] else rnd_deko.uniform(1.6, 2.2))
+        breite = (3.0 if teil is groesse[0] else rnd_deko.uniform(*deko_breite))
         # Nur das innere Band des Rands: weiter aussen sieht man es auf keinem Geraet.
         px = rnd_deko.uniform(-min(MX, 1.9), W + min(MX, 1.9))
         py = rnd_deko.uniform(-min(MY, 1.5), H + min(MY, 1.5))
@@ -216,7 +220,11 @@ if os.environ.get("DEKO"):
             return not any(math.dist((x, y), (hx, hy)) < hr + r * 0.8 for hx, hy, hr in hindernisse)
         if frei_deko(px, py, breite):
             # Etwas dunkler als gemalt: Im Rand liegt Waldschatten, das Feld bleibt der hellste Ort.
-            setze(Image.merge("RGBA", [k.point(lambda v: int(v * 0.82)) for k in teil.split()[:3]] + [teil.getchannel("A")]), *at(px, py), C * breite, rnd_deko.random() < 0.5, schatten=0.6, oben=True)
+            # Die Breite gilt fuer die laengere Seite: Hohe Teile (tote Baeume, Saeulen) ragten
+            # sonst aus dem unteren Rand ueber die Bauzellen (Grafik 07). Fuer breite Teile
+            # wie Stollen und Mauern aendert sich nichts.
+            seite = C * breite * min(1.0, teil.width / teil.height)
+            setze(Image.merge("RGBA", [k.point(lambda v: int(v * 0.82)) for k in teil.split()[:3]] + [teil.getchannel("A")]), *at(px, py), seite, rnd_deko.random() < 0.5, schatten=0.6, oben=True)
             hindernisse.append((px, py, breite / 2))
             deko_lagen.append((px, py, breite))
 

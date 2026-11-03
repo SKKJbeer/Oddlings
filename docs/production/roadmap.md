@@ -12,7 +12,7 @@ Entscheidungskarte beantwortet. Alles, was auf ihn wartet, steht unter
 zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzelnen:
 [backlog.md](backlog.md), offene Fragen: [offene-fragen.md](offene-fragen.md).
 
-**Stand: 03.11.2026** · neueste Version 0.25.0 (Spezialisierungen und Mission 5a „Sumpfpfad“, Bau folgt), davor 0.24.1 (Korrektur für den Release-Bau, Bau 46), davor 0.24.0 (Synergie sichtbar, Einstieg ohne Erklärtext, Bau 45 gescheitert), davor 0.23.0 (Blitz allein verliert Mission 2 und 3, Bau 44), 0.22.0 (Fortsetzen nach Neustart, Bau 43), neuester VALID-Bau 46 (0.24.1)
+**Stand: 03.11.2026** · neueste Version 0.25.1 (gemalte Kampfplätze für M5a Sumpfpfad und M5b Ruinenhof, Bau folgt), davor 0.25.0 (Spezialisierungen und Mission 5a „Sumpfpfad“, Bau 47), davor 0.24.1 (Korrektur für den Release-Bau, Bau 46), davor 0.24.0 (Synergie sichtbar, Einstieg ohne Erklärtext, Bau 45 gescheitert), davor 0.23.0 (Blitz allein verliert Mission 2 und 3, Bau 44), 0.22.0 (Fortsetzen nach Neustart, Bau 43), neuester VALID-Bau 46 (0.24.1)
 
 ## Phasen
 
@@ -93,7 +93,8 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | P2-2: Fortsetzen nach App-Neustart (D-022, D-074) | 0.22.0 | 43 | [Konzept](../konzepte/p2-2-fortsetzen.md) |
 | P2-11: Blitz allein verliert Mission 2 und 3 (D-071, D-075) | 0.23.0 | 44 | [Konzept](../konzepte/p2-11-blitz-monokultur.md) |
 | P2-8: Synergie sichtbar, Einstieg ohne Erklärtext (E2, K8, D-076) | 0.24.0, 0.24.1 | 46 (45 gescheitert) | [Konzept](../konzepte/p2-8-synergie-sichtbar.md) |
-| P3-1: Spezialisierungen, Mission 5a „Sumpfpfad“ (S14, D-077) | 0.25.0 | folgt | [Konzept](../konzepte/p3-1-spezialisierungen-sumpfpfad.md) |
+| P3-1: Spezialisierungen, Mission 5a „Sumpfpfad“ (S14, D-077) | 0.25.0 | 47 | [Konzept](../konzepte/p3-1-spezialisierungen-sumpfpfad.md) |
+| Grafik 07: gemalte Kampfplätze M5a (Sumpfpfad) und M5b (Ruinenhof), Weg M5b als Vorschlag (D-081) | 0.25.1 | folgt | [Konzept](../konzepte/grafik-07-kampfplaetze-m5.md) |
 
 ## Gilt für jedes Paket
 

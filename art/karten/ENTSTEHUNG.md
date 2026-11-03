@@ -87,3 +87,32 @@ aus `wegvorschlaege/` (D-081).
 7. **Atlas:** `atlas.py aus map_missionNN_ground 24x13 voll _ App/Assets.xcassets/Maps`.
    Collagen und Rohbilder liegen unter `kampfplaetze/` (`missionNN-collage.jpg`,
    `missionNN-rohbild.jpg`).
+
+## `map_mission05a_ground`, `map_mission05b_ground` (Grafik 07)
+
+03.11.2026, [Konzept](../../docs/konzepte/grafik-07-kampfplaetze-m5.md). Ablauf wie Grafik 06,
+dieselben Teile aus `region01/` (Bäume, Höhle, Gras, Weg wie oben zerlegt und umgefärbt).
+Weggeometrie M5a aus `mission-05a.json` (= `wegvorschlaege/mission-05a.json`), M5b aus
+`wegvorschlaege/mission-05b.json` (D-081).
+
+1. **Deko-Blätter** (FLUX.1-schnell, 768 × 768, Stil-Teil wie bei `region01`), zerlegt mit `zerlegen.py`:
+   - `kampfplaetze/blatt-sumpf.jpg` (M5a, Seed 41, 6 Teile; Schilf und Rohrkolben fielen beim Zerlegen weg): `sprite sheet of six separate fantasy swamp props, a clump of tall green reeds and cattails, a small dark murky bog pond with lily pads, a gnarled dead tree with twisted bare branches, a rotting mossy tree stump, a crooked wooden post with a glowing green lantern, a cluster of swamp roots with hanging moss, each isolated and evenly spaced on a plain white background, <Stil>, no characters, no text`. Beim hohlen Stumpf den weißen Bodenrest (heller als 200, kaum Farbe) durchsichtig gemacht.
+   - `kampfplaetze/blatt-ruinenhof.jpg` (M5b, Seed 42, 7 Teile, davon 6 genutzt): `sprite sheet of six separate ancient temple ruin props, a broken stone archway overgrown with ivy, a toppled weathered stone statue of a knight, a cracked round stone fountain basin, a cluster of broken column stumps, a pile of carved stone rubble, a tall crumbling stone obelisk with moss, each isolated and evenly spaced on a plain white background, <Stil>, no characters, no text`. Die Ritterstatue ist weggelassen (las sich wie eine Figur), beim Torbogen die halb durchsichtigen Efeuränder deckend gesetzt (Alpha > 40 → 255).
+2. **Gras M5a:** `gras.png` im Teile-Ordner umgefärbt (HSV: Blütenpunkte Sättigung × 0,4 und Helligkeit × 0,75, dann Farbton −6, Sättigung × 0,8, Helligkeit × 0,88): olives Moorgras statt Blumenwiese.
+3. **Collage:** `DEKO=<teile> DEKO_ANZAHL=<n> DEKO_BREITE=<a,b> LICHT=<r,g,b> kampfplatz.py <weg.json> <teile> aus.png 130 4x2`
+   — M5a: 18, `2.4,3.2`, `215,235,205` (grünliche Dämmerung); M5b: 14, `2.2,3.0`, `225,222,245`
+   (kühles Abendlicht). Auf 1024 × 576 verkleinert (`kampfplaetze/mission05X-collage.jpg`).
+   **Verworfen:** die erste Collage mit Deko nach Breite bemessen: Tote Bäume ragten aus dem
+   unteren Rand über Bauzellen. Seitdem zählt die längere Seite.
+4. **Übermalen:** `INIT=<collage> STAERKE=0.3 VERSCHIEBUNG=0.5 erzeugen.sh aus 5 "<Gemeinsamer Teil wie Grafik 06>, <Ort>" 1024x576`:
+   - M5a: `a damp mossy clearing on an island in a misty forest swamp, gnarled dead trees, rotting stumps, reeds and small murky bog ponds with lily pads among the dense round tree canopies, deep olive green mossy grass, cool greenish dusk light with soft mist, soft tree shadows`
+   - M5b: `a grassy courtyard inside ancient overgrown temple ruins, broken stone archways, fallen pillars and carved rubble among the dense round tree canopies, lush grass with small flowers, cool silver evening light with a soft violet tint, long soft shadows`
+   FLUX macht aus den Baumkronen hier große Blätter; im Sumpf passt das und bleibt. Den Weg in
+   M5b malt es mit abgeschrägten, hellen Kanten wie Steinplatten, passend zum Ruinenhof.
+5. **Hochrechnen** (`hochskalieren.sh … 3096x1677`), **Ebene auflegen** (`ebene.py`).
+6. **Nachbessern:** M5a `RAND=20 retusche.py fertig.png aus.png "1510,920,1770,1100:1945,640"
+   "1440,440,1660,670:1960,700" "1630,810,1750,910:1960,950"` (Seerosen und zwei Pfützen im
+   Feld, sie hätten wie unbebaubar gewirkt). Ein Ausgleich mit `ausgleichen.py` wurde verworfen,
+   er färbte die Mittelbahn gelblicher als das übrige Gras. M5b `RAND=16 retusche.py …
+   "1410,460,1550,590:1640,700" "1360,600,1490,730:1640,850"` (zwei Steine im Becken).
+7. **Atlas:** `atlas.py aus map_mission05X_ground 24x13 voll _ App/Assets.xcassets/Maps`.

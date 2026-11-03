@@ -11,6 +11,20 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.25.1 – 03.11.2026 (Grafik 07: Kampfplätze Sumpfpfad und Ruinenhof)
+
+- **Mission 5a „Sumpfpfad“ hat ihren gemalten Kampfplatz:** feuchte Moorinsel mit toten
+  Bäumen, Stümpfen, Tümpeln und einer Irrlicht-Laterne im Waldrand, grünliches
+  Dämmerlicht. Das Feld bleibt Gras und Weg, überall bebaubar.
+- **Kampfplatz für Mission 5b „Ruinen“ liegt bereit** (Ruinenhof mit Torbogen, Säulen und
+  Steinbecken, kühles Abendlicht), auf dem vorgeschlagenen Weg (D-081); er erscheint,
+  sobald Mission 5b gebaut ist.
+- Werkzeug: `kampfplatz.py` mit `DEKO_BREITE`, hohe Deko wird nach ihrer Höhe bemessen
+  (ragte sonst über Bauzellen). Kunstprüfung: Wegvorschläge müssen spielbar sein.
+- Werkzeug: Apple-Lesezugriffe bei Serverfehlern wiederholt.
+- Tests: `test_wegvorschlaege_sind_spielbar`, hohe Deko in `test_deko_nur_im_rand`,
+  `testEveryBundledMissionHasItsPaintedGround` mit Mission 5a.
+
 ## 0.25.0 – 03.11.2026 (P3-1: Spezialisierungen und Mission 5a „Sumpfpfad“)
 
 - **Stufe 3:** Ein Turm auf Stufe 2 lässt sich auf dem Sumpfpfad spezialisieren, je Turm

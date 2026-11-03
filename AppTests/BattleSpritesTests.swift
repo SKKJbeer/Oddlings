@@ -115,11 +115,11 @@ final class BattleSpritesTests: XCTestCase {
         XCTAssertEqual(lines, 0)
     }
 
-    /// Grafik 06: Jede Mission mit Missionsdatei findet ihren eigenen gemalten
+    /// Grafik 06 und 07: Jede Mission mit Missionsdatei findet ihren eigenen gemalten
     /// Boden; fehlt einer, zeichnete die Szene still die Ersatzlinie. Die
     /// Festung verdeckt auch dort keine Bauzelle.
     func testEveryBundledMissionHasItsPaintedGround() throws {
-        for file in ["mvp-mission-01", "mission-02", "mission-03", "mission-04"] {
+        for file in ["mvp-mission-01", "mission-02", "mission-03", "mission-04", "mission-05a"] {
             let config = try BalanceConfig.bundledMission(named: file)
             let name = BattleSprites.groundName(missionID: config.mission.id)
             XCTAssertNotNil(BattleSprites.texture(named: name), name)
