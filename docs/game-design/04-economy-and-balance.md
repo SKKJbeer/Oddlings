@@ -432,6 +432,35 @@ liegen die Elfen höher: „Mix mit Aufwertung“ +0,12, „Mix ohne Aufwertung�
 Mit dem Mondmal vor der Rüstung waren es +0,15; deshalb rechnet die Simulation
 erst die Rüstung, dann das Mal (02). Bemerkt, nicht weiter geändert, wie in M3.
 
+### Mission 6a und 6b – Wahl zwischen zwei Spezialisierungen, Ergebnis der Prüfung (0.27.0) [HYPOTHESE]
+
+Werte in `mission-06a.json` (Sumpfpfad II, Flitzer vorn) und `mission-06b.json` (Ruinen
+II, Panzerbestien vorn). Startgold 240, Wege vom Grafik-Thread, je zehn Wellen. Jeder
+Turm bietet beide Spezialisierungen (D-079): Salve 35, Falkenhorst 45, Gewitterkrone 55
+(drei Sprünge mehr, Sprungweite ×1,4), Funkensäule 50, Moorherz 45, Fäulnis 40;
+Aufwertung des Blitzturms 75, Lebenspunkte ×0,95 gegenüber dem ersten Entwurf.
+
+**Gewitterkrone ohne Sporen-Vorteil (S16).** Mit `keepsDamageOnSlowed` lag „Gewitterkronen
+mit Fäulnis“ 0,4 bis 0,68 vor jeder anderen Bauweise, über der Dominanzgrenze 0,35. Teurere
+Kronen oder schwächere Fäulnis halfen nicht; ohne den Vorteil liegt sie im Feld.
+
+Labor, Stufe pr (beste Bauweise gegen die zweitbeste, je Volk):
+
+| Mission | Zwerge | Elfen | Menschenbot |
+|---|---|---|---|
+| M6a | Gewitterkronen mit Fäulnis 1,38 vor Salven mit Moorherz 1,25 (0,13) | 1,50 vor Mix mit Sumpf-Spezialisierungen 1,20 (0,29) | 83 % |
+| M6b | Gewitterkronen mit Fäulnis 1,28 vor Fäulnis mit Falkenhorsten 1,19 (0,09) | 1,33 vor 1,21 (0,12) | 50 % |
+
+Ohne Volk (`MissionSixTests`): In M6a liegt die Sumpf-Mischung (1,13) vor der Ruinen-Mischung
+(1,03), in M6b umgekehrt (1,12 gegen 1,03); die passende Wahl liegt vor der Mischung nur
+mit Stufe 2. Alle Monokulturen verlieren, auch spezialisiert. In M6b verlieren „Mix mit
+Aufwertung“ und „Salven mit Moorherz“; der Zufallsbot gewinnt dort nie (Warnung, wie M4
+und M5b).
+
+**Offen für den Spieltest:** Gewitterkronen mit Fäulnis bleibt die stärkste Kombination,
+jetzt unter der Grenze. Elfen liegen in M6a mit 0,29 nahe daran. Ob die Wahl sich wie
+eine Wahl anfühlt, zeigt erst das Spielen.
+
 ### Mission 5b – Ruinen, Ergebnis der Prüfung (0.26.0) [HYPOTHESE]
 
 Werte in `mission-05b.json`. Grundlage Mission 4, Startgold 240, Weg vom Grafik-Thread
@@ -501,6 +530,12 @@ gekrönter Blitz vor „Nur Blitz“. **Offen:** Das Moorherz zeigt seinen Wert 
 der Verlangsamung der Elfen; ohne Volk entscheidet in der Kombination die Panzerbestie.
 Ob es sich lohnt anfühlt, klärt der Spieltest. Erste Fassung mit gerader Strecke und
 billigeren Spezialisierungen war zu leicht (Menschenbot 92 %).
+
+**Nachgestimmt in 0.27.0 (D-079, S16):** Die Gewitterkrone verliert den Sporen-Vorteil
+und kostet dafür 30 statt 45 Gold, springt drei- statt zweimal zusätzlich, Sprungweite
+×1,5. Labor: „Gewitterkronen mit Sporen“ 1,46 (Zwerge) und 1,52 (Elfen) vor „Mix mit
+Spezialisierung“ 1,36, Abstand 0,10 und 0,16 statt 0,34; Menschenbot 75 %. Ohne Volk
+trägt die Krone die Kombination weiter (1,35, ohne Krone 1,20).
 
 ## Balance-Labor: erster Lauf (P2-6b, 03.11.2026)
 

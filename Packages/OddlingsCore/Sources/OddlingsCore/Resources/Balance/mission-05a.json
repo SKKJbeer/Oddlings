@@ -111,12 +111,11 @@
       "targets": 2
     },
     "stormCrown": {
-      "cost": 45,
+      "cost": 30,
       "scale": {
-        "chainRadius": 1.4
+        "chainRadius": 1.5
       },
-      "extraJumps": 2,
-      "keepsDamageOnSlowed": true
+      "extraJumps": 3
     },
     "bogHeart": {
       "cost": 45,

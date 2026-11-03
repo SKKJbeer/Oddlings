@@ -137,7 +137,7 @@ enum BattleTexts {
     static func effect(_ specialization: Specialization) -> String {
         switch specialization {
         case .volley: "Trifft zwei Ziele je Schuss."
-        case .stormCrown: "Springt weiter, gebremste Ziele schwächen ihn nicht."
+        case .stormCrown: "Springt öfter und weiter."
         case .bogHeart: "Größerer Kreis, bremst stärker und länger."
         case .falconHold: "Sieht weit, schießt schwer, Rüstung hält wenig davon ab."
         case .sparkColumn: "Ein schwerer Schlag, springt nur einmal weiter, lädt langsamer."
@@ -145,6 +145,12 @@ enum BattleTexts {
         }
     }
     static let specialize = "Spezialisieren"
+    /// Zwei zur Wahl (P3-3, S15).
+    static let chooseSpecialization = "Wähle eine Spezialisierung."
+    static let chooseOneStar = "Tippe einen Stern an."
+    static func specializeDrops(_ other: Specialization) -> String { "Endgültig: \(name(other)) fällt weg." }
+    /// Anfangsbuchstabe auf dem Stern und später am Turmschild (07).
+    static func initial(_ specialization: Specialization) -> String { String(name(specialization).prefix(1)) }
     /// Spezialisieren lässt sich nicht zurücknehmen, nur durch Verkaufen (07).
     static let specializeFinal = "Endgültig, nur Verkaufen nimmt es zurück."
     static func specializeLine(_ specialization: Specialization, cost: Int) -> String {
