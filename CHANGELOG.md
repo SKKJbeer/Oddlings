@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.22.0 – 03.11.2026 (P2-2: Fortsetzen nach App-Neustart)
+## 0.22.0 – 03.11.2026 (P2-2: Fortsetzen nach App-Neustart) · Bau 43
 
 - **Eine laufende Mission geht nicht mehr verloren.** Geht die App in den Hintergrund,
   wird die Mission gesichert. Beendet iOS die App danach oder startet das Telefon neu,

@@ -12,7 +12,7 @@ Entscheidungskarte beantwortet. Alles, was auf ihn wartet, steht unter
 zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzelnen:
 [backlog.md](backlog.md), offene Fragen: [offene-fragen.md](offene-fragen.md).
 
-**Stand: 03.11.2026** · neueste Version 0.22.0 (Fortsetzen nach Neustart), davor 0.21.1 (Balance-Labor, Bau 42), 0.21.0 (Schmiede, Bau 41), neuester VALID-Bau 42 (0.21.1)
+**Stand: 03.11.2026** · neueste Version 0.22.0 (Fortsetzen nach Neustart, Bau 43), davor 0.21.1 (Balance-Labor, Bau 42), 0.21.0 (Schmiede, Bau 41), neuester VALID-Bau 43 (0.22.0)
 
 ## Phasen
 
@@ -88,7 +88,7 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | R-7a: Ausrüstung aus festen Belohnungen (D-066, D-069 bis D-071) | 0.19.0 | 39 | [Konzept](../konzepte/r-7-ausruestung.md) |
 | R-7b: Schmiede mit Erz, Stufen I bis III (D-070, D-072) | 0.21.0 | 41 | [Konzept](../konzepte/r-7b-schmiede.md) |
 | P2-6b: Balance-Labor, Grundstock (D-028, D-073) | 0.21.1 | 42 | [Konzept](../konzepte/p2-6b-balance-labor.md) |
-| P2-2: Fortsetzen nach App-Neustart (D-022, D-074) | 0.22.0 | – | [Konzept](../konzepte/p2-2-fortsetzen.md) |
+| P2-2: Fortsetzen nach App-Neustart (D-022, D-074) | 0.22.0 | 43 | [Konzept](../konzepte/p2-2-fortsetzen.md) |
 
 ## Gilt für jedes Paket
 
