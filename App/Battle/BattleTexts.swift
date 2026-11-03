@@ -52,6 +52,10 @@ enum BattleTexts {
     static let won = "Sieg"
     static let lost = "Niederlage"
     static let paused = "Angehalten"
+    /// Pausentafel nach einem Neustart der App (P2-2).
+    static let resumed = "Hier warst du stehen geblieben."
+    static let restartedAfterUpdate = "Die Mission hat sich mit einem Update geändert und beginnt neu."
+    static let restartedAfterDamage = "Der gesicherte Stand war beschädigt. Die Mission beginnt neu."
     static func speed(_ factor: Int) -> String { "\(factor)×" }
     static func lives(_ lives: Int) -> String { "\(lives) Leben" }
     static func gold(_ gold: Int) -> String { "\(gold) Gold" }

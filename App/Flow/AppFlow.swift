@@ -49,6 +49,18 @@ final class AppFlow {
 
     enum AvatarSection: Equatable { case talents, equipment, forge }
 
+    /// Wie die Schlacht beginnt, die beim Start der App aus dem Spielstand kommt
+    /// (P2-2, D-074). `state` fehlt, wenn die Mission neu beginnen muss.
+    struct ResumePlan: Equatable {
+        let node: String
+        let seed: UInt64
+        let state: GameState?
+        let notice: String
+    }
+
+    /// Gilt, bis die Schlacht endet, verlassen oder neu gestartet wird.
+    private(set) var resume: ResumePlan?
+
     @ObservationIgnored private let store: SaveStore?
     @ObservationIgnored private var save: SaveGame
     @ObservationIgnored private var writable: Bool
@@ -85,6 +97,63 @@ final class AppFlow {
         }
         selectedNode = campaign.continueNode(progress: loadedSave.progress)?.id ?? campaign.nodes.first?.id ?? ""
         self.screen = screen
+        restoreBattle()
+    }
+
+    // MARK: Fortsetzen (P2-2)
+
+    /// Lief beim letzten Beenden eine Mission, öffnet die App direkt in ihr,
+    /// angehalten (Karte S12, Empfehlung). Passt der Stand nicht mehr zu den
+    /// Regeln (Update) oder besteht er die Prüfung nicht, beginnt die Mission neu
+    /// mit Hinweis (D-022). Nur beim normalen Start ins Hauptmenü: Die
+    /// Oberflächentests mit `--play` und die Vorführung wählen ihren Schirm selbst.
+    private func restoreBattle() {
+        guard let battle = save.battle, screen == .menu else { return }
+        guard avatar != nil, let node = campaign.node(battle.node), state(of: node).isPlayable,
+              let mission = battleMission(for: node.id) else {
+            Self.log.error("Gesicherte Mission \(battle.node, privacy: .public) nicht spielbar, verworfen")
+            return discardSavedBattle()
+        }
+        let sameRules = mission.fingerprint == battle.rules
+        let problems = sameRules ? battle.problems(for: Simulation(config: mission)) : []
+        let notice: String
+        var state: GameState?
+        if !sameRules {
+            Self.log.notice("Gesicherte Mission unter alten Regeln, beginnt neu")
+            notice = BattleTexts.restartedAfterUpdate
+        } else if !problems.isEmpty {
+            Self.log.error("Gesicherte Mission ungültig: \(problems.joined(separator: "; "), privacy: .public)")
+            notice = BattleTexts.restartedAfterDamage
+        } else {
+            state = battle.state
+            notice = BattleTexts.resumed
+        }
+        resume = ResumePlan(node: node.id, seed: battle.seed, state: state, notice: notice)
+        if state == nil { discardSavedBattle() }
+        selectedNode = node.id
+        screen = .battle(node: node.id)
+    }
+
+    /// Sichert die laufende Mission, wenn die App in den Hintergrund geht. Der
+    /// Fingerabdruck kommt aus der Konfiguration, die `battleMission` jetzt
+    /// liefert, nicht aus der Schlacht: Die trägt in Testläufen geänderte Zeiten.
+    func suspend(_ nodeID: String, seed: UInt64, state: GameState) {
+        guard store != nil, !state.isOver, let mission = battleMission(for: nodeID) else { return }
+        save.battle = SuspendedBattle(node: nodeID, rules: mission.fingerprint, seed: seed, state: state)
+        persist()
+    }
+
+    /// „Zurück“ aus der Schlacht beendet die Mission; gesichert bleibt nichts.
+    func leaveBattle() {
+        resume = nil
+        discardSavedBattle()
+        showMap()
+    }
+
+    private func discardSavedBattle() {
+        guard save.battle != nil else { return }
+        save.battle = nil
+        persist()
     }
 
     var continueNode: CampaignNode? { campaign.continueNode(progress: progress) }
@@ -110,6 +179,7 @@ final class AppFlow {
         guard let node = campaign.node(nodeID), state(of: node).isPlayable else { return }
         selectedNode = nodeID
         justImproved = nil
+        resume = nil
         screen = .battle(node: nodeID)
     }
 
@@ -283,6 +353,10 @@ final class AppFlow {
         let thresholds = mission(for: nodeID)?.mission.stars
         let stars = StarRating.stars(outcome: outcome, livesLeft: livesLeft, thresholds: thresholds)
         let next = progress.recording(stars: stars, for: nodeID)
+        // Die Mission ist entschieden; fortgesetzt wird sie nicht mehr.
+        let hadBattle = save.battle != nil
+        save.battle = nil
+        resume = nil
         // Erz gibt auch der wiederholte Sieg, deshalb vor dem Vergleich der Sterne.
         lastOre = 0
         if var changed = avatar, let equipment {
@@ -294,7 +368,7 @@ final class AppFlow {
             }
         }
         guard next != progress else {
-            if lastOre > 0 { persist() }
+            if lastOre > 0 || hadBattle { persist() }
             return stars
         }
         let before = rank, ownedBefore = ownedIDs

@@ -21,7 +21,7 @@ final class BattleModel {
     var timeScale = 1.0
     var autoplay: Bool
     private var player: Autoplayer
-    private let seed: UInt64
+    let seed: UInt64
     private let tickDuration: TimeInterval
     private var accumulator: TimeInterval = 0
     /// Befehle aus der Bedienung, ausgeführt im nächsten Schritt. So kommt
@@ -29,12 +29,14 @@ final class BattleModel {
     /// ein Spiel lässt sich aus den Befehlen genau wiederholen.
     private var pending: [Command] = []
 
-    init(config: BalanceConfig, seed: UInt64, autoplay: Bool) {
+    /// `resume` ist ein gesicherter Zustand derselben Mission (P2-2). Geprüft
+    /// hat ihn `AppFlow` mit `SuspendedBattle.problems`, bevor er hier ankommt.
+    init(config: BalanceConfig, seed: UInt64, autoplay: Bool, resume: GameState? = nil) {
         sim = Simulation(config: config)
         self.seed = seed
         self.autoplay = autoplay
         player = Autoplayer(demoOf: config)
-        state = sim.newGame(seed: seed)
+        state = resume ?? sim.newGame(seed: seed)
         previous = state
         tickDuration = 1 / Double(config.simulation.ticksPerSecond)
     }

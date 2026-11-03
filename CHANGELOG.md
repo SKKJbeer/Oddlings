@@ -11,6 +11,22 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.22.0 – 03.11.2026 (P2-2: Fortsetzen nach App-Neustart)
+
+- **Eine laufende Mission geht nicht mehr verloren.** Geht die App in den Hintergrund,
+  wird die Mission gesichert. Beendet iOS die App danach oder startet das Telefon neu,
+  öffnet die App direkt in dieser Mission, angehalten, mit „Hier warst du stehen
+  geblieben.“ auf der Pausentafel. Gebaut ist die Empfehlung der Karte S12 (D-074).
+- Hat ein Update die Mission geändert oder ist der Stand beschädigt, beginnt sie neu,
+  mit Hinweis (D-022). „Zurück“ aus der Schlacht beendet die Mission wie bisher.
+- Spielstand Schema 3 (`battle`), Migration aus Schema 2 ohne Verlust; der gesicherte
+  Zustand wird vor dem Fortsetzen gegen die Mission geprüft. Grenze der Datei 512 KB.
+- Ein stehendes Bollwerk wird nach einer Größenänderung und beim Fortsetzen wieder
+  gezeigt.
+- Tests: `SuspendedBattleTests` (Determinismus über das Speichern, Prüfregeln, Migration,
+  Fingerabdruck), Fortsetzen in `AppFlowTests`, `ResumeE2ETests` in der echten App
+  (Home, Beenden, neu öffnen).
+
 ## 0.21.1 – 03.11.2026 (P2-6b: Balance-Labor, Grundstock) · Bau 42
 
 - **Werkzeug, die App spielt sich unverändert.** `oddlings-balance` lässt gierige,

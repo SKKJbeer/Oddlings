@@ -88,7 +88,9 @@ struct StartView: View {
             AvatarScreen(flow: flow)
         case .battle(let node):
             if let mission = flow.battleMission(for: node) {
-                BattleView(mission: mission, mode: .play, onClose: { flow.showMap() }) { outcome, lives in
+                BattleView(mission: mission, mode: .play, resume: flow.resume?.node == node ? flow.resume : nil,
+                           onClose: { flow.leaveBattle() },
+                           onSuspend: { seed, state in flow.suspend(node, seed: seed, state: state) }) { outcome, lives in
                     flow.finish(node, outcome: outcome, livesLeft: lives)
                     return flow.lastReward
                 }

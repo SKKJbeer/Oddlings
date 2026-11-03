@@ -142,7 +142,8 @@ ohne Simulator, und auch unter Linux (CI-Job `core-linux`, Cloud-Sitzungen).
 | `Talents.swift`, `Avatar.swift` | Talentseiten, Rang aus Sternen (`AvatarRank`), Avatar nur gültig anlegbar |
 | `Equipment.swift` | Ausrüstung aus `equipment.json` (R-7a): Plätze, Stücke, Besitz aus Sternen, `BalanceConfig.applying(equipment:)`; Schmiede (R-7b): `ForgeConfig` (Erz je Ergebnis, Preise), `ForgeState` (Bestand, Stufen), `EquipmentTable.upgrade`/`credit`; die Simulation kennt weder Ausrüstung noch Erz |
 | `Campaign.swift` | Region, Knoten, Sterne (`StarRating`), Fortschritt; Prüfung der Region beim Laden |
-| `SaveGame.swift`, `SaveStore.swift` | Spielstand mit Schema 2, atomar geschrieben, vorige Fassung bleibt, beim Laden geprüft (D-022) |
+| `SaveGame.swift`, `SaveStore.swift` | Spielstand mit Schema 3, atomar geschrieben, vorige Fassung bleibt, beim Laden geprüft (D-022) |
+| `SuspendedBattle.swift` | Laufende Mission im Spielstand (P2-2): Zustand, Knoten, Fingerabdruck der Regeln, Prüfung des Zustands gegen die Mission vor dem Fortsetzen |
 
 Missionen liegen je als Datei in `Resources/Balance/` (`mvp-mission-01.json`,
 `mission-02.json`, `mission-03.json`), die Regionsdatei nennt sie je Knoten. Die Bank hat einen
@@ -178,7 +179,7 @@ unberührt, und jede Kombination ist eine geprüfte Konfiguration.
 
 | Ordner | Was | Darf | Darf nicht |
 |---|---|---|---|
-| `Flow/` | `AppFlow` (Schirme `menu`, `setup`, `map`, `avatar`, `battle`), Spielstand laden und schreiben über `SaveStore`, `AppSettings` getrennt vom Spielstand | Schirm wechseln, Fortschritt nach einem Sieg eintragen, Talentwahl speichern | Sterne oder Rang selbst rechnen (kommt aus dem Kern) |
+| `Flow/` | `AppFlow` (Schirme `menu`, `setup`, `map`, `avatar`, `battle`), Spielstand laden und schreiben über `SaveStore`, `AppSettings` getrennt vom Spielstand; beim Start eine gesicherte Mission prüfen und direkt in sie öffnen (`ResumePlan`, P2-2) | Schirm wechseln, Fortschritt nach einem Sieg eintragen, Talentwahl speichern, laufende Mission sichern und verwerfen | Sterne oder Rang selbst rechnen (kommt aus dem Kern) |
 | `UI/` | `MainMenuView`, `UITheme` (Farben, Schriften, Formen), `AppFonts` (D-032), `FeedbackPlayer` (Haptik je Ereignis) | aussehen, rückmelden | Spielzustand ändern |
 | `Campaign/` | `CampaignMapView`: gemalte Karte Region 1, Knoten, Missionstafel | Knoten wählen, Mission starten (über `AppFlow`) | Freischaltung entscheiden |
 | `Avatar/` | `AvatarSetupView` (R-5), `AvatarScreen` (R-6, Reiter Talente, Ausrüstung R-7a und Schmiede R-7b), `AvatarPortraits` | Avatar anlegen, Talent wählen, Ausrüstung anlegen (über `AppFlow`) | Talent- und Ausrüstungswerte kennen (stehen in `races.json`, `equipment.json`) |
@@ -199,6 +200,16 @@ Spielstand (SaveStore) ──▶ AppFlow: Avatar (Volk, Talente), Fortschritt (S
                  BattleController (Tippen)     BattleScene, FxDirector, AudioDirector, HUD, FeedbackPlayer
                                                                           │
                                          Sieg ──▶ AppFlow trägt Sterne ein ──▶ SaveStore
+```
+
+### Fortsetzen nach Neustart (P2-2)
+
+```
+Hintergrund ──▶ BattleView ── Startwert, Zustand ──▶ AppFlow.suspend ── Fingerabdruck ──▶ SaveStore
+App-Start  ──▶ AppFlow.restoreBattle: Knoten spielbar? Fingerabdruck gleich? problems leer?
+                 ja ──▶ BattleModel(resume:) angehalten, Hinweis auf der Pausentafel
+                 Regeln anders / Zustand kaputt ──▶ Mission neu, Hinweis
+Ergebnis oder „Zurück“ ──▶ AppFlow verwirft die gesicherte Mission
 ```
 
 ### Szene

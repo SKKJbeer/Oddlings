@@ -28,9 +28,10 @@ public struct SaveStore: Sendable {
         case failed(String)
     }
 
-    /// Ein Spielstand ist wenige hundert Byte groß. Was deutlich größer ist, ist
-    /// keiner und wird gar nicht erst in den Speicher geladen.
-    public static let maximumBytes = 64 * 1024
+    /// Fortschritt und Avatar sind wenige hundert Byte, eine gesicherte Mission
+    /// mitten in einer großen Welle einige zehn KB (P2-2). Was deutlich größer
+    /// ist, ist kein Spielstand und wird gar nicht erst in den Speicher geladen.
+    public static let maximumBytes = 512 * 1024
 
     public let directory: URL
     public var primaryURL: URL { directory.appendingPathComponent("save.json") }

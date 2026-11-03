@@ -237,14 +237,24 @@ besten Sterne je Mission, sortiert, ohne Wörterbuch. Daraus rechnet der Kern
 `state(of:)` (`completed`/`open`/`inPreparation`/`locked(Grund)`), `totalStars` und
 den Avatarrang. `StarRating` vergibt 1 bis 3 Sterne aus übrigen Leben.
 
-## Speicherstand (umgesetzt R-1, R-5, R-6)
+## Speicherstand (umgesetzt R-1, R-5, R-6, P2-2)
 
-`SaveGame { schemaVersion = 2, progress: CampaignProgress, avatar: Avatar? }` als
+`SaveGame { schemaVersion = 3, progress: CampaignProgress, avatar: Avatar?, battle: SuspendedBattle? }` als
 JSON in Application Support (`SaveLocation`). `SaveStore` schreibt atomar, behält die
 vorige Fassung und prüft beim Laden: Ein kaputter Teil kostet nur diesen Teil
 (Avatar, Talentwahl), nie den Fortschritt. Einstellungen (Lautstärke Klänge und Musik 0…1, beim Laden begrenzt; Vibration) liegen
-getrennt in `AppSettings`, weil sie dem Gerät gehören. Noch nicht umgesetzt:
-`suspendedMission` (Fortsetzen einer laufenden Mission, P2-2).
+getrennt in `AppSettings`, weil sie dem Gerät gehören.
+
+**Laufende Mission (P2-2, Schema 3, D-074):** `SuspendedBattle { node, rules, seed,
+state: GameState }`. `rules` ist `BalanceConfig.fingerprint` der gespielten
+Konfiguration (Mission mit Volk, Talenten, Ausrüstung): FNV-1a über JSON mit sortierten
+Schlüsseln, 16 Hexziffern. Geschrieben, wenn die App in den Hintergrund geht; verworfen,
+wenn die Mission endet oder verlassen wird. Beim Lesen prüft der Codec nur, ob der
+Knoten zur Region gehört (`Dropped.unknownBattleNode`) und ob der Zustand lesbar ist
+(`Dropped.unreadableBattle`); den Zustand gegen die Mission prüft
+`SuspendedBattle.problems(for:)`, aufgerufen von `AppFlow` mit der gespielten
+Konfiguration. Migration 2 → 3 ohne Inhalt. Grenze der Datei 512 KB (vorher 64 KB).
+[Konzept](../konzepte/p2-2-fortsetzen.md)
 
 ### Ursprünglicher Entwurf (Phase 0)
 

@@ -20,9 +20,15 @@ struct BattleView: View {
     /// Beim Zuschauen bleibt es leer: Eine Vorführung ist kein Sieg.
     var onFinish: ((Outcome, Int) -> String?)?
 
-    init(mission config: BalanceConfig, mode: Mode, onClose: @escaping () -> Void,
+    /// Bekommt Startwert und Zustand, wenn die App in den Hintergrund geht, damit
+    /// die Mission einen Neustart der App übersteht (P2-2).
+    var onSuspend: ((UInt64, GameState) -> Void)?
+
+    init(mission config: BalanceConfig, mode: Mode, resume: AppFlow.ResumePlan? = nil,
+         onClose: @escaping () -> Void, onSuspend: ((UInt64, GameState) -> Void)? = nil,
          onFinish: ((Outcome, Int) -> String?)? = nil) {
         self.onClose = onClose
+        self.onSuspend = onSuspend
         self.onFinish = onFinish
         var autoplay = mode == .watch
         #if DEBUG
@@ -35,11 +41,12 @@ struct BattleView: View {
         if let delay = Self.testFirstWaveDelay { config.mission.firstWaveDelay = delay }
         if let cooldown = Self.testCooldown { config.ability?.cooldown = cooldown }
         #endif
-        let model = BattleModel(config: config, seed: 1, autoplay: autoplay)
+        let model = BattleModel(config: config, seed: resume?.seed ?? 1, autoplay: autoplay, resume: resume?.state)
         #if DEBUG
         model.timeScale = Self.testTimeScale ?? 1
         #endif
         let controller = BattleController(model: model, interactive: mode == .play)
+        if let resume { controller.startPaused(notice: resume.notice) }
         let scene = BattleScene(model: model)
         scene.controller = controller
         let audio = AudioDirector.shared
@@ -82,6 +89,11 @@ struct BattleView: View {
         .persistentSystemOverlays(.hidden)
         .onChange(of: scenePhase) { _, phase in
             if phase != .active { controller.pauseForBackground() }
+            // Erst im Hintergrund sichern, nicht schon bei `.inactive` (Kontrollzentrum):
+            // iOS meldet `.background` vor jedem Beenden aus dem Hintergrund.
+            if phase == .background, controller.isSuspendable {
+                onSuspend?(controller.model.seed, controller.model.state)
+            }
         }
         .onAppear { AudioDirector.shared.startBattle() }
         .onChange(of: controller.paused) { _, paused in AudioDirector.shared.setPaused(paused) }

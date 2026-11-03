@@ -94,6 +94,14 @@ Status: **gilt**, umgesetzt bis 0.12.0; Ende-zu-Ende-Tests **[ENTSCHIEDEN D-029]
   In der App: Schild nur an gepanzerten Gegnern (`BattleSceneTests`), gemalter
   Boden für M1 bis M4 (`BattleSpritesTests`), tieferer Treffer (`SoundMapTests`),
   keine Haptik (`FeedbackPlayerTests`), M4 spielbar (`AppFlowTests`).
+- Seit P2-2 (0.22.0): `SuspendedBattleTests` (gesichert, über die Datei gelesen und
+  weitergespielt endet mit derselben Prüfsumme wie ohne Unterbrechung; voller Zustand
+  unter 512 KB; Migration 2 → 3; unlesbarer Zustand und unbekannter Knoten kosten nur
+  die Mission; Fingerabdruck stabil und empfindlich für Mission und Volk; 15 Brüche,
+  die die Prüfung abweist, jeder einmal rot gesehen; Bank ohne Bankwerte). In der App
+  (`AppFlowTests`): gesichert und neu geöffnet startet angehalten mit Hinweis, geänderte
+  Regeln und kaputter Stand beginnen neu, Ergebnis und „Zurück“ verwerfen, ein
+  entschiedener Zustand wird nie gesichert.
 
 ## Ende-zu-Ende-Tests (D-029)
 
@@ -102,7 +110,7 @@ Tests prüfen, dass die App genau so funktioniert wie gedacht. **[ENTSCHIEDEN]**
 
 Umgesetzt ab Version 0.5.1; Aufbau und Grundsätze: [e2e-tests.md](../konzepte/e2e-tests.md).
 
-**Stand 0.20.0: 34 Fälle** in `AppUITests/`:
+**Stand 0.22.0: 36 Fälle** in `AppUITests/`:
 
 | Datei | Fälle | Ablauf |
 |---|---|---|
@@ -115,6 +123,7 @@ Umgesetzt ab Version 0.5.1; Aufbau und Grundsätze: [e2e-tests.md](../konzepte/e
 | `BuildAndSellE2ETests` | 4 | Kreismenü, Vorschau, bauen, verkaufen, „fehlt N“, Schließen |
 | `HUDE2ETests` | 4 | Startwerte, Welle rufen, Pause hält Countdown, Tempo |
 | `TablesE2ETests` | 4 | Pausetafel (weiter, neu starten), Aufgeben, Bildschirmfotos zum Abgleich |
+| `ResumeE2ETests` | 2 | Turm bauen, Home, App beenden, neu öffnen: direkt in der Mission, angehalten mit Hinweis, Gold und Turm wie vorher, Weiter läuft (P2-2); nach „Zurück“ startet die App im Menü |
 | `MissionE2ETests` | 2 | Niederlage und Nochmal setzt alles zurück, Sieg und zurück ins Menü |
 | `AbilityE2ETests` | 2 | Fähigkeit auf den Weg, Abklingzeit, Knopf verschwindet am Missionsende |
 | `EffectsE2ETests` | 1 | Vorführung spielt jede Effektart (FX 01) |

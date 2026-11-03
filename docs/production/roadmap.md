@@ -12,7 +12,7 @@ Entscheidungskarte beantwortet. Alles, was auf ihn wartet, steht unter
 zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzelnen:
 [backlog.md](backlog.md), offene Fragen: [offene-fragen.md](offene-fragen.md).
 
-**Stand: 02.11.2026** · neueste Version 0.20.0 (Mission 4 mit Rüstung), davor 0.19.0 (Ausrüstung, Bau 39), 0.18.0 (Mission 3 mit Aufwertungen, Bau 38), neuester VALID-Bau 39 (0.19.0)
+**Stand: 03.11.2026** · neueste Version 0.22.0 (Fortsetzen nach Neustart), davor 0.21.1 (Balance-Labor, Bau 42), 0.21.0 (Schmiede, Bau 41), neuester VALID-Bau 42 (0.21.1)
 
 ## Phasen
 
@@ -36,6 +36,7 @@ zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzeln
 | S8 | Was Mission 4 Neues bringt (Entscheidungskarte seit 02.11.) | Thread „Mission 3 mit Aufwertungen bauen“ | nichts, Mission 4 wird mit der Empfehlung gebaut | Panzerbestie mit Rüstung als fester Abzug je Treffer |
 | S9 | R-7b Schmiede: woher die Währung kommt, was die Schmiede macht, wie die Währung heißt (drei Karten seit 02.11.) | Haupt-Thread, [Konzept](../konzepte/r-7b-schmiede.md) | nichts, gebaut sind die Empfehlungen (D-072); eine andere Wahl wird umgebaut | Erz aus jedem Sieg, mehr für neue Sterne; Stufen I bis III; Name Erz |
 | S10 | Wie schwer Mission 1 bis 4 beim ersten Versuch sein sollen (Entscheidungskarte seit 03.11.) | Haupt-Thread, [Konzept](../konzepte/p2-6b-balance-labor.md) | nichts, das Labor warnt nach der Empfehlung (D-073) | Steigend: M1 ≥ 90 %, M2 ≥ 75 %, M3 ≥ 60 %, M4 ≥ 50 % |
+| S12 | Wo die App nach einem Neustart mitten in einer Mission öffnet (Entscheidungskarte seit 03.11.) | Thread „Fortsetzen nach App-Neustart bauen“, [Konzept](../konzepte/p2-2-fortsetzen.md) | nichts, gebaut ist die Empfehlung (D-074) | Direkt in der Mission, pausiert |
 | S11 | Blitz allein gewinnt Mission 2 und 3 beim ersten Spielen: wann beheben (Entscheidungskarte seit 03.11.) | Haupt-Thread, [Labor](../konzepte/p2-6b-balance-labor.md#erster-lauf-03112026-stufe-pr-164-läufe-etwa-25-sekunden) | nichts, steht als bekannter Befund im Labor | Jetzt, als eigenes Paket |
 
 ## Als Nächstes
@@ -52,7 +53,7 @@ Spieltest läuft parallel. Nach R-7a kommt Mission 3 mit Aufwertungen (D-085, 02
 | 5 | ~~P2-3 Ton und Musik~~ ([Konzept](../konzepte/p2-3-ton-und-musik.md)) | Ton und Musik | – | ✓ 0.15.0 |
 | 6 | FX 02 Flitzer und Panzerbestie | Plünderer-3D-Modell | Steffens Urteil am Plünderer im Spiel | – |
 | 7 | ~~P2-6 **Mission 3 mit Aufwertungen**~~ ([Konzept](../konzepte/p2-6-mission-3-aufwerten.md)): Stufe 2 und Zielwahl, Weg „Pilzhain“ (D-081, D-084); Mission 4 folgt danach, nicht parallel | Mission 3 mit Aufwertungen bauen | 2 | ✓ 0.18.0 |
-| 8 | ~~P2-6b Balance-Labor~~, P2-2 Fortsetzen, P2-8 Synergie sichtbar, P2-9 Abstimmung | – | 2 | ✓ P2-6b 0.21.1; Konzepte K1, K6, K8 |
+| 8 | ~~P2-6b Balance-Labor~~, ~~P2-2 Fortsetzen~~, P2-8 Synergie sichtbar, P2-9 Abstimmung | – | 2 | ✓ P2-6b 0.21.1, P2-2 0.22.0; Konzepte K1, K6, K8 |
 | 9 | ~~P2-10 **Mission 4 „Ruinenrand“**~~ ([Konzept](../konzepte/p2-10-mission-4-ruestung.md)): Panzerbestie mit Rüstung (K7, S8, D-087), Weg aus D-081 | Mission 3 mit Aufwertungen bauen | 7 | ✓ 0.20.0 |
 
 ## Ausgeliefert
@@ -87,6 +88,7 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | R-7a: Ausrüstung aus festen Belohnungen (D-066, D-069 bis D-071) | 0.19.0 | 39 | [Konzept](../konzepte/r-7-ausruestung.md) |
 | R-7b: Schmiede mit Erz, Stufen I bis III (D-070, D-072) | 0.21.0 | 41 | [Konzept](../konzepte/r-7b-schmiede.md) |
 | P2-6b: Balance-Labor, Grundstock (D-028, D-073) | 0.21.1 | 42 | [Konzept](../konzepte/p2-6b-balance-labor.md) |
+| P2-2: Fortsetzen nach App-Neustart (D-022, D-074) | 0.22.0 | – | [Konzept](../konzepte/p2-2-fortsetzen.md) |
 
 ## Gilt für jedes Paket
 
@@ -143,7 +145,7 @@ Phase wie oben: Eine Mission wirkt wie das fertige Spiel.
 | # | Paket | Abh. | Konzept | Entscheidung |
 |---|---|---|---|---|
 | P2-1 | Grafik einbauen: Atlas ✓ 0.5.2, Effekte ✓ 0.10.0 (FX 01), Laufzyklen aus 3D in Arbeit (FX 02) | M1.3, Atlas aus dem Grafik-Thread | Art-Direction | D-016 |
-| P2-2 | Fortsetzen einer laufenden Mission nach App-Ende (Speicherstand selbst kommt mit R-1) | R-1 | K6 | D-022 |
+| P2-2 | ✓ 0.22.0 Fortsetzen einer laufenden Mission nach App-Ende ([Konzept](../konzepte/p2-2-fortsetzen.md)) | R-1 | K6 | D-022, D-074 |
 | P2-3 | Ton und Haptik: Klänge, Musik, Regler ✓ 0.15.0 (nur CC0, D-082) | P2-1 (Rückmeldeliste) | K9 | ✓ 0.15.0 |
 | P2-4 | Menüs, Pause, Einstellungen, Ergebnis im Stil: ✓ 0.6.0 und 0.7.0 | M1.3, Oberflächen-Thread | [07](../game-design/07-ui-ux.md) | D-031, D-032 |
 | P2-5 | Zwergenbank und Bonus für frühes Rufen: ✓ 0.16.0 (Mission 2) | – (D-080: startet vor dem Spieltest, Werte nach M1.4 nachziehen) | K3 | D-026, D-083 |
