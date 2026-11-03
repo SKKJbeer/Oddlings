@@ -112,6 +112,8 @@ Oddlings/
 │   │   └── Resources/
 │   │       ├── Balance/         mvp-mission-01.json, races.json: die einzige Quelle der Zahlen
 │   │       └── Campaign/        region-01.json: Knoten, Bedingungen, Sternschwellen
+│   ├── Sources/OddlingsLab/     Balance-Labor (P2-6b): Bots, Läufe, Zielwerte, Bericht; labor.json
+│   ├── Sources/oddlings-balance/ Kommandozeile des Labors, nur Dateien, kein Netz
 │   └── Tests/OddlingsCoreTests/
 ├── art/                         Rohbilder und ENTSTEHUNG.md je Bildgruppe (nicht in der App)
 ├── tools/art-check/             Prüft Atlas und Bilder gegen den Asset-Vertrag (CI-Job „art")
@@ -149,6 +151,21 @@ eigenen Abschnitt `bank` mit eigenem Typ `BankConfig` statt `TowerConfig`
 Kreismenü anbietet. Stufe 2 steht als Abschnitt `upgrades` mit Faktoren auf die
 Werte der Stufe 1 (D-084); so wirken Volk, Talente und Ausrüstung, die die
 Grundwerte ändern, auf beide Stufen, ohne dass die Simulation sie kennt.
+
+### Balance-Labor (P2-6b, D-073)
+
+`OddlingsLab` hängt von `OddlingsCore` ab, nie umgekehrt; die App bindet es nicht ein.
+Es spielt Missionen wie ein Spieler, nur über Befehle, und liest seine Bot-Eigenschaften
+und Zielwerte aus `labor.json` (geprüft beim Laden). Neben Foundation lädt es nur die
+eigenen Module des Pakets (`regeln-pruefen.sh`).
+
+| Datei | Aufgabe |
+|---|---|
+| `LabConfig.swift` | `labor.json`: Gewichte des gierigen Bots, Eigenschaften von Menschen- und Zufallsbot, Stufen, Zielwerte, bekannte Befunde; `issues()` prüft alles |
+| `LabBot.swift` | Ein Bot für alle Profile: gierig (sofort, bester Platz) oder menschenähnlich (Reaktionszeit, Streuung, späte Fähigkeit), gesät |
+| `Play.swift` | `Simulation.play`, Reserve-Suche, Invarianten je Tick; die festen Bauweisen der Balancetests |
+| `Lab.swift` | `FirstPlay` (was ein Spieler vor Mission N hat, D-071), parallele Läufe, Bewertung der Zielwerte, Sperrklinke für bekannte Befunde |
+| `Report.swift` | Bericht als Markdown und CSV |
 
 Regel dahinter: **Alles, was ein Ergebnis ändert, liegt im Kern und ist rein.** Volk,
 Talent und künftig Ausrüstung (D-066) wirken nur als Konfiguration, die vor dem

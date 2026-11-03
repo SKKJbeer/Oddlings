@@ -8,12 +8,16 @@ let package = Package(
     platforms: [.iOS(.v17), .macOS(.v14)],
     products: [
         .library(name: "OddlingsCore", targets: ["OddlingsCore"]),
+        // Balance-Labor (P2-6b): Prüfwerkzeug, nicht Teil der App.
+        .executable(name: "oddlings-balance", targets: ["oddlings-balance"]),
     ],
     targets: [
         .target(
             name: "OddlingsCore",
             resources: [.copy("Resources/Balance"), .copy("Resources/Campaign")]
         ),
-        .testTarget(name: "OddlingsCoreTests", dependencies: ["OddlingsCore"]),
+        .target(name: "OddlingsLab", dependencies: ["OddlingsCore"], resources: [.copy("Resources/labor.json")]),
+        .executableTarget(name: "oddlings-balance", dependencies: ["OddlingsCore", "OddlingsLab"]),
+        .testTarget(name: "OddlingsCoreTests", dependencies: ["OddlingsCore", "OddlingsLab"]),
     ]
 )

@@ -1,5 +1,6 @@
 import Testing
 @testable import OddlingsCore
+import OddlingsLab
 
 /// Balancetests (testing-strategy.md, Regel 3): Beziehungen zwischen Bauweisen,
 /// keine genauen Zahlen. Grundlage sind die Bauweisen aus `simStrategies`.

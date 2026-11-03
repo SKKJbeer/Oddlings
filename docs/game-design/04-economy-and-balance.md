@@ -79,7 +79,7 @@ Gold gesamt in der Mission: 1 291. Das reicht für rund 20 Türme.
 
 Die Balancetests im Simulationspaket
 ([`BalanceTests`](../../Packages/OddlingsCore/Tests/OddlingsCoreTests/BalanceTests.swift),
-Bot in [`BalanceBot`](../../Packages/OddlingsCore/Tests/OddlingsCoreTests/BalanceBot.swift))
+Bot in [`LabBot`](../../Packages/OddlingsCore/Sources/OddlingsLab/LabBot.swift))
 spielen Mission 1 mit der echten Simulation und lassen sieben
 Bauweisen gegeneinander antreten. Ein einfacher Bot baut, sobald das Gold reicht,
 den nächsten Turm seiner Liste auf den Platz mit der größten Wegabdeckung;
@@ -422,6 +422,24 @@ Bauzeitpunkte (die billigeren Wachtürme verschieben alles). An einzelnen Bauwei
 liegen die Elfen höher: „Mix mit Aufwertung“ +0,12, „Mix ohne Aufwertung“ +0,08.
 Mit dem Mondmal vor der Rüstung waren es +0,15; deshalb rechnet die Simulation
 erst die Rüstung, dann das Mal (02). Bemerkt, nicht weiter geändert, wie in M3.
+
+## Balance-Labor: erster Lauf (P2-6b, 03.11.2026)
+
+Gerechnet mit `oddlings-balance --stufe pr` (164 Läufe, Zwerge und Elfen, je Mission
+mit dem, was ein Spieler beim ersten Versuch hat, D-071). Zielwerte vorläufig (D-073).
+
+| Befund | Messung | Stand |
+|---|---|---|
+| Blitz-Monokultur, Mission 2 | gewinnt bei Zwergen und Elfen, ohne Volk Reserve 1,18 | gegen D-071, bekannt, Karte offen |
+| Blitz-Monokultur, Mission 3 | gewinnt mit Volk und Talent (bis 1,14), ohne Volk 0,96 | gegen D-071, bekannt, Karte offen |
+| Dominanz Mission 1, Elfen | Blitz + Sporen 0,49 vor der zweitbesten (Grenze 0,35) | bekannt |
+| Menschenbot | M1 100 %, M2 92 %, M3 100 %, M4 92 % | über allen Zielen „Steigend“, eher zu leicht |
+| Zufallsbot | gewinnt Mission 3 (Zwerge) und 4 nie | Warnung |
+| Invarianten | keine Verletzung | ok |
+
+Die `BalanceTests` sahen die Blitz-Monokultur in M2 und M3 nicht: Sie rechnen dort
+ohne Volk und Talente oder nur mit einzelnen Bauweisen. Der Bericht jeder CI-Stufe
+liegt im Artefakt `balance-labor`.
 
 ### Bonus für frühes Rufen (D-009, E8)
 

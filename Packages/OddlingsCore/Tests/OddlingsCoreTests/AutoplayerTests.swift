@@ -1,5 +1,6 @@
 import Testing
 @testable import OddlingsCore
+import OddlingsLab
 
 @Suite("Mitspieler und Wegabdeckung")
 struct AutoplayerTests {

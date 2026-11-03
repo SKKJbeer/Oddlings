@@ -1,0 +1,78 @@
+{
+  "_status": "Balance-Labor P2-6b (D-028, K11). Bot-Eigenschaften und Zielwerte sind HYPOTHESE bis zum Spieltest WP-15. Die Siegquoten des Menschenbots folgen der Empfehlung auf der Karte an Steffen (steigend).",
+  "_einheiten": "Ticks bei 30 je Sekunde; Anteile von 0 bis 1; Reserve als Faktor auf das Leben aller Gegner.",
+  "greedy": {
+    "sampleStep": 0.25,
+    "wallApproach": 3.0,
+    "bankProbe": 2.5,
+    "coverWeight": 0.25,
+    "sporeReach": 0.5,
+    "lightningNearSpore": 1.5,
+    "sporeNeighbourhood": 2.5
+  },
+  "human": {
+    "reactionTicks": 45,
+    "placementSpread": 4,
+    "abilityDelayTicks": 120,
+    "abilitySkipShare": 0.3
+  },
+  "random": {
+    "minSteps": 12,
+    "maxSteps": 30,
+    "upgradeShare": 0.15
+  },
+  "reserve": {
+    "low": 0.5,
+    "high": 4.0,
+    "halvings": 9
+  },
+  "monocultureSteps": 30,
+  "stages": {
+    "pr": {
+      "seeds": 6,
+      "races": [
+        "dwarves",
+        "elves"
+      ]
+    },
+    "gross": {
+      "seeds": 200,
+      "races": [
+        "dwarves",
+        "elves"
+      ]
+    }
+  },
+  "targets": {
+    "dominanceMargin": 0.35,
+    "minBuildShare": 0.05,
+    "humanWinRate": {
+      "m1": 0.9,
+      "m2": 0.75,
+      "m3": 0.6,
+      "m4": 0.5
+    }
+  },
+  "known": [
+    {
+      "id": "dominanz|m1|elves",
+      "reason": "Blitz + Sporen liegt bei Elfen 0,49 vor der Mischung, das Mondmal verstärkt genau die Kernsynergie. Wird mit der Behebung oben angesehen."
+    },
+    {
+      "id": "monokultur|m2|dwarves|lightning",
+      "reason": "Blitz allein gewinnt Mission 2 schon ohne Volk (Reserve 1,18). Gegen D-071; Behebung wartet auf Steffens Karte (02.11.2026)."
+    },
+    {
+      "id": "monokultur|m2|elves|lightning",
+      "reason": "Blitz allein gewinnt Mission 2 schon ohne Volk (Reserve 1,18). Gegen D-071; Behebung wartet auf Steffens Karte (02.11.2026)."
+    },
+    {
+      "id": "monokultur|m3|dwarves|lightning",
+      "reason": "Blitz allein gewinnt Mission 3 mit Volk und Talent (Reserve bis 1,14), ohne Volk nicht. Gegen D-071; Behebung wartet auf Steffens Karte."
+    },
+    {
+      "id": "monokultur|m3|elves|lightning",
+      "reason": "Blitz allein gewinnt Mission 3 mit Volk und Talent (Reserve bis 1,14), ohne Volk nicht. Gegen D-071; Behebung wartet auf Steffens Karte."
+    }
+  ]
+}

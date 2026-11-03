@@ -1,5 +1,6 @@
 import Testing
 @testable import OddlingsCore
+import OddlingsLab
 
 /// Mission 2 „Zwergenbank“ (P2-5). Werte sind Hypothese bis nach WP-15; die
 /// Tests halten Beziehungen fest, keine genauen Zahlen (testing-strategy.md).

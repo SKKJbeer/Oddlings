@@ -1,6 +1,7 @@
 import Foundation
 import Testing
 @testable import OddlingsCore
+import OddlingsLab
 
 /// Mission 4 „Ruinenrand“ (P2-10). Werte sind Hypothese bis nach WP-15; die
 /// Tests halten Beziehungen fest, keine genauen Zahlen (testing-strategy.md).
