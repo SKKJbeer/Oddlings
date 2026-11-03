@@ -29,7 +29,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   `BossAppTests`, `SoundMapTests`, `FeedbackPlayerTests`, `BossE2ETests`. Labor ohne neue
   Verletzung, Menschenbot 42 % bei Ziel 40 %.
 
-## 0.27.0 – 03.11.2026 (P3-3: Wahl zwischen zwei Spezialisierungen, Mission 6a und 6b)
+## 0.27.0 – 03.11.2026 (P3-3: Wahl zwischen zwei Spezialisierungen, Mission 6a und 6b) · Bau 50
 
 - **Mission 6a „Sumpfpfad II“ und 6b „Ruinen II“** sind spielbar, Wege vom Grafik-Thread.
   Jeder Turm bietet hier beide Spezialisierungen: Salve oder Falkenhorst, Gewitterkrone oder
