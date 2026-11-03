@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.23.0 – 03.11.2026 (P2-11: Blitz allein verliert Mission 2 und 3)
+## 0.23.0 – 03.11.2026 (P2-11: Blitz allein verliert Mission 2 und 3) · Bau 44
 
 - **Mission 2 und 3:** Flitzer laufen 2,6 statt 2,2 Felder je Sekunde, Mission 2 hat
   dazu 10 % mehr Lebenspunkte je Welle. Wer nur Blitztürme baut, verliert jetzt beim

@@ -12,7 +12,7 @@ Entscheidungskarte beantwortet. Alles, was auf ihn wartet, steht unter
 zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzelnen:
 [backlog.md](backlog.md), offene Fragen: [offene-fragen.md](offene-fragen.md).
 
-**Stand: 03.11.2026** · neueste Version 0.23.0 (Blitz allein verliert Mission 2 und 3), davor 0.22.0 (Fortsetzen nach Neustart, Bau 43), 0.21.1 (Balance-Labor, Bau 42), 0.21.0 (Schmiede, Bau 41), neuester VALID-Bau 43 (0.22.0)
+**Stand: 03.11.2026** · neueste Version 0.23.0 (Blitz allein verliert Mission 2 und 3, Bau 44), davor 0.22.0 (Fortsetzen nach Neustart, Bau 43), 0.21.1 (Balance-Labor, Bau 42), 0.21.0 (Schmiede, Bau 41), neuester VALID-Bau 43 (0.22.0)
 
 ## Phasen
 
@@ -89,7 +89,7 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | R-7b: Schmiede mit Erz, Stufen I bis III (D-070, D-072) | 0.21.0 | 41 | [Konzept](../konzepte/r-7b-schmiede.md) |
 | P2-6b: Balance-Labor, Grundstock (D-028, D-073) | 0.21.1 | 42 | [Konzept](../konzepte/p2-6b-balance-labor.md) |
 | P2-2: Fortsetzen nach App-Neustart (D-022, D-074) | 0.22.0 | 43 | [Konzept](../konzepte/p2-2-fortsetzen.md) |
-| P2-11: Blitz allein verliert Mission 2 und 3 (D-071, D-075) | 0.23.0 | – | [Konzept](../konzepte/p2-11-blitz-monokultur.md) |
+| P2-11: Blitz allein verliert Mission 2 und 3 (D-071, D-075) | 0.23.0 | 44 | [Konzept](../konzepte/p2-11-blitz-monokultur.md) |
 
 ## Gilt für jedes Paket
 
