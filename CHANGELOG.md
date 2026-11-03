@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.25.0 – 03.11.2026 (P3-1: Spezialisierungen und Mission 5a „Sumpfpfad“)
+## 0.25.0 – 03.11.2026 (P3-1: Spezialisierungen und Mission 5a „Sumpfpfad“) · Bau 47
 
 - **Stufe 3:** Ein Turm auf Stufe 2 lässt sich auf dem Sumpfpfad spezialisieren, je Turm
   eine Wahl (Steffens Karte S14 „Je Weg drei, Wahl ab M6“, D-077): **Salve** (Wachturm,
@@ -25,6 +25,9 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   Missionsdatei mit Prüfung beim Laden; Mitspieler und Labor spezialisieren mit.
 - Tests: `SpecializationTests`, `MissionFiveATests`, `SpecializationControllerTests`,
   E2E `SpecializationE2ETests`; Kampagne, Ablauf und Labor kennen Mission 5a.
+- Bau 47 ist VALID und in der Gruppe „Team“; der Lauf meldete trotzdem Rot, weil Apple
+  danach beim Lesen der Gruppen einmal mit HTTP 500 antwortete. Die Wiederholung dafür in
+  `scripts/apple.py` kommt mit der nächsten App-Änderung, weil sie sonst einen eigenen Bau auslöst.
 
 ## 0.24.1 – 03.11.2026 (Korrektur: 0.24.0 im Release-Bau) · Bau 46
 
