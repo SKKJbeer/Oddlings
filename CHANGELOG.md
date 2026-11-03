@@ -11,6 +11,18 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.27.1 – 03.11.2026 (Grafik 08: Kampfplätze Tiefes Moor und Tempelplatz)
+
+- **Gemalte Kampfplätze für Mission 6a und 6b** statt der schlichten Karte. 6a „Sumpfpfad II“
+  führt tiefer ins Moor: Nacht, blaugrünes Licht, Mangroven, Trauerweiden, leuchtende Pilze.
+  6b „Ruinen II“ liegt auf dem Tempelplatz: Mondlicht, Feuerschalen, türkise Kristalle,
+  eingestürzte Wände und Treppen. Das Feld bleibt hell, Weg und Gegner sind so gut zu sehen wie in M5.
+- Wege unverändert aus `mission-06a.json` und `mission-06b.json`.
+- Tests: `test_weg_und_wald_liegen_richtig` deckt beide Karten ab (einmal rot gesehen mit
+  dem Weg von M5a), `testEveryBundledMissionHasItsPaintedGround` um `mission-06a`/`-06b` ergänzt.
+- Herkunft, Prompts und Seeds in `art/karten/ENTSTEHUNG.md`, Konzept
+  [Grafik 08](docs/konzepte/grafik-08-kampfplaetze-m6.md).
+
 ## 0.27.0 – 03.11.2026 (P3-3: Wahl zwischen zwei Spezialisierungen, Mission 6a und 6b)
 
 - **Mission 6a „Sumpfpfad II“ und 6b „Ruinen II“** sind spielbar, Wege vom Grafik-Thread.
