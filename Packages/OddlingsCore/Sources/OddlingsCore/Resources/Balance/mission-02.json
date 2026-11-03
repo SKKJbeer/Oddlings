@@ -78,7 +78,7 @@
     },
     "runner": {
       "hp": 52,
-      "speed": 2.2,
+      "speed": 2.6,
       "reward": 4,
       "leakDamage": 1
     },
@@ -91,7 +91,7 @@
   },
   "waves": [
     {
-      "hpScale": 1.0,
+      "hpScale": 1.1,
       "groups": [
         {
           "enemy": "raider",
@@ -101,7 +101,7 @@
       ]
     },
     {
-      "hpScale": 1.09,
+      "hpScale": 1.2,
       "groups": [
         {
           "enemy": "raider",
@@ -111,7 +111,7 @@
       ]
     },
     {
-      "hpScale": 1.17,
+      "hpScale": 1.29,
       "groups": [
         {
           "enemy": "runner",
@@ -121,7 +121,7 @@
       ]
     },
     {
-      "hpScale": 1.26,
+      "hpScale": 1.39,
       "groups": [
         {
           "enemy": "raider",
@@ -137,7 +137,7 @@
       ]
     },
     {
-      "hpScale": 1.42,
+      "hpScale": 1.56,
       "groups": [
         {
           "enemy": "raider",
@@ -147,7 +147,7 @@
       ]
     },
     {
-      "hpScale": 1.52,
+      "hpScale": 1.67,
       "groups": [
         {
           "enemy": "runner",
@@ -157,7 +157,7 @@
       ]
     },
     {
-      "hpScale": 1.68,
+      "hpScale": 1.85,
       "groups": [
         {
           "enemy": "brute",
@@ -173,7 +173,7 @@
       ]
     },
     {
-      "hpScale": 1.85,
+      "hpScale": 2.04,
       "groups": [
         {
           "enemy": "raider",
@@ -189,7 +189,7 @@
       ]
     },
     {
-      "hpScale": 2.03,
+      "hpScale": 2.23,
       "groups": [
         {
           "enemy": "brute",
@@ -205,7 +205,7 @@
       ]
     },
     {
-      "hpScale": 2.27,
+      "hpScale": 2.5,
       "groups": [
         {
           "enemy": "raider",

@@ -5,8 +5,8 @@ ergänzt, D-067). Reihenfolge, Pakete und alles, was auf dich wartet, stehen in 
 [Roadmap](roadmap.md); Einzelheiten im [Backlog](backlog.md), offene Fragen im
 [Register](offene-fragen.md).
 
-**Stand: 03.11.2026** · Neueste Version **0.22.0** (Fortsetzen: eine laufende Mission übersteht das Beenden der App), Bau folgt;
-davor 0.21.1 (Balance-Labor in der CI, Bau 42 VALID), 0.21.0 (Schmiede mit Erz im Avatar-Menü, Bau 41 VALID), 0.20.0 (Mission 4 mit gepanzerter Panzerbestie, Bau 40), 0.19.0 (Ausrüstung im Avatar-Menü, Bau 39 VALID), 0.18.0 (Mission 3 mit Aufwertungen, Bau 38 VALID), 0.16.1 (gemalte Kampfplätze für Mission 2 bis 4), 0.16.0 (Mission 2 mit Zwergenbank). Der Spielrahmen R-1 bis R-6 steht. Spielbar sind Mission 1 bis 4.
+**Stand: 03.11.2026** · Neueste Version **0.23.0** (Blitz allein verliert Mission 2 und 3), Bau folgt;
+davor 0.22.0 (Fortsetzen: eine laufende Mission übersteht das Beenden der App, Bau 43), 0.21.1 (Balance-Labor in der CI, Bau 42 VALID), 0.21.0 (Schmiede mit Erz im Avatar-Menü, Bau 41 VALID), 0.20.0 (Mission 4 mit gepanzerter Panzerbestie, Bau 40), 0.19.0 (Ausrüstung im Avatar-Menü, Bau 39 VALID), 0.18.0 (Mission 3 mit Aufwertungen, Bau 38 VALID), 0.16.1 (gemalte Kampfplätze für Mission 2 bis 4), 0.16.0 (Mission 2 mit Zwergenbank). Der Spielrahmen R-1 bis R-6 steht. Spielbar sind Mission 1 bis 4.
 
 ## Wartet auf dich
 
@@ -22,8 +22,9 @@ davor 0.21.1 (Balance-Labor in der CI, Bau 42 VALID), 0.21.0 (Schmiede mit Erz i
    (0.21.0, D-072); entscheidest du anders, wird umgebaut.
 5. Wie schwer Mission 1 bis 4 beim ersten Versuch sein sollen: Entscheidungskarte im
    Haupt-Thread. Empfehlung „steigend“ (M1 ≥ 90 % bis M4 ≥ 50 %), das Labor warnt danach.
-6. Das Labor hat gefunden: Blitz allein gewinnt Mission 2 und 3 beim ersten Spielen,
-   gegen D-071. Karte im Haupt-Thread, wann es behoben wird (Empfehlung: jetzt).
+6. Das Labor hatte gefunden, dass Blitz allein Mission 2 und 3 gewinnt. Behoben ist es
+   mit der Empfehlung der Karte (jetzt, 0.23.0, D-075): Flitzer schneller, Mission 2 etwas
+   härter. Entscheidest du anders, wird es zurückgenommen.
 7. Ohne Eile: Messung des Spikes auf dem iPhone (WP-01).
 8. Wo die App nach einem Neustart mitten in einer Mission öffnet: Entscheidungskarte
    im Thread „Fortsetzen nach App-Neustart bauen“. Gebaut ist die Empfehlung, direkt in
@@ -70,6 +71,8 @@ davor 0.21.1 (Balance-Labor in der CI, Bau 42 VALID), 0.21.0 (Schmiede mit Erz i
   angehalten. Nach einem Update, das die Mission ändert, beginnt sie neu, mit Hinweis.
 - **Balance-Labor** (P2-6b, 0.21.1): Bots spielen bei jedem PR alle vier Missionen beim
   ersten Spielen, gierig, zufällig und menschenähnlich; Bericht im Artefakt der CI.
+- **Blitz allein verliert** Mission 2 und 3 (P2-11, 0.23.0): Flitzer laufen dort
+  schneller, Mission 2 hat etwas mehr Leben je Welle.
 - **Doku nachgezogen** (27.10.2026): Architektur, Datenmodelle, Teststrategie,
   Oberfläche, Art, Roadmap; die CI prüft seitdem, dass der Doku-Stand mitwächst (D-067).
 
@@ -77,7 +80,7 @@ davor 0.21.1 (Balance-Labor in der CI, Bau 42 VALID), 0.21.0 (Schmiede mit Erz i
 
 | Thread | Woran | Nächster Schritt |
 |---|---|---|
-| Haupt-Thread | 0.21.1 Balance-Labor (P2-6b) in TestFlight (Bau 42) | nach deinen Karten Blitz-Monokultur in M2/M3 beheben |
+| Haupt-Thread | 0.23.0 Blitz-Monokultur (P2-11) im PR | zusammenführen, Bau in TestFlight; Antwort auf die Karten S10 und S11 |
 | Fortsetzen nach App-Neustart bauen | 0.22.0 (P2-2) im PR | zusammenführen, Bau in TestFlight |
 | Mission 2 mit Zwergenbank | 0.16.0, Bau 36 in TestFlight | Werte nach dem Spieltest nachziehen |
 | Mission 3 mit Aufwertungen | 0.18.0 in Bau 38; Mission 4 (0.20.0) im PR | zusammenführen, Bau in TestFlight, Antwort auf die Karte zu Mission 4 |

@@ -177,4 +177,23 @@ struct BalanceTests {
             #expect(raced.play(try order(name), castsAbility: true).state.outcome == .lost, "\(race): \(name)")
         }
     }
+
+    /// D-071 für die ganze Region (P2-11): Vor jeder Mission hat der Spieler Rang,
+    /// Talente und Ausrüstung aus drei Sternen in allen Missionen davor. Auch damit
+    /// verlieren Blitz allein und Sporen allein, mit jedem Volk; die beste Mischung
+    /// der Mission gewinnt. Bis 0.22.0 gewann Blitz allein Mission 2 und 3.
+    @Test("Beim ersten Spielen jeder Mission verlieren Blitz und Sporen allein, die Mischung gewinnt")
+    func monocultureLosesOnEveryFirstPlay() throws {
+        for play in try FirstPlay.all(races: Race.allCases) {
+            let sim = Simulation(config: play.greedyConfig)
+            for kind in [TowerKind.lightning, .spore] {
+                let order = Array(repeating: StrategyStep.build(kind), count: LabConfig.standard.monocultureSteps)
+                #expect(sim.play(order, castsAbility: true).state.outcome == .lost, "\(play.node) \(play.race): nur \(kind)")
+            }
+            let mixes = (sim.config.simStrategies ?? [:]).keys.sorted().filter { $0.hasPrefix("Mix") }
+            #expect(!mixes.isEmpty, "\(play.node)")
+            let best = mixes.map { sim.reserve(sim.config.simStrategies![$0]!, castsAbility: true) }.max() ?? 0
+            #expect(best > 1.1, "\(play.node) \(play.race): beste Mischung \(best)")
+        }
+    }
 }

@@ -100,7 +100,7 @@
     },
     "runner": {
       "hp": 52,
-      "speed": 2.2,
+      "speed": 2.6,
       "reward": 4,
       "leakDamage": 1
     },
