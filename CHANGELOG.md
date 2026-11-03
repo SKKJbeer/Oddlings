@@ -24,7 +24,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Tests: `test_wegvorschlaege_sind_spielbar`, hohe Deko in `test_deko_nur_im_rand`,
   `testEveryBundledMissionHasItsPaintedGround` mit Mission 5a und 5b.
 
-## 0.26.0 – 03.11.2026 (P3-2: Mission 5b „Ruinen“ mit Falkenhorst, Funkensäule, Fäulnis)
+## 0.26.0 – 03.11.2026 (P3-2: Mission 5b „Ruinen“ mit Falkenhorst, Funkensäule, Fäulnis) · Bau 48
 
 - **Mission 5b „Ruinen“** ist spielbar, der zweite Weg nach Mission 4: Panzerbestien in
   jeder Welle, Weg durch das Becken, den der Grafik-Thread vorgeschlagen hat. Werte [HYPOTHESE].
