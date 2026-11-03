@@ -73,4 +73,41 @@ final class SpecializationE2ETests: XCTestCase {
         XCTAssertFalse(specialize.exists, "Stufe 3 ist die letzte")
         e2e.screenshot("p3-2-faeulnis", in: self)
     }
+
+    /// P3-3, S15: Ab Mission 6 stehen zwei Sterne zur Wahl. Der andere Stern
+    /// wechselt nur die Vorschau, das zweite Tippen auf denselben kauft.
+    @MainActor
+    func testMissionSixOffersTwoStarsAndBuysTheSecondTappedOne() throws {
+        let e2e = try E2EApp(["--play", "--e2e-knoten", "m6a", "--e2e-erste-welle", E2EApp.wavesOnHold],
+                             mission: "mission-06a")
+        e2e.waitForBoard()
+        let start = e2e.config.mission.startGold
+        let upgradePrice = try XCTUnwrap(e2e.config.upgradeCost(of: .watch))
+        let volleyPrice = try XCTUnwrap(e2e.config.specializations?[.volley]?.cost)
+        let cell = try XCTUnwrap(e2e.map.buildableCells.first)
+        e2e.build(.watch, at: cell)
+        e2e.tap(cell)
+        let upgrade = e2e.app.buttons["upgrade"]
+        XCTAssertTrue(upgrade.waitForExistence(timeout: 5), "erst aufwerten")
+        upgrade.tap()
+        upgrade.tap()
+        let afterUpgrade = start - e2e.cost(.watch) - upgradePrice
+        e2e.waitFor(e2e.gold, toBe: afterUpgrade, "Aufwerten zieht den Preis ab")
+
+        let volley = e2e.app.buttons["specialize.volley"]
+        let falcon = e2e.app.buttons["specialize.falconHold"]
+        XCTAssertTrue(volley.waitForExistence(timeout: 5), "Stern für die Salve")
+        XCTAssertTrue(falcon.exists, "Stern für den Falkenhorst")
+        XCTAssertFalse(upgrade.exists, "kein Aufwerten-Knopf neben den Sternen")
+        falcon.tap()
+        XCTAssertTrue(e2e.app.staticTexts["specialize.confirm"].waitForExistence(timeout: 5), "erstes Tippen fragt")
+        volley.tap()
+        XCTAssertEqual(e2e.gold, afterUpgrade, "der andere Stern kauft nicht")
+        XCTAssertTrue(e2e.app.staticTexts["specialize.confirm"].exists, "er wechselt nur die Vorschau")
+        volley.tap()
+        e2e.waitFor(e2e.gold, toBe: afterUpgrade - volleyPrice, "zweites Tippen auf denselben Stern kauft")
+        XCTAssertEqual(e2e.app.staticTexts["panel.title"].label, "Salve")
+        XCTAssertFalse(volley.exists || falcon.exists, "Stufe 3 ist endgültig")
+        e2e.screenshot("p3-3-zwei-sterne", in: self)
+    }
 }

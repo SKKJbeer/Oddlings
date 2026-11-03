@@ -100,4 +100,86 @@ final class SpecializationControllerTests: XCTestCase {
         let badge = node.childNode(withName: "level.badge")
         XCTAssertEqual((badge?.children.first as? SKLabelNode)?.text, "III")
     }
+
+    // MARK: Wahl zwischen zwei Spezialisierungen (P3-3, S15)
+
+    private func choiceController(gold: ((BalanceConfig) throws -> Int)? = nil) throws -> (BattleModel, BattleController, BalanceConfig) {
+        var six = try BalanceConfig.bundledMission(named: "mission-06a")
+        six.mission.startGold = try gold?(six) ?? 1_000
+        six.mission.firstWaveDelay = 600
+        let model = BattleModel(config: six, seed: 1, autoplay: false)
+        return (model, BattleController(model: model, interactive: true), six)
+    }
+
+    private func levelTwoWatch(_ model: BattleModel, _ controller: BattleController) throws -> Tower {
+        let cell = try XCTUnwrap(model.sim.map.buildableCells.first)
+        controller.tap(cell)
+        controller.choose(.watch)
+        controller.choose(.watch)
+        controller.afterFrame(events: model.step())
+        controller.tap(cell)
+        controller.upgrade()
+        controller.upgrade()
+        controller.afterFrame(events: model.step())
+        let tower = try XCTUnwrap(model.state.towers.last)
+        XCTAssertEqual(tower.level, 2)
+        return tower
+    }
+
+    func testMissionSixOffersTwoStarsAndUpgradeDoesNothing() throws {
+        let (model, controller, _) = try choiceController()
+        let tower = try levelTwoWatch(model, controller)
+        XCTAssertEqual(controller.specializations(for: tower), [.volley, .falconHold])
+        controller.upgrade()
+        XCTAssertFalse(controller.upgradeArmed, "mit zwei Sternen entscheidet der Stern, nicht der Aufwertungsknopf")
+        XCTAssertNil(controller.armedSpecialization)
+    }
+
+    func testTappingAStarPreviewsItAndTheOtherSwitchesThePreview() throws {
+        let (model, controller, six) = try choiceController()
+        _ = try levelTwoWatch(model, controller)
+        let gold = model.state.gold
+        controller.specialize(.falconHold)
+        XCTAssertEqual(controller.armedSpecialization, .falconHold)
+        XCTAssertEqual(try XCTUnwrap(controller.previewRange).range,
+                       try XCTUnwrap(six.stats(of: .watch, specialization: .falconHold)).range)
+        controller.specialize(.volley)
+        controller.afterFrame(events: model.step())
+        XCTAssertEqual(controller.armedSpecialization, .volley, "der andere Stern wechselt nur die Vorschau")
+        XCTAssertEqual(model.state.gold, gold, "Vorschau kostet nichts")
+        XCTAssertNil(model.state.towers.last?.specialization)
+    }
+
+    func testSecondTapOnTheSameStarBuysIt() throws {
+        let (model, controller, six) = try choiceController()
+        _ = try levelTwoWatch(model, controller)
+        let gold = model.state.gold
+        controller.specialize(.volley)
+        controller.specialize(.volley)
+        controller.afterFrame(events: model.step())
+        let tower = try XCTUnwrap(model.state.towers.last)
+        XCTAssertEqual(tower.level, 3)
+        XCTAssertEqual(tower.specialization, .volley)
+        XCTAssertEqual(model.state.gold, gold - (six.specializations?[.volley]?.cost ?? 0))
+        XCTAssertEqual(controller.specializations(for: tower), [], "Stufe 3 ist endgültig")
+    }
+
+    func testStarWithoutGoldWarnsAndArmsNothing() throws {
+        let (model, controller, _) = try choiceController { six in
+            try XCTUnwrap(six.cost(of: .watch)) + XCTUnwrap(six.upgradeCost(of: .watch))
+                + XCTUnwrap(six.specializations?[.falconHold]?.cost) - 1
+        }
+        _ = try levelTwoWatch(model, controller)
+        let warnings = controller.goldWarnings
+        controller.specialize(.falconHold)
+        XCTAssertEqual(controller.goldWarnings, warnings + 1)
+        XCTAssertNil(controller.armedSpecialization)
+    }
+
+    func testChoiceTextsNameTheDroppedSpecialization() {
+        XCTAssertTrue(BattleTexts.specializeDrops(.falconHold).contains(BattleTexts.name(.falconHold)))
+        XCTAssertNotEqual(BattleTexts.initial(.volley), "")
+        XCTAssertNotEqual(BattleTexts.effect(.stormCrown), "Springt weiter, gebremste Ziele schwächen ihn nicht.",
+                          "S16: die Krone hat keinen Sporen-Vorteil mehr")
+    }
 }
