@@ -136,7 +136,8 @@ unbekanntes Argument bricht ab. Die CI-Stufe läuft mit `permissions: contents: 
   an Steffen.
 - **Mission 1, Elfen:** Blitz + Sporen liegt 0,49 Reserve vor der zweitbesten Bauweise
   (Grenze 0,35). Das Mondmal verstärkt genau die Kernsynergie.
-- Diese fünf stehen als bekannte Befunde in `labor.json`.
+- Diese fünf standen als bekannte Befunde in `labor.json`. Die vier zu Mission 2 und 3
+  sind mit [P2-11](p2-11-blitz-monokultur.md) (0.23.0) behoben und gestrichen.
 - Menschenbot gewinnt M1 100 %, M2 92 %, M3 100 %, M4 92 % (Ziel B: 90/75/60/50). Alle
   Missionen sind für ihn eher zu leicht; das passt zum Befund oben.
 - Der Zufallsbot gewinnt Mission 3 (Zwerge) und Mission 4 nie: Wer dort wahllos baut,

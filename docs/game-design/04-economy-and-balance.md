@@ -345,14 +345,19 @@ Wellen etwas härter als in Mission 1 (Lebenspunkte ×1,3, Anzahl ×1,15).
 
 | Bauweise | Reserve | Ergebnis |
 |---|---|---|
-| Mix ohne Bank | 1,382 | Sieg |
-| Mix, Bank spät | 1,348 | Sieg |
-| Mix mit Bank (früh) | 1,197 | Sieg |
-| Wach + Bank | 0,94 | Niederlage |
-| Nur Wachtürme | 0,92 | Niederlage |
-| Zwei Banken zuerst | 0,62 | Niederlage |
+| Mix ohne Bank | 1,19 | Sieg |
+| Mix, Bank spät | 1,15 | Sieg |
+| Mix mit Bank (früh) | 1,09 | Sieg |
+| Blitz allein (mit Fähigkeit) | 0,94 | Niederlage |
+| Wach + Bank | 0,86 | Niederlage |
+| Nur Wachtürme | 0,83 | Niederlage |
+| Zwei Banken zuerst | 0,57 | Niederlage |
 
-Die beste Bauweise mit Bank liegt 0,034 unter der besten ohne: innerhalb der
+Stand 0.23.0 (P2-11, D-075): Flitzer 2,6 statt 2,2 Felder je Sekunde, Lebenspunkte
+aller Wellen ×1,1. Davor gewann Blitz allein mit 1,18 (Mix ohne Bank 1,382, Bank spät
+1,348, Bank früh 1,197).
+
+Die beste Bauweise mit Bank liegt 0,04 unter der besten ohne: innerhalb der
 Kennzahl (±0,05), also weder Pflicht noch bedeutungslos. Wer zwei Banken vor dem
 ersten Turm baut oder nur auf Wachtürme setzt, verliert; das ist gewollt
 („Ernten oder verteidigen“). Zum Vergleich Mission 1, Mix: 1,348. Dass die frühe
@@ -370,19 +375,23 @@ Grundturms, D-024); Schaden ×1,5, beim Sporenturm Kreis ×1,15 und Verlangsamun
 
 | Bauweise | Reserve | Ergebnis |
 |---|---|---|
-| Wenige Plätze, tief | 1,42 | Sieg |
-| Mix ohne Aufwertung | 1,40 | Sieg |
-| Mix mit Aufwertung | 1,38 | Sieg |
-| Mix mit Bank und Aufwertung (Vorführung) | 1,29 | Sieg |
+| Mix ohne Aufwertung | 1,35 | Sieg |
+| Mix mit Aufwertung | 1,35 | Sieg |
+| Wenige Plätze, tief | 1,34 | Sieg |
+| Mix mit Bank und Aufwertung (Vorführung) | 1,21 | Sieg |
 | Nur Wachtürme | 0,94 | Niederlage |
+| Blitz allein (mit Fähigkeit) | 0,90 | Niederlage |
 | Nur Wachtürme, aufgewertet | 0,84 | Niederlage |
+
+Stand 0.23.0 (P2-11, D-075): Flitzer 2,6 statt 2,2 Felder je Sekunde. Davor gewann Blitz
+allein mit Volk und Talent (bis 1,14); Mix ohne Aufwertung 1,40, Vorführung 1,29.
 
 **Kennzahl:** Die beste Bauweise mit Aufwertung liegt vor der ohne, höchstens 0,15
 darüber (`MissionThreeTests.upgradingIsAChoice`): Vertiefen lohnt sich an den
 Plätzen der Haarnadel, ist aber nie Pflicht. Die Monokultur verliert auch
 aufgewertet (D-071). Der beste Platz sieht 9,8 Felder Weg, in Mission 2 9,0.
 
-**Völker.** Gemessen wie in Mission 1 und 2 an der Vorführbauweise, die alles nutzt:
+**Völker** (gemessen vor 0.23.0). Gemessen wie in Mission 1 und 2 an der Vorführbauweise, die alles nutzt:
 Zwerge 1,33, Elfen 1,33 gegen 1,29 ohne Volk, also innerhalb der Grenze +0,1. An
 einzelnen Bauweisen liegt der Abstand höher: „Mix ohne Aufwertung“ mit Zwergen
 1,525 (+0,12), „Wenige Plätze, tief“ mit Elfen 1,51 (+0,09). Bemerkt, nicht
@@ -436,6 +445,10 @@ mit dem, was ein Spieler beim ersten Versuch hat, D-071). Zielwerte vorläufig (
 | Menschenbot | M1 100 %, M2 92 %, M3 100 %, M4 92 % | über allen Zielen „Steigend“, eher zu leicht |
 | Zufallsbot | gewinnt Mission 3 (Zwerge) und 4 nie | Warnung |
 | Invarianten | keine Verletzung | ok |
+
+**Behoben in 0.23.0** (P2-11, D-075): Blitz allein verliert jetzt in M2 (0,92 bis 0,94) und
+M3 (0,88 bis 0,91) beim ersten Spielen; der Menschenbot gewinnt M2 noch 75 %, M3 92 %.
+`BalanceTests.monocultureLosesOnEveryFirstPlay` hält es für jede Mission fest.
 
 Die `BalanceTests` sahen die Blitz-Monokultur in M2 und M3 nicht: Sie rechnen dort
 ohne Volk und Talente oder nur mit einzelnen Bauweisen. Der Bericht jeder CI-Stufe

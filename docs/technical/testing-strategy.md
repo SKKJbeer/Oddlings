@@ -57,6 +57,9 @@ Status: **gilt**, umgesetzt bis 0.12.0; Ende-zu-Ende-Tests **[ENTSCHIEDEN D-029]
   mit Prüfsumme, 1× = 2×, Speichern/Laden mitten in der Welle, feste Prüfsumme
   einer kleinen Mission, die Linux und macOS gleich liefern müssen) und Balance
   (`BalanceTests`) ab. Das Python-Prüfskript der Phase 0 ist gelöscht.
+- Seit P2-11 (0.23.0): `BalanceTests.monocultureLosesOnEveryFirstPlay` prüft D-071 für
+  jede Mission der Region mit jedem Volk und dem, was vor ihr erreichbar ist (`FirstPlay`
+  aus dem Labor): Blitz und Sporen allein verlieren, die beste Mischung liegt über 1,1.
 - Seit P2-6b (0.21.1): `LabTests` (Konfiguration deckt jede Mission, Unsinn abgewiesen,
   Menschenbot gesät und langsamer, Bericht unabhängig von der Reihenfolge der Kerne,
   kaputte Balance wird rot, bekannte Befunde nur als Sperrklinke, Invarianten fangen

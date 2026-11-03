@@ -11,6 +11,18 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.23.0 – 03.11.2026 (P2-11: Blitz allein verliert Mission 2 und 3)
+
+- **Mission 2 und 3:** Flitzer laufen 2,6 statt 2,2 Felder je Sekunde, Mission 2 hat
+  dazu 10 % mehr Lebenspunkte je Welle. Wer nur Blitztürme baut, verliert jetzt beim
+  ersten Spielen (D-071); Mischungen gewinnen weiter, die Bank bleibt eine Wahl.
+  Gebaut mit der Empfehlung der Karte S11 (D-075). Mission 2 ist dadurch spürbar
+  schwerer, Mission 4 bleibt unverändert.
+- Balance-Labor: die vier bekannten Befunde zu Mission 2 und 3 sind gestrichen, übrig
+  bleibt Mission 1 mit Elfen.
+- Tests: `BalanceTests.monocultureLosesOnEveryFirstPlay` prüft D-071 für jede Mission
+  mit jedem Volk (rot mit den alten Werten).
+
 ## 0.22.0 – 03.11.2026 (P2-2: Fortsetzen nach App-Neustart) · Bau 43
 
 - **Eine laufende Mission geht nicht mehr verloren.** Geht die App in den Hintergrund,
