@@ -344,6 +344,17 @@ final class FxDirectorTests: XCTestCase {
 
     // MARK: Sporenfunke und Einstieg (P2-8)
 
+    /// Farben nach Anteilen vergleichen: SpriteKit gibt `color` im eigenen
+    /// Farbraum zurück, ein `==` mit der gesetzten Farbe schlägt dann fehl.
+    private func same(_ a: SKColor, _ b: SKColor) -> Bool {
+        var ar: CGFloat = 0, ag: CGFloat = 0, ab: CGFloat = 0, aa: CGFloat = 0
+        var br: CGFloat = 0, bg: CGFloat = 0, bb: CGFloat = 0, ba: CGFloat = 0
+        guard a.getRed(&ar, green: &ag, blue: &ab, alpha: &aa), b.getRed(&br, green: &bg, blue: &bb, alpha: &ba) else {
+            return false
+        }
+        return abs(ar - br) < 0.01 && abs(ag - bg) < 0.01 && abs(ab - bb) < 0.01 && abs(aa - ba) < 0.01
+    }
+
     /// Ein Blitz in ein verlangsamtes Ziel: Das Glied leuchtet in der Farbe des
     /// Funkens und ist dicker als ein normales.
     func testSparkLinkIsGreenAndThicker() {
@@ -357,14 +368,15 @@ final class FxDirectorTests: XCTestCase {
         let plain = EnemyNode(enemy: Enemy(id: 8, kind: .raider, hp: 10, maxHP: 10, distance: 5), field: field)
         plain.position = CGPoint(x: 200, y: 100)
         for node in [tower, slowed, plain] { scene.effectLayer.addChild(node) }
+        // Vor dem Blitz: Das erste Glied schlägt ohne Verzögerung ein.
+        var called: [CGPoint] = []
+        scene.fx.onCombo = { called.append($0) }
         scene.fx.bolt(from: tower, through: [slowed, plain])
         scene.fx.advance(by: 0.001)
         let glows = scene.effectLayer.children.compactMap { $0 as? SKSpriteNode }.filter { $0.zPosition == 3 }
-        XCTAssertTrue(glows.contains { $0.color == FxStyle.comboColor && abs($0.size.height - FxStyle.comboGlowWidth * field) < 0.01 },
+        XCTAssertTrue(glows.contains { same($0.color, FxStyle.comboColor) && abs($0.size.height - FxStyle.comboGlowWidth * field) < 0.01 },
                       "grünes, dickes Glied in das verlangsamte Ziel")
-        XCTAssertFalse(glows.contains { $0.color == FxStyle.comboColor && abs($0.size.height - FxStyle.boltGlowWidth * field) < 0.01 })
-        var called: [CGPoint] = []
-        scene.fx.onCombo = { called.append($0) }
+        XCTAssertFalse(glows.contains { same($0.color, FxStyle.comboColor) && abs($0.size.height - FxStyle.boltGlowWidth * field) < 0.01 })
         run(scene, seconds: 0.5)
         XCTAssertEqual(scene.fx.stats.combos, 1, "nur das verlangsamte Ziel sprüht")
         XCTAssertEqual(called.count, 1)
@@ -427,7 +439,10 @@ final class FxDirectorTests: XCTestCase {
         guard case .build(let cell) = controller.guide.shown else { return XCTFail("Hand erwartet") }
         XCTAssertTrue(scene.fx.showsGuide)
         let hand = try XCTUnwrap(scene.effectLayer.childNode(withName: FxDirector.guideName))
-        XCTAssertEqual(hand.position, scene.layout.scenePoint(cell.center))
+        let expected = scene.layout.scenePoint(cell.center)
+        // SpriteKit speichert Positionen als Float: nur auf Bruchteile eines Punkts genau.
+        XCTAssertEqual(hand.position.x, expected.x, accuracy: 0.01)
+        XCTAssertEqual(hand.position.y, expected.y, accuracy: 0.01)
         scene.model.enqueue(.build(.watch, cell))
         run(scene, seconds: 0.5)
         XCTAssertFalse(scene.fx.showsGuide)

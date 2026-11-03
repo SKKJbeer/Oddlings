@@ -20,8 +20,13 @@ struct GuideMemory {
     static func key(_ step: Step) -> String { "guide.seen.\(step.rawValue)" }
 
     /// Was in den Voreinstellungen steht, kommt von außen: Nur ein echtes `true`
-    /// heißt „gezeigt“, alles andere „noch nicht“.
-    func seen(_ step: Step) -> Bool { defaults.object(forKey: Self.key(step)) as? Bool == true }
+    /// heißt „gezeigt“, alles andere „noch nicht“. `as? Bool` reicht nicht, es
+    /// liest auch die Zahl 1 als wahr.
+    func seen(_ step: Step) -> Bool {
+        guard let value = defaults.object(forKey: Self.key(step)) as? NSNumber,
+              CFGetTypeID(value) == CFBooleanGetTypeID() else { return false }
+        return value.boolValue
+    }
 
     func markSeen(_ step: Step) { defaults.set(true, forKey: Self.key(step)) }
 
@@ -169,7 +174,9 @@ final class BattleGuide {
             } else if now.firstWaveStarted {
                 // Von selbst gekommen: nicht gelernt, beim nächsten Versuch wieder.
                 wave = .done
-            } else if now.canCallWave && !now.halted {
+            } else if now.towers > 0 && now.canCallWave && !now.halted {
+                // Erst mit einem Turm: Wer die Hand übersprungen hat, bekommt
+                // sonst den Pfeil, bevor er gebaut hat.
                 let waited = seconds + now.dt
                 if waited >= BattleStyle.guideWaveDelay {
                     wave = .showing
