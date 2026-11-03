@@ -29,7 +29,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   `SpecializationControllerTests` (zwei Sterne), `SpecializationE2ETests` (Mission 6a).
   Labor ohne neue Verletzung, Zielwerte M6a/M6b 45 %.
 
-## 0.26.1 – 03.11.2026 (Grafik 07: Kampfplätze Sumpfpfad und Ruinen)
+## 0.26.1 – 03.11.2026 (Grafik 07: Kampfplätze Sumpfpfad und Ruinen) · Bau 49
 
 - **Mission 5a „Sumpfpfad“ hat ihren gemalten Kampfplatz:** feuchte Moorinsel mit toten
   Bäumen, Stümpfen, Tümpeln und einer Irrlicht-Laterne im Waldrand, grünliches
