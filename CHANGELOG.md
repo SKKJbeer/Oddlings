@@ -11,6 +11,24 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.27.0 – 03.11.2026 (P3-3: Wahl zwischen zwei Spezialisierungen, Mission 6a und 6b)
+
+- **Mission 6a „Sumpfpfad II“ und 6b „Ruinen II“** sind spielbar, Wege vom Grafik-Thread.
+  Jeder Turm bietet hier beide Spezialisierungen: Salve oder Falkenhorst, Gewitterkrone oder
+  Funkensäule, Moorherz oder Fäulnis. In 6a lohnen eher die Formen des Sumpfpfads, in 6b
+  die der Ruinen. Werte [HYPOTHESE].
+- **Zwei Sterne nebeneinander** (Karte S15): Erstes Tippen zeigt die Vorschau und
+  „Endgültig: … fällt weg“, der andere Stern wechselt nur die Vorschau, das zweite Tippen
+  auf denselben kauft.
+- **Gewitterkrone ohne Sporen-Vorteil** (Empfehlung zu Karte S16): Mit ihm schlug
+  Gewitterkrone plus Sporen in Mission 6 alles andere. Die Krone springt jetzt öfter und
+  weiter; in Mission 5a kostet sie 30 statt 45 Gold.
+- Kampagne: Weiter führt nach 5a zu 6a, nach 5b zu 6b. Die gemalten Kampfplätze für
+  Mission 6 folgen (Grafik 08), bis dahin die schlichte Karte.
+- Tests: `MissionSixTests` (für 6a und 6b), `CampaignTests`, `AppFlowTests`,
+  `SpecializationControllerTests` (zwei Sterne), `SpecializationE2ETests` (Mission 6a).
+  Labor ohne neue Verletzung, Zielwerte M6a/M6b 45 %.
+
 ## 0.26.1 – 03.11.2026 (Grafik 07: Kampfplätze Sumpfpfad und Ruinen)
 
 - **Mission 5a „Sumpfpfad“ hat ihren gemalten Kampfplatz:** feuchte Moorinsel mit toten

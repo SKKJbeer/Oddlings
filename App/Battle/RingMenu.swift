@@ -49,12 +49,16 @@ struct RingMenu: View {
                     }
                 }
             }
-        case .tower(_, let armed, let upgradeArmed):
+        case .tower(_, let armed, let upgradeArmed, _):
             if let tower = controller.selectedTower {
-                let upgradeCost = controller.upgradeCost(for: tower)
+                let choices = controller.specializations(for: tower)
+                // Zwei zur Wahl (P3-3, S15): je ein Stern statt „Aufwerten“.
+                let stars = choices.count > 1 ? choices : []
+                let upgradeCost = stars.isEmpty ? controller.upgradeCost(for: tower) : nil
                 let targets = controller.hasTargetMode(tower)
-                // Reihenfolge im Bogen: Aufwerten, Zielwahl, Verkaufen (07, „Turm antippen“).
-                let count = 1 + (upgradeCost == nil ? 0 : 1) + (targets ? 1 : 0)
+                // Reihenfolge im Bogen: Aufwerten (oder die Sterne), Zielwahl, Verkaufen (07, „Turm antippen“).
+                let buyButtons = stars.isEmpty ? (upgradeCost == nil ? 0 : 1) : stars.count
+                let count = 1 + buyButtons + (targets ? 1 : 0)
                 let points = hud.ring(at: cell, count: count)
                 let rect = hud.panel(for: cell, avoiding: points)
                 let refund = controller.refund(for: tower)
@@ -72,6 +76,17 @@ struct RingMenu: View {
                                           specialization: controller.specialization(for: tower),
                                           action: controller.upgrade)
                             .position(point)
+                    }
+                    ForEach(stars.indices, id: \.self) { index in
+                        let star = stars[index]
+                        let cost = controller.cost(of: star) ?? 0
+                        if index < points.count {
+                            UpgradeRingButton(cost: cost, armed: upgradeArmed && controller.armedSpecialization == star,
+                                              affordable: controller.gold >= cost, specialization: star,
+                                              identifier: "specialize.\(star.rawValue)",
+                                              action: { controller.specialize(star) })
+                                .position(points[index])
+                        }
                     }
                     if targets, points.count >= 2 {
                         TargetRingButton(mode: tower.targetMode, action: controller.cycleTargetMode)
@@ -100,8 +115,13 @@ extension RingMenu {
     /// Bei einem gebauten Turm; die Bank zeigt, wie viel sie ausgezahlt hat.
     /// Vor dem Aufwerten sagt die Tafel, was Stufe 2 bringt, danach die Zielwahl.
     fileprivate func towerLines(_ tower: Tower, upgradeArmed: Bool) -> InfoLines {
-        if upgradeArmed, let specialization = controller.specialization(for: tower) {
-            return InfoLines(first: BattleTexts.effect(specialization), second: BattleTexts.specializeFinal, warn: true)
+        if upgradeArmed, let specialization = controller.armedSpecialization {
+            let others = controller.specializations(for: tower).filter { $0 != specialization }
+            return InfoLines(first: BattleTexts.effect(specialization),
+                             second: others.first.map(BattleTexts.specializeDrops) ?? BattleTexts.specializeFinal, warn: true)
+        }
+        if controller.specializations(for: tower).count > 1 {
+            return InfoLines(first: BattleTexts.chooseSpecialization, second: BattleTexts.role(tower.kind))
         }
         if upgradeArmed {
             return InfoLines(first: BattleTexts.upgradeArmed,
@@ -120,9 +140,12 @@ extension RingMenu {
     /// Was das nächste Tippen tut: verkaufen, aufwerten oder der Erlös.
     fileprivate func actionLine(_ tower: Tower, armed: Bool, upgradeArmed: Bool, refund: Int) -> String {
         if armed { return BattleTexts.confirmSell(refund: refund) }
+        if upgradeArmed, let specialization = controller.armedSpecialization, let cost = controller.cost(of: specialization) {
+            return BattleTexts.confirmSpecialize(specialization, cost: cost)
+        }
         if let specialization = controller.specialization(for: tower), let cost = controller.upgradeCost(for: tower) {
-            return upgradeArmed ? BattleTexts.confirmSpecialize(specialization, cost: cost)
-                                : BattleTexts.specializeLine(specialization, cost: cost)
+            return controller.specializations(for: tower).count > 1 ? BattleTexts.chooseOneStar
+                                                                      : BattleTexts.specializeLine(specialization, cost: cost)
         }
         if upgradeArmed, let cost = controller.upgradeCost(for: tower) { return BattleTexts.confirmUpgrade(cost) }
         if let cost = controller.upgradeCost(for: tower) { return BattleTexts.upgradeLine(cost) }
@@ -213,6 +236,8 @@ private struct UpgradeRingButton: View {
     let armed: Bool
     let affordable: Bool
     let specialization: Specialization?
+    /// Bei zwei Sternen trägt jeder seinen Namen (`specialize.<name>`, P3-3).
+    var identifier: String?
     let action: () -> Void
 
     var body: some View {
@@ -220,8 +245,13 @@ private struct UpgradeRingButton: View {
             RingButtonFace(highlighted: armed, tint: specialization == nil ? UITheme.fresh : UITheme.coin,
                            size: BattleStyle.ringButton) {
                 VStack(spacing: 0) {
-                    Image(systemName: specialization == nil ? "chevron.up.2" : "star.fill")
-                        .font(.system(size: 15, weight: .heavy))
+                    if identifier != nil, let specialization {
+                        // Zwei Sterne: der Anfangsbuchstabe unterscheidet sie (07).
+                        Text("★ \(BattleTexts.initial(specialization))").font(UITheme.display(14))
+                    } else {
+                        Image(systemName: specialization == nil ? "chevron.up.2" : "star.fill")
+                            .font(.system(size: 15, weight: .heavy))
+                    }
                     Text(armed ? BattleTexts.levelTag(specialization == nil ? 2 : 3) : "\(cost)").font(UITheme.display(15))
                 }
                 .foregroundStyle(armed ? UITheme.outline : affordable ? UITheme.cream : UITheme.danger)
@@ -232,7 +262,7 @@ private struct UpgradeRingButton: View {
         }
         .buttonStyle(RingPressStyle())
         .accessibilityLabel(label)
-        .accessibilityIdentifier(specialization == nil ? "upgrade" : "specialize")
+        .accessibilityIdentifier(identifier ?? (specialization == nil ? "upgrade" : "specialize"))
     }
 
     private var label: String {

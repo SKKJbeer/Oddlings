@@ -16,8 +16,9 @@ final class BattleController {
         case cell(Cell, choice: TowerKind?)
         /// Gebauter Turm. `sellArmed`: Verkaufen wurde einmal angetippt, das
         /// zweite Tippen verkauft (07-ui-ux.md, Grundsatz 4). `upgradeArmed`
-        /// ebenso fürs Aufwerten, weil es Gold kostet (P2-6).
-        case tower(id: Int, sellArmed: Bool = false, upgradeArmed: Bool = false)
+        /// ebenso fürs Aufwerten, weil es Gold kostet (P2-6). `choice`: welche
+        /// Spezialisierung vorgemerkt ist, wenn der Turm zwei zur Wahl hat (P3-3).
+        case tower(id: Int, sellArmed: Bool = false, upgradeArmed: Bool = false, choice: Specialization? = nil)
         /// Steinregen ist gewählt; der nächste Tipp auf die Karte wirft (07).
         case aiming
     }
@@ -131,12 +132,12 @@ final class BattleController {
     }
 
     var sellArmed: Bool {
-        if case .tower(_, true, _) = selection { return true }
+        if case .tower(_, true, _, _) = selection { return true }
         return false
     }
 
     var upgradeArmed: Bool {
-        if case .tower(_, _, true) = selection { return true }
+        if case .tower(_, _, true, _) = selection { return true }
         return false
     }
 
@@ -176,7 +177,7 @@ final class BattleController {
         // Ansicht, dass sich der Turm ändern kann. Sonst blieb die Zielwahl auf
         // dem Knopf stehen, weil sie weder Gold noch Auswahl ändert.
         _ = shownTower
-        guard case .tower(let id, _, _) = selection else { return nil }
+        guard case .tower(let id, _, _, _) = selection else { return nil }
         return model.state.towers.first { $0.id == id }
     }
 
@@ -198,12 +199,47 @@ final class BattleController {
     }
 
     /// Stufe 3 (P3-1): Auf Stufe 2 nimmt die Spezialisierung den Platz von
-    /// „Aufwerten“ ein, mit demselben zweimaligen Tippen. Auf dem Sumpfpfad gibt
-    /// es je Turm eine (S14); bietet eine spätere Mission zwei, braucht das
-    /// Kreismenü eine zweite Karte, das ist P3-2.
+    /// „Aufwerten“ ein, mit demselben zweimaligen Tippen. In M5a und M5b gibt
+    /// es je Turm eine (S14); bei zwei zur Wahl stehen zwei Sterne (P3-3).
     func specialization(for tower: Tower) -> Specialization? {
-        guard tower.level == 2, tower.specialization == nil else { return nil }
-        return model.sim.config.specializations(for: tower.kind).first
+        specializations(for: tower).first
+    }
+
+    /// Ab Mission 6 stehen zwei zur Wahl (D-077, P3-3), in der Reihenfolge des
+    /// Codes. Leer, wenn der Turm nicht spezialisieren kann.
+    func specializations(for tower: Tower) -> [Specialization] {
+        guard tower.level == 2, tower.specialization == nil else { return [] }
+        return model.sim.config.specializations(for: tower.kind)
+    }
+
+    func cost(of specialization: Specialization) -> Int? {
+        model.sim.config.specializations?[specialization]?.cost
+    }
+
+    /// Die vorgemerkte Spezialisierung: bei einer Wahl die angetippte, sonst die einzige.
+    var armedSpecialization: Specialization? {
+        guard case .tower(_, _, true, let choice) = selection, let tower = selectedTower else { return nil }
+        return choice ?? specialization(for: tower)
+    }
+
+    /// Ein Stern bei zwei zur Wahl (P3-3): Das erste Tippen merkt ihn vor und
+    /// zeigt seine Wirkung, ein Tippen auf den anderen Stern schaltet nur um,
+    /// das zweite Tippen auf denselben kauft.
+    func specialize(_ specialization: Specialization) {
+        guard interactive, case .tower(let id, _, let armed, let choice) = selection, let tower = selectedTower,
+              specializations(for: tower).contains(specialization), let cost = cost(of: specialization) else { return }
+        guard gold >= cost else {
+            goldWarnings += 1
+            feedback(.cannotAfford)
+            return
+        }
+        if armed, (choice ?? self.specialization(for: tower)) == specialization {
+            model.enqueue(.specialize(towerID: id, specialization))
+            selection = .tower(id: id)
+        } else {
+            selection = .tower(id: id, upgradeArmed: true, choice: specialization)
+            feedback(.preview)
+        }
     }
 
     /// Zielwahl ab Stufe 2 und nur bei Türmen mit Einzelziel (07, „Zielwahl“).
@@ -214,8 +250,10 @@ final class BattleController {
     /// Erstes Tippen zeigt Stufe 2 in Tafel und Kreis, zweites kauft. Die
     /// Auswahl bleibt am Turm, damit man gleich die Zielwahl sieht.
     func upgrade() {
-        guard interactive, case .tower(let id, _, let armed) = selection, let tower = selectedTower,
+        guard interactive, case .tower(let id, _, let armed, _) = selection, let tower = selectedTower,
               let cost = upgradeCost(for: tower) else { return }
+        // Bei zwei zur Wahl gibt es kein „Aufwerten“, nur die Sterne (`specialize`).
+        guard specializations(for: tower).count < 2 else { return }
         guard gold >= cost else {
             goldWarnings += 1
             feedback(.cannotAfford)
@@ -277,7 +315,7 @@ final class BattleController {
     private func previewStats(of tower: Tower) -> TowerConfig? {
         let config = model.sim.config
         guard upgradeArmed else { return config.stats(of: tower) }
-        if let specialization = specialization(for: tower) {
+        if let specialization = armedSpecialization {
             return config.stats(of: tower.kind, specialization: specialization)
         }
         return config.stats(of: tower.kind, level: tower.level + 1)
@@ -289,7 +327,7 @@ final class BattleController {
         guide.skip()
         guard interactive, !model.state.isOver, !surrendered, let cell else { return dismiss() }
         if let tower = model.state.towers.first(where: { $0.cell == cell }) {
-            if case .tower(tower.id, _, _) = selection {
+            if case .tower(tower.id, _, _, _) = selection {
                 selection = .none
             } else {
                 selection = .tower(id: tower.id)
@@ -337,7 +375,7 @@ final class BattleController {
 
     /// Erstes Tippen fragt „Sicher?“, zweites verkauft.
     func sell() {
-        guard interactive, case .tower(let id, let armed, _) = selection else { return }
+        guard interactive, case .tower(let id, let armed, _, _) = selection else { return }
         if armed {
             model.enqueue(.sell(towerID: id))
             selection = .none
@@ -496,7 +534,7 @@ final class BattleController {
     /// Eigenschaft lässt SwiftUI neu zeichnen, und das 60-mal je Sekunde.
     private func refreshCopies() {
         let state = model.state
-        let tower: Tower? = if case .tower(let id, _, _) = selection { state.towers.first { $0.id == id } } else { nil }
+        let tower: Tower? = if case .tower(let id, _, _, _) = selection { state.towers.first { $0.id == id } } else { nil }
         if shownTower != tower { shownTower = tower }
         if gold != state.gold { gold = state.gold }
         if lives != state.fortressLives { lives = state.fortressLives }
