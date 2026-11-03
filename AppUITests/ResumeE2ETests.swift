@@ -8,7 +8,7 @@ final class ResumeE2ETests: XCTestCase {
 
     /// Hält die erste Welle zurück: Gold ändert sich dann nur durch den Bau, und
     /// der Vergleich nach dem Neustart bleibt genau.
-    private let hold = ["--e2e-erste-welle", E2EApp.wavesOnHold]
+    @MainActor private var hold: [String] { ["--e2e-erste-welle", E2EApp.wavesOnHold] }
 
     @MainActor
     private func startMission(storage: String) throws -> E2EApp {
