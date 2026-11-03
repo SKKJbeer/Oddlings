@@ -11,6 +11,21 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.25.0 – 03.11.2026 (P3-1: Spezialisierungen und Mission 5a „Sumpfpfad“)
+
+- **Stufe 3:** Ein Turm auf Stufe 2 lässt sich auf dem Sumpfpfad spezialisieren, je Turm
+  eine Wahl (Steffens Karte S14 „Je Weg drei, Wahl ab M6“, D-077): **Salve** (Wachturm,
+  zwei Ziele je Schuss), **Gewitterkrone** (Blitz springt öfter und weiter, gebremste Ziele
+  schwächen ihn nicht), **Moorherz** (Sporen mit größerem Kreis, bremsen stärker und länger).
+  Im Kreismenü steht dafür ein Stern an der Stelle von „Aufwerten“, zweimal tippen, die
+  Tafel warnt „Endgültig“. Schild „III“ am Turm. Verkaufen erstattet 70 % von allem.
+- **Mission 5a „Sumpfpfad“** nach Mission 4: Flitzerschwärme auf einem Mäander-Weg,
+  den der Grafik-Thread für den gemalten Kampfplatz vorgeschlagen hat. Werte [HYPOTHESE].
+- Kern: Befehl `specialize`, `Specialization`, Abschnitt `specializations` der
+  Missionsdatei mit Prüfung beim Laden; Mitspieler und Labor spezialisieren mit.
+- Tests: `SpecializationTests`, `MissionFiveATests`, `SpecializationControllerTests`,
+  E2E `SpecializationE2ETests`; Kampagne, Ablauf und Labor kennen Mission 5a.
+
 ## 0.24.1 – 03.11.2026 (Korrektur: 0.24.0 im Release-Bau) · Bau 46
 
 - **0.24.0 ließ sich für TestFlight nicht übersetzen** (Bau 45 gescheitert): Die Prüfung

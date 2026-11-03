@@ -407,7 +407,7 @@ final class FxDirector {
         label("+\(refund)", at: CGPoint(x: top.x, y: top.y + field * 0.4), color: FxStyle.gold)
     }
 
-    /// Aufwerten: der Turm federt hoch, ein Ring in Gold und „II“ darüber.
+    /// Aufwerten: der Turm federt hoch, ein Ring in Gold und das Stufenschild darüber.
     /// Das neue Bild setzt `TowerNode.showLevel`; hier nur der Augenblick.
     func upgrade(_ tower: TowerNode) {
         stats.upgrades += 1
@@ -419,7 +419,7 @@ final class FxDirector {
             node.yScale = CGFloat(1 + 0.28 * spring)
         }
         ring(at: tower.position, radius: 1.0, color: FxStyle.gold, duration: 0.45, flatten: 0.38)
-        label(BattleTexts.levelTag, at: CGPoint(x: tower.position.x, y: tower.position.y + field * 1.1), color: FxStyle.gold)
+        label(BattleTexts.levelTag(tower.level), at: CGPoint(x: tower.position.x, y: tower.position.y + field * 1.1), color: FxStyle.gold)
     }
 
     /// Zwergenbank zahlt: kurzes Nicken und die Summe in Gold. Keine Münzen,

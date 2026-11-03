@@ -58,6 +58,26 @@ public struct LabBot: Sendable {
         var upgraded: [Int] = []
         while let step = order.first {
             let kind = step.kind
+            if case .specialize(let specialization) = step {
+                // Der älteste Turm der Art auf Stufe 2 ohne Spezialisierung (P3-1);
+                // gibt es keinen, wartet der Schritt auf eine Aufwertung im selben
+                // Zug oder entfällt.
+                guard let tower = state.towers.first(where: {
+                    $0.kind == kind && $0.level == 2 && $0.specialization == nil && !upgraded.contains($0.id)
+                }), let cost = sim.config.specializations?[specialization]?.cost else {
+                    if commands.contains(where: {
+                        if case .build(kind, _) = $0 { true } else if case .upgrade = $0 { true } else { false }
+                    }) { break }
+                    order.removeFirst()
+                    continue
+                }
+                guard gold >= cost else { break }
+                order.removeFirst()
+                gold -= cost
+                upgraded.append(tower.id)
+                commands.append(.specialize(towerID: tower.id, specialization))
+                continue
+            }
             if case .upgrade = step {
                 // Wie der Mitspieler der App: der älteste Turm der Art auf Stufe 1.
                 // Steht er erst im Bau, wartet der Schritt einen Tick.

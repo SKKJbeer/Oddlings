@@ -97,6 +97,7 @@ Status: **gilt**, umgesetzt bis 0.12.0; Ende-zu-Ende-Tests **[ENTSCHIEDEN D-029]
   In der App: Schild nur an gepanzerten Gegnern (`BattleSceneTests`), gemalter
   Boden für M1 bis M4 (`BattleSpritesTests`), tieferer Treffer (`SoundMapTests`),
   keine Haptik (`FeedbackPlayerTests`), M4 spielbar (`AppFlowTests`).
+- Seit P3-1 (0.25.0): `SpecializationTests` (nur aus Stufe 2, nur angeboten, nur einmal, Gold und Erlös, Werte von Stufe 2 aus, Salve trifft zwei Ziele nach Zielwahl, Gewitterkrone ohne Abfall auf verlangsamten Zielen, Bauweisen, Prüfung beim Laden, Fortsetzen) und `MissionFiveATests` (je Turm eine Spezialisierung, Flitzer in der Mehrheit, Weg = Vorschlag, Monokulturen verlieren, Spezialisieren hebt die Mischung, Völker). App: `SpecializationControllerTests`.
 - Seit P2-2 (0.22.0): `SuspendedBattleTests` (gesichert, über die Datei gelesen und
   weitergespielt endet mit derselben Prüfsumme wie ohne Unterbrechung; voller Zustand
   unter 512 KB; Migration 2 → 3; unlesbarer Zustand und unbekannter Knoten kosten nur
@@ -130,6 +131,7 @@ Umgesetzt ab Version 0.5.1; Aufbau und Grundsätze: [e2e-tests.md](../konzepte/e
 | `NavigationE2ETests` | 4 | Menü → Karte → Mission → zurück, Vorführung, Hintergrund pausiert, Einstellung übersteht Neustart |
 | `CampaignE2ETests` | 2 | Sterne nach Sieg überstehen Neustart, Ergebnistafel nennt das Erz (R-7b), Mission 2 danach offen und startbar, gesperrte Missionen nennen den Grund |
 | `ArmorE2ETests` | 1 | Mission 4: zwei Wachtürme, die erste Panzerbestie wirft Funken an der Panzerung, der Hinweis kommt genau einmal (`fx.stats`, P2-10) |
+| `SpecializationE2ETests` | 1 | Mission 5a: Wachturm bauen, aufwerten, spezialisieren (zweimal tippen, „Salve“, Preis abgezogen, Zielwahl bleibt) (P3-1) |
 | `UpgradeE2ETests` | 1 | Mission 3: Turm bauen, aufwerten (zweimal tippen, Preis abgezogen, „Wachturm II“), Zielwahl schaltet Erster → Letzter → Stärkster ohne Gold (P2-6) |
 | `BankE2ETests` | 2 | Mission 2: Bank im Kreismenü mit Warnung und Preis (P2-5), frühes Rufen schreibt Gold gut, Höchstzahl sperrt die dritte Bank |
 | `AvatarE2ETests` | 6 | Avatar einmal aufbauen (R-5), Zwerge mit Preis und Fähigkeit, Rang schaltet Talent frei (R-6), Ausrüstung anlegen und ablegen übersteht den Neustart (R-7a), Schmieden zieht Erz ab und Stufe und Bestand überstehen den Neustart (R-7b), Aufbau und Menü passen auf den Schirm |

@@ -107,6 +107,26 @@ public struct Simulation: Sendable {
             state.towers[index].spent += cost
             events.append(.towerUpgraded(id: towerID, level: state.towers[index].level))
 
+        case .specialize(let towerID, let specialization):
+            guard let index = state.towers.firstIndex(where: { $0.id == towerID }) else {
+                return events.append(.commandRejected(command, reason: .unknownTower))
+            }
+            let tower = state.towers[index]
+            guard tower.level == 2, tower.specialization == nil,
+                  config.specializations(for: tower.kind).contains(specialization),
+                  let cost = config.specializations?[specialization]?.cost else {
+                return events.append(.commandRejected(command, reason: .notUpgradable))
+            }
+            guard state.gold >= cost else {
+                return events.append(.commandRejected(command, reason: .notEnoughGold))
+            }
+            state.gold -= cost
+            // Wie beim Aufwerten läuft der Takt weiter.
+            state.towers[index].level = 3
+            state.towers[index].specialization = specialization
+            state.towers[index].spent += cost
+            events.append(.towerUpgraded(id: towerID, level: 3))
+
         case .setTargetMode(let towerID, let mode):
             guard let index = state.towers.firstIndex(where: { $0.id == towerID }) else {
                 return events.append(.commandRejected(command, reason: .unknownTower))
@@ -297,17 +317,17 @@ public struct Simulation: Sendable {
             case .bank:
                 continue
             case .watch:
-                guard let target = target(in: state.enemies, around: tower.cell.center, range: stats.range,
-                                          mode: tower.targetMode)
-                else { continue }
-                // Erst der Schuss, dann der Treffer: wie bisher, nur über eine Stelle.
-                events.append(.towerFired(towerID: tower.id, targets: [state.enemies[target].id]))
-                damage(target, by: stats.damage, &state, &events)
+                let hits = targets(in: state.enemies, around: tower.cell.center, range: stats.range,
+                                   mode: tower.targetMode, count: stats.targets ?? 1)
+                guard !hits.isEmpty else { continue }
+                // Erst der Schuss, dann die Treffer: wie bisher, nur über eine Stelle.
+                events.append(.towerFired(towerID: tower.id, targets: hits.map { state.enemies[$0].id }))
+                for hit in hits { damage(hit, by: stats.damage, &state, &events) }
             case .lightning:
                 guard let first = target(in: state.enemies, around: tower.cell.center, range: stats.range,
                                          mode: tower.targetMode)
                 else { continue }
-                let chain = chainTargets(in: state.enemies, from: first, stats: stats)
+                let chain = chainTargets(in: state.enemies, from: first, stats: stats, tick: state.tick)
                 events.append(.towerFired(towerID: tower.id, targets: chain.map { state.enemies[$0.index].id }))
                 for hit in chain {
                     damage(hit.index, by: hit.damage, &state, &events)
@@ -358,10 +378,28 @@ public struct Simulation: Sendable {
         return best
     }
 
+    /// Die besten `count` Ziele nach der Zielwahl, ohne doppelte (Salve, P3-1).
+    /// Das erste ist dasselbe wie bei `target`, damit ein Ziel je Schuss sich
+    /// nicht ändert.
+    func targets(in enemies: [Enemy], around center: Point, range: Double, mode: TargetMode, count: Int) -> [Int] {
+        // Der übliche Fall ohne Kopie: Wachtürme schießen jeden Takt.
+        if count <= 1 { return target(in: enemies, around: center, range: range, mode: mode).map { [$0] } ?? [] }
+        var remaining = enemies
+        var found: [Int] = []
+        while found.count < count, let next = target(in: remaining, around: center, range: range, mode: mode) {
+            found.append(next)
+            // Ausgeschlossen wie ein toter Gegner; die Indizes bleiben dieselben.
+            remaining[next].hp = 0
+        }
+        return found
+    }
+
     /// Kette des Blitzturms: vom ersten Ziel zum nächstgelegenen noch nicht
     /// getroffenen Gegner im Sprungradius, je Sprung um `chainFalloff` schwächer.
-    /// Gemessen wird vom zuletzt getroffenen Gegner aus, nicht vom Turm.
-    func chainTargets(in enemies: [Enemy], from first: Int, stats: TowerConfig) -> [(index: Int, damage: Double)] {
+    /// Gemessen wird vom zuletzt getroffenen Gegner aus, nicht vom Turm. Mit
+    /// Gewitterkrone verliert ein Sprung auf ein verlangsamtes Ziel nichts (P3-1).
+    func chainTargets(in enemies: [Enemy], from first: Int, stats: TowerConfig,
+                      tick: Int = 0) -> [(index: Int, damage: Double)] {
         let jumps = stats.chainJumps ?? 0
         let radius = stats.chainRadius ?? 0
         let falloff = stats.chainFalloff ?? 1
@@ -369,8 +407,8 @@ public struct Simulation: Sendable {
         var hits: [(index: Int, damage: Double)] = [(first, stats.damage)]
         var damage = stats.damage
         var current = first
+        let keepsOnSlowed = stats.keepsDamageOnSlowed ?? false
         for _ in 0..<jumps {
-            damage *= falloff
             var next: Int?, nextDistance = Double.infinity
             for (index, enemy) in enemies.enumerated() where enemy.hp > 0 && !hits.contains(where: { $0.index == index }) {
                 let distance = positions[index].distance(to: positions[current])
@@ -381,6 +419,8 @@ public struct Simulation: Sendable {
                 }
             }
             guard let found = next else { break }
+            let slowed = (enemies[found].slow?.untilTick ?? Int.min) > tick
+            if !(keepsOnSlowed && slowed) { damage *= falloff }
             hits.append((found, damage))
             current = found
         }

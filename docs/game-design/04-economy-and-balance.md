@@ -432,6 +432,37 @@ liegen die Elfen höher: „Mix mit Aufwertung“ +0,12, „Mix ohne Aufwertung�
 Mit dem Mondmal vor der Rüstung waren es +0,15; deshalb rechnet die Simulation
 erst die Rüstung, dann das Mal (02). Bemerkt, nicht weiter geändert, wie in M3.
 
+### Mission 5a – Spezialisierungen, Ergebnis der Prüfung (0.25.0) [HYPOTHESE]
+
+Werte in `mission-05a.json`. Grundlage Mission 4 (Türme, Aufwertung, Bank, Bonus,
+Fähigkeit, gepanzerte Panzerbestie), Startgold 220, Flitzer 2,6 Felder je Sekunde,
+Weg vom Grafik-Thread. Zehn Wellen, mehr als die Hälfte aller Gegner Flitzer, eine
+reine Flitzerwelle; Lebenspunkte ×1,1 bis ×2,47. Spezialisierungen: Salve 35 Gold
+(zwei Ziele), Gewitterkrone 45 (zwei Sprünge mehr, Sprungweite ×1,4, kein Abfall auf
+verlangsamten Zielen), Moorherz 45 (Kreis ×1,2, Verlangsamung ×0,6, Dauer ×1,5).
+
+Labor, Stufe pr (gieriger Bot, erstes Spielen, je Volk):
+
+| Bauweise | Zwerge | Elfen |
+|---|---|---|
+| Gewitterkronen mit Sporen | 1,57 | 1,71 |
+| Mix mit Spezialisierung | 1,42 | 1,37 |
+| Mix mit Aufwertung | 1,19 | 1,20 |
+| Mix mit Bank und Spezialisierung (Vorführung) | 1,03 | – |
+| Nur Blitz, spezialisiert | 1,04 (verliert beim ersten Spielen) | – |
+| Salven | 0,92 | – |
+| Nur Blitz | 0,94 | – |
+| Nur Wachtürme | 0,76 | – |
+
+Menschenbot gewinnt 75 % (Ziel S10 für M4: ≥ 50 %), alle Monokulturen verlieren,
+der Abstand der besten Bauweise liegt bei den Elfen mit 0,34 knapp unter der Grenze
+0,35. Ohne Volk (`MissionFiveATests`): Spezialisieren hebt die Mischung um mehr als
+0,1, ohne Gewitterkrone sinkt die Kombination, Salven liegen vor „Nur Wachtürme“ und
+gekrönter Blitz vor „Nur Blitz“. **Offen:** Das Moorherz zeigt seinen Wert nur mit
+der Verlangsamung der Elfen; ohne Volk entscheidet in der Kombination die Panzerbestie.
+Ob es sich lohnt anfühlt, klärt der Spieltest. Erste Fassung mit gerader Strecke und
+billigeren Spezialisierungen war zu leicht (Menschenbot 92 %).
+
 ## Balance-Labor: erster Lauf (P2-6b, 03.11.2026)
 
 Gerechnet mit `oddlings-balance --stufe pr` (164 Läufe, Zwerge und Elfen, je Mission
