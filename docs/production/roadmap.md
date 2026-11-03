@@ -86,7 +86,7 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | P2-3: Ton und Musik, nur CC0 (D-082) | 0.15.0 | 35 | [Konzept](../konzepte/p2-3-ton-und-musik.md) |
 | R-7a: Ausrüstung aus festen Belohnungen (D-066, D-069 bis D-071) | 0.19.0 | 39 | [Konzept](../konzepte/r-7-ausruestung.md) |
 | R-7b: Schmiede mit Erz, Stufen I bis III (D-070, D-072) | 0.21.0 | 41 | [Konzept](../konzepte/r-7b-schmiede.md) |
-| P2-6b: Balance-Labor, Grundstock (D-028, D-073) | 0.21.1 | – | [Konzept](../konzepte/p2-6b-balance-labor.md) |
+| P2-6b: Balance-Labor, Grundstock (D-028, D-073) | 0.21.1 | 42 | [Konzept](../konzepte/p2-6b-balance-labor.md) |
 
 ## Gilt für jedes Paket
 

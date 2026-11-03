@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.21.1 – 03.11.2026 (P2-6b: Balance-Labor, Grundstock)
+## 0.21.1 – 03.11.2026 (P2-6b: Balance-Labor, Grundstock) · Bau 42
 
 - **Werkzeug, die App spielt sich unverändert.** `oddlings-balance` lässt gierige,
   zufällige und menschenähnliche Bots alle vier Missionen beim ersten Spielen durchspielen
