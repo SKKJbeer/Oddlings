@@ -23,7 +23,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Tests: `BalanceTests.monocultureLosesOnEveryFirstPlay` prüft D-071 für jede Mission
   mit jedem Volk (rot mit den alten Werten).
 
-## 0.22.0 – 03.11.2026 (P2-2: Fortsetzen nach App-Neustart)
+## 0.22.0 – 03.11.2026 (P2-2: Fortsetzen nach App-Neustart) · Bau 43
 
 - **Eine laufende Mission geht nicht mehr verloren.** Geht die App in den Hintergrund,
   wird die Mission gesichert. Beendet iOS die App danach oder startet das Telefon neu,
