@@ -157,6 +157,13 @@ public struct Strike: Codable, Equatable, Sendable {
 public struct SlowEffect: Codable, Equatable, Sendable {
     public var factor: Double
     public var untilTick: Int
+
+    /// Öffentlich, damit die App-Tests einen verlangsamten Gegner bauen können;
+    /// in der Simulation setzt nur `Simulation` die Verlangsamung.
+    public init(factor: Double, untilTick: Int) {
+        self.factor = factor
+        self.untilTick = untilTick
+    }
 }
 
 /// Eingaben von außen (Architekturregel 2). Die Darstellung schickt Befehle,
