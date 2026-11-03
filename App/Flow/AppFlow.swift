@@ -381,6 +381,13 @@ final class AppFlow {
         return stars
     }
 
+    /// Zeigt diese Mission die stillen Zeichen des Einstiegs (P2-8)? Nur die erste
+    /// Mission der Region und nur, solange sie nie gewonnen wurde: Wer sie schon
+    /// geschafft hat, hat das Bauen und Rufen gelernt.
+    func showsIntro(for nodeID: String) -> Bool {
+        nodeID == campaign.nodes.first?.id && progress.stars(for: nodeID) == 0
+    }
+
     #if DEBUG
     /// Oberflächentests: Sterne auf einem Knoten, den es noch nicht zu spielen
     /// gibt, damit ein Rang über sechs Sternen prüfbar ist, solange nur
@@ -392,13 +399,6 @@ final class AppFlow {
         progress = next
         save.progress = next
         persist()
-    }
-
-    /// Zeigt diese Mission die stillen Zeichen des Einstiegs (P2-8)? Nur die erste
-    /// Mission der Region und nur, solange sie nie gewonnen wurde: Wer sie schon
-    /// geschafft hat, hat das Bauen und Rufen gelernt.
-    func showsIntro(for nodeID: String) -> Bool {
-        nodeID == campaign.nodes.first?.id && progress.stars(for: nodeID) == 0
     }
 
     /// `--e2e-erz N`: Erz für den Schmiede-Test, ohne erst Missionen zu spielen.

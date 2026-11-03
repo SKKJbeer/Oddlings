@@ -50,7 +50,7 @@ Status: **gilt**, umgesetzt bis 0.12.0; Ende-zu-Ende-Tests **[ENTSCHIEDEN D-029]
   seit 0.15.0 auch `tools/ton`: jede Tondatei mit Herkunft und CC0-Lizenz, D-082;
   seit 0.16.1 prüft es jeden Kampfplatz mit `mission` im Vertrag: Weg im Bild auf der
   Geometrie, dunkler Waldrand, Deko nie auf Bauzellen, Wegvorschlag gleich Missionsdatei),
-  `core-linux` (Paket unter Linux), `iphone` (Paket im Release-Bau, App-Bau,
+  `core-linux` (Paket unter Linux), `iphone` (Paket im Release-Bau, App-Bau, seit 0.24.1 auch die App im Release-Bau wie für TestFlight,
   `AppTests`, `AppUITests`, Probelauf im Simulator mit Bildschirmfotos und
   Spielstand im Artefakt `simulator-probe`). Zusammengeführt wird nur, wenn alle grün sind.
 - Seit WP-10 decken die Swift-Tests Determinismus (`DeterminismTests`: Replay

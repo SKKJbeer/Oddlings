@@ -118,6 +118,17 @@ jobs:
             -derivedDataPath build/DerivedData \
             CODE_SIGNING_ALLOWED=NO 2>&1 | tail -n 80
 
+      # TestFlight baut Release. Code, der nur im Debug-Bau steht (#if DEBUG),
+      # fehlt dort; 0.24.0 hat so erst beim Archivieren nicht übersetzt (Bau 45).
+      - name: App als Release übersetzen
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project Oddlings.xcodeproj -scheme Oddlings -configuration Release \
+            -destination "id=$UDID" \
+            -derivedDataPath build/DerivedDataRelease \
+            CODE_SIGNING_ALLOWED=NO 2>&1 | tail -n 40
+
       # App-Tests (AppTests) und Oberflächentests (AppUITests). Das Protokoll
       # wird nicht nur gekürzt gezeigt: Jeder Testfall steht mit Ergebnis im
       # Lauf, sonst sieht man nicht, ob ein Ziel überhaupt gelaufen ist.

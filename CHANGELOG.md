@@ -11,7 +11,14 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.24.0 – 03.11.2026 (P2-8: Synergie sichtbar, Einstieg ohne Erklärtext)
+## 0.24.1 – 03.11.2026 (Korrektur: 0.24.0 im Release-Bau)
+
+- **0.24.0 ließ sich für TestFlight nicht übersetzen** (Bau 45 gescheitert): Die Prüfung
+  „Mission 1 zeigt den Einstieg“ stand versehentlich im Teil, den es nur im Testbau gibt.
+  Sie gilt jetzt in jedem Bau; das Verhalten ist unverändert.
+- CI: neuer Schritt „App als Release übersetzen“, damit so etwas schon im PR auffällt.
+
+## 0.24.0 – 03.11.2026 (P2-8: Synergie sichtbar, Einstieg ohne Erklärtext) · Bau 45 gescheitert (Release übersetzte nicht, siehe 0.24.1)
 
 - **Sporenfunke sichtbar:** Trifft der Blitz einen verlangsamten Gegner, leuchtet das
   Kettenglied grün-türkis und dicker, am Ziel platzen Sporenwölkchen mit Ring und
