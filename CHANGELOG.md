@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.26.1 – 03.11.2026 (Grafik 07: Kampfplätze Sumpfpfad und Ruinen)
+## 0.26.1 – 03.11.2026 (Grafik 07: Kampfplätze Sumpfpfad und Ruinen) · Bau 49
 
 - **Mission 5a „Sumpfpfad“ hat ihren gemalten Kampfplatz:** feuchte Moorinsel mit toten
   Bäumen, Stümpfen, Tümpeln und einer Irrlicht-Laterne im Waldrand, grünliches
