@@ -89,7 +89,7 @@ Was dauerhaft freigeschaltet wird:
 | Türme, Aufwertungen, Spezialisierungen, Festungsfähigkeit | Hauptmissionen ([Region 1](#region-1-und-die-vollversion)) |
 | Volk | einmal beim Avatar-Aufbau, beide von Anfang an (D-063) |
 | Avatarrang und Talente | Sterne (D-064, D-065, umgesetzt 0.12.0) |
-| Ausrüstung mit kleinen Boni | feste Belohnungen aus Missionen und Sternschwellen (D-070, umgesetzt 0.19.0); Schmiede mit Spielwährung folgt (R-7b) |
+| Ausrüstung mit kleinen Boni | feste Belohnungen aus Missionen und Sternschwellen (D-070, umgesetzt 0.19.0); Schmiede mit Erz hebt sie auf Stufe II und III (R-7b, 0.21.0, D-072) |
 | Nebenmissionen | Sterne |
 | Bestiarium und Turmbuch (E11): Eintrag mit Bild und Charaktertext | erste Begegnung |
 | Abzeichen, Banner, Titel für den Avatar | Eisern-Modi, Bosse, alle Sterne einer Region |

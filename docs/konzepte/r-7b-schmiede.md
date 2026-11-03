@@ -1,7 +1,9 @@
 # R-7b: Schmiede mit Spielwährung
 
-Status: **[VORSCHLAG]**, wartet auf drei Entscheidungen von Steffen (Karten im
-Haupt-Thread). Vorgänger: [R-7a feste Belohnungen](r-7-ausruestung.md), 0.19.0.
+Status: **umgesetzt in 0.21.0 mit den drei Empfehlungen** (D-072): Erz aus jedem Sieg,
+neue Sterne geben mehr; die Schmiede hebt vorhandene Stücke auf Stufe II und III; die
+Währung heißt Erz. Die drei Karten an Steffen (S9) sind noch offen; entscheidet er
+anders, wird umgebaut. Werte [HYPOTHESE] bis zum Spieltest. Vorgänger: [R-7a feste Belohnungen](r-7-ausruestung.md), 0.19.0.
 Grundlage: D-066, D-069 (+10 % höchstens), D-070 (Schmiede, nie gegen Echtgeld,
 keine Zufallstruhen), D-071. Reihenfolge: nach Mission 3 in offener Reihenfolge (D-085).
 
@@ -48,9 +50,13 @@ neue Ausrüstungsplätze.
 
 ## Architektur (unter Annahme der Empfehlungen)
 
-- **Daten:** `Balance/forge.json`: Ertrag je Sieg und je neuem Stern, Kosten je Stufe.
-  Stufen und ihre Faktoren in `equipment.json` je Stück (`levels`). Keine Zahl im Code.
-- **Kern:** `ForgeRules` rechnet Ertrag und Kosten. `EquipmentTable.effective` nimmt die
+- **Daten:** alles in `Balance/equipment.json`, damit Stücke und ihre Stufen an einer
+  Stelle stehen: je Stück `levels` (Bonus von Stufe II und III), dazu ein Block `forge`
+  mit `winOre`, `newStarOre`, `maxOre` und `levelCosts`. Keine Zahl im Code. (Im
+  Entwurf stand eine eigene `forge.json`; eine zweite Datei hätte die Stufen von ihren
+  Stücken getrennt.)
+- **Kern:** `ForgeConfig.ore` rechnet den Ertrag, `EquipmentTable` Kosten, Stufen und
+  Schmieden (`upgrade`, `credit`). `EquipmentTable.effective` nimmt die
   Stufe je Stück. Eine Stufe gilt nur, wenn das Stück besessen wird.
 - **Spielstand:** `Avatar.forge { ore, levels: [EquipmentLevel { piece, level }] }`,
   sortiert, ohne Wörterbuch. Schema bleibt 2, Feld optional.

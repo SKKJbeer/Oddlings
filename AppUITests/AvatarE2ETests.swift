@@ -207,6 +207,60 @@ final class AvatarE2ETests: XCTestCase {
         XCTAssertFalse(again.app.buttons["equip.purse-seal"].isSelected)
     }
 
+    /// R-7b: Mit Erz aus dem Testschalter verbessert der Reiter „Schmiede“ ein
+    /// Stück. Der Knopf nennt den Preis, ist ohne genug Erz gesperrt, und Stufe
+    /// und Bestand überstehen den Neustart.
+    @MainActor
+    func testForgeUpgradesAPieceThatSurvivesRelaunch() throws {
+        let e2e = try E2EApp(["--e2e-volle-sterne", "m1", "--e2e-erz", "30"], storage: "schmiede", avatar: .dwarves)
+        let badge = e2e.app.buttons["menu.avatar"]
+        XCTAssertTrue(badge.waitForExistence(timeout: 15))
+        badge.tap()
+        let tab = e2e.app.buttons["avatar.tab.forge"]
+        XCTAssertTrue(tab.waitForExistence(timeout: 5))
+        tab.tap()
+        XCTAssertTrue(tab.isSelected)
+        let ore = element("forge.ore", in: e2e)
+        XCTAssertTrue(ore.waitForExistence(timeout: 5))
+        XCTAssertTrue(ore.label.contains("30 Erz"), ore.label)
+        let watch = e2e.app.buttons["forge.watch-banner"]
+        XCTAssertTrue(watch.waitForExistence(timeout: 5))
+        XCTAssertFalse(e2e.app.buttons["forge.storm-banner"].exists, "nur erhaltene Stücke stehen in der Schmiede")
+        XCTAssertTrue(watch.label.contains("Stufe II"), watch.label)
+        XCTAssertTrue(watch.label.contains("20 Erz"), watch.label)
+        XCTAssertTrue(watch.isEnabled)
+        let level = element("forge.watch-banner.level", in: e2e)
+        XCTAssertEqual(level.label, "Stufe I")
+        watch.tap()
+        XCTAssertTrue(ore.label.contains("10 Erz"), ore.label)
+        XCTAssertEqual(level.label, "Stufe II")
+        XCTAssertTrue(watch.label.contains("Stufe III"), watch.label)
+        XCTAssertFalse(watch.isEnabled, "für Stufe III reicht das Erz nicht")
+        e2e.screenshot("10-schmiede", in: self)
+        assertFits([e2e.app.buttons["avatar.back"], e2e.app.buttons["avatar.tab.talents"], tab, ore, watch],
+                   in: e2e, hittable: false)
+
+        e2e.app.terminate()
+        let again = try E2EApp(storage: "schmiede", fresh: false)
+        let againBadge = again.app.buttons["menu.avatar"]
+        XCTAssertTrue(againBadge.waitForExistence(timeout: 15))
+        againBadge.tap()
+        again.app.buttons["avatar.tab.forge"].tap()
+        let againLevel = element("forge.watch-banner.level", in: again)
+        XCTAssertTrue(againLevel.waitForExistence(timeout: 5))
+        XCTAssertEqual(againLevel.label, "Stufe II", "die Stufe steht im Spielstand")
+        XCTAssertTrue(element("forge.ore", in: again).label.contains("10 Erz"), "der Bestand auch")
+        again.app.buttons["avatar.tab.equipment"].tap()
+        let banner = again.app.buttons["equip.watch-banner"]
+        XCTAssertTrue(banner.waitForExistence(timeout: 5))
+        XCTAssertTrue(banner.label.contains("+3"), "die Ausrüstung zeigt den Bonus der Stufe: \(banner.label)")
+    }
+
+    /// Ein Text kann je nach Gestaltung als Text oder als Gruppe ankommen.
+    private func element(_ id: String, in e2e: E2EApp) -> XCUIElement {
+        e2e.app.descendants(matching: .any).matching(identifier: id).firstMatch
+    }
+
     /// Im Querformat ist wenig Platz: Im Aufbau und auf der Tafel mit Avatar darf
     /// nichts übereinander liegen oder aus dem Bild ragen.
     @MainActor

@@ -246,6 +246,25 @@ Mischung bleibt dort mehr als 0,05 vor „Nur Wachtürme“. Gemessen am 01.11.2
 | Zwerge | ×1,042 | ×1,093 (Sturmbanner, Mondamulett, Schatzsiegel) |
 | Elfen | ×1,034 | ×1,092 (dieselbe) |
 
+**Schmiede (R-7b).** Seit 0.21.0 (D-072) rechnet derselbe Test jede volle Belegung zweimal: auf
+Stufe I und auf der höchsten Schmiedestufe. Damit Stufe III unter der Obergrenze
+bleibt, ist Stufe I schwächer als die Stücke aus R-7a (Wachbanner +2 statt +3 %).
+Gemessen am 02.11.2026:
+
+| | Stufe I, schwächste bis stärkste | Stufe III, schwächste bis stärkste |
+|---|---|---|
+| Zwerge | ×1,038 bis ×1,043 | ×1,082 bis ×1,095 (Sturmbanner, Flinkes Amulett, Schatzsiegel) |
+| Elfen | ×1,025 bis ×1,037 | ×1,068 bis ×1,092 (Sturmbanner, Mondamulett, Schatzsiegel) |
+
+Das Flinke Amulett III steht bei 0,94 statt 0,93: Mit 0,93 lag die Mischung der
+Zwerge nicht mehr 0,05 vor „Nur Wachtürme“.
+
+**Erz [HYPOTHESE].** Ein Sieg gibt 4, jeder neue Stern 7, höchstens 999 im Bestand;
+Stufe II kostet 20, Stufe III 40. Wer jede der neun Missionen der Region einmal mit
+drei Sternen gewinnt, hat 225 Erz, die sechs Stücke ganz zu schmieden kostet 360: rund
+zwei Drittel ohne Wiederholen, wie im Konzept verlangt. Wiederholen gibt 4 je Sieg,
+also fünf Siege für eine Stufe II. Mit Mission 1 bis 4 sind es heute 100 Erz.
+
 Das Festungsleben ist als Feld vorgesehen, aber kein Stück nutzt es: +10 % Leben
 trugen „Nur Blitztürme“ mit Zwergen zum Sieg, weil mehr Gegner durchlaufen dürfen.
 Säule 1 gilt beim ersten Spielen (D-071, `monocultureLosesOnFirstPlay`): vor Mission 1

@@ -122,7 +122,8 @@ struct BalanceTests {
     }
 
     /// D-066, D-069: Ausrüstung macht stärker, aber jede volle Belegung hebt die
-    /// Reserve um höchstens 10 % gegenüber demselben Avatar ohne Ausrüstung.
+    /// Reserve um höchstens 10 % gegenüber demselben Avatar ohne Ausrüstung,
+    /// auch auf der höchsten Stufe der Schmiede.
     /// Gemessen am Schnitt über vier Mischungen, weil ein einzelner Lauf um
     /// ±0,05 springt (siehe Talente); dazu mit jeder Talentwahl des höchsten Rangs,
     /// denn eine Wahl kann zur Ausrüstung besser passen als die andere.
@@ -138,8 +139,9 @@ struct BalanceTests {
         let table = try EquipmentTable.bundled()
         let bare = average(sim.config.applying(config, talents: []))
         var strongest: (reserve: Double, pieces: [EquipmentPiece]) = (0, [])
-        for pieces in table.fullLoadouts() {
-            let name = "\(race) \(pieces.map(\.id))"
+        // Stufe I aus den festen Belohnungen und die höchste Stufe aus der Schmiede (R-7b).
+        for pieces in table.fullLoadouts() + table.fullLoadouts(atMaxLevel: true) {
+            let name = "\(race) \(pieces.map { "\($0.id) \($0.bonus)" })"
             let with = average(sim.config.applying(config, talents: [], equipment: pieces))
             #expect(with > bare, "\(name) hilft")
             #expect(with <= bare * 1.10, "\(name): \(with) gegen \(bare)")

@@ -38,6 +38,7 @@ struct StartView: View {
             flow.createAvatar(race: race, name: "Test", portrait: AvatarPortraits.of(race)[0].id)
         }
         if let node = SaveLocation.argument(after: "--e2e-volle-sterne") { flow.seedStarsForTests(StarRating.maximum, on: node) }
+        if let ore = SaveLocation.argument(after: "--e2e-erz").flatMap(Int.init), ore > 0 { flow.seedOreForTests(ore) }
         #endif
         _flow = State(initialValue: flow)
     }
@@ -89,6 +90,7 @@ struct StartView: View {
             if let mission = flow.battleMission(for: node) {
                 BattleView(mission: mission, mode: .play, onClose: { flow.showMap() }) { outcome, lives in
                     flow.finish(node, outcome: outcome, livesLeft: lives)
+                    return flow.lastReward
                 }
                 // Neuer Knoten, neue Schlacht: ohne eigene Kennung behielte
                 // SwiftUI den Zustand der vorigen Mission.

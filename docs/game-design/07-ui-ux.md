@@ -157,13 +157,18 @@ Einmal beim ersten „Spielen“: links die beiden Völker mit Fähigkeit und Zu
 Porträt und Name. Danach ist das Volk gesetzt (D-063). Einzelheiten:
 [R-5](../konzepte/r-5-avatar.md).
 
-### Avatar-Menü (umgesetzt 0.12.0, R-6; Ausrüstung 0.19.0, R-7a)
+### Avatar-Menü (umgesetzt 0.12.0, R-6; Ausrüstung 0.19.0, R-7a; Schmiede 0.21.0, R-7b)
 Eigener Schirm, erreichbar über das Avatarschild im Hauptmenü und auf der Karte.
 Links der Charakter (Porträt, Name, Rang als römische Ziffer, Sternbalken bis zum
 nächsten Rang), rechts die Abschnitte als Reiter: „Talente“ mit je zwei Spielarten je Reihe und
 „Ausrüstung“ mit drei Plätzen und ihren Stücken (gesperrte nennen ihre Herkunft,
 Tippen legt an oder ab). Nach einem neuen Rang trägt das Schild „Neues Talent“, nach
 einem neuen Stück „Neue Ausrüstung“; das Menü öffnet dann auf diesem Reiter.
+Dritter Reiter „Schmiede“: oben der Erzbestand, darunter jedes erhaltene Stück mit
+Stufe, Bonus jetzt und nach der nächsten Stufe. Der Knopf nennt Stufe und Preis
+(„Stufe II · 20 Erz“) und ist gesperrt, wenn das Erz nicht reicht; auf Stufe III steht
+„Höchste Stufe“. Die Ergebnistafel nennt den Ertrag („+25 Erz“). Prozente stehen mit
+einer Nachkommastelle, weil Stufen halbe Prozent auseinanderliegen.
 Einzelheiten: [R-6](../konzepte/r-6-avatarrang.md), [R-7](../konzepte/r-7-ausruestung.md).
 
 ## 4 Architektur

@@ -37,6 +37,9 @@ final class BattleController {
     /// Länge des laufenden Countdowns in Sekunden, für den Ring am Welle-Knopf.
     private(set) var countdownTotal = 1
     private(set) var outcome: Outcome?
+    /// Zeile der Ergebnistafel aus dem Spielstand („+11 Erz“, R-7b). Die
+    /// Schlacht rechnet sie nicht selbst: Erz ist Sache des Fortschritts.
+    var reward: String?
     private(set) var paused = false
     private(set) var speed = 1
     /// „Aufgeben“ in der Pause: Die Mission bleibt angehalten, die Tafel zeigt
