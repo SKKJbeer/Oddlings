@@ -37,8 +37,11 @@ struct RingMenu: View {
             let points = hud.ring(at: cell, count: kinds.count)
             ZStack {
                 if let choice {
-                    let rect = hud.panel(for: cell, avoiding: points)
-                    InfoPanel(title: BattleTexts.name(choice), lines: previewLines(choice), action: BattleTexts.tapAgainToBuild, actionID: nil)
+                    let stats = buildStats(choice)
+                    let place = panelPlace(for: cell, avoiding: points, hud: hud, stats: stats != nil)
+                    let rect = place.rect
+                    InfoPanel(title: BattleTexts.name(choice), lines: previewLines(choice), stats: stats, wide: place.wide,
+                              action: BattleTexts.tapAgainToBuild, actionID: nil)
                         .frame(width: rect.width, height: rect.height)
                         .position(x: rect.midX, y: rect.midY)
                 }
@@ -60,11 +63,15 @@ struct RingMenu: View {
                 let buyButtons = stars.isEmpty ? (upgradeCost == nil ? 0 : 1) : stars.count
                 let count = 1 + buyButtons + (targets ? 1 : 0)
                 let points = hud.ring(at: cell, count: count)
-                let rect = hud.panel(for: cell, avoiding: points)
+                let stats = towerStats(tower, upgradeArmed: upgradeArmed)
+                let place = panelPlace(for: cell, avoiding: points, hud: hud, stats: stats != nil)
+                let rect = place.rect
                 let refund = controller.refund(for: tower)
                 ZStack {
-                    InfoPanel(title: tower.specialization.map(BattleTexts.name) ?? BattleTexts.name(tower.kind, level: tower.level),
-                              lines: towerLines(tower, upgradeArmed: upgradeArmed),
+                    InfoPanel(title: towerTitle(tower, upgradeArmed: upgradeArmed),
+                              lines: stats == nil ? towerLines(tower, upgradeArmed: upgradeArmed)
+                                                  : statLine(tower, upgradeArmed: upgradeArmed),
+                              stats: stats, wide: place.wide,
                               action: actionLine(tower, armed: armed, upgradeArmed: upgradeArmed, refund: refund),
                               actionID: armed ? "sell.confirm"
                                   : upgradeArmed ? (controller.specialization(for: tower) == nil ? "upgrade.confirm" : "specialize.confirm") : nil)
@@ -103,6 +110,52 @@ struct RingMenu: View {
 }
 
 extension RingMenu {
+    /// Mit Turmwerten die hohe Tafel oder, wo sie nicht passt, die Leiste (D-130).
+    fileprivate func panelPlace(for cell: Cell, avoiding points: [CGPoint], hud: HudLayout,
+                                stats: Bool) -> (rect: CGRect, wide: Bool) {
+        guard stats else { return (hud.panel(for: cell, avoiding: points), false) }
+        return hud.statPanel(for: cell, avoiding: points, tall: BattleStyle.statPanel, wide: BattleStyle.statStrip)
+    }
+
+    /// Turmwerte vor dem Bau (D-130); die Bank hat keine.
+    fileprivate func buildStats(_ kind: TowerKind) -> TowerStatBlock? {
+        let changes = controller.statChanges(for: kind)
+        return changes.isEmpty ? nil : TowerStatBlock(kind: kind, changes: changes, comparing: false)
+    }
+
+    /// Turmwerte am gebauten Turm, beim vorgemerkten Kauf als Vergleich (D-130).
+    fileprivate func towerStats(_ tower: Tower, upgradeArmed: Bool) -> TowerStatBlock? {
+        let changes = controller.statChanges(for: tower)
+        return changes.isEmpty ? nil : TowerStatBlock(kind: tower.kind, changes: changes, comparing: upgradeArmed)
+    }
+
+    /// Beim Vergleich nennt der Titel das Ziel: „Wachturm → II“, „Wachturm → Salve“.
+    fileprivate func towerTitle(_ tower: Tower, upgradeArmed: Bool) -> String {
+        let now = tower.specialization.map(BattleTexts.name) ?? BattleTexts.name(tower.kind, level: tower.level)
+        guard upgradeArmed else { return now }
+        if let specialization = controller.armedSpecialization { return "\(now) → \(BattleTexts.name(specialization))" }
+        return "\(BattleTexts.name(tower.kind)) → \(BattleTexts.levelTag(tower.level + 1))"
+    }
+
+    /// Die eine Zeile unter den Kacheln: die Warnung vor dem Endgültigen, was
+    /// Stufe 2 freischaltet oder die Kampfbilanz des Turms.
+    fileprivate func statLine(_ tower: Tower, upgradeArmed: Bool) -> InfoLines {
+        if upgradeArmed, let specialization = controller.armedSpecialization {
+            let others = controller.specializations(for: tower).filter { $0 != specialization }
+            return InfoLines(first: others.first.map(BattleTexts.specializeDrops) ?? BattleTexts.specializeFinal,
+                             second: "", warn: true)
+        }
+        if upgradeArmed {
+            return InfoLines(first: tower.kind == .spore ? BattleTexts.upgradeUnlocksNothing : TowerStatTexts.newTargetMode,
+                             second: "", tone: .gain)
+        }
+        if controller.specializations(for: tower).count > 1 {
+            return InfoLines(first: BattleTexts.chooseSpecialization, second: "", tone: .gain)
+        }
+        return InfoLines(first: TowerStatTexts.tally(tower, seconds: controller.secondsInBattle(tower)), second: "",
+                         firstID: "panel.tally")
+    }
+
     /// Zweite und dritte Zeile der Infotafel vor dem Bau. Bei der Bank steht
     /// der Preis des Wartens in Orange da (07, „Zwergenbank“).
     fileprivate func previewLines(_ kind: TowerKind) -> InfoLines {
@@ -155,10 +208,17 @@ extension RingMenu {
 
 /// Rolle und Zusammenspiel, bei der Bank Ertrag und Warnung.
 fileprivate struct InfoLines {
+    enum Tone { case plain, gain }
     var first: String
     var second: String
-    /// Zweite Zeile in Orange statt Grün: ein Preis, kein Vorteil.
+    /// Zweite Zeile in Orange statt Grün: ein Preis, kein Vorteil. Unter den
+    /// Turmwerten gilt das für die eine Zeile.
     var warn = false
+    /// Farbe der einen Zeile unter den Turmwerten: Pergament für die Bilanz,
+    /// Grün für einen Vorteil.
+    var tone = Tone.plain
+    /// Kennung der ersten Zeile, wo ein Test sie liest (Kampfbilanz).
+    var firstID = "panel.first"
 }
 
 /// Ein Turmknopf im Bogen: Bild des Turms, darunter das Preisschild.
@@ -301,14 +361,63 @@ private struct TargetRingButton: View {
     }
 }
 
-/// Name, Rolle, Zusammenspiel und was das nächste Tippen tut.
+/// Name, Rolle, Zusammenspiel und was das nächste Tippen tut. Mit Turmwerten
+/// (D-130): Name, vier Kacheln, eine Zeile, was das nächste Tippen tut.
 private struct InfoPanel: View {
     let title: String
     let lines: InfoLines
+    var stats: TowerStatBlock?
+    /// Flache Leiste statt hoher Tafel (`HudLayout.statPanel`).
+    var wide = false
     let action: String
     let actionID: String?
 
     var body: some View {
+        if let stats { statBody(stats) } else { plainBody }
+    }
+
+    private func statBody(_ stats: TowerStatBlock) -> some View {
+        VStack(alignment: .leading, spacing: wide ? 3 : 4) {
+            if wide {
+                // Leiste: Titel und nächstes Tippen in einer Zeile, Kacheln nebeneinander.
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    titleText
+                    Spacer(minLength: 0)
+                    actionLine.lineLimit(1).minimumScaleFactor(0.7)
+                }
+                TowerStatGrid(block: stats, columns: 4)
+                statNote
+            } else {
+                titleText
+                TowerStatGrid(block: stats, columns: 2)
+                statNote
+                actionLine
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.75)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .woodPanel(padding: wide ? 8 : 10, radius: 18)
+        .allowsHitTesting(false)
+    }
+
+    private var titleText: some View {
+        Text(title).font(UITheme.display(18))
+            .lineLimit(1)
+            .minimumScaleFactor(0.7)
+            .accessibilityIdentifier("panel.title")
+    }
+
+    private var statNote: some View {
+        Text(lines.first)
+            .font(lines.warn ? UITheme.bodyHeavy(12) : UITheme.body(12))
+            .foregroundStyle(lines.warn ? UITheme.danger : lines.tone == .gain ? UITheme.fresh : UITheme.parchment)
+            .lineLimit(1)
+            .minimumScaleFactor(0.7)
+            .accessibilityIdentifier(lines.firstID)
+    }
+
+    private var plainBody: some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(title).font(UITheme.display(19))
                 .accessibilityIdentifier("panel.title")

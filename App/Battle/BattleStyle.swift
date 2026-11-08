@@ -118,6 +118,11 @@ enum BattleStyle {
     static let ringButton: CGFloat = 54
     static let ringGap: CGFloat = 6
     static let infoPanel = CGSize(width: 214, height: 96)
+    /// Tafel mit Turmwerten (D-130): Titel, vier Kacheln, eine Zeile, was das
+    /// nächste Tippen tut. Breiter, damit „15,0 → 22,5 +50 %“ in eine Kachel passt.
+    static let statPanel = CGSize(width: 256, height: 176)
+    /// Flache Leiste, wenn die hohe Tafel nirgends frei liegt (iPhone SE, vier Knöpfe).
+    static let statStrip = CGSize(width: 380, height: 100)
     static var hudMetrics: HudLayout.Metrics {
         HudLayout.Metrics(button: ringButton, gap: ringGap, margin: screenMargin, panel: infoPanel)
     }

@@ -52,6 +52,14 @@ public struct Tower: Codable, Equatable, Sendable {
     public var targetMode: TargetMode = .first
     /// Gesetzt genau auf Stufe 3 (P3-1).
     public var specialization: Specialization? = nil
+    /// Kampfbilanz (D-131): Schaden, der wirklich ankam, ohne Überschuss über
+    /// das Restleben hinaus. Nur zum Anzeigen; die Regeln lesen sie nie, darum
+    /// fehlt sie in der Prüfsumme.
+    public var damageDealt: Double = 0
+    /// Gegner, deren Leben dieser Turm auf null gebracht hat.
+    public var kills: Int = 0
+    /// Treffer, die einen Gegner verlangsamt haben (Sporenturm).
+    public var slowHits: Int = 0
 
     public init(id: Int, kind: TowerKind, cell: Cell, cooldownTicks: Int, spent: Int,
                 builtTick: Int = 0, paid: Int = 0, level: Int = 1, targetMode: TargetMode = .first,
@@ -70,10 +78,11 @@ public struct Tower: Codable, Equatable, Sendable {
 
     private enum CodingKeys: String, CodingKey {
         case id, kind, cell, cooldownTicks, spent, builtTick, paid, level, targetMode, specialization
+        case damageDealt, kills, slowHits
     }
 
     /// Zustände ohne Bankfelder (vor 0.16.0), ohne Stufe (vor 0.18.0) und ohne
-    /// Spezialisierung (vor P3-1) bleiben lesbar.
+    /// Spezialisierung (vor P3-1) und ohne Kampfbilanz (vor 0.29) bleiben lesbar.
     public init(from decoder: any Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         id = try c.decode(Int.self, forKey: .id)
@@ -86,6 +95,9 @@ public struct Tower: Codable, Equatable, Sendable {
         level = try c.decodeIfPresent(Int.self, forKey: .level) ?? 1
         targetMode = try c.decodeIfPresent(TargetMode.self, forKey: .targetMode) ?? .first
         specialization = try c.decodeIfPresent(Specialization.self, forKey: .specialization)
+        damageDealt = try c.decodeIfPresent(Double.self, forKey: .damageDealt) ?? 0
+        kills = try c.decodeIfPresent(Int.self, forKey: .kills) ?? 0
+        slowHits = try c.decodeIfPresent(Int.self, forKey: .slowHits) ?? 0
     }
 }
 
