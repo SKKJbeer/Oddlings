@@ -12,7 +12,7 @@ Entscheidungskarte beantwortet. Alles, was auf ihn wartet, steht unter
 zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzelnen:
 [backlog.md](backlog.md), offene Fragen: [offene-fragen.md](offene-fragen.md).
 
-**Stand: 03.11.2026** · neueste Version 0.28.2 (gemalter Kampfplatz Bosslichtung M7, Bau folgt), davor 0.28.1 (gemalte Kampfplätze für M6a und M6b, Bau 52), davor 0.28.0 (Mission 7 „Der Moorkönig“), davor 0.27.0 (Wahl zwischen zwei Spezialisierungen, Mission 6a und 6b, Bau 50), davor 0.26.1 (gemalte Kampfplätze für M5a Sumpfpfad und M5b Ruinen, Bau 49), davor 0.26.0 (Mission 5b „Ruinen“, Bau 48), davor 0.25.0 (Spezialisierungen und Mission 5a „Sumpfpfad“, Bau 47), davor 0.24.1 (Korrektur für den Release-Bau, Bau 46), davor 0.24.0 (Synergie sichtbar, Einstieg ohne Erklärtext, Bau 45 gescheitert), davor 0.23.0 (Blitz allein verliert Mission 2 und 3, Bau 44), 0.22.0 (Fortsetzen nach Neustart, Bau 43), neuester VALID-Bau 52 (0.28.1)
+**Stand: 03.11.2026** · neueste Version 0.28.2 (gemalter Kampfplatz Bosslichtung M7, Bau folgt), davor 0.28.1 (gemalte Kampfplätze für M6a und M6b, Bau 52), davor 0.28.0 (Mission 7 „Der Moorkönig“, Bau 51), davor 0.27.0 (Wahl zwischen zwei Spezialisierungen, Mission 6a und 6b, Bau 50), davor 0.26.1 (gemalte Kampfplätze für M5a Sumpfpfad und M5b Ruinen, Bau 49), davor 0.26.0 (Mission 5b „Ruinen“, Bau 48), davor 0.25.0 (Spezialisierungen und Mission 5a „Sumpfpfad“, Bau 47), davor 0.24.1 (Korrektur für den Release-Bau, Bau 46), davor 0.24.0 (Synergie sichtbar, Einstieg ohne Erklärtext, Bau 45 gescheitert), davor 0.23.0 (Blitz allein verliert Mission 2 und 3, Bau 44), 0.22.0 (Fortsetzen nach Neustart, Bau 43), neuester VALID-Bau 52 (0.28.1)
 
 ## Phasen
 
@@ -99,7 +99,7 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | P3-2: Mission 5b „Ruinen“, Falkenhorst, Funkensäule, Fäulnis (D-078) | 0.26.0 | 48 | [Konzept](../konzepte/p3-2-ruinen-spezialisierungen.md) |
 | Grafik 07: gemalte Kampfplätze M5a (Sumpfpfad) und M5b (Ruinenhof), Wege aus D-081 | 0.26.1 | 49 | [Konzept](../konzepte/grafik-07-kampfplaetze-m5.md) |
 | P3-3: Wahl zwischen zwei Spezialisierungen, Mission 6a und 6b, Gewitterkrone ohne Sporen-Vorteil (D-079) | 0.27.0 | 50 | [Konzept](../konzepte/p3-3-wahl-zwischen-spezialisierungen.md) |
-| P3-4: Mission 7, der Moorkönig mit Schild und Ruf (D-090) | 0.28.0 | folgt | [Konzept](../konzepte/p3-4-mission-7-boss.md) |
+| P3-4: Mission 7, der Moorkönig mit Schild und Ruf (D-090) | 0.28.0 | 51 | [Konzept](../konzepte/p3-4-mission-7-boss.md) |
 | Grafik 08: gemalte Kampfplätze M6a (Tiefes Moor) und M6b (Tempelplatz) | 0.28.1 | 52 | [Konzept](../konzepte/grafik-08-kampfplaetze-m6.md) |
 | Grafik 09: gemalter Kampfplatz Bosslichtung M7 | 0.28.2 | folgt | [Konzept](../konzepte/grafik-09-bosslichtung-m7.md) |
 

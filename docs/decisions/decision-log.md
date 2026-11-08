@@ -21,7 +21,8 @@ Spielkonzepte führen"). Vergeben bzw. reserviert:
 | D-070 bis D-079 | Haupt-Thread (Avatar, Ausrüstung) |
 | D-080 bis D-089 | Projektplanung |
 | D-090 bis D-099 | Haupt-Thread (Kampagne Region 1) |
-| ab D-100 | frei, Block von zehn beim Koordinator anfragen |
+| D-110 bis D-119 | Haupt-Thread (Nebenmissionen, P3-5) |
+| ab D-100 | frei, sofern nicht oben vergeben; Block von zehn beim Koordinator anfragen |
 
 Eine Nummer doppelt bricht den CI-Schritt `regeln` (`scripts/links-pruefen.py`).
 
