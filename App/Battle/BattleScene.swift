@@ -430,13 +430,15 @@ final class BattleScene: SKScene {
         case .enemySlowed:
             // Verlangsamung zeigt sich über den Zustand (Farbton am Gegner).
             break
-        case .bossShieldRaised:
+        case .bossShieldRaised(let id, _):
             // Die Kuppel zeigt der Zustand; der Satz sagt, was jetzt zählt.
             fx.banner(BattleTexts.bossShield, size: size)
+            if let node = enemyNodes[id] { fx.raiseShield(node) }
         case .bossSummoned(let id, _):
             if let node = enemyNodes[id] { fx.summon(node) }
         case .bossShieldDropped(let id):
             if let node = enemyNodes[id] {
+                fx.lowerShield(node)
                 fx.hint(at: CGPoint(x: node.position.x, y: node.position.y + node.height * 1.3), text: BattleTexts.bossShieldDown)
             }
         case .shieldAbsorbed(let id):
