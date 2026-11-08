@@ -129,6 +129,9 @@ Aufteilung siehe Abschnitt 2. Weitere Regeln:
 - Nicht leistbar: Knopf gedimmt, Schild orange „fehlt 30". Antippen zeigt einen
   kurzen Hinweis und gibt Warnhaptik, öffnet nichts.
 - Der Bogen klappt an Rändern nach innen und weicht den HUD-Ecken aus.
+- **Bauplätze** [ENTSCHIEDEN] (D-121, Steffen 08.11.2026) sind nur zu sehen, solange gebaut wird: vor der
+  ersten Welle und solange ein freies Feld gewählt ist, als abgerundete helle Felder;
+  belegte Felder zeigen keins. Sonst bleibt die gemalte Wiese ohne Raster (0.29.1).
 
 ### Turm antippen, verkaufen
 Reichweite, Infotafel auf der freien Bildschirmseite (Name, eine Zeile Rolle,

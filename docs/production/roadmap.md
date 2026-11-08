@@ -12,7 +12,7 @@ Entscheidungskarte beantwortet. Alles, was auf ihn wartet, steht unter
 zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzelnen:
 [backlog.md](backlog.md), offene Fragen: [offene-fragen.md](offene-fragen.md).
 
-**Stand: 08.11.2026** · neueste Version 0.29.0 (Turmwerte und Vergleich beim Aufwerten, UI-02, Bau 55), davor 0.28.3 (gemalter Kampfplatz Bosslichtung M7, Bau 54), davor 0.28.2 (der Moorkönig als eigene 3D-Figur), davor 0.28.1 (gemalte Kampfplätze für M6a und M6b, Bau 52), davor 0.28.0 (Mission 7 „Der Moorkönig“, Bau 51), davor 0.27.0 (Wahl zwischen zwei Spezialisierungen, Mission 6a und 6b, Bau 50), davor 0.26.1 (gemalte Kampfplätze für M5a Sumpfpfad und M5b Ruinen, Bau 49), davor 0.26.0 (Mission 5b „Ruinen“, Bau 48), davor 0.25.0 (Spezialisierungen und Mission 5a „Sumpfpfad“, Bau 47), davor 0.24.1 (Korrektur für den Release-Bau, Bau 46), davor 0.24.0 (Synergie sichtbar, Einstieg ohne Erklärtext, Bau 45 gescheitert), davor 0.23.0 (Blitz allein verliert Mission 2 und 3, Bau 44), 0.22.0 (Fortsetzen nach Neustart, Bau 43), neuester VALID-Bau 55 (0.29.0)
+**Stand: 08.11.2026** · neueste Version 0.29.1 (Türme stimmig in der Welt), davor 0.29.0 (Turmwerte und Vergleich beim Aufwerten, UI-02, Bau 55), davor 0.28.3 (gemalter Kampfplatz Bosslichtung M7, Bau 54), davor 0.28.2 (der Moorkönig als eigene 3D-Figur), davor 0.28.1 (gemalte Kampfplätze für M6a und M6b, Bau 52), davor 0.28.0 (Mission 7 „Der Moorkönig“, Bau 51), davor 0.27.0 (Wahl zwischen zwei Spezialisierungen, Mission 6a und 6b, Bau 50), davor 0.26.1 (gemalte Kampfplätze für M5a Sumpfpfad und M5b Ruinen, Bau 49), davor 0.26.0 (Mission 5b „Ruinen“, Bau 48), davor 0.25.0 (Spezialisierungen und Mission 5a „Sumpfpfad“, Bau 47), davor 0.24.1 (Korrektur für den Release-Bau, Bau 46), davor 0.24.0 (Synergie sichtbar, Einstieg ohne Erklärtext, Bau 45 gescheitert), davor 0.23.0 (Blitz allein verliert Mission 2 und 3, Bau 44), 0.22.0 (Fortsetzen nach Neustart, Bau 43), neuester VALID-Bau 55 (0.29.0)
 
 ## Phasen
 
@@ -106,6 +106,7 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | Grafik 08: gemalte Kampfplätze M6a (Tiefes Moor) und M6b (Tempelplatz) | 0.28.1 | 52 | [Konzept](../konzepte/grafik-08-kampfplaetze-m6.md) |
 | FX 03: der Moorkönig als 3D-Figur mit Schild- und Ruffolge (D-100, D-101) | 0.28.2 | folgt | [Konzept](../konzepte/fx-03-moorkoenig.md) |
 | Grafik 09: gemalter Kampfplatz Bosslichtung M7 | 0.28.3 | 54 | [Konzept](../konzepte/grafik-09-bosslichtung-m7.md) |
+| Grafik 10: Türme stimmig in der Welt (Licht, Schatten, Fundament, Bauplätze nur beim Bauen) | 0.29.1 | – | [Konzept](../konzepte/grafik-10-tuerme-in-der-welt.md) |
 
 ## Gilt für jedes Paket
 

@@ -349,6 +349,70 @@
         2
       ],
       "mission": "Packages/OddlingsCore/Sources/OddlingsCore/Resources/Balance/mission-07.json"
+    },
+    "tower_watch_shadow": {
+      "seiteZellen": 2.4,
+      "alpha": true
+    },
+    "tower_lightning_shadow": {
+      "seiteZellen": 2.4,
+      "alpha": true
+    },
+    "tower_spore_shadow": {
+      "seiteZellen": 2.4,
+      "alpha": true
+    },
+    "tower_bank_shadow": {
+      "seiteZellen": 2.4,
+      "alpha": true
+    },
+    "tower_watch_2_shadow": {
+      "seiteZellen": 2.4,
+      "alpha": true
+    },
+    "tower_lightning_2_shadow": {
+      "seiteZellen": 2.4,
+      "alpha": true
+    },
+    "tower_spore_2_shadow": {
+      "seiteZellen": 2.4,
+      "alpha": true
+    },
+    "footing_mission01": {
+      "seiteZellen": 1.2,
+      "alpha": true
+    },
+    "footing_mission02": {
+      "seiteZellen": 1.2,
+      "alpha": true
+    },
+    "footing_mission03": {
+      "seiteZellen": 1.2,
+      "alpha": true
+    },
+    "footing_mission04": {
+      "seiteZellen": 1.2,
+      "alpha": true
+    },
+    "footing_mission05a": {
+      "seiteZellen": 1.2,
+      "alpha": true
+    },
+    "footing_mission05b": {
+      "seiteZellen": 1.2,
+      "alpha": true
+    },
+    "footing_mission06a": {
+      "seiteZellen": 1.2,
+      "alpha": true
+    },
+    "footing_mission06b": {
+      "seiteZellen": 1.2,
+      "alpha": true
+    },
+    "footing_mission07": {
+      "seiteZellen": 1.2,
+      "alpha": true
     }
   }
 }

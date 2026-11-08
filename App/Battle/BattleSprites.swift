@@ -27,6 +27,30 @@ enum BattleSprites {
     }
     static func enemyName(_ kind: EnemyKind) -> String { "enemy_\(kind.rawValue)" }
     static let fortressName = "fortress"
+    /// Schatten eines Turmbildes (D-120), gerechnet von `turmboden.py`.
+    static func shadowName(_ kind: TowerKind, level: Int) -> String { towerName(kind, level: level) + "_shadow" }
+    /// Schatten der höchsten Stufe bis `level`, die ein eigenes Bild hat: Stufe 3
+    /// (Spezialisierung) trägt das Bild der Stufe 2 und damit auch ihren Schatten.
+    static func shadowNameAvailable(_ kind: TowerKind, level: Int) -> String {
+        for candidate in stride(from: level, to: 1, by: -1) where texture(named: shadowName(kind, level: candidate)) != nil {
+            return shadowName(kind, level: candidate)
+        }
+        return shadowName(kind, level: 1)
+    }
+    /// Fleck festgetretene Erde unter jedem Turm, aus dem Weg dieser Karte.
+    static func footingName(missionID: String) -> String {
+        "footing_\(missionID.replacingOccurrences(of: "-", with: ""))"
+    }
+
+    /// Schatten oder Fundament, Fuß in der Mitte; nil ohne Bild im Katalog.
+    static func groundDecal(named name: String, side: CGFloat) -> SKSpriteNode? {
+        guard let texture = texture(named: name) else { return nil }
+        let sprite = SKSpriteNode(texture: texture)
+        sprite.name = name
+        sprite.size = CGSize(width: side, height: side)
+        return sprite
+    }
+
     /// `mission-01` → `map_mission01_ground`.
     static func groundName(missionID: String) -> String {
         "map_\(missionID.replacingOccurrences(of: "-", with: ""))_ground"
@@ -414,14 +438,26 @@ final class TowerNode: SKNode {
     /// Zwergenbank (P2-5): Balken „ausgezahlt von Obergrenze“ am Fuß. Nur bei
     /// der Bank vorhanden; leer wird sie grau, damit man sie verkauft.
     let bankBar: SKSpriteNode?
+    /// Was am Boden liegt (D-120): Fundament und Schatten. Die Szene legt es in
+    /// eine eigene Ebene unter alle Türme, damit kein Schatten über einen
+    /// Nachbarturm fällt; es folgt dem Auftritt über `idle`.
+    let shade = SKNode()
+    let footing: SKSpriteNode?
+    let shadow: SKSpriteNode?
+    /// Licht des Kampfplatzes; nil = ungetönt (Tests, Kampfplatz ohne Eintrag).
+    let light: SKColor?
     private let bankFill = SKSpriteNode()
     private let bankWidth: CGFloat
     private(set) var bankEmpty = false
 
-    init(tower: Tower, field: CGFloat) {
+    init(tower: Tower, field: CGFloat, light: SKColor? = nil, footing footingName: String? = nil) {
         towerID = tower.id
         kind = tower.kind
+        self.light = light
         art = BattleSprites.tower(tower.kind, field: field)
+        footing = footingName.flatMap { BattleSprites.groundDecal(named: $0, side: BattleStyle.footingSide * field) }
+        shadow = BattleSprites.groundDecal(named: BattleSprites.shadowNameAvailable(tower.kind, level: tower.level),
+                                           side: BattleStyle.towerShadowSide * field)
         if tower.kind == .lightning {
             let glow = SKSpriteNode(texture: FxTextures.texture(.glow))
             glow.color = FxStyle.crystalGlow
@@ -445,6 +481,12 @@ final class TowerNode: SKNode {
         }
         super.init()
         name = art.name
+        if let footing { shade.addChild(footing) }
+        if let shadow {
+            shadow.zPosition = 1
+            shade.addChild(shadow)
+        }
+        tint(empty: false)
         addChild(lift)
         lift.addChild(pulse)
         pulse.addChild(art)
@@ -472,9 +514,20 @@ final class TowerNode: SKNode {
         bankEmpty = empty
         bankFill.color = empty ? BattleStyle.bankSpent : BattleStyle.bankFill
         art.alpha = empty ? BattleStyle.bankEmptyAlpha : 1
+        tint(empty: empty)
+    }
+
+    /// Ortslicht multipliziert (colorBlendFactor 1 = Textur × Farbe); eine leere
+    /// Bank wird grau, dann zählt das Licht nicht mehr.
+    private func tint(empty: Bool) {
         for case let sprite as SKSpriteNode in art.children {
-            sprite.color = .gray
-            sprite.colorBlendFactor = empty ? 0.8 : 0
+            if empty {
+                sprite.color = .gray
+                sprite.colorBlendFactor = 0.8
+            } else {
+                sprite.color = light ?? .white
+                sprite.colorBlendFactor = light == nil ? 0 : 1
+            }
         }
     }
 
@@ -488,6 +541,9 @@ final class TowerNode: SKNode {
         level = newLevel
         if let texture = BattleSprites.texture(named: BattleSprites.towerName(kind, level: newLevel)) {
             for case let sprite as SKSpriteNode in art.children { sprite.texture = texture }
+        }
+        if let shadow, let texture = BattleSprites.texture(named: BattleSprites.shadowNameAvailable(kind, level: newLevel)) {
+            shadow.texture = texture
         }
         badge?.removeFromParent()
         badge = nil
@@ -518,6 +574,8 @@ final class TowerNode: SKNode {
         let phase = FxMath.phase(forID: towerID) * 2 * Double.pi
         let wave = still ? 0 : CGFloat(sin(time * 2 * Double.pi / FxStyle.breathPeriod + phase))
         art.yScale = 1 + FxStyle.breathAmount * wave
+        // Fundament und Schatten erscheinen mit dem Turm, nicht vor ihm.
+        shade.alpha = lift.alpha
         glow?.alpha = min(1, 0.35 + 0.12 * wave + flare)
         glow?.setScale(1 + 0.6 * flare)
     }
