@@ -22,7 +22,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Herkunft in `art/karten/ENTSTEHUNG.md`, Konzept
   [Grafik 09](docs/konzepte/grafik-09-bosslichtung-m7.md).
 
-## 0.28.1 – 08.11.2026 (Grafik 08: Kampfplätze Tiefes Moor und Tempelplatz)
+## 0.28.1 – 08.11.2026 (Grafik 08: Kampfplätze Tiefes Moor und Tempelplatz) · Bau 52
 
 - **Gemalte Kampfplätze für Mission 6a und 6b** statt der schlichten Karte. 6a „Sumpfpfad II“
   führt tiefer ins Moor: Nacht, blaugrünes Licht, Mangroven, Trauerweiden, leuchtende Pilze.
