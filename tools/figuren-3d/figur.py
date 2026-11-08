@@ -61,6 +61,27 @@ bpy.ops.mesh.select_all(action='SELECT')
 bpy.ops.mesh.remove_doubles(threshold=rig.get("verschweissen", 0.002))
 bpy.ops.object.mode_set(mode='OBJECT')
 
+# Kleine lose Splitter (TRELLIS lässt einzelne Inseln neben der Figur
+# stehen): Sie bekommen kein Gewicht, bleiben beim Sturz in der Luft hängen
+# und sehen dann wie Schmutz aus (Moorkönig, FX 03).
+if rig.get("splitterBis", 0) > 0:
+    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.mesh.select_all(action='SELECT')
+    bpy.ops.mesh.separate(type='LOOSE')
+    bpy.ops.object.mode_set(mode='OBJECT')
+    teile = [o for o in bpy.data.objects if o.type == 'MESH']
+    for o in teile:
+        if len(o.data.vertices) <= rig["splitterBis"]:
+            bpy.data.objects.remove(o)
+    teile = [o for o in bpy.data.objects if o.type == 'MESH']
+    bpy.ops.object.select_all(action='DESELECT')
+    for o in teile:
+        o.select_set(True)
+    bpy.context.view_layer.objects.active = max(teile, key=lambda o: len(o.data.vertices))
+    if len(teile) > 1:
+        bpy.ops.object.join()
+    koerper = bpy.context.view_layer.objects.active
+
 # TRELLIS liefert Metallic 1; damit spiegelt die Figur nur die dunkle Umgebung
 # und das Licht von links oben kommt nicht an.
 for m in koerper.data.materials:
@@ -204,6 +225,13 @@ for teil in teile:
 
 # Bewegungen: je Knochen eine Drehung (Grad um x = vor/zurück, um y = seitlich)
 # als Sinus über die Folge, dazu Hub des Beckens. Werte stehen in rig.json.
+def drehungen(eintraege):
+    # Je Knochen eine Drehung ["x", 30] oder mehrere [["y", 40], ["x", -20]].
+    for name, wert in eintraege.items():
+        for achse, grad in (wert if isinstance(wert[0], list) else [wert]):
+            yield name, achse, grad
+
+
 def setze(folge, i, n):
     t = i / n
     for name, b in arm.pose.bones.items():
@@ -213,10 +241,20 @@ def setze(folge, i, n):
     for name, (achse, grad, phase) in rig["folgen"][folge].get("schwingen", {}).items():
         w = math.radians(grad) * math.sin(2 * math.pi * (t + phase))
         arm.pose.bones[name].rotation_euler["xyz".index(achse)] = w
-    for name, (achse, grad) in rig["folgen"][folge].get("verlauf", {}).items():
+    # Grundhaltung aus einer anderen Folge, voll ausgeführt (der Ruf des
+    # Moorkönigs beginnt und endet in der Schildhaltung, FX 03).
+    basis = rig["folgen"][folge].get("basis")
+    for name, achse, grad in drehungen(rig["folgen"][basis].get("verlauf", {}) if basis else {}):
+        arm.pose.bones[name].rotation_euler["xyz".index(achse)] += math.radians(grad)
+    for name, achse, grad in drehungen(rig["folgen"][folge].get("verlauf", {})):
         # Einmalige Bewegung (Treffer, Sturz): weich von 0 auf grad
         k = 1 - (1 - t) ** 2 if n > 1 else 1
-        arm.pose.bones[name].rotation_euler["xyz".index(achse)] = math.radians(grad) * k
+        arm.pose.bones[name].rotation_euler["xyz".index(achse)] += math.radians(grad) * k
+    for name, achse, grad in drehungen(rig["folgen"][folge].get("bogen", {})):
+        # Hin und zurück (Stab heben und aufstoßen): erstes und letztes Bild in
+        # der Grundhaltung, damit die Folge ohne Sprung in sie zurückkehrt.
+        u = i / (n - 1) if n > 1 else 0
+        arm.pose.bones[name].rotation_euler["xyz".index(achse)] += math.radians(grad) * math.sin(math.pi * u)
     # Grundhaltung: TRELLIS-Vorlagen stehen mit abgespreizten Armen, damit
     # Hände und Körper getrennt bleiben. Die Drehung steht in rig.json um eine
     # Achse des Modells (nicht des Knochens) und wird unter die Bewegung gelegt.
@@ -272,7 +310,11 @@ sc.render.resolution_x = sc.render.resolution_y = pixel
 sc.view_settings.view_transform = 'Standard'
 
 os.makedirs(aus, exist_ok=True)
+# NUR=walk,shield rendert nur diese Folgen (Proben beim Einstellen des Skeletts).
+nur = [x for x in os.environ.get("NUR", "").split(",") if x]
 for folge, f in rig["folgen"].items():
+    if nur and folge not in nur:
+        continue
     n = f["bilder"]
     for i in range(n):
         setze(folge, i, n)

@@ -1,0 +1,45 @@
+{
+  "_zweck": "Skelett des Moorkönigs (FX 03, TRELLIS-Modell aus vorlage.png, Seed 1); Punkte als Anteile der Modellbox, Blick nach -y. Stab in der rechten Hand (-x), Schild am linken Arm (+x)",
+  "blick": 35,
+  "ruhe": {},
+  "bildHoehe": 1.6,
+  "kameraHoehe": 12,
+  "licht": {"haupt": 5.0, "fuell": 3.0, "welt": 1.6, "rand": 3.0},
+  "knochen": {
+    "becken": {"von": [0, 0, 0.24], "bis": [0, 0, 0.4]},
+    "rumpf": {"von": [0, 0, 0.4], "bis": [0, 0, 0.76], "eltern": "becken"},
+    "kopf": {"von": [0, -0.05, 0.76], "bis": [0, -0.05, 1.0], "eltern": "rumpf"},
+    "bein_l": {"von": [-0.17, 0, 0.24], "bis": [-0.2, -0.05, 0.02], "eltern": "becken"},
+    "bein_r": {"von": [0.15, 0, 0.24], "bis": [0.17, -0.05, 0.02], "eltern": "becken"},
+    "arm_stab": {"von": [-0.3, -0.05, 0.72], "bis": [-0.43, -0.1, 0.5], "eltern": "rumpf"},
+    "arm_schild": {"von": [0.32, -0.05, 0.72], "bis": [0.34, -0.15, 0.36], "eltern": "rumpf"}
+  },
+  "folgen": {
+    "walk": {
+      "bilder": 8,
+      "hub": 0.015,
+      "schwingen": {
+        "bein_l": ["x", 18, 0], "bein_r": ["x", 18, 0.5],
+        "arm_stab": ["x", 10, 0.5], "arm_schild": ["x", 8, 0],
+        "rumpf": ["z", 5, 0], "kopf": ["y", 3, 0.25]
+      }
+    },
+    "hit": {"bilder": 3, "verlauf": {"rumpf": ["x", -10], "kopf": ["x", -8]}},
+    "die": {
+      "bilder": 8,
+      "verlauf": {"becken": ["x", -75], "arm_stab": ["y", 50], "arm_schild": ["y", -40], "kopf": ["x", -25]}
+    },
+    "shield": {
+      "bilder": 4,
+      "verlauf": {"arm_schild": [["y", 45], ["x", -25]], "rumpf": ["x", 8], "kopf": ["x", 8]}
+    },
+    "summon": {
+      "bilder": 5,
+      "basis": "shield",
+      "bogen": {"arm_stab": [["x", -80], ["y", 30]], "kopf": ["x", -14]}
+    }
+  },
+  "requisiten": [],
+  "splitterBis": 60,
+  "stil": {"saettigung": 1.45, "helligkeit": 1.7, "eigenlicht": 0.45, "kontur": 0.006}
+}
