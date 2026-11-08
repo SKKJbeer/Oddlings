@@ -31,12 +31,14 @@ final class TowerGroundingTests: XCTestCase {
         }
     }
 
-    func testTowerIsLitLikeItsBattlefield() {
+    func testTowerIsLitLikeItsBattlefield() throws {
         let light = SKColor(red: 0.8, green: 0.85, blue: 0.9, alpha: 1)
         let node = TowerNode(tower: watch, field: 40, light: light)
         let sprite = node.art.children.compactMap { $0 as? SKSpriteNode }.first
         XCTAssertEqual(sprite?.colorBlendFactor, 1)
-        XCTAssertEqual(sprite?.color, light)
+        // SpriteKit hält die Farbe in einem eigenen Farbraum; gleich aussehende
+        // Farben sind dann nicht mehr `==`, also Kanal für Kanal vergleichen.
+        assertSameColor(try XCTUnwrap(sprite).color, light)
 
         let plain = TowerNode(tower: watch, field: 40)
         XCTAssertEqual(plain.art.children.compactMap { $0 as? SKSpriteNode }.first?.colorBlendFactor, 0)
@@ -138,5 +140,16 @@ final class TowerGroundingTests: XCTestCase {
         scene.controller = BattleController(model: model, interactive: false)
         scene.frame(after: 0.03)
         XCTAssertFalse(scene.zonesShown)
+    }
+
+    private func assertSameColor(_ a: SKColor, _ b: SKColor, file: StaticString = #filePath, line: UInt = #line) {
+        XCTAssertEqual(channels(a), channels(b), file: file, line: line)
+    }
+
+    /// Kanäle auf drei Stellen gerundet, damit Farbraum-Rauschen nicht zählt.
+    private func channels(_ color: SKColor) -> [Int] {
+        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+        XCTAssertTrue(color.getRed(&r, green: &g, blue: &b, alpha: &a))
+        return [r, g, b, a].map { Int(($0 * 1000).rounded()) }
     }
 }
