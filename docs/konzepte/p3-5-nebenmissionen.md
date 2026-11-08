@@ -7,7 +7,7 @@ N2 ab 15 Sternen; „Sterne öffnen Nebenmissionen, nie Hauptmissionen“; D-027
 Frage“), [R-6 Avatarrang](r-6-avatarrang.md) (Region 1 = 27 Sterne),
 [R-Spielrahmen](r-spielrahmen.md) (Platzhalternamen „Nebenmission 1/2“).
 
-**Nur Konzept.** Gebaut wird erst nach Steffens Antworten auf die Karten S18 bis S20.
+**Nur Konzept.** Gebaut wird erst nach Steffens Antworten auf die Karten S21 bis S23.
 
 ## Ziel
 
@@ -20,7 +20,7 @@ Was sie nicht sind: kein Eisern-Modus. Der Eisern-Modus (E9) ist eine Einschrän
 **je Mission** nach dem ersten Sieg und bleibt ein eigener Kandidat. N1 und N2 sind zwei
 eigene Missionen mit eigener Sonderregel, eigenen Sternen und eigenem Ort auf der Karte.
 
-## Sonderregel [VORSCHLAG, Karte S18]
+## Sonderregel [VORSCHLAG, Karte S21]
 
 Empfehlung: **je Nebenmission eine andere Art Einschränkung, beide nur aus Daten**.
 
@@ -46,7 +46,7 @@ Andere Wege, auf der Karte zur Wahl:
   Pause; Festung mit einem Leben). Mehr Auftritt, braucht neue Regeln in der Simulation,
   neue Darstellung und eigene Tests. „Ein Leben“ macht Sterne sinnlos (alle oder keiner).
 
-## Ort und Karte [VORSCHLAG, Karte S19]
+## Ort und Karte [VORSCHLAG, Karte S22]
 
 Empfehlung: **bekannte Kampfplätze mit neuem Weg**. N1 auf dem Kampfplatz von M1, N2 auf
 dem von M3, je mit einem neuen Wegverlauf aus dem Wegwerkzeug (wie D-081).
@@ -59,7 +59,7 @@ Andere Wege: **genau dieselbe Karte wie M1/M3** (noch weniger Arbeit, aber Wiede
 fühlt sich wie Strafe an) oder **zwei neue Kampfplätze** (am schönsten, bindet den
 Grafik-Thread für zwei Bilder; verschiebt P3-5 um dessen Dauer).
 
-## Belohnung [VORSCHLAG, Karte S20]
+## Belohnung [VORSCHLAG, Karte S23]
 
 Empfehlung: **drei Sterne und Erz wie jede Mission, dazu ein Banner für den Avatar beim
 ersten Sieg**.
@@ -81,7 +81,7 @@ Vorteil verteilen, den Hauptmissions-Spieler nicht bekommen).
   auf sie. Namen bleiben Platzhalter, bis Steffen sie nennt.
 - Sonderregel sichtbar machen: vor dem Start eine Zeile auf der Missionstafel
   („Nur Wachturm und Sporenturm“), im Bauen-Kreismenü nur die erlaubten Türme.
-- Banner nur, wenn S20 so entschieden wird.
+- Banner nur, wenn S23 so entschieden wird.
 
 **Nicht drin:** Eisern-Modus je Mission (E9), tägliche Herausforderung (E10), neue
 Gegner, neue Turmarten, Ranglisten.

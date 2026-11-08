@@ -58,7 +58,7 @@ Spieltest läuft parallel. Nach R-7a kommt Mission 3 mit Aufwertungen (D-085, 02
 | 11 | ~~P3-2 **Mission 5b „Ruinen“** mit Falkenhorst, Funkensäule, Fäulnis~~ ([Konzept](../konzepte/p3-2-ruinen-spezialisierungen.md), D-078) | Haupt-Thread | 10 | ✓ 0.26.0 |
 | 12 | ~~P3-3 **Wahl zwischen zwei Spezialisierungen, Mission 6a und 6b**~~ ([Konzept](../konzepte/p3-3-wahl-zwischen-spezialisierungen.md), S15, S16, D-079); gemalte Kampfplätze M6 folgen (Grafik 08) | Haupt-Thread | 11 | ✓ 0.27.0 |
 | 13 | ~~P3-4 **Mission 7, der Moorkönig**~~ ([Konzept](../konzepte/p3-4-mission-7-boss.md), S17, D-090): Schild und Ruf bei halbem Leben, Ende von Region 1; gemalter Boss und Kampfplatz folgen (Grafik-Thread), eigene Bossmusik (Ton-Thread) | Haupt-Thread | 12 | ✓ 0.28.0 |
-| 14 | P3-5 **Nebenmissionen N1 und N2** ([Konzept](../konzepte/p3-5-nebenmissionen.md), S18 Sonderregel, S19 Ort, S20 Belohnung): Konzept liegt, Karten bei Steffen; Bau danach als 0.29.0 | Haupt-Thread | 13 | Konzept |
+| 14 | P3-5 **Nebenmissionen N1 und N2** ([Konzept](../konzepte/p3-5-nebenmissionen.md), S21 Sonderregel, S22 Ort, S23 Belohnung): Konzept liegt, Karten bei Steffen; Bau danach als 0.29.0 | Haupt-Thread | 13 | Konzept |
 | 9 | ~~P2-10 **Mission 4 „Ruinenrand“**~~ ([Konzept](../konzepte/p2-10-mission-4-ruestung.md)): Panzerbestie mit Rüstung (K7, S8, D-087), Weg aus D-081 | Mission 3 mit Aufwertungen bauen | 7 | ✓ 0.20.0 |
 
 ## Ausgeliefert
