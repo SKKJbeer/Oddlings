@@ -61,7 +61,7 @@ final class CampaignE2ETests: XCTestCase {
         XCTAssertEqual(e2e.app.staticTexts["map.panel.status"].label, "Ab 6 Sternen, du hast 0")
         XCTAssertFalse(e2e.mapStart.isEnabled)
         e2e.node("m7").tap()
-        XCTAssertEqual(e2e.app.staticTexts["map.panel.title"].label, "Mission 7")
+        XCTAssertEqual(e2e.app.staticTexts["map.panel.title"].label, "Der Moorkönig")
         XCTAssertEqual(e2e.app.staticTexts["map.panel.status"].label, "Erst nach Sumpfpfad II oder Ruinen II")
     }
 }

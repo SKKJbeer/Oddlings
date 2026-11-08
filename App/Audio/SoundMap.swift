@@ -38,6 +38,12 @@ enum SoundMap {
         case .wallFell: [Request(cue: .wallDown)]
         // Leise Münze statt eigenem Klang: Gold kommt herein, wie beim Sturz.
         case .bankPaid, .earlyCallBonus: [Request(cue: .coin)]
+        // Boss (P3-4): keine neuen Klänge, bis der Ton-Thread sie liefert. Alles
+        // tiefer, damit es nach dem König klingt und nicht nach dem Spieler.
+        case .bossArrived: [Request(cue: .wave, semitones: AudioStyle.bossSemitones)]
+        case .bossShield: [Request(cue: .wallUp, semitones: AudioStyle.bossSemitones)]
+        case .bossSummon: [Request(cue: .abilityCast, semitones: AudioStyle.bossSemitones)]
+        case .bossShieldDown: [Request(cue: .wallDown, semitones: AudioStyle.bossSemitones)]
         case .user(let action): [Request(cue: cue(for: action))]
         }
     }

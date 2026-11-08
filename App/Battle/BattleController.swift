@@ -71,6 +71,8 @@ final class BattleController {
     private(set) var limitWarnings = 0
     /// Steigt mit jeder Aufwertung, für Tests und die Ergebnistafel.
     private(set) var towersUpgraded = 0
+    /// Leiste oben, solange ein Boss auf dem Weg ist (P3-4); nil ohne Boss.
+    private(set) var boss: BossStatus?
 
     /// Rückmeldung an den Finger. Austauschbar, damit Tests mitschreiben können.
     @ObservationIgnored var haptics: @MainActor (Haptic) -> Void
@@ -538,6 +540,8 @@ final class BattleController {
         if shownTower != tower { shownTower = tower }
         if gold != state.gold { gold = state.gold }
         if lives != state.fortressLives { lives = state.fortressLives }
+        let bossNow = BossStatus(state: state, config: model.sim.config)
+        if boss != bossNow { boss = bossNow }
         if let ability = model.sim.config.ability {
             let total = Double(model.sim.ticks(ability.cooldown))
             let left = Double(max(0, state.ability.readyTick - state.tick))
@@ -563,4 +567,23 @@ final class BattleController {
             secondsToNextWave = seconds
         }
     }
+}
+
+/// Was die Bossleiste zeigt (P3-4). In Hundertsteln, damit die Leiste nicht in
+/// jedem Bild neu zeichnet; die Schwelle des Schilds steht als Strich darauf.
+struct BossStatus: Equatable {
+    var fraction: Double
+    var shieldAt: Double
+    var shielded: Bool
+
+    /// Der erste Boss auf dem Weg; nil, wenn keiner da ist.
+    init?(state: GameState, config: BalanceConfig) {
+        guard let enemy = state.enemies.first(where: { config.enemies[$0.kind]?.boss != nil }),
+              let rules = config.enemies[enemy.kind]?.boss else { return nil }
+        fraction = (max(0, min(1, enemy.hp / enemy.maxHP)) * 100).rounded(.up) / 100
+        shieldAt = rules.shieldAt
+        shielded = enemy.shieldUntilTick != nil
+    }
+
+    var percent: Int { Int((fraction * 100).rounded()) }
 }

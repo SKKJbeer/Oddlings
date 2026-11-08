@@ -432,6 +432,33 @@ liegen die Elfen höher: „Mix mit Aufwertung“ +0,12, „Mix ohne Aufwertung�
 Mit dem Mondmal vor der Rüstung waren es +0,15; deshalb rechnet die Simulation
 erst die Rüstung, dann das Mal (02). Bemerkt, nicht weiter geändert, wie in M3.
 
+### Mission 7 – der Moorkönig, Ergebnis der Prüfung (0.28.0) [HYPOTHESE]
+
+Werte in `mission-07.json`: Startgold 290, zehn Wellen, Flitzer und Panzerbestien
+gemischt (Lebenspunkte ×0,74 gegenüber M6), alle sechs Spezialisierungen wie M6. Der
+Moorkönig hat 4000 Leben, Tempo 0,35, Rüstung 14 (Mindestanteil 0,3), Verlangsamung
+halb, Schild bei der Hälfte für 10 s, ruft alle 1,5 s acht Flitzer mit vollem Leben.
+Er kommt in der letzten Welle, mit 20 Flitzern und 8 Panzerbestien hinter sich.
+
+Abgestimmt in dieser Reihenfolge: Erst verloren auch gute Mischungen früh, dann gewannen
+reine Falkenhorste und reiner Einzelschaden. Weniger Leben der Wellen, mehr Startgold,
+mehr Rüstung am König und mehr Gerufene in kürzerem Takt trennen beides.
+
+Ohne Volk (`MissionSevenTests`, Reserve): freie Wahl 1,29, Ruinen-Mischung 1,34, Fäulnis
+mit Falkenhorsten 1,43, Gewitterkronen mit Fäulnis 1,39 gewinnen. „Nur Einzelschaden“
+(0,92, König bis auf 24 % herunter) und „Nur Gruppenschaden“ (0,52, König nie unter den
+Schild) verlieren am Boss, ebenso alle Monokulturen und die Sumpf-Mischung (0,90).
+
+Labor, Stufe pr:
+
+| Mission | Zwerge | Elfen | Menschenbot |
+|---|---|---|---|
+| M7 | Mix mit Ruinen-Spezialisierungen 1,48 vor Fäulnis mit Falkenhorsten 1,42 (0,07) | Gewitterkronen mit Fäulnis 1,81 vor Fäulnis mit Falkenhorsten 1,50 (0,30) | 42 % (Ziel 40 %) |
+
+**Offen für den Spieltest:** Ob sich der Schild wie ein Auftritt anfühlt oder wie eine
+Pause, und ob zehn Sekunden zu lang sind. Elfen liegen mit 0,30 nahe an der Grenze 0,35.
+Der Zufallsbot gewinnt nie (Warnung, wie M4, M5b und M6b).
+
 ### Mission 6a und 6b – Wahl zwischen zwei Spezialisierungen, Ergebnis der Prüfung (0.27.0) [HYPOTHESE]
 
 Werte in `mission-06a.json` (Sumpfpfad II, Flitzer vorn) und `mission-06b.json` (Ruinen

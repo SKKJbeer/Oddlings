@@ -161,6 +161,14 @@ enum BattleTexts {
     }
     /// Beim ersten gepanzerten Gegner einer Mission (P2-10).
     static let armorHint = "Gepanzert: Steine schlagen durch"
+    /// Boss (P3-4). Der Satz zum Schild sagt, was jetzt zählt: die Gerufenen.
+    static let bossName = "Moorkönig"
+    static let bossArrives = "Der Moorkönig kommt!"
+    static let bossShield = "Schild! Er ruft Verstärkung."
+    static let bossShieldDown = "Schild fällt"
+    static func bossHealth(percent: Int, shielded: Bool) -> String {
+        shielded ? "\(percent) Prozent, Schild steht" : "\(percent) Prozent Leben"
+    }
     /// Sporenfunke (E2, P2-8): Blitz trifft ein verlangsamtes Ziel.
     static let sparkWord = "Sporenfunke!"
     /// Einmal je Gerät unter dem ersten Funken (K8). Beschreibt die Regel, verspricht keinen Bonus.

@@ -26,6 +26,14 @@ enum BattleSprites {
         level >= 2 ? "tower_\(kind.rawValue)_\(level)" : towerName(kind)
     }
     static func enemyName(_ kind: EnemyKind) -> String { "enemy_\(kind.rawValue)" }
+    /// Wer einspringt, solange eine Art kein eigenes Bild hat (P3-4): Der
+    /// Moorkönig ist bis zum Bild des Grafik-Threads eine große, umgefärbte Panzerbestie.
+    static func standIn(for kind: EnemyKind) -> EnemyKind? { kind == .moorKing ? .brute : nil }
+    /// Name des Bildes, das wirklich geladen wird.
+    static func pictureName(_ kind: EnemyKind) -> String {
+        if texture(named: enemyName(kind)) == nil, let other = standIn(for: kind) { return enemyName(other) }
+        return enemyName(kind)
+    }
     static let fortressName = "fortress"
     /// `mission-01` → `map_mission01_ground`.
     static func groundName(missionID: String) -> String {
@@ -107,7 +115,7 @@ enum BattleSprites {
 
     static func enemyBody(_ kind: EnemyKind, field: CGFloat) -> SKNode {
         let height = BattleStyle.enemyHeight(kind) * field
-        if let texture = frames(kind, .walk).first ?? texture(named: enemyName(kind)) {
+        if let texture = frames(kind, .walk).first ?? texture(named: pictureName(kind)) {
             let sprite = SKSpriteNode(texture: texture)
             sprite.anchorPoint = CGPoint(x: 0.5, y: 0.1)
             sprite.size = CGSize(width: height, height: height)
@@ -157,6 +165,13 @@ final class EnemyNode: SKNode {
     var lastHit: Double = -.infinity
     /// Effekt-Uhr des letzten Funkens an der Panzerung (P2-10), eigene Grenze.
     var lastArmorSpark: Double = -.infinity
+    /// Der Boss (P3-4) zeigt sein Leben in der Kopfleiste, nicht über dem Kopf.
+    let isBoss: Bool
+    /// Kuppel, solange der Schild des Bosses steht.
+    private let shieldDome = SKSpriteNode()
+    private var shieldTime: Double = 0
+    /// Grundfärbung der Ersatzfigur (`standIn`), 0 bei eigenem Bild.
+    private let baseTint: CGFloat
     /// Schild neben der Lebensleiste, nur bei Gegnern mit Rüstung (E3, P2-10).
     private(set) var armorBadge: SKShapeNode?
     var isArmored: Bool { armorBadge != nil }
@@ -176,9 +191,11 @@ final class EnemyNode: SKNode {
     private let healthWidth: CGFloat
     private var shownFraction: Double = 1
 
-    init(enemy: Enemy, field: CGFloat, armored: Bool = false) {
+    init(enemy: Enemy, field: CGFloat, armored: Bool = false, boss: Bool = false) {
         enemyID = enemy.id
         kind = enemy.kind
+        isBoss = boss
+        baseTint = BattleSprites.pictureName(enemy.kind) == BattleSprites.enemyName(enemy.kind) ? 0 : FxStyle.standInTint
         body = BattleSprites.enemyBody(enemy.kind, field: field)
         walkFrames = BattleSprites.frames(enemy.kind, .walk)
         hitFrames = BattleSprites.frames(enemy.kind, .hit)
@@ -215,6 +232,19 @@ final class EnemyNode: SKNode {
         motion.addChild(reaction)
         reaction.addChild(body)
         if let flash { reaction.addChild(flash) }
+        if let sprite = body as? SKSpriteNode, baseTint > 0 {
+            sprite.color = FxStyle.enemyColor(enemy.kind)
+            sprite.colorBlendFactor = baseTint
+        }
+        shieldDome.texture = FxTextures.texture(.glow)
+        shieldDome.color = FxStyle.shieldColor
+        shieldDome.colorBlendFactor = 1
+        shieldDome.blendMode = .add
+        shieldDome.size = CGSize(width: height * FxStyle.shieldWidth, height: height * FxStyle.shieldWidth)
+        shieldDome.position = CGPoint(x: 0, y: height * 0.5)
+        shieldDome.isHidden = true
+        shieldDome.name = "boss.shield"
+        addChild(shieldDome)
 
         let barHeight = BattleStyle.healthHeight * field
         health.color = BattleStyle.healthBack
@@ -311,13 +341,18 @@ final class EnemyNode: SKNode {
     func show(_ enemy: Enemy, dt: Double = 0, stunned: Bool = false) {
         let fraction = max(0, min(1, enemy.hp / enemy.maxHP))
         shownFraction = FxMath.lag(shownFraction, towards: fraction, dt: dt, rate: FxStyle.healthLagRate)
-        health.isHidden = fraction >= 1
+        health.isHidden = isBoss || fraction >= 1
         healthFill.size.width = healthWidth * CGFloat(fraction)
         healthLag.size.width = healthWidth * CGFloat(shownFraction)
         let slowed = enemy.slow != nil
         if let sprite = body as? SKSpriteNode {
-            sprite.color = FxStyle.slowTint
-            sprite.colorBlendFactor = slowed ? FxStyle.slowTintFactor : 0
+            sprite.color = slowed ? FxStyle.slowTint : FxStyle.enemyColor(kind)
+            sprite.colorBlendFactor = slowed ? FxStyle.slowTintFactor : baseTint
+        }
+        shieldDome.isHidden = enemy.shieldUntilTick == nil
+        if !shieldDome.isHidden {
+            shieldTime += dt
+            shieldDome.alpha = FxStyle.shieldAlpha * CGFloat(0.8 + 0.2 * sin(shieldTime * FxStyle.shieldBreath))
         }
         slowAura.isHidden = !slowed
         if slowed {
@@ -343,6 +378,11 @@ final class EnemyNode: SKNode {
             }
         }
     }
+
+    /// Für die Darstellungstests: ob die Schildkuppel steht.
+    var showsShield: Bool { !shieldDome.isHidden }
+    /// Für die Darstellungstests: ob der Lebensbalken über dem Kopf zu sehen ist.
+    var showsHealth: Bool { !health.isHidden }
 
     /// Für die Darstellungstests: ob Sternchen kreisen.
     var showsStun: Bool { !stars.isHidden }

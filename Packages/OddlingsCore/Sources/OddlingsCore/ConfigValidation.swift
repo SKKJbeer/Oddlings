@@ -48,6 +48,8 @@ public struct ConfigIssue: Hashable, Sendable, CustomStringConvertible {
         case specializationNeedsUpgrade  // Stufe 3 ohne Stufe 2 für diesen Turm
         case emptySpecialization       // Spezialisierung ohne jede Wirkung
         case strategyNeedsSpecialization // Bauweise spezialisiert, die Mission bietet es nicht an
+        case bossSummonsBoss           // ein Boss darf keinen Boss rufen
+        case tooManyBossesInWave       // höchstens ein Boss je Welle
     }
 
     public init(field: String, rule: Rule) {
@@ -87,6 +89,8 @@ public struct ConfigIssue: Hashable, Sendable, CustomStringConvertible {
         case .specializationNeedsUpgrade: "\(field) braucht eine Aufwertung auf Stufe 2 für diesen Turm"
         case .emptySpecialization: "\(field) braucht scale, targets, extraJumps, keepsDamageOnSlowed oder vulnerableFactor"
         case .strategyNeedsSpecialization: "\(field) spezialisiert, die Mission bietet es nicht an"
+        case .bossSummonsBoss: "\(field) ruft einen Boss oder einen Gegner ohne Werte"
+        case .tooManyBossesInWave: "\(field) hat mehr als einen Boss"
         case .starsOutOfOrder: "\(field) braucht 0 < two ≤ three ≤ fortressLives"
         case .invalidID: "\(field) darf nur Kleinbuchstaben, Ziffern und Bindestriche enthalten"
         case .duplicateID: "\(field) ist doppelt vergeben"
@@ -241,6 +245,22 @@ extension BalanceConfig {
             default:
                 found.append(.init(field: field, rule: .armorNeedsBothValues))
             }
+            if let scale = enemy.slowScale { fraction(scale, "\(field).slowScale") }
+            if let boss = enemy.boss {
+                fraction(boss.shieldAt, "\(field).boss.shieldAt")
+                if boss.shieldAt >= 1 { found.append(.init(field: "\(field).boss.shieldAt", rule: .mustBeFraction)) }
+                positive(boss.shieldDuration, "\(field).boss.shieldDuration")
+                positive(boss.summonEvery, "\(field).boss.summonEvery")
+                positive(Double(boss.summonCount), "\(field).boss.summonCount")
+                positive(boss.summonHPScale, "\(field).boss.summonHPScale")
+                if enemies[boss.summon] == nil || enemies[boss.summon]?.boss != nil {
+                    found.append(.init(field: "\(field).boss.summon", rule: .bossSummonsBoss))
+                }
+            }
+        }
+        for (index, wave) in waves.enumerated() {
+            let bosses = wave.groups.filter { enemies[$0.enemy]?.boss != nil }.reduce(0) { $0 + $1.count }
+            if bosses > 1 { found.append(.init(field: "waves[\(index)]", rule: .tooManyBossesInWave)) }
         }
 
         if let ability { found += ability.issues(field: "ability") }

@@ -19,6 +19,8 @@ enum SoundMoment: Equatable, Sendable {
     case wallRaised, wallFell
     /// Zwergenbank zahlt aus bzw. frühes Rufen schreibt Gold gut (P2-5).
     case bankPaid, earlyCallBonus
+    /// Boss (P3-4): Auftritt, Schild, Ruf, Schild fällt.
+    case bossArrived, bossShield, bossSummon, bossShieldDown
     case user(UserAction)
 }
 

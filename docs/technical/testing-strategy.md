@@ -100,6 +100,7 @@ Status: **gilt**, umgesetzt bis 0.12.0; Ende-zu-Ende-Tests **[ENTSCHIEDEN D-029]
 - Seit P3-1 (0.25.0): `SpecializationTests` (nur aus Stufe 2, nur angeboten, nur einmal, Gold und Erlös, Werte von Stufe 2 aus, Salve trifft zwei Ziele nach Zielwahl, Gewitterkrone ohne Abfall auf verlangsamten Zielen, Bauweisen, Prüfung beim Laden, Fortsetzen) und `MissionFiveATests` (je Turm eine Spezialisierung, Flitzer in der Mehrheit, Weg = Vorschlag, Monokulturen verlieren, Spezialisieren hebt die Mischung, Völker). App: `SpecializationControllerTests`.
 - Seit P3-2 (0.26.0): `RuinSpecializationTests` (Fäulnis macht Verlangsamte so lange verwundbar, stapelt nicht mit dem Mondmal, Sporen ohne Fäulnis markieren nicht, Funkensäule, Falkenhorst, Prüfung beim Laden) und `MissionFiveBTests` (Ruinen-Spezialisierungen, Panzerbestien prägen die Mission, Weg = Vorschlag, Monokulturen verlieren, Spezialisieren und jede Spezialisierung zählen, Völker). App: `SpecializationControllerTests` bietet in M5b die anderen drei an.
 - Seit P3-3 (0.27.0): `MissionSixTests` (je für 6a und 6b: je Turm zwei Spezialisierungen, Krone ohne Sporen-Vorteil, Weg = Vorschlag, freie Wahl und beide Mischungen gewinnen, Monokulturen verlieren, die passende Mischung liegt vorn, keine Kombination mehr als 0,3 vor der besten Mischung, Determinismus, Völker); `CampaignTests` und `AppFlowTests` öffnen M6a/M6b. App: `SpecializationControllerTests` (zwei Sterne, Aufwerten tut nichts, Vorschau wechselt, zweites Tippen auf denselben kauft, Warnung ohne Gold).
+- Seit P3-4 (0.28.0): `BossTests` (Schild an der Schwelle im selben Tick, kein Schaden und kein Laufen mit Schild, Ruf im Takt mit Kennungen und Leben, Schild fällt nach der Zeit, halbe Verlangsamung, Steinregen nur außerhalb des Schilds, Durchbruch verliert, Determinismus, alter Zustand lädt, jede Prüfregel einzeln); `MissionSevenTests` (ein Boss in der letzten Welle, Weg = Vorschlag, Mischungen gewinnen, reine Gruppen- und reine Einzelziel-Bauweise erreichen den Boss und verlieren an ihm, Monokulturen verlieren, keine Kombination mehr als 0,3 vor der besten Mischung, Determinismus, Völker); `CampaignTests` und `AppFlowTests` öffnen M7 nach M6a oder M6b. App: `BossAppTests` (Leiste oben statt über dem Kopf, Kuppel mit dem Schild, Ruf in der Szene), `SoundMapTests`, `FeedbackPlayerTests`.
 - Seit P2-2 (0.22.0): `SuspendedBattleTests` (gesichert, über die Datei gelesen und
   weitergespielt endet mit derselben Prüfsumme wie ohne Unterbrechung; voller Zustand
   unter 512 KB; Migration 2 → 3; unlesbarer Zustand und unbekannter Knoten kosten nur
@@ -145,12 +146,13 @@ Umgesetzt ab Version 0.5.1; Aufbau und Grundsätze: [e2e-tests.md](../konzepte/e
 | `AbilityE2ETests` | 2 | Fähigkeit auf den Weg, Abklingzeit, Knopf verschwindet am Missionsende |
 | `EffectsE2ETests` | 1 | Vorführung spielt jede Effektart (FX 01), auch Sporenfunke und „Sporenfunke!“ (P2-8) |
 | `GuideE2ETests` | 3 | Mission 1 frisch: Hand erst beim Zögern, nach dem ersten Turm der Pfeil, nach dem Rufen nichts; nach Neustart der App keins mehr; Schalter aus zeigt nichts; Schalter „Hinweise“ in den Einstellungen (`guide.state`, P2-8) |
+| `BossE2ETests` | 1 | Mission 7 mit `--e2e-bosswelle`: die Lebensleiste des Moorkönigs erscheint mit seinem Auftritt (P3-4) |
 | `SoundE2ETests` | 2 | Menümusik, Vorführung spielt jede Klanggruppe mit Kampfmusik und ohne Bedientöne, Lautstärkeregler überstehen Neustart (P2-3) |
 
 **Testschalter** (nur Debug-Bau, ändern keine Regel): `--play` (Mission direkt),
 `--demo`, `--e2e-frisch` (leerer Speicher, Hinweise des Einstiegs zurückgesetzt), `--e2e-ohne-hinweise` (Schalter „Hinweise“ aus), `--e2e-speicher`, `--e2e-avatar <volk>`
 (fertiger Avatar), `--e2e-volle-sterne`, `--e2e-erz N` (Erz für die Schmiede), `--e2e-knoten <id>` (mit `--play`: diese Mission statt M1), `--e2e-erste-welle` (erste Welle gehalten),
-`--e2e-zeitraffer N`, `--e2e-abklingzeit`, `--e2e-mitspieler`, `--e2e-fx`, `--e2e-ton` (Tonzähler `audio.stats`),
+`--e2e-zeitraffer N`, `--e2e-abklingzeit`, `--e2e-bosswelle` (nur die letzte Welle, P3-4), `--e2e-mitspieler`, `--e2e-fx`, `--e2e-ton` (Tonzähler `audio.stats`),
 `--fx-messung`. Ein neuer Schalter kommt hier in die Liste.
 
 **Was sie prüfen.** Nicht einzelne Regeln (das tun die Paket-Tests), sondern dass

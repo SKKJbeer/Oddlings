@@ -11,7 +11,25 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.27.0 – 03.11.2026 (P3-3: Wahl zwischen zwei Spezialisierungen, Mission 6a und 6b)
+## 0.28.0 – 03.11.2026 (P3-4: Mission 7, der Moorkönig)
+
+- **Mission 7 „Der Moorkönig“** ist spielbar und schließt Region 1 ab. Offen nach
+  Sumpfpfad II **oder** Ruinen II, Weg vom Grafik-Thread (Hufeisen um die Bosslichtung).
+  Alle sechs Spezialisierungen stehen zur Wahl. Werte [HYPOTHESE].
+- **Der Boss** (Empfehlung zu Karte S17): langsam, gepanzert, Verlangsamung wirkt nur halb.
+  Bei halbem Leben bleibt er stehen und hebt einen Schild: Er nimmt keinen Schaden und
+  ruft im Takt Flitzer an seiner Stelle. Danach fällt der Schild. Läuft er durch, ist die
+  Mission verloren. Wer nur Gruppen- oder nur Einzelschaden baut, verliert an ihm.
+- **Darstellung:** Lebensleiste des Bosses oben über der Karte mit Strich an der
+  Schildschwelle, Kuppel während des Schilds, Banner beim Auftritt und beim Schild, grüner
+  Dunst beim Ruf, tiefe Klänge aus dem Vorhandenen. Bis der Moorkönig gemalt ist, steht
+  eine große, umgefärbte Panzerbestie für ihn.
+- Kampagne: Weiter führt nach Mission 6 zum Moorkönig und bleibt nach dem Sieg dort.
+- Tests: `BossTests`, `MissionSevenTests`, `CampaignTests`, `AppFlowTests`,
+  `BossAppTests`, `SoundMapTests`, `FeedbackPlayerTests`, `BossE2ETests`. Labor ohne neue
+  Verletzung, Menschenbot 42 % bei Ziel 40 %.
+
+## 0.27.0 – 03.11.2026 (P3-3: Wahl zwischen zwei Spezialisierungen, Mission 6a und 6b) · Bau 50
 
 - **Mission 6a „Sumpfpfad II“ und 6b „Ruinen II“** sind spielbar, Wege vom Grafik-Thread.
   Jeder Turm bietet hier beide Spezialisierungen: Salve oder Falkenhorst, Gewitterkrone oder

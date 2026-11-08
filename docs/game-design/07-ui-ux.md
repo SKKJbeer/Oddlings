@@ -389,6 +389,10 @@ Goldanzeige auf; VoiceOver liest „Nächste Welle · 25 s · +12 Gold“.
 | Bank zahlt aus | „+10" steigt auf, Münzen zum Zähler | leises Klimpern, gedrosselt | keine |
 | Fähigkeit bereit | zwei Pulse am Knopf | heller Ton | keine |
 | Steinregen | Schatten, Einschlag, Staub | Grollen, Einschlag | Stoß schwer |
+| Boss erscheint (P3-4) | Banner „Der Moorkönig kommt!“, Lebensleiste oben über der Karte statt über dem Kopf, Strich an der Schildschwelle | Wellenklang tiefer | keine |
+| Boss hebt den Schild | Kuppel um ihn, Leiste färbt sich, Banner „Schild! Er ruft Verstärkung.“ | Mauer, tiefer | Stoß schwer |
+| Boss ruft | grüner Dunst an seiner Stelle, die Gerufenen erscheinen wie jeder Gegner | Wirken, tiefer, gedrosselt | keine |
+| Schild fällt | Kuppel weg, Hinweis „Schild fällt“ | Mauer fällt, tiefer | keine |
 
 Haptik nur für eigene Handlungen (K9); eine Bank, die von selbst zahlt, vibriert
 nicht.

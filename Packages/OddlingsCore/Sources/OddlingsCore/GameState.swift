@@ -102,6 +102,10 @@ public struct Enemy: Codable, Equatable, Sendable {
     public var stunUntilTick: Int? = nil
     /// Mondmal: nimmt mehr Schaden; nil, sobald es abgelaufen ist.
     public var vulnerable: VulnerableEffect? = nil
+    /// Boss (P3-4): Schild steht bis zu diesem Tick; nil ohne Schild.
+    public var shieldUntilTick: Int? = nil
+    /// Boss (P3-4): Der Schild ist verbraucht, es gibt nur einen.
+    public var shieldSpent: Bool? = nil
 
     /// Öffentlich für die Darstellungstests der App; die Simulation legt
     /// Gegner sonst selbst an.
@@ -241,4 +245,12 @@ public enum Event: Equatable, Sendable {
     case towerUpgraded(id: Int, level: Int)
     /// Ein Turm nimmt ab jetzt seine Ziele nach `mode`.
     case targetModeChanged(id: Int, mode: TargetMode)
+    /// Der Boss bleibt stehen und hebt den Schild bis `untilTick` (P3-4).
+    case bossShieldRaised(id: Int, untilTick: Int)
+    /// Der Boss ruft; `summoned` sind die neuen Gegner in Zustandsreihenfolge.
+    case bossSummoned(id: Int, summoned: [Int])
+    /// Der Schild ist gefallen, der Boss läuft weiter.
+    case bossShieldDropped(id: Int)
+    /// Der Schild hat einen Treffer ganz geschluckt.
+    case shieldAbsorbed(id: Int)
 }

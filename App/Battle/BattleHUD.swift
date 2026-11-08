@@ -93,6 +93,40 @@ struct BattleTopBar: View {
     }
 }
 
+/// Lebensleiste des Bosses oben über der Karte (P3-4), statt über seinem Kopf:
+/// So bleibt sie im Getümmel lesbar. Der Strich zeigt, wo der Schild steigt.
+struct BossBar: View {
+    let status: BossStatus
+
+    var body: some View {
+        VStack(spacing: 3) {
+            Text(BattleTexts.bossName)
+                .font(UITheme.display(15))
+                .foregroundStyle(UITheme.cream)
+            GeometryReader { box in
+                ZStack(alignment: .leading) {
+                    Capsule().fill(UITheme.outline)
+                    Capsule()
+                        .fill(status.shielded ? Color(uiColor: FxStyle.shieldColor) : UITheme.heart)
+                        .frame(width: box.size.width * status.fraction)
+                    Rectangle()
+                        .fill(UITheme.cream)
+                        .frame(width: 2)
+                        .offset(x: box.size.width * status.shieldAt - 1)
+                    Capsule().strokeBorder(UITheme.outline, lineWidth: UITheme.line)
+                }
+            }
+            .frame(width: BattleStyle.bossBarWidth, height: BattleStyle.bossBarHeight)
+        }
+        .padding(.top, BattleStyle.hudMargin)
+        .allowsHitTesting(false)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(BattleTexts.bossName)
+        .accessibilityValue(BattleTexts.bossHealth(percent: status.percent, shielded: status.shielded))
+        .accessibilityIdentifier("hud.boss")
+    }
+}
+
 /// Holzkapsel der Leiste mit dunkler Kontur.
 private struct BarBackground: View {
     var fill: Color = UITheme.wood

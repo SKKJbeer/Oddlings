@@ -28,6 +28,8 @@ final class FxDirector {
         var armorSparks = 0, armorHints = 0
         /// „Sporenfunke!“ über dem Ziel und davon die mit Satz; Hände des Einstiegs (P2-8).
         var callouts = 0, sentences = 0, guides = 0
+        /// Rufe des Bosses (P3-4).
+        var summons = 0
 
         var summary: String {
             "arrows=\(arrows) bolts=\(bolts) combos=\(combos) spores=\(spores) hits=\(hits) deaths=\(deaths) "
@@ -35,7 +37,7 @@ final class FxDirector {
                 + "casts=\(casts) impacts=\(impacts) walls=\(walls) flinches=\(flinches) falls=\(falls) dropped=\(dropped)"
                 + " payouts=\(payouts) empties=\(empties) upgrades=\(upgrades)"
                 + " armorSparks=\(armorSparks) armorHints=\(armorHints)"
-                + " callouts=\(callouts) sentences=\(sentences) guides=\(guides)"
+                + " callouts=\(callouts) sentences=\(sentences) guides=\(guides) summons=\(summons)"
         }
     }
 
@@ -266,6 +268,14 @@ final class FxDirector {
             sparks(at: at, count: 4, color: FxStyle.armorSpark, speed: 2.2, size: 0.18)
         }
         return true
+    }
+
+    /// Der Boss ruft (P3-4): grüner Dunst steigt an seiner Stelle auf. Die
+    /// Gerufenen erscheinen mit ihrem eigenen Auftritt (`spawn`).
+    func summon(_ boss: EnemyNode) {
+        stats.summons += 1
+        let at = CGPoint(x: boss.position.x, y: boss.position.y + boss.height * 0.3)
+        sparks(at: at, count: FxStyle.summonSparks, color: FxStyle.summonColor, speed: 1.6, size: 0.3)
     }
 
     /// Beim ersten gepanzerten Gegner einer Mission ein kurzer Hinweis über ihm.

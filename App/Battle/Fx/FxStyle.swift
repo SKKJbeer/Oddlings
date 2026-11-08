@@ -19,6 +19,8 @@ enum FxStyle {
         case .runner: Gait(stride: 0.55, hop: 0.08, squash: 0.12, sway: 0.05, lean: 0.20)
         // Schwer: kaum Hüpfen, kräftiges Stauchen, Wanken.
         case .brute: Gait(stride: 0.50, hop: 0.04, squash: 0.14, sway: 0.07, lean: 0.03)
+        // Der Moorkönig (P3-4): langsam stampfend, schwer wankend, aufrecht.
+        case .moorKing: Gait(stride: 0.62, hop: 0.02, squash: 0.10, sway: 0.09, lean: 0.01)
         }
     }
 
@@ -64,6 +66,19 @@ enum FxStyle {
     static let healthLagRate: Double = 1.4
     static let healthLag = SKColor(red: 1.00, green: 0.95, blue: 0.80, alpha: 1)
 
+    // MARK: Boss (P3-4)
+
+    /// Schildkuppel um den Moorkönig: Breite in Höhen der Figur, Farbe, Atmen.
+    static let shieldWidth: CGFloat = 1.25
+    static let shieldColor = SKColor(red: 0.55, green: 0.95, blue: 0.80, alpha: 1)
+    static let shieldAlpha: CGFloat = 0.35
+    static let shieldBreath: Double = 4
+    /// Ruf: grüner Dunst an der Stelle des Königs.
+    static let summonColor = SKColor(red: 0.45, green: 0.85, blue: 0.45, alpha: 1)
+    static let summonSparks = 10
+    /// Färbung der Ersatzfigur, bis der Moorkönig gemalt ist.
+    static let standInTint: CGFloat = 0.55
+
     static let deathLife: TimeInterval = 0.45
     static let deathSmoke = 6
     static let deathChunks = 8
@@ -74,6 +89,7 @@ enum FxStyle {
         case .raider: SKColor(red: 0.45, green: 0.70, blue: 0.30, alpha: 1)
         case .runner: SKColor(red: 0.98, green: 0.55, blue: 0.20, alpha: 1)
         case .brute: SKColor(red: 0.55, green: 0.50, blue: 0.48, alpha: 1)
+        case .moorKing: SKColor(red: 0.32, green: 0.45, blue: 0.30, alpha: 1)
         }
     }
 
