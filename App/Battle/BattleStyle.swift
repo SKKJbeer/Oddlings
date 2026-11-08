@@ -10,7 +10,11 @@ enum BattleStyle {
     static let background = SKColor(red: 0.20, green: 0.34, blue: 0.22, alpha: 1)
     static let path = SKColor(red: 0.62, green: 0.50, blue: 0.33, alpha: 1)
     static let pathWidth: CGFloat = 0.8
-    static let buildZone = SKColor(white: 1, alpha: 0.07)
+    /// Bauplätze erscheinen nur beim Bauen (D-121); dann deutlicher als das
+    /// frühere Dauerraster, das die gemalte Wiese kariert hat.
+    static let buildZone = SKColor(white: 1, alpha: 0.16)
+    static let buildZoneCorner: CGFloat = 0.16
+    static let buildZoneFade: TimeInterval = 0.18
     static let buildZoneInset: CGFloat = 0.06
     /// So viele Zellen reicht der gemalte Boden links und rechts (`width`) und
     /// oben und unten (`height`) über das Feld hinaus. Unter der Kopfleiste ist
@@ -56,6 +60,10 @@ enum BattleStyle {
     /// (art/asset-vertrag.json; die CI prüft die Bilder dagegen).
     static let towerSpriteSide: CGFloat = 1.9
     static let fortressSpriteSide: CGFloat = 2.4
+    /// Schatten und Fundament (D-120), Quadrate mit dem Fuß in der Mitte;
+    /// dieselben Seiten wie in art/asset-vertrag.json.
+    static let towerShadowSide: CGFloat = 2.4
+    static let footingSide: CGFloat = 1.2
     static let fortressAnchorY: CGFloat = 0.15
     /// Die Festung steht im Rand hinter dem Wegende, nicht im Feld: Dort ist jede
     /// Zelle neben dem Weg bebaubar. Zellen nach rechts und unten vom Wegende.

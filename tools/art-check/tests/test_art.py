@@ -463,5 +463,85 @@ class Kampfplatzbild(unittest.TestCase):
                     self.assertLess(streifen(punkte), feld * 0.8, name_)
 
 
+class TuermeInDerWelt(unittest.TestCase):
+    """D-120: Jeder Turm hat einen Schatten, jeder Kampfplatz Licht und Fundament,
+    und das Licht ist dasselbe, mit dem der Boden gemalt wurde."""
+
+    ATLAS = os.path.join(WURZEL, "App/Assets.xcassets/Battle.spriteatlas")
+    KARTEN = os.path.join(WURZEL, "App/Assets.xcassets/Maps")
+
+    def missionen(self):
+        import re
+        return [re.fullmatch(r"map_mission(\w+)_ground\.imageset", e).group(1)
+                for e in sorted(os.listdir(self.KARTEN)) if e.startswith("map_mission")]
+
+    def bild(self, name):
+        return Image.open(os.path.join(self.ATLAS, f"{name}.imageset", f"{name}@3x.png")).convert("RGBA")
+
+    def test_jeder_turm_hat_einen_schatten(self):
+        import re
+        tuerme = [e[:-9] for e in os.listdir(self.ATLAS) if re.fullmatch(r"tower_[a-z]+(_\d)?\.imageset", e)]
+        self.assertGreater(len(tuerme), 3)
+        for t in tuerme:
+            self.assertTrue(os.path.isdir(os.path.join(self.ATLAS, f"{t}_shadow.imageset")), t)
+
+    def test_jeder_kampfplatz_hat_licht_und_fundament(self):
+        licht = json.load(open(os.path.join(WURZEL, "App/Battle/kampfplatzlicht.json")))
+        for m in self.missionen():
+            self.assertIn(f"mission-{m}", licht, m)
+            self.assertTrue(os.path.isdir(os.path.join(self.ATLAS, f"footing_mission{m}.imageset")), m)
+
+    def test_licht_ist_das_licht_des_bodens(self):
+        # Steht der Wert nicht in der Entstehung des Bodens, wurde einer der beiden
+        # geändert und der andere nicht. M1 ist der Vorgabewert von kampfplatz.py.
+        licht = json.load(open(os.path.join(WURZEL, "App/Battle/kampfplatzlicht.json")))
+        quelle = open(os.path.join(WURZEL, "art/karten/ENTSTEHUNG.md"), encoding="utf-8").read()
+        quelle += open(os.path.join(WURZEL, ".claude/skills/spielgrafik/scripts/kampfplatz.py"), encoding="utf-8").read()
+        for mission, rgb in licht.items():
+            if mission.startswith("mission-"):
+                self.assertIn(",".join(map(str, rgb)), quelle, mission)
+
+    def test_schatten_faellt_nach_rechts_unten(self):
+        # Licht von oben links (art-direction.md): Der Schwerpunkt des Schattens
+        # liegt rechts unterhalb des Fußes, der in der Bildmitte sitzt.
+        for name in ("tower_watch_shadow", "tower_spore_shadow", "tower_lightning_shadow"):
+            a = self.bild(name).getchannel("A")
+            w, h = a.size
+            summe = sx = sy = 0
+            for y in range(0, h, 2):
+                for x in range(0, w, 2):
+                    v = a.getpixel((x, y))
+                    summe += v; sx += v * x; sy += v * y
+            self.assertGreater(sx / summe, w / 2, name)
+            self.assertGreater(sy / summe, h / 2, name)
+            self.assertEqual(a.getpixel((w // 2, h // 2)) > 100, True, f"{name}: kein Kontaktschatten am Fuß")
+
+    def test_fundament_ist_erde_vom_weg(self):
+        # Die Farbe kommt aus dem gemalten Weg: warm (rot über blau), heller als das Gras.
+        for m in self.missionen():
+            b = self.bild(f"footing_mission{m}")
+            deckend = [p for p in b.getdata() if p[3] > 180]
+            self.assertGreater(len(deckend), 100, m)
+            r = sum(p[0] for p in deckend) / len(deckend)
+            g = sum(p[1] for p in deckend) / len(deckend)
+            bl = sum(p[2] for p in deckend) / len(deckend)
+            self.assertGreater(r, bl + 20, m)
+            self.assertGreater(r, g - 10, m)
+
+    def test_skript_rechnet_gleich(self):
+        # Gleiche Eingabe, gleiches Bild: Der Atlas ist aus dem Skript entstanden.
+        with tempfile.TemporaryDirectory() as t:
+            for teil in ("art", "App/Assets.xcassets", "Packages/OddlingsCore/Sources/OddlingsCore/Resources/Balance"):
+                shutil.copytree(os.path.join(WURZEL, teil), os.path.join(t, teil))
+            subprocess.run([sys.executable, os.path.join(WURZEL, ".claude/skills/spielgrafik/scripts/turmboden.py"), t],
+                           check=True, capture_output=True)
+            for name in ("tower_watch_shadow", "footing_mission05a"):
+                for f in (2, 3):
+                    rel = f"App/Assets.xcassets/Battle.spriteatlas/{name}.imageset/{name}@{f}x.png"
+                    alt = Image.open(os.path.join(WURZEL, rel)).convert("RGBA")
+                    neu = Image.open(os.path.join(t, rel)).convert("RGBA")
+                    self.assertEqual(list(alt.getdata()), list(neu.getdata()), rel)
+
+
 if __name__ == "__main__":
     unittest.main()

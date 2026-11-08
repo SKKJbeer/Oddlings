@@ -11,6 +11,21 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.29.1 – 08.11.2026 (Grafik 10: Türme stimmig in der Welt)
+
+- **Türme gehören jetzt zum Ort** (D-120): Sie stehen im Licht ihres Kampfplatzes (warmer
+  Nachmittag in Mission 1, grünliche Dämmerung im Sumpf, Mondlicht im Moor), werfen einen
+  Schatten nach unten rechts und stehen auf festgetretener Erde aus dem Weg derselben Karte.
+  Die Festung bekommt dasselbe Licht.
+- **Kein Karomuster mehr auf der Wiese** (D-121, von Steffen entschieden): Bauplätze sind nur zu
+  sehen, solange gebaut wird, vor der ersten Welle und mit gewähltem freien Feld. Belegte
+  Felder zeigen keins.
+- Werkzeug `turmboden.py` (Skill `spielgrafik`) rechnet Schatten und Fundament, ohne Modell.
+- Tests: `TowerGroundingTests` (App, zehn Fälle) und `TuermeInDerWelt` (art-check, sechs
+  Fälle; der Lichtvergleich einmal rot gesehen mit geändertem Wert für Mission 2).
+- Konzept [Grafik 10](docs/konzepte/grafik-10-tuerme-in-der-welt.md), Herkunft in
+  `art/spielfeld/ENTSTEHUNG.md`.
+
 ## 0.29.0 – 08.11.2026 (UI-02: Turmwerte und Vergleich beim Aufwerten)
 
 - **Die Tafel am Turm zeigt, was er kann** (D-130): vier Kacheln, vorn Schaden pro

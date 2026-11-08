@@ -36,6 +36,11 @@ Warum A und nicht die Alternativen (Bilder in `art/stilmuster/`):
   rechteckiges Raster (D-005), Türme und Figuren stehen darauf in 3/4-Ansicht.
 - Licht von oben links, warm. Schatten nach unten rechts, als weiche Ellipse
   unter jeder Figur (von der Szene gezeichnet, nicht ins Bild gemalt).
+- Türme stehen im Licht ihres Ortes (D-120, 0.29.1): Die Szene multipliziert Turm und
+  Festung mit dem Lichtton, mit dem der Kampfplatz gemalt wurde. Jeder Turm wirft einen
+  gerechneten Schatten (Kontakt am Fuß, Schlagschatten nach unten rechts) und steht auf
+  festgetretener Erde aus dem Weg derselben Karte. Gegner bleiben ungetönt, damit sie
+  auch in der Nacht lesbar sind. [Grafik 10](../konzepte/grafik-10-tuerme-in-der-welt.md)
 
 ## Farbwelt
 
