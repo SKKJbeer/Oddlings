@@ -243,7 +243,11 @@ Ergebnis oder „Zurück“ ──▶ AppFlow verwirft die gesicherte Mission
   Turmangriffe und Fähigkeiten hängen an Ereignissen. Echte Gliedmaßen kommen als
   vorgerenderte Bildfolgen aus 3D-Modellen (FX 02, D-051,
   [Konzept](../konzepte/fx-02-figuren-in-3d.md)); ohne Bildfolge bleibt das
-  gemalte Standbild.
+  gemalte Standbild. Der Moorkönig spielt dazu Schild und Ruf als Folge
+  (FX 03, [Konzept](../konzepte/fx-03-moorkoenig.md)): `FxDirector.raiseShield`,
+  `summon` und `lowerShield` hängen an `bossShieldRaised`, `bossSummoned` und
+  `bossShieldDropped`; `EnemyNode.guardFrame` hält die Schildhaltung, bis der
+  Schild fällt.
 
 ### Testschalter
 

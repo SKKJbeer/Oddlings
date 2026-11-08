@@ -26,14 +26,6 @@ enum BattleSprites {
         level >= 2 ? "tower_\(kind.rawValue)_\(level)" : towerName(kind)
     }
     static func enemyName(_ kind: EnemyKind) -> String { "enemy_\(kind.rawValue)" }
-    /// Wer einspringt, solange eine Art kein eigenes Bild hat (P3-4): Der
-    /// Moorkönig ist bis zum Bild des Grafik-Threads eine große, umgefärbte Panzerbestie.
-    static func standIn(for kind: EnemyKind) -> EnemyKind? { kind == .moorKing ? .brute : nil }
-    /// Name des Bildes, das wirklich geladen wird.
-    static func pictureName(_ kind: EnemyKind) -> String {
-        if texture(named: enemyName(kind)) == nil, let other = standIn(for: kind) { return enemyName(other) }
-        return enemyName(kind)
-    }
     static let fortressName = "fortress"
     /// `mission-01` → `map_mission01_ground`.
     static func groundName(missionID: String) -> String {
@@ -115,7 +107,7 @@ enum BattleSprites {
 
     static func enemyBody(_ kind: EnemyKind, field: CGFloat) -> SKNode {
         let height = BattleStyle.enemyHeight(kind) * field
-        if let texture = frames(kind, .walk).first ?? texture(named: pictureName(kind)) {
+        if let texture = frames(kind, .walk).first ?? texture(named: enemyName(kind)) {
             let sprite = SKSpriteNode(texture: texture)
             sprite.anchorPoint = CGPoint(x: 0.5, y: 0.1)
             sprite.size = CGSize(width: height, height: height)
@@ -133,6 +125,8 @@ enum BattleSprites {
 /// Bildfolgen eines Gegners; die Namen stehen im Asset-Vertrag.
 enum EnemyMotion: String, CaseIterable {
     case walk, hit, die
+    /// Nur der Boss (FX 03): Schild heben, und aus der Schildhaltung rufen.
+    case shield, summon
 }
 
 /// Ein Gegner, in Ebenen gebaut, damit sich Bewegungen nicht gegenseitig
@@ -156,6 +150,11 @@ final class EnemyNode: SKNode {
     let walkFrames: [SKTexture]
     let hitFrames: [SKTexture]
     let dieFrames: [SKTexture]
+    /// Boss (FX 03): Schild heben (letztes Bild = Schildhaltung) und Ruf.
+    let shieldFrames: [SKTexture]
+    let summonFrames: [SKTexture]
+    /// Haltung, zu der `release` zurückkehrt, solange der Schild steht; sonst nil (Laufbild).
+    private(set) var guardFrame: SKTexture?
     /// Solange Treffer oder Sturz spielen, bestimmt der Director das Bild, nicht der Lauf.
     private(set) var holdsFrame = false
     /// Für die Darstellungstests: Nummer des gezeigten Laufbilds.
@@ -170,8 +169,6 @@ final class EnemyNode: SKNode {
     /// Kuppel, solange der Schild des Bosses steht.
     private let shieldDome = SKSpriteNode()
     private var shieldTime: Double = 0
-    /// Grundfärbung der Ersatzfigur (`standIn`), 0 bei eigenem Bild.
-    private let baseTint: CGFloat
     /// Schild neben der Lebensleiste, nur bei Gegnern mit Rüstung (E3, P2-10).
     private(set) var armorBadge: SKShapeNode?
     var isArmored: Bool { armorBadge != nil }
@@ -195,11 +192,12 @@ final class EnemyNode: SKNode {
         enemyID = enemy.id
         kind = enemy.kind
         isBoss = boss
-        baseTint = BattleSprites.pictureName(enemy.kind) == BattleSprites.enemyName(enemy.kind) ? 0 : FxStyle.standInTint
         body = BattleSprites.enemyBody(enemy.kind, field: field)
         walkFrames = BattleSprites.frames(enemy.kind, .walk)
         hitFrames = BattleSprites.frames(enemy.kind, .hit)
         dieFrames = BattleSprites.frames(enemy.kind, .die)
+        shieldFrames = BattleSprites.frames(enemy.kind, .shield)
+        summonFrames = BattleSprites.frames(enemy.kind, .summon)
         height = BattleStyle.enemyHeight(enemy.kind) * field
         healthWidth = BattleStyle.healthWidth * field
         if let sprite = body as? SKSpriteNode {
@@ -232,10 +230,6 @@ final class EnemyNode: SKNode {
         motion.addChild(reaction)
         reaction.addChild(body)
         if let flash { reaction.addChild(flash) }
-        if let sprite = body as? SKSpriteNode, baseTint > 0 {
-            sprite.color = FxStyle.enemyColor(enemy.kind)
-            sprite.colorBlendFactor = baseTint
-        }
         shieldDome.texture = FxTextures.texture(.glow)
         shieldDome.color = FxStyle.shieldColor
         shieldDome.colorBlendFactor = 1
@@ -321,10 +315,20 @@ final class EnemyNode: SKNode {
         setTexture(texture)
     }
 
-    /// Zurück zum Lauf, beim nächsten Bild der Szene.
+    /// Zurück zum Lauf, beim nächsten Bild der Szene; hinter dem Schild zurück in die Schildhaltung.
     func release() {
+        if let guardFrame {
+            holdsFrame = true
+            setTexture(guardFrame)
+            return
+        }
         holdsFrame = false
         if hasFrames { setTexture(walkFrames[walkIndex]) }
+    }
+
+    /// Schildhaltung setzen (nil = wieder laufen). Nur der Director ruft das.
+    func guardPose(_ texture: SKTexture?) {
+        guardFrame = texture
     }
 
     private func setTexture(_ texture: SKTexture) {
@@ -346,8 +350,8 @@ final class EnemyNode: SKNode {
         healthLag.size.width = healthWidth * CGFloat(shownFraction)
         let slowed = enemy.slow != nil
         if let sprite = body as? SKSpriteNode {
-            sprite.color = slowed ? FxStyle.slowTint : FxStyle.enemyColor(kind)
-            sprite.colorBlendFactor = slowed ? FxStyle.slowTintFactor : baseTint
+            sprite.color = FxStyle.slowTint
+            sprite.colorBlendFactor = slowed ? FxStyle.slowTintFactor : 0
         }
         shieldDome.isHidden = enemy.shieldUntilTick == nil
         if !shieldDome.isHidden {

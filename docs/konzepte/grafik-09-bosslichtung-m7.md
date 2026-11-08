@@ -1,6 +1,6 @@
 # Konzept: Kampfplatz Bosslichtung für Mission 7 (Grafik 09)
 
-Status: **umgesetzt in 0.28.2** · Stil D-016 · Thread „Kampfplätze für Mission 5 und 6 malen"
+Status: **umgesetzt in 0.28.3** · Stil D-016 · Thread „Kampfplätze für Mission 5 und 6 malen"
 Anlass: Mission 7 „Der Moorkönig“ (P3-4, 0.28.0) schließt Region 1 ab und lief bisher auf
 der schlichten Karte. Vorgehen wie [Grafik 08](grafik-08-kampfplaetze-m6.md); hier steht
 nur, was neu ist. Die Figur des Moorkönigs ist ein eigenes Paket (Thread „Moorkönig als 3D-Boss bauen“).
@@ -46,4 +46,4 @@ Unverändert: `map_mission07_ground`, 24 × 13 Zellen, 3096 × 1677 px @3x, JPEG
 - **Hindernis auf der Lichtung.** Der erste Übermal-Versuch setzte einen riesigen Baum
   in die Mitte. Darum sagt der Prompt ausdrücklich, dass die Lichtung leer ist.
 - **Versionsnummer.** Der Moorkönig-Thread liefert parallel. Wer zuerst auf main kommt,
-  bekommt 0.28.2, der andere die nächste Nummer.
+  bekommt 0.28.2, der andere die nächste Nummer. Der Moorkönig kam zuerst, deshalb 0.28.3.

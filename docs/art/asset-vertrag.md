@@ -23,7 +23,8 @@ Sie folgen den IDs der Simulation.
 |---|---|
 | `tower_watch`, `tower_lightning`, `tower_spore` | Türme, ganzer Körper |
 | `tower_<id>_top` | drehbares Oberteil, nur wo es eines gibt |
-| `enemy_raider`, `enemy_runner`, `enemy_brute` | Gegner, Blick nach rechts |
+| `enemy_raider`, `enemy_runner`, `enemy_brute`, `enemy_moorKing` | Gegner, Blick nach rechts |
+| `enemy_<art>_<folge>_NN` | Bildfolgen aus 3D ([FX 02](../konzepte/fx-02-figuren-in-3d.md)): `walk`, `hit`, `die`; der Moorkönig dazu `shield` und `summon` ([FX 03](../konzepte/fx-03-moorkoenig.md)). Anzahl je Folge im Feld `folge` |
 | `fortress` | Festung am Wegende |
 | `map_mission01_ground` … `map_mission04_ground`, `map_mission05a_ground`, `map_mission05b_ground`, `map_mission06a_ground`, `map_mission06b_ground`, `map_mission07_ground` | Boden der ganzen Karte je Mission (Name aus der Missionskennung), Weg eingemalt; Geometrie je Bild in `art/asset-vertrag.json` unter `mission` ([Grafik 06](../konzepte/grafik-06-kampfplaetze-m2-m4.md), [Grafik 07](../konzepte/grafik-07-kampfplaetze-m5.md), [Grafik 08](../konzepte/grafik-08-kampfplaetze-m6.md), [Grafik 09](../konzepte/grafik-09-bosslichtung-m7.md)) |
 | `buildzone_tile` | Markierung einer bebaubaren Zelle, Overlay |
