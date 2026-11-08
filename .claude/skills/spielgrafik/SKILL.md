@@ -56,6 +56,9 @@ description: Hochwertige Spielgrafik (App-Symbole, Figuren, Store-Bilder, Hinter
   Trägt der Ort fast nur über die Deko (Sumpf, Ruinenhof, Grafik 07): `DEKO_BREITE=2.4,3.2`
   und mehr Teile; hohe Teile werden nach ihrer Höhe bemessen, damit sie nicht über Bauzellen
   ragen. Für einen anderen Bodenton das Gras im Teile-Ordner umfärben, nicht das Feld bemalen.
+  Nachtkarten (Grafik 08): „moonlit“ oder „moonlight“ im Übermal-Prompt malt einen Vollmond
+  ins Bild. Stattdessen „night light, no moon, no sky“ und „the clearing itself well lit“,
+  dazu ein kühles `LICHT`; so bleibt das Feld hell genug für Gegner und Weg.
 - **Lange Läufe in der Cloud:** Ein 512er-Bild braucht rund 12 Minuten, 1024x640
   rund 20, Hochrechnen auf 2580 px rund 10. Ein mit `setsid nohup` abgekoppelter
   Lauf überlebt das Abräumen eines untätigen Containers NICHT (26.10.2026
