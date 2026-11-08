@@ -136,19 +136,24 @@ final class BattleSpritesTests: XCTestCase {
         }
     }
 
-    /// FX 02: Der Plünderer hat Laufen, Zucken und Sturz als Bildfolge, gleich
-    /// groß wie sein Standbild; die anderen Gegner bleiben beim Standbild.
-    func testRaiderHasFramesOthersKeepTheirPicture() throws {
-        XCTAssertEqual(BattleSprites.frames(.raider, .walk).count, 8)
-        XCTAssertEqual(BattleSprites.frames(.raider, .hit).count, 3)
-        XCTAssertEqual(BattleSprites.frames(.raider, .die).count, 6)
-        let still = try XCTUnwrap(BattleSprites.texture(named: BattleSprites.enemyName(.raider)))
-        for motion in EnemyMotion.allCases {
-            for texture in BattleSprites.frames(.raider, motion) {
-                XCTAssertEqual(texture.size(), still.size(), "\(motion)")
+    /// FX 02/03: Plünderer und Moorkönig haben ihre Bildfolgen, gleich groß wie
+    /// ihr Standbild; die anderen Gegner bleiben beim Standbild.
+    func testRaiderAndKingHaveFramesOthersKeepTheirPicture() throws {
+        let counts: [EnemyKind: [EnemyMotion: Int]] = [
+            .raider: [.walk: 8, .hit: 3, .die: 6, .shield: 0, .summon: 0],
+            .moorKing: [.walk: 8, .hit: 3, .die: 8, .shield: 4, .summon: 5],
+        ]
+        for (kind, expected) in counts.sorted(by: { $0.key.rawValue < $1.key.rawValue }) {
+            let still = try XCTUnwrap(BattleSprites.texture(named: BattleSprites.enemyName(kind)))
+            for motion in EnemyMotion.allCases {
+                let frames = BattleSprites.frames(kind, motion)
+                XCTAssertEqual(frames.count, expected[motion], "\(kind) \(motion)")
+                for texture in frames {
+                    XCTAssertEqual(texture.size(), still.size(), "\(kind) \(motion)")
+                }
             }
         }
-        for kind in EnemyKind.allCases where kind != .raider {
+        for kind in EnemyKind.allCases where counts[kind] == nil {
             XCTAssertTrue(BattleSprites.frames(kind, .walk).isEmpty, "\(kind)")
         }
     }
