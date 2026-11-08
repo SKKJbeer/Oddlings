@@ -78,7 +78,8 @@ def pruefe(wurzel):
                 soll = round(regel["seiteZellen"] * pt * f)
                 if bild.size != (soll, soll):
                     fehler.append(f"{name}@{f}x: Groesse {bild.size}, Vertrag Quadrat {soll}px")
-                elif bild.mode == "RGBA" and (folge is None or name.endswith("_00")):
+                elif "anker" in regel and bild.mode == "RGBA" and (folge is None or name.endswith("_00")):
+                    # Ohne Anker (Schatten, Fundament): Fuß in der Mitte, kein Fuß zu messen.
                     # Fuss = unterste deckende Zeile; die Szene setzt anchorPoint.y = anker.
                     # In einer Folge nur im ersten Bild: Beim Laufen hebt ein Fuß ab,
                     # beim Sturz liegt die Figur; gleicher Maßstab kommt aus folge.py.

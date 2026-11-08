@@ -1,5 +1,6 @@
 import OddlingsCore
 import SpriteKit
+import UIKit
 
 /// Zeigt, was die Simulation tut (WP-11). Die Szene liest Zustand und
 /// Ereignisse und ändert nichts davon (Architekturregel 2). Effekte hängen an
@@ -22,6 +23,16 @@ final class BattleScene: SKScene {
     private let world: SKNode
     private let ground = SKNode()
     private let towerLayer = SKNode()
+    /// Bauplätze (D-121): nur sichtbar, solange gebaut wird.
+    private let zoneLayer = SKNode()
+    private var zoneTiles: [Cell: SKSpriteNode] = [:]
+    private(set) var zonesShown = false
+    private var zonesOccupied: Set<Cell> = []
+    /// Fundamente und Schatten aller Türme (D-120), unter den Türmen und unter
+    /// der Auswahl, damit die Markierung darüber lesbar bleibt.
+    private let shadeLayer = SKNode()
+    /// Licht des Kampfplatzes; Türme und Festung werden damit getönt.
+    private let light: SKColor?
     private let enemyLayer = SKNode()
     let effectLayer: SKNode
     private let fortress = SKShapeNode()
@@ -54,6 +65,7 @@ final class BattleScene: SKScene {
         let size = CGSize(width: 844, height: 390)
         let layout = BoardLayout(size: size, map: model.sim.map)
         self.layout = layout
+        light = BattlefieldLight.color(missionID: model.sim.config.mission.id)
         let world = SKNode(), effects = SKNode()
         self.world = world
         effectLayer = effects
@@ -65,7 +77,7 @@ final class BattleScene: SKScene {
         probe = FxProbe.fromArguments()
         #endif
         addChild(world)
-        for (layer, z) in [(ground, 0), (selectionLayer, 5), (towerLayer, 10), (enemyLayer, 20), (effectLayer, 30)] {
+        for (layer, z) in [(ground, 0), (zoneLayer, 2), (shadeLayer, 3), (selectionLayer, 5), (towerLayer, 10), (enemyLayer, 20), (effectLayer, 30)] {
             layer.zPosition = CGFloat(z)
             world.addChild(layer)
         }
@@ -103,6 +115,7 @@ final class BattleScene: SKScene {
         fx.advance(by: fxTime)
         controller?.afterFrame(events: events, dt: fxTime)
         showSelection()
+        showBuildZones(dt: min(frameTime, BattleStyle.maxCatchUp))
         showGuide()
     }
 
@@ -141,6 +154,7 @@ final class BattleScene: SKScene {
 
     private func clearPieces() {
         towerLayer.removeAllChildren()
+        shadeLayer.removeAllChildren()
         enemyLayer.removeAllChildren()
         towerNodes = [:]
         enemyNodes = [:]
@@ -192,7 +206,44 @@ final class BattleScene: SKScene {
         }
     }
 
+    /// Bauplätze nur beim Bauen (D-121): vor der ersten Welle und solange eine
+    /// leere Zelle gewählt ist. Sonst bleibt die gemalte Wiese frei. Belegte
+    /// Zellen zeigen kein Feld, denn dort steht schon ein Turm.
+    private func showBuildZones(dt: TimeInterval) {
+        let wanted = wantsBuildZones
+        if wanted {
+            let occupied = Set(model.state.towers.map(\.cell))
+            if occupied != zonesOccupied {
+                zonesOccupied = occupied
+                for (cell, tile) in zoneTiles { tile.isHidden = occupied.contains(cell) }
+            }
+        }
+        zonesShown = wanted
+        // Auf- und Abblenden im Bildtakt, auch in der Pause: Bauen geht dort ja auch.
+        let target: CGFloat = wanted ? 1 : 0
+        let step = fx.reduceMotion ? 1 : CGFloat(dt / BattleStyle.buildZoneFade)
+        zoneLayer.alpha += max(-step, min(step, target - zoneLayer.alpha))
+    }
+
+    /// Eigene Eigenschaft, damit Tests die Regel ohne Bildwechsel prüfen.
+    var wantsBuildZones: Bool {
+        guard let controller, controller.interactive else { return false }
+        if case .cell = controller.selection { return true }
+        return controller.wave == 0 && controller.outcome == nil
+    }
+
     // MARK: Karte
+
+    /// Abgerundetes Feld, einmal je Größe gezeichnet; alle Bauplätze teilen es.
+    private func buildZoneTexture(side: CGFloat) -> SKTexture {
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: side, height: side))
+        let image = renderer.image { _ in
+            BattleStyle.buildZone.setFill()
+            UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: side, height: side),
+                         cornerRadius: side * BattleStyle.buildZoneCorner).fill()
+        }
+        return SKTexture(image: image)
+    }
 
     /// Felder → Punkte. Die Karte zählt y von oben, SpriteKit von unten.
     private func toScene(_ point: Point) -> CGPoint { layout.scenePoint(point) }
@@ -206,12 +257,19 @@ final class BattleScene: SKScene {
         let painted = BattleSprites.ground(missionID: model.sim.config.mission.id, layout: layout)
         if let painted { ground.addChild(painted) }
         let inset = BattleStyle.buildZoneInset * field
+        zoneLayer.removeAllChildren()
+        zoneTiles = [:]
+        zonesOccupied = []
+        let tileTexture = buildZoneTexture(side: field - 2 * inset)
         for cell in map.buildableCells {
-            let tile = SKSpriteNode(color: BattleStyle.buildZone,
-                                    size: CGSize(width: field - 2 * inset, height: field - 2 * inset))
+            let tile = SKSpriteNode(texture: tileTexture)
+            tile.size = CGSize(width: field - 2 * inset, height: field - 2 * inset)
             tile.position = toScene(cell.center)
-            ground.addChild(tile)
+            zoneLayer.addChild(tile)
+            zoneTiles[cell] = tile
         }
+        zonesShown = wantsBuildZones
+        zoneLayer.alpha = zonesShown ? 1 : 0
         if painted == nil {
             let line = CGMutablePath()
             for (index, point) in map.path.points.enumerated() {
@@ -238,6 +296,10 @@ final class BattleScene: SKScene {
             fortress.fillColor = .clear
             fortress.strokeColor = .clear
             picture.position = CGPoint(x: BattleStyle.fortressOffset.x * field, y: -BattleStyle.fortressOffset.y * field)
+            if let light {
+                picture.color = light
+                picture.colorBlendFactor = 1
+            }
             fortress.addChild(picture)
         } else {
             fortress.fillColor = BattleStyle.fortress
@@ -286,6 +348,7 @@ final class BattleScene: SKScene {
         }
         for (id, node) in towerNodes where liveTowers[id] == nil {
             node.removeFromParent()
+            node.shade.removeFromParent()
             towerNodes[id] = nil
         }
 
@@ -340,8 +403,11 @@ final class BattleScene: SKScene {
     }
 
     private func makeTowerNode(_ tower: Tower) -> TowerNode {
-        let node = TowerNode(tower: tower, field: field)
+        let node = TowerNode(tower: tower, field: field, light: light,
+                             footing: BattleSprites.footingName(missionID: model.sim.config.mission.id))
         node.position = toScene(tower.cell.center)
+        node.shade.position = node.position
+        shadeLayer.addChild(node.shade)
         // Weiter unten heißt weiter vorn; bleibt innerhalb der eigenen Ebene.
         node.zPosition = 1 - node.position.y / max(size.height, 1)
         towerLayer.addChild(node)

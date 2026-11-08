@@ -27,7 +27,9 @@ Sie folgen den IDs der Simulation.
 | `enemy_<art>_<folge>_NN` | Bildfolgen aus 3D ([FX 02](../konzepte/fx-02-figuren-in-3d.md)): `walk`, `hit`, `die`; der Moorkönig dazu `shield` und `summon` ([FX 03](../konzepte/fx-03-moorkoenig.md)). Anzahl je Folge im Feld `folge` |
 | `fortress` | Festung am Wegende |
 | `map_mission01_ground` … `map_mission04_ground`, `map_mission05a_ground`, `map_mission05b_ground`, `map_mission06a_ground`, `map_mission06b_ground`, `map_mission07_ground` | Boden der ganzen Karte je Mission (Name aus der Missionskennung), Weg eingemalt; Geometrie je Bild in `art/asset-vertrag.json` unter `mission` ([Grafik 06](../konzepte/grafik-06-kampfplaetze-m2-m4.md), [Grafik 07](../konzepte/grafik-07-kampfplaetze-m5.md), [Grafik 08](../konzepte/grafik-08-kampfplaetze-m6.md), [Grafik 09](../konzepte/grafik-09-bosslichtung-m7.md)) |
-| `buildzone_tile` | Markierung einer bebaubaren Zelle, Overlay |
+| `buildzone_tile` | Markierung einer bebaubaren Zelle, Overlay (heute von der Szene gezeichnet, nur beim Bauen sichtbar, D-121) |
+| `tower_<name>_shadow` | Schatten je Turmbild, Quadrat 2,4 Zellen, Fuß in der Mitte, gerechnet von `turmboden.py` (D-120) |
+| `footing_<mission>` | Fundament unter jedem Turm, Quadrat 1,2 Zellen, Fuß in der Mitte, Erde aus dem Weg der Karte (D-120) |
 | `fx_glow`, `fx_spark`, `fx_ring`, `fx_puff`, `fx_coin`, `fx_arrow`, `fx_bolt`, `fx_confetti`, `fx_star`, `fx_stone`, `fx_wall`, `fx_hand` | Effekte, siehe „Effekte“ unten |
 | `icon_slowed` | Zustandssymbol über dem Gegner (E3) |
 

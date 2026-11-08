@@ -447,6 +447,10 @@ final class FxDirector {
             node.alpha = 1 - s
         }
         animate(tower, key: "remove", duration: FxStyle.sellLife, end: .remove) { _, _ in }
+        // Fundament und Schatten liegen in der Schattenebene der Szene (D-120) und gehen mit.
+        animate(tower.shade, key: "remove", duration: FxStyle.sellLife, end: .remove) { node, t in
+            node.alpha = CGFloat(1 - t)
+        }
         dust(at: tower.position, count: FxStyle.dustPuffs, radius: 0.55, size: 0.55)
         let top = CGPoint(x: tower.position.x, y: tower.position.y + field * 0.6)
         coins(at: top, count: FxStyle.coinsPerKill)

@@ -183,7 +183,7 @@ unberührt, und jede Kombination ist eine geprüfte Konfiguration.
 | `UI/` | `MainMenuView`, `UITheme` (Farben, Schriften, Formen), `AppFonts` (D-032), `FeedbackPlayer` (Haptik je Ereignis) | aussehen, rückmelden | Spielzustand ändern |
 | `Campaign/` | `CampaignMapView`: gemalte Karte Region 1, Knoten, Missionstafel | Knoten wählen, Mission starten (über `AppFlow`) | Freischaltung entscheiden |
 | `Avatar/` | `AvatarSetupView` (R-5), `AvatarScreen` (R-6, Reiter Talente, Ausrüstung R-7a und Schmiede R-7b), `AvatarPortraits` | Avatar anlegen, Talent wählen, Ausrüstung anlegen (über `AppFlow`) | Talent- und Ausrüstungswerte kennen (stehen in `races.json`, `equipment.json`) |
-| `Battle/` | `BattleModel` (Takt), `BattleScene`, `BattleController` (Tippen → Befehle), `BattleHUD`, `RingMenu`, `BoardLayout`, `HudLayout`, `BattleGuide` (stille Zeichen des Einstiegs, P2-8, mit `GuideMemory` in den Voreinstellungen) | Befehle erzeugen, Zustand und Ereignisse lesen | Gold, Leben oder Gegner direkt ändern (Regel 2) |
+| `Battle/` | `BattleModel` (Takt), `BattleScene`, `BattleController` (Tippen → Befehle), `BattleHUD`, `RingMenu`, `BoardLayout`, `HudLayout`, `BattleGuide` (stille Zeichen des Einstiegs, P2-8, mit `GuideMemory` in den Voreinstellungen), `BattlefieldLight` (Lichtton je Kampfplatz aus `kampfplatzlicht.json`, D-120) | Befehle erzeugen, Zustand und Ereignisse lesen | Gold, Leben oder Gegner direkt ändern (Regel 2) |
 | `Battle/Fx/` | `FxDirector` spielt Effekte an Ereignissen auf eigener Uhr, dazu Treffer- und Sturzbilder (FX 02); `FxMath` rein, auch die Bildwahl je Strecke (`walkFrame`); `FxProbe`, `FxStatsOverlay` nur für Messung und E2E | gepoolte Sprites, Tweens im Bildtakt | `SKAction`/`SKShapeNode` für flüchtige Effekte, Zustand anfassen (D-050) |
 | `Audio/` | `AudioDirector` nimmt `SoundMoment`s aus Szene und Bedienung und Lagen aus den Schirmen, `SoundMap` (rein: Moment → Klang, Lage), `SoundLimiter` (rein: Stimmen und Abstand je Klang), `AudioStyle` (Mischung), `AudioEngine` (AVAudioEngine für Klänge, AVAudioPlayer für Musik, Audiositzung `.ambient`), `AudioStatsOverlay` nur für E2E | Klänge und Musik spielen, Lautstärke aus `AppSettings` | Spielzustand lesen oder ändern, Netz, Fremdbibliotheken ([Konzept](../konzepte/p2-3-ton-und-musik.md)) |
 | `Spike/` | Leistungsprobe WP-01 | – | wird nach der Messung gelöscht |
@@ -259,7 +259,7 @@ Welle), ändern aber keine Regel. Liste und Zweck:
 ## 6a. Grafik und Werkzeuge
 
 Bilder entstehen außerhalb der App und werden fertig eingecheckt:
-Skill `spielgrafik` (FLUX lokal, Freistellen, Atlas, Karte, Kampfplatz) für
+Skill `spielgrafik` (FLUX lokal, Freistellen, Atlas, Karte, Kampfplatz, Turmschatten und Fundament mit `turmboden.py`) für
 Gemälde, `tools/figuren-3d` (FX 02) für Bildfolgen aus 3D: `trellis.py` (Modell), `figur.py` (Skelett, Comic-Look, Render), `folge.py` (Atlas). `BattleSprites.frames` lädt eine Folge bis zum ersten fehlenden Bild. Jede
 Bildgruppe hat eine `ENTSTEHUNG.md` mit Herkunft; `tools/art-check` prüft Namen,
 Maße und Anker in der CI. Kein Werkzeug davon landet in der App.

@@ -41,3 +41,20 @@ single isolated full body character centered in frame, side three-quarter view f
 nach links. Spiegeln ist billiger als neu rechnen. Ein freier Kartenentwurf
 (Bild-zu-Bild mit Stärke 0,7) wich vom Weg ab und wirkte flach; verworfen,
 die Karte entsteht aus Texturen, siehe [karten/ENTSTEHUNG.md](../karten/ENTSTEHUNG.md).
+
+## Schatten und Fundament der Türme (D-120, 0.28.4)
+
+Gerechnet, nicht gemalt: `.claude/skills/spielgrafik/scripts/turmboden.py`, kein
+Modell, fester Seed je Name. Konzept: [Türme in der Welt](../../docs/konzepte/grafik-10-tuerme-in-der-welt.md).
+
+- Schatten `tower_watch_shadow`, `tower_watch_2_shadow`, `tower_lightning_shadow`,
+  `tower_lightning_2_shadow`, `tower_spore_shadow`, `tower_spore_2_shadow`,
+  `tower_bank_shadow`: aus dem Umriss des jeweiligen Turmbildes, oberhalb des
+  Fußes gespiegelt, auf 42 % gestaucht und nach rechts geschert (Licht von oben
+  links), weich gezeichnet, dazu eine Kontaktellipse am Fuß. Neuer Turm oder neue
+  Stufe: Skript erneut laufen lassen.
+- Fundament `footing_mission01`, `footing_mission02`, `footing_mission03`,
+  `footing_mission04`, `footing_mission05a`, `footing_mission05b`,
+  `footing_mission06a`, `footing_mission06b`, `footing_mission07`: ein unregelmäßiger
+  Fleck aus dem gemalten Weg der jeweiligen Karte (Mitte des längsten waagerechten
+  Wegstücks), weicher Rand. Neuer Kampfplatz: Skript erneut laufen lassen.

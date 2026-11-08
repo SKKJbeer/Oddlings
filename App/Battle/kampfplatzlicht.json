@@ -1,0 +1,12 @@
+{
+  "_zweck": "Lichtton je Kampfplatz (r, g, b), derselbe Wert wie LICHT beim Malen des Bodens (art/karten/ENTSTEHUNG.md). Die Szene multipliziert Türme und Festung damit, damit sie im selben Licht stehen wie der Boden (D-120). tools/art-check prüft beide Stellen gegeneinander.",
+  "mission-01": [255, 238, 210],
+  "mission-02": [245, 245, 225],
+  "mission-03": [225, 240, 232],
+  "mission-04": [255, 226, 190],
+  "mission-05a": [215, 235, 205],
+  "mission-05b": [225, 222, 245],
+  "mission-06a": [195, 215, 228],
+  "mission-06b": [205, 212, 238],
+  "mission-07": [205, 225, 208]
+}
