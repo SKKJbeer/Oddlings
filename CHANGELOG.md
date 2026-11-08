@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.28.0 – 03.11.2026 (P3-4: Mission 7, der Moorkönig)
+## 0.28.0 – 03.11.2026 (P3-4: Mission 7, der Moorkönig) · Bau 51
 
 - **Mission 7 „Der Moorkönig“** ist spielbar und schließt Region 1 ab. Offen nach
   Sumpfpfad II **oder** Ruinen II, Weg vom Grafik-Thread (Hufeisen um die Bosslichtung).
