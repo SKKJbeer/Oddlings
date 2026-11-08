@@ -10,8 +10,6 @@ davor 0.27.0 (Wahl zwischen zwei Spezialisierungen, Mission 6a „Sumpfpfad II�
 
 ## Wartet auf dich
 
-0. Wann das Bauraster auf der Wiese zu sehen ist: Entscheidungskarte S25 im Thread
-   „Türme stimmig in die Welt einfügen“. Gebaut ist die Empfehlung, nur beim Bauen (0.28.4, D-121).
 0. Wie der Boss von Mission 7 kämpft: Entscheidungskarte S17 im Haupt-Thread. Gebaut ist
    die Empfehlung, Schild und Ruf bei halbem Leben (0.28.0, D-090).
 0. Was mit der Gewitterkrone passiert, damit sie mit Sporen in Mission 6 nicht alles

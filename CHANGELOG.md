@@ -17,7 +17,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   Nachmittag in Mission 1, grünliche Dämmerung im Sumpf, Mondlicht im Moor), werfen einen
   Schatten nach unten rechts und stehen auf festgetretener Erde aus dem Weg derselben Karte.
   Die Festung bekommt dasselbe Licht.
-- **Kein Karomuster mehr auf der Wiese** (D-121, Karte S25 offen): Bauplätze sind nur zu
+- **Kein Karomuster mehr auf der Wiese** (D-121, von Steffen entschieden): Bauplätze sind nur zu
   sehen, solange gebaut wird, vor der ersten Welle und mit gewähltem freien Feld. Belegte
   Felder zeigen keins.
 - Werkzeug `turmboden.py` (Skill `spielgrafik`) rechnet Schatten und Fundament, ohne Modell.

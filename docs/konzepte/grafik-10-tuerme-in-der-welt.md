@@ -27,7 +27,7 @@ Gemessen an M1, M5a und M6a (Bilder aus dem Atlas auf dem echten Boden):
 | Ortslicht (D-120) | Turmbild und Festung × Lichtton des Kampfplatzes | `App/Battle/kampfplatzlicht.json`, `BattlefieldLight`, `TowerNode.tint` |
 | Schatten (D-120) | Kontaktellipse am Fuß und Schlagschatten nach unten rechts, aus dem Umriss jedes Turmbildes | `turmboden.py` → `tower_*_shadow` |
 | Fundament (D-120) | Fleck festgetretene Erde unter jedem Turm, aus dem gemalten Weg derselben Karte | `turmboden.py` → `footing_<mission>` |
-| Bauplätze (D-121, Karte S25) | nur sichtbar, solange gebaut wird: vor der ersten Welle und mit gewählter leerer Zelle; belegte Zellen ohne Feld; abgerundet und deutlicher | `BattleScene.showBuildZones` |
+| Bauplätze (D-121, Karte S25 entschieden) | nur sichtbar, solange gebaut wird: vor der ersten Welle und mit gewählter leerer Zelle; belegte Zellen ohne Feld; abgerundet und deutlicher | `BattleScene.showBuildZones` |
 
 Nicht im Umfang: Gegner bleiben ungetönt (Lesbarkeit geht vor, art-direction.md); neue
 gemalte Turmbilder; Steinsockel je Ort (wäre FLUX-Arbeit je Kampfplatz, kann folgen,
@@ -59,8 +59,8 @@ wenn das Fundament aus Erde nicht reicht).
 ## Bedienung
 
 Karte S25 (08.11.2026): „Wann soll das Bauraster sichtbar sein?“ Optionen: nur beim
-Bauen (Empfehlung, gebaut), immer weicher, wie heute. Bis zur Antwort gilt die
-Empfehlung (D-121). Vor der ersten Welle stehen die Felder, damit man beim Einstieg sieht,
+Bauen (Empfehlung), immer weicher, wie heute. Steffen hat am 08.11.2026 „nur beim
+Bauen“ gewählt (D-121). Vor der ersten Welle stehen die Felder, damit man beim Einstieg sieht,
 wo man bauen kann; die Hand des Einstiegs (P2-8) zeigt auf ein solches Feld.
 
 ## Sicherheit
