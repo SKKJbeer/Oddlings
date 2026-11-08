@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.29.0 – 08.11.2026 (UI-02: Turmwerte und Vergleich beim Aufwerten)
+## 0.29.0 – 08.11.2026 (UI-02: Turmwerte und Vergleich beim Aufwerten) · Bau 55
 
 - **Die Tafel am Turm zeigt, was er kann** (D-130): vier Kacheln, vorn Schaden pro
   Sekunde (beim Blitzturm über die volle Kette, beim Sporenturm „Bremst um“), dazu
