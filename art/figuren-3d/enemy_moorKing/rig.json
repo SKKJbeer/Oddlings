@@ -27,7 +27,7 @@
     "hit": {"bilder": 3, "verlauf": {"rumpf": ["x", -10], "kopf": ["x", -8]}},
     "die": {
       "bilder": 8,
-      "verlauf": {"becken": ["x", -75], "arm_stab": ["y", 50], "arm_schild": ["y", -40], "kopf": ["x", -25]}
+      "verlauf": {"becken": ["x", -62], "arm_stab": ["y", 15], "arm_schild": ["y", -40], "kopf": ["x", -25]}
     },
     "shield": {
       "bilder": 4,

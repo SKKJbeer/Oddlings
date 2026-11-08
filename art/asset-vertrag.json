@@ -78,37 +78,37 @@
       "alpha": true
     },
     "enemy_moorKing": {
-      "seiteZellen": 1.9,
+      "seiteZellen": 2.3,
       "anker": 0.1,
       "alpha": true
     },
     "enemy_moorKing_walk": {
       "folge": 8,
-      "seiteZellen": 1.9,
+      "seiteZellen": 2.3,
       "anker": 0.1,
       "alpha": true
     },
     "enemy_moorKing_hit": {
       "folge": 3,
-      "seiteZellen": 1.9,
+      "seiteZellen": 2.3,
       "anker": 0.1,
       "alpha": true
     },
     "enemy_moorKing_die": {
       "folge": 8,
-      "seiteZellen": 1.9,
+      "seiteZellen": 2.3,
       "anker": 0.1,
       "alpha": true
     },
     "enemy_moorKing_shield": {
       "folge": 4,
-      "seiteZellen": 1.9,
+      "seiteZellen": 2.3,
       "anker": 0.1,
       "alpha": true
     },
     "enemy_moorKing_summon": {
       "folge": 5,
-      "seiteZellen": 1.9,
+      "seiteZellen": 2.3,
       "anker": 0.1,
       "alpha": true
     },
