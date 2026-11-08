@@ -135,4 +135,4 @@ Jeder neue Test wird einmal rot gesehen.
 ## Aufwand (Schätzung, nicht gemessen)
 
 Nach Empfehlung: etwa wie eine Hauptmission ohne neue Regel (M3/M4), zwei Missionen
-Abstimmung im Labor, kleine App-Arbeit. Mit Banner etwas mehr. Version 0.29.0.
+Abstimmung im Labor, kleine App-Arbeit. Mit Banner etwas mehr. Version 0.30.0 (0.29.0 belegt die Wertetafel der Aufwertungen).
