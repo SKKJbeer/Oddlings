@@ -22,7 +22,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Herkunft in `art/karten/ENTSTEHUNG.md`, Konzept
   [Grafik 09](docs/konzepte/grafik-09-bosslichtung-m7.md).
 
-## 0.28.2 – 08.11.2026 (FX 03: der Moorkönig als eigene 3D-Figur)
+## 0.28.2 – 08.11.2026 (FX 03: der Moorkönig als eigene 3D-Figur) · Bau 53
 
 - **Der Moorkönig hat sein eigenes Gesicht** (D-100, Karte S18 offen): ein breiter,
   gebückter Moortroll mit Wurzelkrone, Moosbart, Laternenstab und Rindenschild, gebaut
