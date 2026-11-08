@@ -90,6 +90,7 @@ davor 0.27.0 (Wahl zwischen zwei Spezialisierungen, Mission 6a „Sumpfpfad II�
 | Thread | Woran | Nächster Schritt |
 |---|---|---|
 | Haupt-Thread | 0.28.0 Mission 7, der Moorkönig (P3-4) | zusammenführen, Bau in TestFlight; deine Karten S16 (Gewitterkrone) und S17 (Bossregel) |
+| Moorkönig als 3D-Boss bauen | 0.28.2 der Moorkönig als eigene 3D-Figur (FX 03, D-100) | zusammenführen, Bau in TestFlight; deine Karte S18 (Gestalt) |
 | Synergie sichtbar (P2-8) | 0.24.1 in TestFlight (Bau 46) | Eindruck beim Spieltest: Sieht man den Sporenfunken, kommen Hand und Pfeil zur rechten Zeit? |
 | Fortsetzen nach App-Neustart bauen | 0.22.0 (P2-2) in TestFlight (Bau 43) | deine Karte S12 (wo der Neustart landet) |
 | Mission 2 mit Zwergenbank | 0.16.0, Bau 36 in TestFlight | Werte nach dem Spieltest nachziehen |
