@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.28.3 – 08.11.2026 (Grafik 09: Kampfplatz Bosslichtung)
+## 0.28.3 – 08.11.2026 (Grafik 09: Kampfplatz Bosslichtung) · Bau 54
 
 - **Gemalter Kampfplatz für Mission 7 „Der Moorkönig“**: die Lichtung im Reich des Bosses,
   im Rand hohle Sumpfbäume, Steinkreis, Geweih-Totems, Schlammbecken und eine rostige Krone
