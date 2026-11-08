@@ -69,12 +69,31 @@ struct HudLayout: Equatable {
 
     /// Infotafel auf der Seite der Karte, die von der Zelle weg liegt, und
     /// weder über der Zelle noch über einem Knopf.
-    func panel(for cell: Cell, avoiding buttons: [CGPoint]) -> CGRect {
-        let size = metrics.panel
+    /// `size` ist größer, wenn die Tafel Turmwerte trägt (D-130).
+    func panel(for cell: Cell, avoiding buttons: [CGPoint], size: CGSize? = nil) -> CGRect {
+        let size = size ?? metrics.panel
         let left = [bounds.minX, bounds.maxX - size.width]
-        let xs = cell.x >= board.columns / 2 ? left : left.reversed()
+        // Die Mitte zuletzt: Die große Tafel mit Turmwerten (D-130) findet auf
+        // dem iPhone SE bei vier Knöpfen in der Kartenmitte sonst keine freie Ecke.
+        let xs = (cell.x >= board.columns / 2 ? left : left.reversed()) + [bounds.midX - size.width / 2]
         let ys = cell.y >= board.rows / 2 ? [bounds.minY, bounds.maxY - size.height]
                                           : [bounds.maxY - size.height, bounds.minY]
+        return place(size, for: cell, avoiding: buttons, xs: xs, ys: ys)
+            ?? CGRect(origin: CGPoint(x: xs[0], y: ys[0]), size: size)
+    }
+
+    /// Wie `panel`, aber nil, wenn die Tafel in dieser Größe nirgends frei
+    /// liegt. Die Tafel mit Turmwerten (D-130) weicht dann auf die flache Leiste aus.
+    func freePanel(for cell: Cell, avoiding buttons: [CGPoint], size: CGSize) -> CGRect? {
+        let left = [bounds.minX, bounds.maxX - size.width]
+        let xs = (cell.x >= board.columns / 2 ? left : left.reversed()) + [bounds.midX - size.width / 2]
+        let ys = cell.y >= board.rows / 2 ? [bounds.minY, bounds.maxY - size.height]
+                                          : [bounds.maxY - size.height, bounds.minY]
+        return place(size, for: cell, avoiding: buttons, xs: xs, ys: ys)
+    }
+
+    private func place(_ size: CGSize, for cell: Cell, avoiding buttons: [CGPoint],
+                       xs: [CGFloat], ys: [CGFloat]) -> CGRect? {
         let blocked = [cellRect(cell)] + buttons.map(buttonRect)
         for x in xs {
             for y in ys {
@@ -82,7 +101,16 @@ struct HudLayout: Equatable {
                 if !blocked.contains(where: { $0.intersects(rect) }) { return rect }
             }
         }
-        return CGRect(origin: CGPoint(x: xs[0], y: ys[0]), size: size)
+        return nil
+    }
+
+    /// Lage der Tafel mit Turmwerten: hoch mit vier Kacheln im Quadrat, wo
+    /// Platz ist, sonst als flache Leiste mit vier Kacheln nebeneinander. Auf
+    /// dem iPhone SE fehlt der hohen Tafel bei vier Knöpfen in der
+    /// Kartenmitte die Höhe; die Leiste passt dort überall (HudLayoutTests).
+    func statPanel(for cell: Cell, avoiding buttons: [CGPoint], tall: CGSize, wide: CGSize) -> (rect: CGRect, wide: Bool) {
+        if let rect = freePanel(for: cell, avoiding: buttons, size: tall) { return (rect, false) }
+        return (panel(for: cell, avoiding: buttons, size: wide), true)
     }
 
     // MARK: Rechnung

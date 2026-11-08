@@ -250,9 +250,17 @@ public struct Simulation: Sendable {
 
     /// Trifft und meldet; `armorAbsorbed` nur, wenn die Rüstung wirklich etwas
     /// geschluckt hat, damit Missionen ohne Rüstung dieselben Ereignisse liefern.
-    private func damage(_ index: Int, by amount: Double, piercesArmor: Bool = false,
+    /// `tower` ist der Index des schießenden Turms; er schreibt die Kampfbilanz
+    /// (D-131). Gezählt wird nur, was am Leben ankam, und der Treffer, der es
+    /// auf null bringt, ist der Sieg dieses Turms.
+    private func damage(_ index: Int, by amount: Double, piercesArmor: Bool = false, tower: Int? = nil,
                         _ state: inout GameState, _ events: inout [Event]) {
+        let before = state.enemies[index].hp
         let hit = strike(&state.enemies[index], by: amount, tick: state.tick, piercesArmor: piercesArmor)
+        if let tower {
+            state.towers[tower].damageDealt += min(hit.dealt, max(0, before))
+            if before > 0 && state.enemies[index].hp <= 0 { state.towers[tower].kills += 1 }
+        }
         let id = state.enemies[index].id
         if hit.shielded { return events.append(.shieldAbsorbed(id: id)) }
         events.append(.enemyDamaged(id: id, amount: hit.dealt))
@@ -333,7 +341,7 @@ public struct Simulation: Sendable {
                 guard !hits.isEmpty else { continue }
                 // Erst der Schuss, dann die Treffer: wie bisher, nur über eine Stelle.
                 events.append(.towerFired(towerID: tower.id, targets: hits.map { state.enemies[$0].id }))
-                for hit in hits { damage(hit, by: stats.damage, &state, &events) }
+                for hit in hits { damage(hit, by: stats.damage, tower: index, &state, &events) }
             case .lightning:
                 guard let first = target(in: state.enemies, around: tower.cell.center, range: stats.range,
                                          mode: tower.targetMode)
@@ -341,7 +349,7 @@ public struct Simulation: Sendable {
                 let chain = chainTargets(in: state.enemies, from: first, stats: stats, tick: state.tick)
                 events.append(.towerFired(towerID: tower.id, targets: chain.map { state.enemies[$0.index].id }))
                 for hit in chain {
-                    damage(hit.index, by: hit.damage, &state, &events)
+                    damage(hit.index, by: hit.damage, tower: index, &state, &events)
                 }
             case .spore:
                 let hits = enemiesInRange(state.enemies, around: tower.cell.center, range: stats.range)
@@ -349,8 +357,9 @@ public struct Simulation: Sendable {
                 guard !hits.isEmpty else { continue }
                 events.append(.towerFired(towerID: tower.id, targets: hits.map { state.enemies[$0].id }))
                 for hit in hits {
-                    damage(hit, by: stats.damage, &state, &events)
+                    damage(hit, by: stats.damage, tower: index, &state, &events)
                     applySlow(to: &state.enemies[hit], stats: stats, tick: state.tick)
+                    state.towers[index].slowHits += 1
                     // Fäulnis nach dem Schaden: Der Puls selbst trifft nicht stärker.
                     // Gleicher Zustand wie das Mondmal, also kein Stapeln mit ihm.
                     if let factor = stats.vulnerableFactor, let duration = stats.slowDuration {

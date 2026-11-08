@@ -314,6 +314,31 @@ final class BattleController {
         }
     }
 
+    // MARK: Wertetafel (D-130)
+
+    /// Die Kennzahlen des gewählten Turms. Beim ersten Tippen auf Aufwerten
+    /// oder einen Stern alt → neu, sonst jede Zeile unverändert. Dieselben
+    /// Werte wie der Kreis (`previewStats`), damit Tafel und Kreis nie
+    /// Verschiedenes zeigen.
+    func statChanges(for tower: Tower) -> [TowerChange] {
+        guard let now = model.sim.config.stats(of: tower) else { return [] }
+        let sheet = TowerSheet(kind: tower.kind, stats: now)
+        guard upgradeArmed, let next = previewStats(of: tower) else { return sheet.changes(to: sheet) }
+        return sheet.changes(to: TowerSheet(kind: tower.kind, stats: next))
+    }
+
+    /// Kennzahlen vor dem Bau, mit Volk und Ausrüstung.
+    func statChanges(for kind: TowerKind) -> [TowerChange] {
+        guard let stats = model.sim.config.towers[kind] else { return [] }
+        let sheet = TowerSheet(kind: kind, stats: stats)
+        return sheet.changes(to: sheet)
+    }
+
+    /// Sekunden, die der Turm schon steht; für die Kampfbilanz.
+    func secondsInBattle(_ tower: Tower) -> Int {
+        max(0, model.state.tick - tower.builtTick) / model.sim.config.simulation.ticksPerSecond
+    }
+
     private func previewStats(of tower: Tower) -> TowerConfig? {
         let config = model.sim.config
         guard upgradeArmed else { return config.stats(of: tower) }

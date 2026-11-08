@@ -5,11 +5,14 @@ ergänzt, D-067). Reihenfolge, Pakete und alles, was auf dich wartet, stehen in 
 [Roadmap](roadmap.md); Einzelheiten im [Backlog](backlog.md), offene Fragen im
 [Register](offene-fragen.md).
 
-**Stand: 08.11.2026** · Neueste Version **0.28.3** (gemalter Kampfplatz Bosslichtung für Mission 7, Bau 54 VALID), davor **0.28.2** (der Moorkönig als eigene 3D-Figur), **0.28.1** (gemalte Kampfplätze für Mission 6a und 6b, Bau 52 VALID), **0.28.0** (Mission 7 „Der Moorkönig“, Ende von Region 1, Bau 51 VALID);
+**Stand: 08.11.2026** · Neueste Version **0.29.0** (die Tafel am Turm zeigt Werte, beim Aufwerten den Vergleich und die Kampfbilanz), davor **0.28.3** (gemalter Kampfplatz Bosslichtung für Mission 7, Bau 54 VALID), davor **0.28.2** (der Moorkönig als eigene 3D-Figur), **0.28.1** (gemalte Kampfplätze für Mission 6a und 6b, Bau 52 VALID), **0.28.0** (Mission 7 „Der Moorkönig“, Ende von Region 1, Bau 51 VALID);
 davor 0.27.0 (Wahl zwischen zwei Spezialisierungen, Mission 6a „Sumpfpfad II“ und 6b „Ruinen II“, Bau 50 VALID), 0.26.1 (gemalte Kampfplätze für Sumpfpfad und Ruinen, Bau 49 VALID), 0.26.0 (Mission 5b „Ruinen“ mit Falkenhorst, Funkensäule, Fäulnis, Bau 48 VALID), 0.25.0 (Spezialisierungen: Salve, Gewitterkrone, Moorherz, dazu Mission 5a „Sumpfpfad“, Bau 47 VALID), 0.24.1 (Sporenfunke sichtbar, Einstieg ohne Erklärtext, Bau 46 VALID), 0.23.0 (Blitz allein verliert Mission 2 und 3, Bau 44), 0.22.0 (Fortsetzen: eine laufende Mission übersteht das Beenden der App, Bau 43 VALID), 0.21.1 (Balance-Labor in der CI, Bau 42 VALID), 0.21.0 (Schmiede mit Erz im Avatar-Menü, Bau 41 VALID), 0.20.0 (Mission 4 mit gepanzerter Panzerbestie, Bau 40), 0.19.0 (Ausrüstung im Avatar-Menü, Bau 39 VALID), 0.18.0 (Mission 3 mit Aufwertungen, Bau 38 VALID), 0.16.1 (gemalte Kampfplätze für Mission 2 bis 4), 0.16.0 (Mission 2 mit Zwergenbank). Der Spielrahmen R-1 bis R-6 steht. Spielbar ist ganz Region 1: Mission 1 bis 4, der Sumpfpfad (5a und 6a), die Ruinen (5b und 6b) und der Moorkönig (7).
 
 ## Wartet auf dich
 
+0. Wie viel Statistik die Tafel am Turm zeigt: Entscheidungskarte S24 im Thread
+   „Aufwertungen mit Werten und Vergleich zeigen“. Gebaut ist die Empfehlung, Werte,
+   Vergleich und Kampfbilanz (0.29.0, D-130, D-131).
 0. Wie der Boss von Mission 7 kämpft: Entscheidungskarte S17 im Haupt-Thread. Gebaut ist
    die Empfehlung, Schild und Ruf bei halbem Leben (0.28.0, D-090).
 0. Was mit der Gewitterkrone passiert, damit sie mit Sporen in Mission 6 nicht alles
@@ -37,6 +40,8 @@ davor 0.27.0 (Wahl zwischen zwei Spezialisierungen, Mission 6a „Sumpfpfad II�
 
 ## Fertig
 
+- **Turmwerte und Vergleich** (0.29.0, UI-02): vier Kacheln am Turm mit Schaden/s vorn,
+  beim Aufwerten und Spezialisieren alt → neu mit Plus und Minus, Kampfbilanz je Turm.
 - **Mission 1 spielbar** mit Kreismenü, Kopfleiste, Pause, 2×, Ergebnis, Neustart (0.5.0, 0.6.0).
 - **Spielrahmen** (D-060): Hauptmenü, Einstellungen, Spielstand, gemalte Kampagnenkarte
   Region 1 mit Sternen (0.7.0, 0.10.2), Steinregen (0.8.0), Zwerge mit Bollwerk und
