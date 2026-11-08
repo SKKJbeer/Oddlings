@@ -30,6 +30,8 @@ final class FxDirector {
         var callouts = 0, sentences = 0, guides = 0
         /// Rufe des Bosses (P3-4).
         var summons = 0
+        /// Schildhaltungen der Bildfolge (FX 03): gehoben, gesenkt.
+        var guards = 0, unguards = 0
 
         var summary: String {
             "arrows=\(arrows) bolts=\(bolts) combos=\(combos) spores=\(spores) hits=\(hits) deaths=\(deaths) "
@@ -38,6 +40,7 @@ final class FxDirector {
                 + " payouts=\(payouts) empties=\(empties) upgrades=\(upgrades)"
                 + " armorSparks=\(armorSparks) armorHints=\(armorHints)"
                 + " callouts=\(callouts) sentences=\(sentences) guides=\(guides) summons=\(summons)"
+                + " guards=\(guards) unguards=\(unguards)"
         }
     }
 
@@ -276,6 +279,39 @@ final class FxDirector {
         stats.summons += 1
         let at = CGPoint(x: boss.position.x, y: boss.position.y + boss.height * 0.3)
         sparks(at: at, count: FxStyle.summonSparks, color: FxStyle.summonColor, speed: 1.6, size: 0.3)
+        // Mit Bildfolge hebt er den Stab und stößt ihn auf; die Folge endet in
+        // der Schildhaltung, `release` kehrt dorthin zurück.
+        guard !boss.summonFrames.isEmpty else { return }
+        let frames = boss.summonFrames
+        animate(boss.body, key: "frames", duration: FxStyle.summonFramesLife,
+                onEnd: { [weak boss] in boss?.release() }) { [weak boss] _, t in
+            boss?.hold(frames[FxMath.onceFrame(t, frames: frames.count)])
+        }
+    }
+
+    /// Der Schild steigt (FX 03): Schildarm vor, Knie beugen; das letzte Bild
+    /// bleibt stehen, bis `lowerShield`. Ohne Folge trägt die Kuppel allein.
+    func raiseShield(_ boss: EnemyNode) {
+        guard let last = boss.shieldFrames.last else { return }
+        stats.guards += 1
+        let frames = boss.shieldFrames
+        boss.guardPose(last)
+        animate(boss.body, key: "frames", duration: FxStyle.shieldFramesLife,
+                onEnd: { [weak boss] in boss?.release() }) { [weak boss] _, t in
+            boss?.hold(frames[FxMath.onceFrame(t, frames: frames.count)])
+        }
+    }
+
+    /// Der Schild fällt: dieselbe Folge rückwärts, danach läuft er wieder.
+    func lowerShield(_ boss: EnemyNode) {
+        guard boss.guardFrame != nil else { return }
+        stats.unguards += 1
+        let frames = Array(boss.shieldFrames.reversed())
+        boss.guardPose(nil)
+        animate(boss.body, key: "frames", duration: FxStyle.shieldFramesLife,
+                onEnd: { [weak boss] in boss?.release() }) { [weak boss] _, t in
+            boss?.hold(frames[FxMath.onceFrame(t, frames: frames.count)])
+        }
     }
 
     /// Beim ersten gepanzerten Gegner einer Mission ein kurzer Hinweis über ihm.

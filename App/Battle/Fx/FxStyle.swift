@@ -76,8 +76,9 @@ enum FxStyle {
     /// Ruf: grüner Dunst an der Stelle des Königs.
     static let summonColor = SKColor(red: 0.45, green: 0.85, blue: 0.45, alpha: 1)
     static let summonSparks = 10
-    /// Färbung der Ersatzfigur, bis der Moorkönig gemalt ist.
-    static let standInTint: CGFloat = 0.55
+    /// Bildfolgen des Moorkönigs (FX 03): Schild heben bzw. senken, ein Ruf mit dem Stab.
+    static let shieldFramesLife: TimeInterval = 0.45
+    static let summonFramesLife: TimeInterval = 0.7
 
     static let deathLife: TimeInterval = 0.45
     static let deathSmoke = 6

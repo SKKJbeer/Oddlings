@@ -77,6 +77,41 @@
       "anker": 0.1,
       "alpha": true
     },
+    "enemy_moorKing": {
+      "seiteZellen": 2.3,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_moorKing_walk": {
+      "folge": 8,
+      "seiteZellen": 2.3,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_moorKing_hit": {
+      "folge": 3,
+      "seiteZellen": 2.3,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_moorKing_die": {
+      "folge": 8,
+      "seiteZellen": 2.3,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_moorKing_shield": {
+      "folge": 4,
+      "seiteZellen": 2.3,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_moorKing_summon": {
+      "folge": 5,
+      "seiteZellen": 2.3,
+      "anker": 0.1,
+      "alpha": true
+    },
     "map_mission01_ground": {
       "zellen": [
         24,
@@ -300,6 +335,20 @@
         2
       ],
       "mission": "Packages/OddlingsCore/Sources/OddlingsCore/Resources/Balance/mission-06b.json"
+    },
+    "map_mission07_ground": {
+      "zellen": [
+        24,
+        13
+      ],
+      "alpha": false,
+      "ordner": "App/Assets.xcassets/Maps",
+      "format": "jpg",
+      "rand": [
+        4,
+        2
+      ],
+      "mission": "Packages/OddlingsCore/Sources/OddlingsCore/Resources/Balance/mission-07.json"
     }
   }
 }

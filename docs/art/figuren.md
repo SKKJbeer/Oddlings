@@ -61,6 +61,16 @@ man einfarbig erkennt), Farben, Bewegung in der Szene und was das Bild
 - **Bewegung:** langsames, schweres Stampfen mit Bildschütteln beim Auftreten
   (sehr schwach, nur bei Nahsicht).
 
+### Moorkönig `enemy_moorKing` (Boss, P3-4, FX 03)
+- **Rolle:** Boss von Region 1: langsam, gepanzert, bei halbem Leben Schild und Ruf (D-090).
+- **Persönlichkeit:** alt, schwer, mürrisch, herrscht über alles, was im Moor kriecht.
+- **Silhouette:** breiter, gebückter Moortroll mit Wurzelkrone und kleinem Geweih,
+  Bart, Laternenstab in der rechten, runder Rindenschild an der linken Hand.
+- **Farben:** Moosgrün, Rindenbraun, Giftgrün nur an Laterne, Augen und Kronenstein.
+- **Bewegung:** schweres Stapfen; hebt den Schild vor die Brust und hält ihn, solange
+  er steht; ruft mit erhobenem Stab. 3D-Figur, 2,3 Felder (D-100, D-101).
+- **Nicht:** Totenköpfe, Blut, Feuer, Blau.
+
 ## Festung `fortress`
 - Seit 0.11.1 eine Zwergenfeste mit zwei Ecktürmen, Fackeln und Bannern, im Stil
   der Türme ([Grafik 05](../konzepte/grafik-05-kampfplatz.md)); vorher ein Torhaus

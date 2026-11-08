@@ -11,7 +11,34 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.28.1 – 08.11.2026 (Grafik 08: Kampfplätze Tiefes Moor und Tempelplatz)
+## 0.28.3 – 08.11.2026 (Grafik 09: Kampfplatz Bosslichtung) · Bau 54
+
+- **Gemalter Kampfplatz für Mission 7 „Der Moorkönig“**: die Lichtung im Reich des Bosses,
+  im Rand hohle Sumpfbäume, Steinkreis, Geweih-Totems, Schlammbecken und eine rostige Krone
+  zwischen Knochen, dazu fahles Sturmlicht. Die Lichtung selbst ist frei und hell; der Weg läuft
+  als Hufeisen herum (`mission-07.json`).
+- Tests: `test_weg_und_wald_liegen_richtig` deckt die Karte ab (einmal rot gesehen mit dem Weg
+  von M5b), `testEveryBundledMissionHasItsPaintedGround` um `mission-07` ergänzt.
+- Herkunft in `art/karten/ENTSTEHUNG.md`, Konzept
+  [Grafik 09](docs/konzepte/grafik-09-bosslichtung-m7.md).
+
+## 0.28.2 – 08.11.2026 (FX 03: der Moorkönig als eigene 3D-Figur)
+
+- **Der Moorkönig hat sein eigenes Gesicht** (D-100, Karte S18 offen): ein breiter,
+  gebückter Moortroll mit Wurzelkrone, Moosbart, Laternenstab und Rindenschild, gebaut
+  wie der Plünderer (FLUX-Vorlage, TRELLIS, Blender). Die grün eingefärbte Panzerbestie
+  entfällt.
+- **28 Bilder:** Laufen (8), Zucken (3), Sturz (8), Schild heben (4), Ruf (5). Hebt er
+  den Schild, hält er den Schild vor die Brust, bis er fällt; beim Ruf reißt er den Stab
+  hoch und kehrt in die Schildhaltung zurück. Ein Treffer-Zucken setzt die Haltung nicht
+  zurück.
+- **2,3 Felder statt 1,9** (D-101): Bei 1,9 stand er kaum größer als die Panzerbestie.
+- Werkzeug: `figur.py` kann mehrere Drehungen je Knochen, Hin-und-zurück-Bewegungen,
+  eine Grundhaltung aus einer anderen Folge und entfernt lose Splitter.
+- Tests: `BossAppTests` (Schildhaltung, Ruf, Rückkehr zum Laufen), `BattleSpritesTests`
+  (jede Gegnerart hat ein eigenes Bild, Folgen des Königs), `check_assets.py`.
+
+## 0.28.1 – 08.11.2026 (Grafik 08: Kampfplätze Tiefes Moor und Tempelplatz) · Bau 52
 
 - **Gemalte Kampfplätze für Mission 6a und 6b** statt der schlichten Karte. 6a „Sumpfpfad II“
   führt tiefer ins Moor: Nacht, blaugrünes Licht, Mangroven, Trauerweiden, leuchtende Pilze.

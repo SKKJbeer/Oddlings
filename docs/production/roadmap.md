@@ -12,7 +12,7 @@ Entscheidungskarte beantwortet. Alles, was auf ihn wartet, steht unter
 zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzelnen:
 [backlog.md](backlog.md), offene Fragen: [offene-fragen.md](offene-fragen.md).
 
-**Stand: 03.11.2026** · neueste Version 0.28.1 (gemalte Kampfplätze für M6a und M6b, Bau folgt), davor 0.28.0 (Mission 7 „Der Moorkönig“, Bau 51), davor 0.27.0 (Wahl zwischen zwei Spezialisierungen, Mission 6a und 6b, Bau 50), davor 0.26.1 (gemalte Kampfplätze für M5a Sumpfpfad und M5b Ruinen, Bau 49), davor 0.26.0 (Mission 5b „Ruinen“, Bau 48), davor 0.25.0 (Spezialisierungen und Mission 5a „Sumpfpfad“, Bau 47), davor 0.24.1 (Korrektur für den Release-Bau, Bau 46), davor 0.24.0 (Synergie sichtbar, Einstieg ohne Erklärtext, Bau 45 gescheitert), davor 0.23.0 (Blitz allein verliert Mission 2 und 3, Bau 44), 0.22.0 (Fortsetzen nach Neustart, Bau 43), neuester VALID-Bau 51 (0.28.0)
+**Stand: 08.11.2026** · neueste Version 0.28.3 (gemalter Kampfplatz Bosslichtung M7, Bau 54), davor 0.28.2 (der Moorkönig als eigene 3D-Figur), davor 0.28.1 (gemalte Kampfplätze für M6a und M6b, Bau 52), davor 0.28.0 (Mission 7 „Der Moorkönig“, Bau 51), davor 0.27.0 (Wahl zwischen zwei Spezialisierungen, Mission 6a und 6b, Bau 50), davor 0.26.1 (gemalte Kampfplätze für M5a Sumpfpfad und M5b Ruinen, Bau 49), davor 0.26.0 (Mission 5b „Ruinen“, Bau 48), davor 0.25.0 (Spezialisierungen und Mission 5a „Sumpfpfad“, Bau 47), davor 0.24.1 (Korrektur für den Release-Bau, Bau 46), davor 0.24.0 (Synergie sichtbar, Einstieg ohne Erklärtext, Bau 45 gescheitert), davor 0.23.0 (Blitz allein verliert Mission 2 und 3, Bau 44), 0.22.0 (Fortsetzen nach Neustart, Bau 43), neuester VALID-Bau 50 (0.27.0)
 
 ## Phasen
 
@@ -37,6 +37,7 @@ zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzeln
 | S9 | R-7b Schmiede: woher die Währung kommt, was die Schmiede macht, wie die Währung heißt (drei Karten seit 02.11.) | Haupt-Thread, [Konzept](../konzepte/r-7b-schmiede.md) | nichts, gebaut sind die Empfehlungen (D-072); eine andere Wahl wird umgebaut | Erz aus jedem Sieg, mehr für neue Sterne; Stufen I bis III; Name Erz |
 | S10 | Wie schwer Mission 1 bis 4 beim ersten Versuch sein sollen (Entscheidungskarte seit 03.11.) | Haupt-Thread, [Konzept](../konzepte/p2-6b-balance-labor.md) | nichts, das Labor warnt nach der Empfehlung (D-073) | Steigend: M1 ≥ 90 %, M2 ≥ 75 %, M3 ≥ 60 %, M4 ≥ 50 % |
 | S12 | Wo die App nach einem Neustart mitten in einer Mission öffnet (Entscheidungskarte seit 03.11.) | Thread „Fortsetzen nach App-Neustart bauen“, [Konzept](../konzepte/p2-2-fortsetzen.md) | nichts, gebaut ist die Empfehlung (D-074) | Direkt in der Mission, pausiert |
+| S18 | Gestalt des Moorkönigs als 3D-Figur (Entscheidungskarte seit 08.11.) | Thread „Moorkönig als 3D-Boss bauen“, [Konzept](../konzepte/fx-03-moorkoenig.md) | nichts, gebaut ist die Empfehlung (D-100) | So übernehmen (Vorlage 71) |
 | S11 | Blitz allein gewinnt Mission 2 und 3 beim ersten Spielen: wann beheben (Entscheidungskarte seit 03.11.) | Haupt-Thread, [Labor](../konzepte/p2-6b-balance-labor.md#erster-lauf-03112026-stufe-pr-164-läufe-etwa-25-sekunden) | nichts, gebaut ist die Empfehlung (P2-11, D-075) | Jetzt, als eigenes Paket |
 
 ## Als Nächstes
@@ -101,7 +102,9 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | Grafik 07: gemalte Kampfplätze M5a (Sumpfpfad) und M5b (Ruinenhof), Wege aus D-081 | 0.26.1 | 49 | [Konzept](../konzepte/grafik-07-kampfplaetze-m5.md) |
 | P3-3: Wahl zwischen zwei Spezialisierungen, Mission 6a und 6b, Gewitterkrone ohne Sporen-Vorteil (D-079) | 0.27.0 | 50 | [Konzept](../konzepte/p3-3-wahl-zwischen-spezialisierungen.md) |
 | P3-4: Mission 7, der Moorkönig mit Schild und Ruf (D-090) | 0.28.0 | 51 | [Konzept](../konzepte/p3-4-mission-7-boss.md) |
-| Grafik 08: gemalte Kampfplätze M6a (Tiefes Moor) und M6b (Tempelplatz) | 0.28.1 | folgt | [Konzept](../konzepte/grafik-08-kampfplaetze-m6.md) |
+| Grafik 08: gemalte Kampfplätze M6a (Tiefes Moor) und M6b (Tempelplatz) | 0.28.1 | 52 | [Konzept](../konzepte/grafik-08-kampfplaetze-m6.md) |
+| FX 03: der Moorkönig als 3D-Figur mit Schild- und Ruffolge (D-100, D-101) | 0.28.2 | folgt | [Konzept](../konzepte/fx-03-moorkoenig.md) |
+| Grafik 09: gemalter Kampfplatz Bosslichtung M7 | 0.28.3 | 54 | [Konzept](../konzepte/grafik-09-bosslichtung-m7.md) |
 
 ## Gilt für jedes Paket
 

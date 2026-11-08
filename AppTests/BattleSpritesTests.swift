@@ -18,13 +18,9 @@ final class BattleSpritesTests: XCTestCase {
         for kind in TowerKind.allCases {
             XCTAssertNotNil(BattleSprites.texture(named: BattleSprites.towerName(kind)), "\(kind)")
         }
-        // Der Moorkönig (P3-4) leiht sich das Bild der Panzerbestie, bis er gemalt ist.
+        // Jede Gegnerart hat ihr eigenes Bild; seit FX 03 auch der Moorkönig.
         for kind in EnemyKind.allCases {
-            XCTAssertNotNil(BattleSprites.texture(named: BattleSprites.pictureName(kind)), "\(kind)")
-            if BattleSprites.texture(named: BattleSprites.enemyName(kind)) == nil {
-                XCTAssertEqual(kind, .moorKing, "nur der Boss darf einspringen lassen")
-                XCTAssertEqual(BattleSprites.pictureName(kind), BattleSprites.enemyName(.brute))
-            }
+            XCTAssertNotNil(BattleSprites.texture(named: BattleSprites.enemyName(kind)), "\(kind)")
         }
         XCTAssertNotNil(BattleSprites.fortress(field: field))
     }
@@ -124,7 +120,7 @@ final class BattleSpritesTests: XCTestCase {
     /// Boden; fehlt einer, zeichnete die Szene still die Ersatzlinie. Die
     /// Festung verdeckt auch dort keine Bauzelle.
     func testEveryBundledMissionHasItsPaintedGround() throws {
-        for file in ["mvp-mission-01", "mission-02", "mission-03", "mission-04", "mission-05a", "mission-05b", "mission-06a", "mission-06b"] {
+        for file in ["mvp-mission-01", "mission-02", "mission-03", "mission-04", "mission-05a", "mission-05b", "mission-06a", "mission-06b", "mission-07"] {
             let config = try BalanceConfig.bundledMission(named: file)
             let name = BattleSprites.groundName(missionID: config.mission.id)
             XCTAssertNotNil(BattleSprites.texture(named: name), name)
@@ -140,19 +136,24 @@ final class BattleSpritesTests: XCTestCase {
         }
     }
 
-    /// FX 02: Der Plünderer hat Laufen, Zucken und Sturz als Bildfolge, gleich
-    /// groß wie sein Standbild; die anderen Gegner bleiben beim Standbild.
-    func testRaiderHasFramesOthersKeepTheirPicture() throws {
-        XCTAssertEqual(BattleSprites.frames(.raider, .walk).count, 8)
-        XCTAssertEqual(BattleSprites.frames(.raider, .hit).count, 3)
-        XCTAssertEqual(BattleSprites.frames(.raider, .die).count, 6)
-        let still = try XCTUnwrap(BattleSprites.texture(named: BattleSprites.enemyName(.raider)))
-        for motion in EnemyMotion.allCases {
-            for texture in BattleSprites.frames(.raider, motion) {
-                XCTAssertEqual(texture.size(), still.size(), "\(motion)")
+    /// FX 02/03: Plünderer und Moorkönig haben ihre Bildfolgen, gleich groß wie
+    /// ihr Standbild; die anderen Gegner bleiben beim Standbild.
+    func testRaiderAndKingHaveFramesOthersKeepTheirPicture() throws {
+        let counts: [EnemyKind: [EnemyMotion: Int]] = [
+            .raider: [.walk: 8, .hit: 3, .die: 6, .shield: 0, .summon: 0],
+            .moorKing: [.walk: 8, .hit: 3, .die: 8, .shield: 4, .summon: 5],
+        ]
+        for (kind, expected) in counts.sorted(by: { $0.key.rawValue < $1.key.rawValue }) {
+            let still = try XCTUnwrap(BattleSprites.texture(named: BattleSprites.enemyName(kind)))
+            for motion in EnemyMotion.allCases {
+                let frames = BattleSprites.frames(kind, motion)
+                XCTAssertEqual(frames.count, expected[motion], "\(kind) \(motion)")
+                for texture in frames {
+                    XCTAssertEqual(texture.size(), still.size(), "\(kind) \(motion)")
+                }
             }
         }
-        for kind in EnemyKind.allCases where kind != .raider {
+        for kind in EnemyKind.allCases where counts[kind] == nil {
             XCTAssertTrue(BattleSprites.frames(kind, .walk).isEmpty, "\(kind)")
         }
     }
