@@ -63,14 +63,13 @@ Alle Folgen beginnen oder enden in einer Haltung, aus der die nächste ohne Spru
 weitergeht. Das Standbild `enemy_moorKing` ist `walk_00`, damit Szenen ohne
 Bildfolge (Kampagnenkarte, Vorschau) dieselbe Figur zeigen.
 
-Größe: 28 Bilder in @2x und @3x bei 1,9 Feldern (245 px @3x), je etwa 60 KB,
-zusammen rund 2,5 MB. Vertretbar für den einzigen Boss der Region; der Atlas liegt
-heute bei etwa 6 MB.
+Größe: 28 Bilder in @2x und @3x bei 2,3 Feldern (297 px @3x), zusammen 1,8 MB.
+Vertretbar für den einzigen Boss der Region.
 
 ## Asset-Vertrag
 
-`enemy_moorKing` mit `seiteZellen` 1,9 und `anker` 0,1 (wie im Mission-Thread
-vereinbart, `BattleStyle.enemyHeight`), dazu `enemy_moorKing_walk` (folge 8),
+`enemy_moorKing` mit `seiteZellen` 2,3 (D-101; im Mission-Thread waren 1,9
+vereinbart, siehe Ergebnis) und `anker` 0,1, dazu `enemy_moorKing_walk` (folge 8),
 `_hit` (3), `_die` (8), `_shield` (4), `_summon` (5). `check_assets.py` prüft
 Vollständigkeit, Größe und Herkunft wie beim Plünderer.
 
@@ -113,3 +112,18 @@ Laufzeit geladen. Der Token für Hugging Face steht nur in der Umgebung, nie im 
 - Die Figur ist groß: Kontur und Farbangleich sind auf ihr gut zu sehen. Darum wird
   gegen eine gemalte Standansicht derselben Vorlage angeglichen, nicht gegen die
   Panzerbestie.
+
+## Ergebnis (0.28.2)
+
+Gebaut wie oben, Gestalt nach der Empfehlung zu Karte S18 (D-100). Abweichungen:
+
+- **2,3 Felder statt 1,9** (D-101): Die breite, gebückte Figur füllt ihr Quadrat nur zu
+  drei Vierteln. Bei 1,9 stand sie kaum größer als die Panzerbestie neben ihr.
+- Der Sturz kippt weniger weit (Becken 62°, Stab nur 15° seitlich), sonst bestimmte die
+  Breite des liegenden Königs den Maßstab aller 28 Bilder.
+- `figur.py` kann jetzt mehrere Drehungen je Knochen, Hin-und-zurück-Bewegungen
+  (`bogen`), eine Grundhaltung aus einer anderen Folge (`basis`) und entfernt lose
+  Splitter (`splitterBis`); der Plünderer rendert unverändert.
+- Szene neben Flitzer, Plünderer und Panzerbestie:
+  `/mnt/project-files/moorkoenig/szene-0.28.2.jpg`, alle Folgen:
+  `/mnt/project-files/moorkoenig/bildfolgen-0.28.2.jpg`.
