@@ -59,6 +59,9 @@ description: Hochwertige Spielgrafik (App-Symbole, Figuren, Store-Bilder, Hinter
   Nachtkarten (Grafik 08): „moonlit“ oder „moonlight“ im Übermal-Prompt malt einen Vollmond
   ins Bild. Stattdessen „night light, no moon, no sky“ und „the clearing itself well lit“,
   dazu ein kühles `LICHT`; so bleibt das Feld hell genug für Gegner und Weg.
+  Ein großes Ding im Ortsprompt („a huge ancient tree“) landet gern mitten auf dem Feld:
+  Rand-Dinge mit „in the surrounding forest edge only“ einleiten und „the clearing is plain
+  open grass with nothing on it“ anhängen (Grafik 09).
 - **Lange Läufe in der Cloud:** Ein 512er-Bild braucht rund 12 Minuten, 1024x640
   rund 20, Hochrechnen auf 2580 px rund 10. Ein mit `setsid nohup` abgekoppelter
   Lauf überlebt das Abräumen eines untätigen Containers NICHT (26.10.2026

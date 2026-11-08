@@ -137,3 +137,16 @@ Wege aus `mission-06a.json` und `mission-06b.json` (= `wegvorschlaege/`).
 5. **Nachbessern:** M6b `RAND=16 retusche.py fertig.png aus.png "1030,670,1190,840:1450,670"`.
    Dort stand eine kleine Figur auf dem Weg, die wie ein Gegner gewirkt hätte. M6a ohne Nachbessern.
 6. **Atlas:** `atlas.py aus map_mission06X_ground 24x13 voll _ App/Assets.xcassets/Maps`.
+
+## `map_mission07_ground` (Grafik 09, Bosslichtung)
+
+08.11.2026, [Konzept](../../docs/konzepte/grafik-09-bosslichtung-m7.md). Ablauf wie Grafik 08,
+Moorgras aus Grafik 07, Weg aus `mission-07.json` (= `wegvorschlaege/mission-07.json`).
+
+1. **Deko-Blatt** `kampfplaetze/blatt-bosslichtung.jpg` (Seed 61, 768 × 768, 11 Teile, 8 genutzt): `sprite sheet of six separate fantasy bog king lair props, a huge ancient hollow swamp tree with a gnarled root throne, a ring of mossy standing stones, a crooked wooden totem pole with antlers and hanging moss, a dark bubbling mud pool, a pile of old bones and a rusty crown half sunk in moss, a cluster of tall glowing green reeds, each isolated and evenly spaced on a plain white background, <Stil>, no characters, no text`. Weggelassen sind der Stab mit Krone (las sich wie eine Waffe), das Holzkreuz und das flach liegende Geweih.
+2. **Collage:** 16 Teile, `DEKO_BREITE=2.4,3.2`, `LICHT=205,225,208`.
+3. **Übermalen** (Seed 7, `STAERKE=0.3 VERSCHIEBUNG=0.5`, gemeinsamer Teil wie Grafik 06): `an empty open mossy clearing in a bog king's realm, in the surrounding forest edge only: hollow swamp trees, mossy standing stones, crooked antler totems, bubbling mud pools and tall reeds among the dense round tree canopies, deep green mossy grass, eerie greenish storm light with soft mist, no moon, no sky, the clearing itself well lit, soft tree shadows, the clearing is plain open grass with nothing on it`.
+   **Verworfen:** Seed 5 mit „a wide open mossy clearing at the heart of a bog king's realm, a huge ancient hollow swamp tree …“. FLUX setzte einen riesigen toten Baum mitten auf die Lichtung, also auf Bauzellen, und malte trotz „no moon“ eine Mondscheibe an den Ausgang. Erst „empty“, „in the surrounding forest edge only“ und „plain open grass with nothing on it“ hielten die Lichtung frei.
+4. **Hochrechnen**, **Ebene auflegen** wie oben.
+5. **Nachbessern:** `RAND=16 retusche.py fertig.png aus.png "1465,455,1650,625:1700,700"` (ein großer Stein auf der Lichtung).
+6. **Atlas:** `atlas.py aus map_mission07_ground 24x13 voll _ App/Assets.xcassets/Maps`.
