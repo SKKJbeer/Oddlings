@@ -120,7 +120,7 @@ final class BattleSpritesTests: XCTestCase {
     /// Boden; fehlt einer, zeichnete die Szene still die Ersatzlinie. Die
     /// Festung verdeckt auch dort keine Bauzelle.
     func testEveryBundledMissionHasItsPaintedGround() throws {
-        for file in ["mvp-mission-01", "mission-02", "mission-03", "mission-04", "mission-05a", "mission-05b"] {
+        for file in ["mvp-mission-01", "mission-02", "mission-03", "mission-04", "mission-05a", "mission-05b", "mission-06a", "mission-06b"] {
             let config = try BalanceConfig.bundledMission(named: file)
             let name = BattleSprites.groundName(missionID: config.mission.id)
             XCTAssertNotNil(BattleSprites.texture(named: name), name)

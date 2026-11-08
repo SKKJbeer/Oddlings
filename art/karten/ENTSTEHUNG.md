@@ -116,3 +116,24 @@ Weggeometrie M5a aus `mission-05a.json` (= `wegvorschlaege/mission-05a.json`), M
    er färbte die Mittelbahn gelblicher als das übrige Gras. M5b `RAND=16 retusche.py …
    "1410,460,1550,590:1640,700" "1360,600,1490,730:1640,850"` (zwei Steine im Becken).
 7. **Atlas:** `atlas.py aus map_mission05X_ground 24x13 voll _ App/Assets.xcassets/Maps`.
+
+## `map_mission06a_ground`, `map_mission06b_ground` (Grafik 08)
+
+03.11.2026, [Konzept](../../docs/konzepte/grafik-08-kampfplaetze-m6.md). Ablauf und Teile wie
+Grafik 07 (M6a mit dem olivgrünen Moorgras aus Schritt 2 dort, M6b mit dem Gras aus `region01`).
+Wege aus `mission-06a.json` und `mission-06b.json` (= `wegvorschlaege/`).
+
+1. **Deko-Blätter** (FLUX.1-schnell, 768 × 768, Stil-Teil wie bei `region01`), zerlegt mit `zerlegen.py`:
+   - `kampfplaetze/blatt-moor.jpg` (M6a, Seed 51, 7 Teile, 6 genutzt): `sprite sheet of six separate fantasy deep bog props, a twisted mangrove tree with arching roots, a cluster of glowing blue bioluminescent mushrooms, a half sunken mossy stone head statue, a hollow fallen log covered in moss, a dark bog pool with floating glowing lily pads, a tall weeping willow tree with drooping branches, each isolated and evenly spaced on a plain white background, <Stil>, no characters, no text`. Der „Steinkopf“ kam als leeres Steintor und ist weggelassen.
+   - `kampfplaetze/blatt-tempel.jpg` (M6b, Seed 52, 6 Teile, 5 genutzt): `sprite sheet of six separate ancient temple ruin props, a cluster of glowing teal magic crystals growing from rocks, a stone fire brazier with burning flames, a collapsed temple wall with a carved relief, a broken flight of mossy stone stairs, an overgrown stone altar, a tall cracked stone pillar with ivy, each isolated and evenly spaced on a plain white background, <Stil>, no characters, no text`. Die zweite, flache Treppe ist weggelassen (weißer Bodenrest). Bei allen Teilen wurden fast weiße, kaum farbige Pixel durchsichtig gemacht: zuerst heller als 200 und Spanne unter 25, bei vier Teilen zusätzlich heller als 175 und Spanne unter 14.
+2. **Collage:** M6a 18 Teile, `DEKO_BREITE=2.4,3.2`, `LICHT=195,215,228` (kühle Nacht); M6b 14,
+   `2.2,3.0`, `205,212,238` (Mondlicht). Auf 1024 × 576 verkleinert (`kampfplaetze/mission06X-collage.jpg`).
+3. **Übermalen** (`STAERKE=0.3 VERSCHIEBUNG=0.5`, gemeinsamer Teil wie Grafik 06):
+   - M6a, Seed 7: `a mossy clearing deep in a misty bog at night, twisted mangrove trees with arching roots, weeping willows, hollow mossy logs, glowing teal mushrooms and dark bog pools with glowing lily pads among the dense round tree canopies, deep green mossy grass, bright cool blue-green night light with soft mist, no moon, no sky, the clearing itself well lit, soft tree shadows`.
+     **Verworfen:** Seed 5 mit „moonlit bog … moonlight“. FLUX malte einen Vollmond als
+     Scheibe an den Ausgang. Seitdem steht im Prompt „night light, no moon, no sky“.
+   - M6b, Seed 5: `a grassy temple square deep inside ancient overgrown temple ruins at night, crumbling walls with carved reliefs, broken stone stairs, ivy covered pillars, stone fire braziers with warm flames and glowing teal magic crystals among the dense round tree canopies, lush grass with small flowers, bright silver-blue moonlight with warm firelight pools and teal crystal glow, the square itself well lit, long soft shadows`
+4. **Hochrechnen** (`hochskalieren.sh … 3096x1677`), **Ebene auflegen** (`ebene.py`).
+5. **Nachbessern:** M6b `RAND=16 retusche.py fertig.png aus.png "1030,670,1190,840:1450,670"`.
+   Dort stand eine kleine Figur auf dem Weg, die wie ein Gegner gewirkt hätte. M6a ohne Nachbessern.
+6. **Atlas:** `atlas.py aus map_mission06X_ground 24x13 voll _ App/Assets.xcassets/Maps`.
