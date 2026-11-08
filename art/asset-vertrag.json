@@ -335,6 +335,20 @@
         2
       ],
       "mission": "Packages/OddlingsCore/Sources/OddlingsCore/Resources/Balance/mission-06b.json"
+    },
+    "map_mission07_ground": {
+      "zellen": [
+        24,
+        13
+      ],
+      "alpha": false,
+      "ordner": "App/Assets.xcassets/Maps",
+      "format": "jpg",
+      "rand": [
+        4,
+        2
+      ],
+      "mission": "Packages/OddlingsCore/Sources/OddlingsCore/Resources/Balance/mission-07.json"
     }
   }
 }
