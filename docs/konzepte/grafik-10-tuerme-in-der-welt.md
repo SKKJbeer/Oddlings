@@ -1,6 +1,6 @@
 # Konzept: Türme stimmig in die Welt einfügen (Grafik 10)
 
-Status: **umgesetzt in 0.28.4** · Stil D-016 · Thread „Türme stimmig in die Welt einfügen“
+Status: **umgesetzt in 0.29.1** · Stil D-016 · Thread „Türme stimmig in die Welt einfügen“
 Anlass: Steffen am 08.11.2026: „die türme sehen nicht stimmig aus dass sie zur welt
 gehören. das muss fließend aussehen dass es dann in der welt ist.“ Die Ansicht der
 Aufwertungen mit Werten macht ein anderer Thread.

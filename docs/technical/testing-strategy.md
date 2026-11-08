@@ -135,7 +135,7 @@ Umgesetzt ab Version 0.5.1; Aufbau und Grundsätze: [e2e-tests.md](../konzepte/e
 | `CampaignE2ETests` | 2 | Sterne nach Sieg überstehen Neustart, Ergebnistafel nennt das Erz (R-7b), Mission 2 danach offen und startbar, gesperrte Missionen nennen den Grund |
 | `ArmorE2ETests` | 1 | Mission 4: zwei Wachtürme, die erste Panzerbestie wirft Funken an der Panzerung, der Hinweis kommt genau einmal (`fx.stats`, P2-10) |
 | `SpecializationE2ETests` | 3 | Mission 5a: Wachturm bauen, aufwerten, spezialisieren (zweimal tippen, „Salve“, Preis abgezogen, Zielwahl bleibt) (P3-1); Mission 5b: Sporenturm zur „Fäulnis“ (P3-2); Mission 6a: zwei Sterne, Falkenhorst vorgemerkt, Salve gewechselt und gekauft (P3-3) |
-| `UpgradeE2ETests` | 1 | Mission 3: Turm bauen, aufwerten (zweimal tippen, Preis abgezogen, „Wachturm II“), Zielwahl schaltet Erster → Letzter → Stärkster ohne Gold (P2-6) |
+| `UpgradeE2ETests` | 1 | Mission 3: Turm bauen, Kampfbilanz und Schaden/s am Turm, erstes Tippen auf Aufwerten zeigt „Wachturm → II“ mit dem Plus aus der Konfiguration und „gleich“ bei der Reichweite (UI-02), aufwerten (zweimal tippen, Preis abgezogen, „Wachturm II“), Zielwahl schaltet Erster → Letzter → Stärkster ohne Gold (P2-6) |
 | `BankE2ETests` | 2 | Mission 2: Bank im Kreismenü mit Warnung und Preis (P2-5), frühes Rufen schreibt Gold gut, Höchstzahl sperrt die dritte Bank |
 | `AvatarE2ETests` | 6 | Avatar einmal aufbauen (R-5), Zwerge mit Preis und Fähigkeit, Rang schaltet Talent frei (R-6), Ausrüstung anlegen und ablegen übersteht den Neustart (R-7a), Schmieden zieht Erz ab und Stufe und Bestand überstehen den Neustart (R-7b), Aufbau und Menü passen auf den Schirm |
 | `BuildAndSellE2ETests` | 4 | Kreismenü, Vorschau, bauen, verkaufen, „fehlt N“, Schließen |

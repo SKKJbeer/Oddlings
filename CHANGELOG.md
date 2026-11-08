@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.28.4 – 08.11.2026 (Grafik 10: Türme stimmig in der Welt)
+## 0.29.1 – 08.11.2026 (Grafik 10: Türme stimmig in der Welt)
 
 - **Türme gehören jetzt zum Ort** (D-120): Sie stehen im Licht ihres Kampfplatzes (warmer
   Nachmittag in Mission 1, grünliche Dämmerung im Sumpf, Mondlicht im Moor), werfen einen
@@ -25,6 +25,24 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   Fälle; der Lichtvergleich einmal rot gesehen mit geändertem Wert für Mission 2).
 - Konzept [Grafik 10](docs/konzepte/grafik-10-tuerme-in-der-welt.md), Herkunft in
   `art/spielfeld/ENTSTEHUNG.md`.
+
+## 0.29.0 – 08.11.2026 (UI-02: Turmwerte und Vergleich beim Aufwerten)
+
+- **Die Tafel am Turm zeigt, was er kann** (D-130): vier Kacheln, vorn Schaden pro
+  Sekunde (beim Blitzturm über die volle Kette, beim Sporenturm „Bremst um“), dazu
+  Schaden, Tempo oder Kette und Reichweite. Mit Volk und Ausrüstung verrechnet. Vor dem
+  Bau dieselben Werte.
+- **Vorher und nachher**: Beim ersten Tippen auf Aufwerten oder einen Stern zeigt jede
+  Kachel alt → neu mit grünem Plus, orangem Minus (zum Beispiel Tempo beim Falkenhorst)
+  oder „gleich“, dazu einen wachsenden Balken. Titel „Wachturm → II“.
+- **Kampfbilanz je Turm** (D-131): Schaden, Erledigte und Zeit im Kampf, beim Sporenturm
+  gebremste Treffer. Die Simulation zählt mit; alte Spielstände bleiben lesbar.
+- Wo die Tafel nicht frei liegt (iPhone SE, vier Knöpfe in der Kartenmitte), kommt sie als
+  flache Leiste (D-132).
+- Tests: `TowerSheetTests`, `TowerTallyTests` (Paket, einmal rot gesehen),
+  `TowerStatsTests`, `HudLayoutTests.testStatPanelFitsEveryCellOfEveryMission`,
+  `UpgradeE2ETests` erweitert. Konzept [UI-02](docs/konzepte/ui-02-turmwerte.md),
+  Karte S24 offen.
 
 ## 0.28.3 – 08.11.2026 (Grafik 09: Kampfplatz Bosslichtung) · Bau 54
 

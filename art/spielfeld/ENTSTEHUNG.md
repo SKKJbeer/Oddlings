@@ -42,7 +42,7 @@ nach links. Spiegeln ist billiger als neu rechnen. Ein freier Kartenentwurf
 (Bild-zu-Bild mit Stärke 0,7) wich vom Weg ab und wirkte flach; verworfen,
 die Karte entsteht aus Texturen, siehe [karten/ENTSTEHUNG.md](../karten/ENTSTEHUNG.md).
 
-## Schatten und Fundament der Türme (D-120, 0.28.4)
+## Schatten und Fundament der Türme (D-120, 0.29.1)
 
 Gerechnet, nicht gemalt: `.claude/skills/spielgrafik/scripts/turmboden.py`, kein
 Modell, fester Seed je Name. Konzept: [Türme in der Welt](../../docs/konzepte/grafik-10-tuerme-in-der-welt.md).

@@ -131,7 +131,7 @@ Aufteilung siehe Abschnitt 2. Weitere Regeln:
 - Der Bogen klappt an Rändern nach innen und weicht den HUD-Ecken aus.
 - **Bauplätze** [ENTSCHIEDEN] (D-121, Steffen 08.11.2026) sind nur zu sehen, solange gebaut wird: vor der
   ersten Welle und solange ein freies Feld gewählt ist, als abgerundete helle Felder;
-  belegte Felder zeigen keins. Sonst bleibt die gemalte Wiese ohne Raster (0.28.4).
+  belegte Felder zeigen keins. Sonst bleibt die gemalte Wiese ohne Raster (0.29.1).
 
 ### Turm antippen, verkaufen
 Reichweite, Infotafel auf der freien Bildschirmseite (Name, eine Zeile Rolle,
@@ -311,6 +311,18 @@ andere Stern wechselt nur die Vorschau, das zweite Tippen auf denselben kauft. O
 Gold warnt der Stern wie Aufwerten. Bei einer einzigen Spezialisierung (M5a, M5b)
 bleibt der eine Sternknopf `specialize`. Bilder statt Buchstaben kommen mit den
 Turmbildern der Stufe 3.
+
+**Turmwerte und Vergleich (UI-02, 0.29.0, D-130 bis D-132, Karte S24):** Die Tafel am
+Turm zeigt vier Kacheln, vorn die Leitzahl mit Goldschimmer (Wach- und Blitzturm
+Schaden/s, Blitz über die volle Kette; Sporenturm „Bremst um“), dann Schaden, Tempo
+bzw. Kette, Reichweite. Darunter die Kampfbilanz („312 Schaden · 7 erledigt · seit
+1:40“) und was das nächste Tippen tut. Beim ersten Tippen auf Aufwerten oder einen
+Stern heißt der Titel „Wachturm → II“ bzw. „Wachturm II → Falkenhorst“, jede Kachel
+zeigt alt → neu mit Schild (grün Plus, orange Minus, braun „gleich“) und einen
+wachsenden Balken; die Zeile nennt, was neu ist, oder warnt „Endgültig“. Vor dem Bau
+dieselben Kacheln ohne Vergleich. Liegt die hohe Tafel nirgends frei (iPhone SE, vier
+Knöpfe in der Kartenmitte), kommt sie als flache Leiste. Die Bank bleibt beim Text.
+[Konzept](../konzepte/ui-02-turmwerte.md).
 
 **Panzerung (P2-10, 0.20.0, Mission 4):** Gepanzerte Gegner tragen ein graues
 Schild links neben der Lebensleiste, von Anfang an, nicht erst bei Schaden (E3).

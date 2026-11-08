@@ -101,6 +101,35 @@ final class HudLayoutTests: XCTestCase {
         }
     }
 
+    /// Tafel mit Turmwerten (D-130): In jeder Mission, auf jedem Gerät, bei
+    /// bis zu vier Knöpfen liegt sie frei, hoch oder als Leiste.
+    func testStatPanelFitsEveryCellOfEveryMission() throws {
+        let names = ["mission-02", "mission-03", "mission-04", "mission-05a", "mission-05b",
+                     "mission-06a", "mission-06b", "mission-07"]
+        let maps = [try BalanceConfig.missionOne()] + (try names.map { try BalanceConfig.bundledMission(named: $0) })
+        var strips = 0
+        for config in maps {
+            map = Simulation(config: config).map
+            for device in devices {
+                let hud = layout(device)
+                for cell in map.buildableCells {
+                    for count in 1...4 {
+                        let buttons = hud.ring(at: cell, count: count)
+                        let place = hud.statPanel(for: cell, avoiding: buttons,
+                                                  tall: BattleStyle.statPanel, wide: BattleStyle.statStrip)
+                        if place.wide { strips += 1 }
+                        let context = "\(config.mission.id), \(device.name), Zelle \(cell.x),\(cell.y), \(count) Knöpfe"
+                        XCTAssertTrue(hud.bounds.insetBy(dx: -0.5, dy: -0.5).contains(place.rect), "außerhalb: \(context)")
+                        XCTAssertFalse(place.rect.intersects(hud.cellRect(cell)), "verdeckt die Zelle: \(context)")
+                        XCTAssertFalse(buttons.map(hud.buttonRect).contains { $0.intersects(place.rect) },
+                                       "verdeckt Knopf: \(context)")
+                    }
+                }
+            }
+        }
+        XCTAssertGreaterThan(strips, 0, "die Leiste wird gebraucht, sonst wäre sie überflüssig")
+    }
+
     func testPanelCoversNeitherCellNorButtons() {
         for device in devices {
             let hud = layout(device)

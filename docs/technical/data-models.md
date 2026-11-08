@@ -94,6 +94,10 @@ struct Tower: Codable, Equatable {
     var paid: Int                    // von der Bank ausgezahlt, höchstens `cap`
     var level: Int                   // 1 oder 2 (P2-6); ältere Stände lesen sich mit 1
     var targetMode: TargetMode       // .first, .last, .strongest; ältere Stände .first
+    var specialization: Specialization?   // Stufe 3 (P3-1)
+    var damageDealt: Double          // Kampfbilanz (D-131): angekommener Schaden ohne Überschuss
+    var kills: Int                   // Gegner, die dieser Turm auf null gebracht hat
+    var slowHits: Int                // Sporenpuls-Treffer; alle drei ältere Stände 0, nicht in der Prüfsumme
 }
 struct Enemy: Codable, Equatable {
     var id: Int; var kind: EnemyKind
