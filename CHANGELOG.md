@@ -26,7 +26,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Konzept [Grafik 10](docs/konzepte/grafik-10-tuerme-in-der-welt.md), Herkunft in
   `art/spielfeld/ENTSTEHUNG.md`.
 
-## 0.29.0 – 08.11.2026 (UI-02: Turmwerte und Vergleich beim Aufwerten)
+## 0.29.0 – 08.11.2026 (UI-02: Turmwerte und Vergleich beim Aufwerten) · Bau 55
 
 - **Die Tafel am Turm zeigt, was er kann** (D-130): vier Kacheln, vorn Schaden pro
   Sekunde (beim Blitzturm über die volle Kette, beim Sporenturm „Bremst um“), dazu
