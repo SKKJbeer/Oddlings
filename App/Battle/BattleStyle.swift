@@ -70,7 +70,7 @@ enum BattleStyle {
         case .raider, .runner: 0.9
         case .brute: 1.2
         // Der Boss soll sich wie ein Auftritt anfühlen (P3-4): deutlich größer als die Panzerbestie.
-        case .moorKing: 1.9
+        case .moorKing: 2.3
         }
     }
 
