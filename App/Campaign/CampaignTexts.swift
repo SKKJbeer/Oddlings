@@ -37,7 +37,7 @@ enum CampaignTexts {
         case "m6a": "Sumpfpfad II"
         case "m5b": "Ruinen"
         case "m6b": "Ruinen II"
-        case "m7": "Mission 7"
+        case "m7": "Der Moorkönig"
         case "n1": "Nebenmission 1"
         case "n2": "Nebenmission 2"
         default: id
@@ -71,7 +71,7 @@ enum CampaignTexts {
         case "m4": "Aktiv eingreifen, zähe Ziele."
         case "m5a", "m6a": "Der Sumpf schickt Flitzer."
         case "m5b", "m6b": "Die Ruinen schicken Panzerbestien."
-        case "m7": "Alles zusammen."
+        case "m7": "Alles zusammen gegen den Moorkönig."
         default: "Eine Sonderregel für den zweiten Durchgang."
         }
     }

@@ -193,10 +193,24 @@ Säule 1 und 3.
 | Flitzer | Schnell, wenig Leben; bestraft Lücken und fehlende Kontrolle | ja |
 | Panzerbestie | Langsam, sehr zäh; prüft nachhaltigen Einzelschaden. Ab Mission 4 mit Rüstung ([unten](#rüstung-wie-gebaut-p2-10-0200)) | **[VORSCHLAG]** in Mission 1 ab Welle 7, abschaltbar, weil datengetrieben fast kostenlos |
 | Schattenflieger | Fliegt, umgeht etwas | nein, später |
-| Bosse | Taktische Herausforderung (Phasen, Schild, Beschwörung) | nein |
+| Bosse | Taktische Herausforderung (Phasen, Schild, Beschwörung). Erster Boss: der Moorkönig in Mission 7 ([unten](#der-moorkönig-wie-gebaut-p3-4-0280)) | nein; ab Phase 3 |
 
 **[VORSCHLAG]** Gegner sind im MVP nicht anvisierbar durch den Spieler (kein
 „Fokus auf dieses Ziel"). Kandidat für Phase 2.
+
+### Der Moorkönig, wie gebaut (P3-4, 0.28.0)
+
+Boss von Mission 7 (D-090, Empfehlung zu Karte S17). Langsam, gepanzert, viel Leben.
+Verlangsamung wirkt bei ihm nur halb (`slowScale`). Bei halbem Leben hält der Treffer an
+der Schwelle an und er hebt im selben Tick einen **Schild**: Für eine feste Zeit nimmt er
+keinen Schaden, bleibt stehen und **ruft** im Takt Flitzer an seiner Stelle. Dann fällt der
+Schild, ein zweites Mal kommt er nicht. Der Steinregen trifft ihn außerhalb des Schilds
+voll. Läuft er durch, kostet er alle Leben. Zielwahl „stärkster“ nimmt ihn, wie die
+Panzerbestie. Werte in `mission-07.json`, Begründung in
+[04](04-economy-and-balance.md#mission-7--der-moorkönig-ergebnis-der-prüfung-0280-hypothese).
+
+Was das prüft: Während des Schilds zählt Gruppenschaden gegen die Gerufenen, danach
+Einzelschaden durch die Rüstung. Wer nur eine Seite gebaut hat, verliert.
 
 ## Schaden
 

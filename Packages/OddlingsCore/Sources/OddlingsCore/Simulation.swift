@@ -36,7 +36,7 @@ public struct Simulation: Sendable {
 
     /// Ein Tick. Die Reihenfolge ist festgeschrieben, weil sie Ergebnisse
     /// ändert (data-models.md): Befehle → Mauer fällt, Einschlag der Fähigkeit → Wellen/Spawns → Türme feuern (nach ID)
-    /// → Tote auswerten und Gold gutschreiben → Banken zahlen → Bewegung → Durchbrüche → Ende.
+    /// → Bosse (Schild, Ruf) → Tote auswerten und Gold gutschreiben → Banken zahlen → Bewegung → Durchbrüche → Ende.
     /// Befehle laufen in der übergebenen Reihenfolge.
     @discardableResult
     public func step(_ state: inout GameState, commands: [Command] = []) -> [Event] {
@@ -47,6 +47,7 @@ public struct Simulation: Sendable {
         startWaveIfDue(&state, &events)
         spawnDue(&state, &events)
         fireTowers(&state, &events)
+        runBosses(&state, &events)
         collectKills(&state, &events)
         payBanks(&state, &events)
         move(&state)
@@ -215,6 +216,8 @@ public struct Simulation: Sendable {
     struct Hit: Equatable {
         var dealt: Double
         var absorbed: Double
+        /// Der Schild eines Bosses hat alles geschluckt (P3-4).
+        var shielded = false
     }
 
     /// Jeder Treffer läuft hier durch, damit Mondmal und Rüstung für alle Türme
@@ -223,6 +226,7 @@ public struct Simulation: Sendable {
     /// Grenze der Völker (03). Die Fähigkeit durchschlägt Rüstung (P2-10, K7).
     /// `absorbed` ist in derselben Einheit wie `dealt`, also mit dem Mal.
     func strike(_ enemy: inout Enemy, by amount: Double, tick: Int, piercesArmor: Bool = false) -> Hit {
+        if enemy.shieldUntilTick != nil { return Hit(dealt: 0, absorbed: 0, shielded: true) }
         var factor = 1.0
         if let mark = enemy.vulnerable, mark.untilTick > tick { factor = mark.factor }
         var passed = amount
@@ -230,8 +234,14 @@ public struct Simulation: Sendable {
            let armor = stats.armor, let share = stats.armorMinShare {
             passed = max(amount - armor, amount * share)
         }
-        enemy.hp -= passed * factor
-        return Hit(dealt: passed * factor, absorbed: (amount - passed) * factor)
+        var dealt = passed * factor
+        // Vor dem Schild hält der Boss an der Schwelle an, damit kein einzelner
+        // schwerer Treffer die zweite Phase überspringt (P3-4).
+        if let boss = config.enemies[enemy.kind]?.boss, enemy.shieldSpent != true {
+            dealt = min(dealt, max(0, enemy.hp - boss.shieldAt * enemy.maxHP))
+        }
+        enemy.hp -= dealt
+        return Hit(dealt: dealt, absorbed: (amount - passed) * factor)
     }
 
     func hurt(_ enemy: inout Enemy, by amount: Double, tick: Int, piercesArmor: Bool = false) -> Double {
@@ -244,6 +254,7 @@ public struct Simulation: Sendable {
                         _ state: inout GameState, _ events: inout [Event]) {
         let hit = strike(&state.enemies[index], by: amount, tick: state.tick, piercesArmor: piercesArmor)
         let id = state.enemies[index].id
+        if hit.shielded { return events.append(.shieldAbsorbed(id: id)) }
         events.append(.enemyDamaged(id: id, amount: hit.dealt))
         if hit.absorbed > 0 { events.append(.armorAbsorbed(id: id, amount: hit.absorbed)) }
     }
@@ -444,7 +455,8 @@ public struct Simulation: Sendable {
     /// Verlangsamung, und ein Puls verkürzt eine laufende nie. Sonst stünden
     /// Gegner unter fünf Sporentürmen still.
     func applySlow(to enemy: inout Enemy, stats: TowerConfig, tick: Int) {
-        guard let factor = stats.slowFactor, let duration = stats.slowDuration else { return }
+        guard var factor = stats.slowFactor, let duration = stats.slowDuration else { return }
+        if let scale = config.enemies[enemy.kind]?.slowScale { factor = 1 - (1 - factor) * scale }
         let until = tick + ticks(duration)
         if let active = enemy.slow, active.untilTick > tick {
             enemy.slow = SlowEffect(factor: min(active.factor, factor), untilTick: max(active.untilTick, until))
@@ -486,6 +498,43 @@ public struct Simulation: Sendable {
         }
     }
 
+    /// Schild heben, rufen, Schild fallen lassen (P3-4). Nach den Türmen, damit
+    /// ein Boss, den sie an die Schwelle gebracht haben, im selben Tick stehen
+    /// bleibt. Gerufene kommen hinten an die Liste, wie neu Erschienene.
+    private func runBosses(_ state: inout GameState, _ events: inout [Event]) {
+        let count = state.enemies.count
+        for index in 0..<count {
+            let enemy = state.enemies[index]
+            guard let boss = config.enemies[enemy.kind]?.boss, enemy.hp > 0 else { continue }
+            let duration = max(1, ticks(boss.shieldDuration))
+            if enemy.shieldSpent != true, enemy.hp <= boss.shieldAt * enemy.maxHP {
+                let until = state.tick + duration
+                state.enemies[index].shieldUntilTick = until
+                state.enemies[index].shieldSpent = true
+                state.enemies[index].slow = nil
+                events.append(.bossShieldRaised(id: enemy.id, untilTick: until))
+            }
+            guard let until = state.enemies[index].shieldUntilTick else { continue }
+            if state.tick >= until {
+                state.enemies[index].shieldUntilTick = nil
+                events.append(.bossShieldDropped(id: enemy.id))
+                continue
+            }
+            let elapsed = state.tick - (until - duration)
+            guard elapsed % max(1, ticks(boss.summonEvery)) == 0, let stats = config.enemies[boss.summon] else { continue }
+            let hp = stats.hp * boss.summonHPScale
+            var summoned: [Int] = []
+            for _ in 0..<boss.summonCount {
+                let id = state.nextEntityID
+                state.nextEntityID += 1
+                state.enemies.append(Enemy(id: id, kind: boss.summon, hp: hp, maxHP: hp, distance: enemy.distance))
+                events.append(.enemySpawned(id: id))
+                summoned.append(id)
+            }
+            events.append(.bossSummoned(id: enemy.id, summoned: summoned))
+        }
+    }
+
     private func collectKills(_ state: inout GameState, _ events: inout [Event]) {
         var alive: [Enemy] = []
         for enemy in state.enemies {
@@ -504,6 +553,7 @@ public struct Simulation: Sendable {
         let perTick = 1 / Double(config.simulation.ticksPerSecond)
         for index in state.enemies.indices {
             guard let enemy = config.enemies[state.enemies[index].kind] else { continue }
+            if state.enemies[index].shieldUntilTick != nil { continue }
             if let stun = state.enemies[index].stunUntilTick {
                 if stun > state.tick { continue }
                 state.enemies[index].stunUntilTick = nil

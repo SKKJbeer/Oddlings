@@ -41,6 +41,11 @@ struct BattleView: View {
         #if DEBUG
         if let delay = Self.testFirstWaveDelay { config.mission.firstWaveDelay = delay }
         if let cooldown = Self.testCooldown { config.ability?.cooldown = cooldown }
+        // `--e2e-bosswelle`: nur die letzte Welle, damit ein Test den Boss in
+        // Sekunden statt in zehn Wellen erreicht.
+        if ProcessInfo.processInfo.arguments.contains("--e2e-bosswelle"), let last = config.waves.last {
+            config.waves = [last]
+        }
         #endif
         let model = BattleModel(config: config, seed: resume?.seed ?? 1, autoplay: autoplay, resume: resume?.state)
         #if DEBUG
@@ -66,6 +71,10 @@ struct BattleView: View {
                 ZStack {
                     SpriteView(scene: scene, preferredFramesPerSecond: 60, options: [.ignoresSiblingOrder])
                     RingMenu(controller: controller, insets: boardInsets)
+                    if let boss = controller.boss {
+                        BossBar(status: boss)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                    }
                     // Nach dem Ende gibt es nichts mehr zu werfen; die Ergebnistafel liegt darüber.
                     if controller.hasAbility && !controller.isFinished {
                         AbilityButton(controller: controller)

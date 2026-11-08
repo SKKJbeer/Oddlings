@@ -39,7 +39,7 @@ anderthalb Stunden), aber kurz genug, dass man das Ende sieht und mehr will.
 | M3 | Aufwerten Stufe 2, Zielwahl | Vertiefen statt verbreitern (spielbar ab 0.18.0, „Pilzhain“) |
 | M4 | ~~Festungsfähigkeit~~ (seit R-3 in jeder Mission); Panzerbestie mit Rüstung | Aktiv eingreifen, zähe Ziele (spielbar ab 0.20.0, „Ruinenrand“) |
 | M5a/b, M6a/b | Spezialisierungen (je Weg andere zuerst) | Gabelung: Sumpf schickt Flitzer, Ruinen schicken Panzerbestien |
-| M7 | Boss | Alles zusammen |
+| M7 | Boss „Moorkönig“: Schild und Ruf bei halbem Leben ([02](02-combat-and-towers.md#der-moorkönig-wie-gebaut-p3-4-0280)) | Alles zusammen (spielbar ab 0.28.0, offen nach M6a oder M6b) |
 | N1, N2 | Nebenmissionen mit Sonderregel | Wiederspielwert |
 
 Beide Wege der Gabelung führen zum Boss. Wer will, spielt den anderen danach

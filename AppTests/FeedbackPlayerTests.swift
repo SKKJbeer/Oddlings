@@ -26,6 +26,7 @@ final class FeedbackPlayerTests: XCTestCase {
         XCTAssertNil(FeedbackPlayer.haptic(for: .barrierFell), "das Ende der Mauer ist keine Handlung")
         XCTAssertEqual(FeedbackPlayer.haptic(for: .towerUpgraded(id: 1, level: 2)), .medium)
         XCTAssertNil(FeedbackPlayer.haptic(for: .targetModeChanged(id: 1, mode: .last)), "der Tipp hat schon geklickt")
+        XCTAssertEqual(FeedbackPlayer.haptic(for: .bossShieldRaised(id: 1, untilTick: 9)), .heavy, "Wendepunkt (P3-4)")
     }
 
     /// Treffer und Tode kommen in Mengen; sie dürfen die eigene Handlung nicht übertönen.
@@ -33,7 +34,8 @@ final class FeedbackPlayerTests: XCTestCase {
         let silent: [Event] = [.towerFired(towerID: 1, targets: [2]), .enemyDamaged(id: 2, amount: 1),
                                .armorAbsorbed(id: 2, amount: 6),
                                .enemySlowed(id: 2), .enemyKilled(id: 2, reward: 3),
-                               .waveStarted(index: 0), .enemySpawned(id: 3)]
+                               .waveStarted(index: 0), .enemySpawned(id: 3),
+                               .bossSummoned(id: 1, summoned: [4]), .bossShieldDropped(id: 1), .shieldAbsorbed(id: 1)]
         for event in silent { XCTAssertNil(FeedbackPlayer.haptic(for: event), "\(event)") }
     }
 }

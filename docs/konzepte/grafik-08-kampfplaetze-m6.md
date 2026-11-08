@@ -1,6 +1,6 @@
 # Konzept: Kampfplätze für Mission 6a und 6b (Grafik 08)
 
-Status: **umgesetzt in 0.27.1** · Stil D-016 · Thread „Kampfplätze für Mission 5 und 6 malen"
+Status: **umgesetzt in 0.28.1** · Stil D-016 · Thread „Kampfplätze für Mission 5 und 6 malen"
 Anlass: Mission 6a „Sumpfpfad II“ und 6b „Ruinen II“ sind seit 0.27.0 (P3-3) spielbar,
 bisher auf der schlichten Karte. Vorgehen wie [Grafik 07](grafik-07-kampfplaetze-m5.md);
 dieses Dokument nennt nur, was neu ist.
@@ -19,7 +19,7 @@ sehen, dass es ein neuer Ort ist. Die Qualität entspricht M1 bis M5.
 | Bild, Rand, Deko, Licht | dieser Thread |
 
 Missionsdateien, Simulation und App-Code ändern sich durch dieses Paket nicht.
-Abgesprochen mit dem Mission-Thread: Grafik 08 kommt als 0.27.1, Mission 7 als 0.28.0.
+Ursprünglich als 0.27.1 abgesprochen. Mission 7 (0.28.0) kam zuerst auf main, deshalb wird es 0.28.1.
 
 ## Die zwei Orte
 

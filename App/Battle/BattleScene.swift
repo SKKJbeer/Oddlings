@@ -314,6 +314,11 @@ final class BattleScene: SKScene {
             node.show(enemy, dt: dt, stunned: (enemy.stunUntilTick ?? Int.min) > state.tick)
             if appeared {
                 fx.spawn(node)
+                // Der Auftritt des Bosses (P3-4): Banner und tiefer Wellenklang.
+                if node.isBoss {
+                    fx.banner(BattleTexts.bossArrives, size: size)
+                    audio?.play(.bossArrived)
+                }
                 if node.isArmored && !armorHintShown {
                     armorHintShown = true
                     fx.armorHint(node)
@@ -345,8 +350,8 @@ final class BattleScene: SKScene {
     }
 
     private func makeEnemyNode(_ enemy: Enemy) -> EnemyNode {
-        let armored = (model.sim.config.enemies[enemy.kind]?.armor ?? 0) > 0
-        let node = EnemyNode(enemy: enemy, field: field, armored: armored)
+        let stats = model.sim.config.enemies[enemy.kind]
+        let node = EnemyNode(enemy: enemy, field: field, armored: (stats?.armor ?? 0) > 0, boss: stats?.boss != nil)
         enemyLayer.addChild(node)
         enemyNodes[enemy.id] = node
         return node
@@ -425,6 +430,18 @@ final class BattleScene: SKScene {
         case .enemySlowed:
             // Verlangsamung zeigt sich über den Zustand (Farbton am Gegner).
             break
+        case .bossShieldRaised:
+            // Die Kuppel zeigt der Zustand; der Satz sagt, was jetzt zählt.
+            fx.banner(BattleTexts.bossShield, size: size)
+        case .bossSummoned(let id, _):
+            if let node = enemyNodes[id] { fx.summon(node) }
+        case .bossShieldDropped(let id):
+            if let node = enemyNodes[id] {
+                fx.hint(at: CGPoint(x: node.position.x, y: node.position.y + node.height * 1.3), text: BattleTexts.bossShieldDown)
+            }
+        case .shieldAbsorbed(let id):
+            // Wie die Panzerung: Funke und dumpfer Treffer, mit derselben Grenze je Gegner.
+            if let node = enemyNodes[id], fx.armor(node) { audio?.play(.armored) }
         }
     }
 
@@ -449,6 +466,11 @@ final class BattleScene: SKScene {
         case .enemyKilled: return .killed
         case .enemyLeaked: return .leaked
         case .enemySpawned: return nil
+        case .bossShieldRaised: return .bossShield
+        case .bossSummoned: return .bossSummon
+        case .bossShieldDropped: return .bossShieldDown
+        // Spielt `play` selbst, gedrosselt mit dem Funken.
+        case .shieldAbsorbed: return nil
         case .waveStarted(let index): return .waveStarted(index: index, count: model.sim.config.waves.count)
         case .missionEnded(let won): return .missionEnded(won: won)
         case .abilityCast:

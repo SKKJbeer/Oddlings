@@ -13,10 +13,19 @@ final class SoundMapTests: XCTestCase {
             .waveStarted(index: 0, count: 5), .abilityCast, .abilityImpact(moon: false), .abilityImpact(moon: true),
             .wallRaised, .wallFell, .user(.selectCell), .user(.callWave), .user(.cannotAfford),
             .bankPaid, .earlyCallBonus, .upgraded, .armored,
+            .bossArrived, .bossShield, .bossSummon, .bossShieldDown,
         ]
         for moment in moments { XCTAssertFalse(cues(moment).isEmpty, "\(moment) klingt") }
         // Das Ende trägt die Musik, nicht ein Klang.
         XCTAssertTrue(cues(.missionEnded(won: true)).isEmpty)
+    }
+
+    /// P3-4: Der Moorkönig klingt tiefer als das, was er sich leiht.
+    func testBossSoundsAreLower() {
+        for moment: SoundMoment in [.bossArrived, .bossShield, .bossSummon, .bossShieldDown] {
+            XCTAssertEqual(SoundMap.requests(for: moment).map(\.semitones), [AudioStyle.bossSemitones], "\(moment)")
+        }
+        XCTAssertLessThan(AudioStyle.bossSemitones, 0)
     }
 
     func testEachTowerHasItsOwnVoice() {
