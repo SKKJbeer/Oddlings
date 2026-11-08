@@ -39,7 +39,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Herkunft, Prompts und Seeds in `art/karten/ENTSTEHUNG.md`, Konzept
   [Grafik 08](docs/konzepte/grafik-08-kampfplaetze-m6.md).
 
-## 0.28.0 – 03.11.2026 (P3-4: Mission 7, der Moorkönig)
+## 0.28.0 – 03.11.2026 (P3-4: Mission 7, der Moorkönig) · Bau 51
 
 - **Mission 7 „Der Moorkönig“** ist spielbar und schließt Region 1 ab. Offen nach
   Sumpfpfad II **oder** Ruinen II, Weg vom Grafik-Thread (Hufeisen um die Bosslichtung).
