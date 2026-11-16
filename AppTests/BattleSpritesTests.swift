@@ -34,6 +34,31 @@ final class BattleSpritesTests: XCTestCase {
         }
     }
 
+    /// A-5 (G7): Jede Spezialisierung hat eine eigene Gestalt im Katalog, mit
+    /// Schatten, und die sechs Bilder sind verschieden. Sonst fiele der Turm still
+    /// auf das Bild der Stufe 2 zurück, und die Wahl wäre auf dem Feld unsichtbar.
+    func testEverySpecializationHasItsOwnPictureAndShadow() throws {
+        var pictures: [Data] = []
+        for specialization in Specialization.allCases {
+            let kind = specialization.tower
+            let name = BattleSprites.towerName(kind, level: 3, specialization: specialization)
+            XCTAssertTrue(name.hasPrefix("tower_\(kind.rawValue)_"), name)
+            XCTAssertNotNil(BattleSprites.texture(named: name), name)
+            XCTAssertNotNil(BattleSprites.texture(named: name + "_shadow"), name)
+            XCTAssertEqual(BattleSprites.towerNameAvailable(kind, level: 3, specialization: specialization), name)
+            pictures.append(try XCTUnwrap(UIImage(named: name)?.pngData(), name))
+        }
+        XCTAssertEqual(Set(pictures).count, Specialization.allCases.count, "sechs verschiedene Bilder")
+    }
+
+    /// Fehlt ein Bild, steht die nächstgröbere Gestalt da, nie ein Loch.
+    func testMissingPictureFallsBackToTheLevelBelow() {
+        XCTAssertEqual(BattleSprites.towerNames(.watch, level: 3, specialization: .volley),
+                       ["tower_watch_volley", "tower_watch_3", "tower_watch_2", "tower_watch"])
+        XCTAssertEqual(BattleSprites.towerNameAvailable(.watch, level: 3), "tower_watch_2")
+        XCTAssertEqual(BattleSprites.towerNameAvailable(.bank, level: 1), "tower_bank")
+    }
+
     func testPaintedTowerIsSquareWithFootOnCellCenter() throws {
         for kind in TowerKind.allCases {
             let node = BattleSprites.tower(kind, field: field)

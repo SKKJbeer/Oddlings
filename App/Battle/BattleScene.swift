@@ -344,7 +344,7 @@ final class BattleScene: SKScene {
             if pendingBuilds.remove(tower.id) != nil { fx.build(node) }
             node.idle(time: fx.time, still: fx.reduceMotion)
             if tower.kind == .bank, let bank = model.sim.config.bank { node.showBank(paid: tower.paid, cap: bank.cap) }
-            node.showLevel(tower.level, field: field)
+            node.show(level: tower.level, specialization: tower.specialization)
         }
         for (id, node) in towerNodes where liveTowers[id] == nil {
             node.removeFromParent()
@@ -464,7 +464,7 @@ final class BattleScene: SKScene {
             if let node = towerNodes.removeValue(forKey: id) { fx.sell(node, refund: refund) }
         case .towerUpgraded(let id, let level):
             if let node = towerNodes[id] {
-                node.showLevel(level, field: field)
+                node.show(level: level, specialization: model.state.towers.first { $0.id == id }?.specialization)
                 fx.upgrade(node)
             }
         case .targetModeChanged(let id, let mode):
