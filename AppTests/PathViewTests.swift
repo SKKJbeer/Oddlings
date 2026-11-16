@@ -12,7 +12,7 @@ final class PathViewTests: XCTestCase {
     private func paths() throws -> [(String, PathGeometry)] {
         // Nebenmissionen ohne eigene Missionsdatei (P3-5) haben noch keinen Weg.
         try CampaignConfig.regionOne().nodes.compactMap(\.mission).map { name in
-            (name, try BalanceConfig.bundledMission(named: name).map.path)
+            (name, try PathGeometry(points: BalanceConfig.bundledMission(named: name).map.path))
         }
     }
 
@@ -78,7 +78,7 @@ final class PathViewTests: XCTestCase {
     /// Krümmung nur im Bogen, mit Vorzeichen der Drehung: Mission 1 biegt
     /// zuerst nach unten (Uhrzeigersinn auf dem Bildschirm, positiv).
     func testCurvatureOnlyInBendsWithTurnSign() throws {
-        let path = try BalanceConfig.missionOne().map.path
+        let path = try PathGeometry(points: BalanceConfig.missionOne().map.path)
         let view = PathView(path: path, radius: FxStyle.pathCornerRadius)
         let corner = path.points[0].distance(to: path.points[1])
         XCTAssertEqual(view.sample(at: corner - 1).curvature, 0)

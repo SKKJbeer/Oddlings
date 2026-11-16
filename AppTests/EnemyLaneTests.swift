@@ -29,7 +29,7 @@ final class EnemyLaneTests: XCTestCase {
 
     /// Zwei Gegner mit derselben Strecke stehen nie auf demselben Punkt, auch im Bogen.
     func testSameDistanceNeverSamePoint() throws {
-        let path = try BalanceConfig.missionOne().map.path
+        let path = try PathGeometry(points: BalanceConfig.missionOne().map.path)
         let view = PathView(path: path, radius: FxStyle.pathCornerRadius)
         let width = FxStyle.laneWidth(.raider)
         for distance in stride(from: 0.0, through: path.length, by: 0.25) {

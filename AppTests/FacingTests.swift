@@ -9,7 +9,7 @@ import XCTest
 final class FacingTests: XCTestCase {
     func testEveryStretchOfEveryMissionGetsItsView() throws {
         for mission in try CampaignConfig.regionOne().nodes.compactMap(\.mission) {
-            let path = try BalanceConfig.bundledMission(named: mission).map.path
+            let path = try PathGeometry(points: BalanceConfig.bundledMission(named: mission).map.path)
             let view = PathView(path: path, radius: FxStyle.pathCornerRadius)
             var along = 0.0
             for index in path.points.indices.dropLast() {
