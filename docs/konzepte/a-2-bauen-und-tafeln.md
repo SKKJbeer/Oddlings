@@ -122,14 +122,18 @@ Mit Bauinseln (A-4) leuchten statt der Kacheln die Inseln; dann entfällt der Um
 
 Jeder Text der Tafel wird im App-Test mit der echten Schrift gemessen
 (`TextFitTests`, UIFont aus `AppFonts`), mit den längsten Zahlen, die vorkommen.
-Was nicht passt, wird umformuliert. Betroffen nach dem Review:
+Was nicht passt, wird umformuliert. Gemessen (Nunito/Lilita, längste Preise aller Missionen):
 
-| Heute | Neu |
-|---|---|
-| „Neu: Zielwahl (Erster, Letzter, Stärkster)“ | „Neu: Zielwahl für Stufe II“ |
-| „Nochmal tippen: aufwerten für 35 Gold“ | „Nochmal tippen: aufwerten (35)“ |
-| „Nochmal tippen: Salve für 60 Gold“ | wie gemessen, sonst „Nochmal tippen: Salve (60)“ |
+| Heute | Neu | Grund |
+|---|---|---|
+| „Nochmal tippen: aufwerten für 75 Gold“ | „Nochmal tippen: aufwerten (75)“ | den Preis zeigt schon der Knopf |
+| „Nochmal tippen: Gewitterkrone für 55 Gold“ (275 pt) | „Nochmal tippen: Gewitterkrone (55)“ | über 236 pt |
+| „Endgültig, nur Verkaufen nimmt es zurück.“ (242 pt) | „Endgültig, nur Verkaufen hebt es auf.“ | über 236 pt |
+| „Die 100 Gold fehlen dir in den nächsten Wellen.“ (289 pt) | „100 Gold fehlen dir vorerst.“ | lief bei der Bank über |
+| Wirkung der Spezialisierungen, bis 382 pt | je ein kurzer Satz (z. B. „Sieht weit, durchschlägt Rüstung.“) | die Kacheln zeigen die Zahlen |
+| kleine Tafel 214 pt breit | 240 pt | „Ab 20 s alle 4 s +5, bis 300 Gold“ passte nicht |
 
+„Neu: Zielwahl (Erster, Letzter, Stärkster)“ passt mit 225 von 236 pt und bleibt.
 `minimumScaleFactor` bleibt als Sicherheitsnetz, darf aber laut Test nicht nötig sein.
 
 ### Wellenvorschau (D-159)
@@ -160,14 +164,17 @@ nutzen Atlas und `FxTextures`.
 
 | Test | Was | Rot gesehen mit |
 |---|---|---|
-| `WaveForecastTests` (App) | Zusammenfassen je Art, Reihenfolge, höchstens drei, neue Arten, letzte Welle → nil | „neu“ ohne Blick auf frühere Wellen |
+| `BuildAidsTests` (App): Wellenvorschau | Zusammenfassen je Art, Reihenfolge, höchstens drei, neue Arten, letzte Welle → nil | „neu“ ohne Blick auf frühere Wellen |
 | `HudLayoutTests` | Tafel nie auf Festung, Fähigkeitsknopf oder Zettel; nie mehr Wegzellen als die beste freie Lage; Bogen meidet feste Ecken; alte Prüfungen weiter | Strafe 0 |
-| `BuildZoneFocusTests` (App) | Deckkraft 1 an der Zelle, 0 ab drei Feldern, stetig fallend | Radius 0 |
+| `BuildAidsTests`: Bauplätze, Weg im Kreis (Länge = Simulation) | Deckkraft 1 an der Zelle, 0 ab drei Feldern, stetig fallend | Radius 0 |
 | `TextFitTests` (App) | jeder Tafeltext mit echter Schrift in seiner Breite | alter Text „Neu: Zielwahl (…)“ |
 | `BattleSceneTests` | Vorschau-Turm erscheint bei gewähltem Turm, kostet nichts, verschwindet beim Abbruch und nach dem Bau; Wegabdeckung vorhanden | Vorschau nicht entfernt |
 | `FxDirectorTests` | Errichten, Aufwerten, Spezialisieren enden sauber (keine laufenden Tweens, Turm voll sichtbar, Maßstab 1) | Maske bleibt stehen |
-| E2E `BuildAndSellE2ETests` | Nach Wahl eines Turms steht `battle.preview` mit dessen Art | – |
-| E2E `HUDE2ETests` | Wellenvorschau zeigt die Gegner der ersten Welle aus der Missionsdatei | – |
+| E2E `HUDE2ETests` | Wellenvorschau zeigt die Gegner der ersten Welle aus der Missionsdatei, nach dem Rufen Welle 2 | – |
+| E2E `BankE2ETests` | neue Warnzeile der Bank | – |
+
+Die Vorschau des Turms prüft `BattleSceneTests` an der Szene selbst; ein eigener
+Bedienungshaken nur dafür wäre Code allein für den Test.
 
 ## Risiken
 

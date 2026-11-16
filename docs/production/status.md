@@ -94,6 +94,7 @@ davor 0.27.0 (Wahl zwischen zwei Spezialisierungen, Mission 6a „Sumpfpfad II�
 
 | Thread | Woran | Nächster Schritt |
 |---|---|---|
+| Türme bauen hochwertig inszenieren (A-2) | 0.31.0: Vorschau vor dem Kauf, Turm wächst aus dem Boden, Auftritte für Aufwerten und Spezialisieren, Tafel weicht Weg und Festung, Wellenvorschau | PR durch die CI, dann TestFlight |
 | Haupt-Thread | 0.28.0 Mission 7, der Moorkönig (P3-4), Bau 51 in TestFlight | deine Karten S16 (Gewitterkrone), S17 (Bossregel) und S21 bis S23 (Nebenmissionen N1/N2, Konzept P3-5); Spieltest der ganzen Region 1 |
 | Moorkönig als 3D-Boss bauen | 0.28.2 der Moorkönig als eigene 3D-Figur (FX 03, D-100) | zusammenführen, Bau in TestFlight; deine Karte S18 (Gestalt) |
 | Synergie sichtbar (P2-8) | 0.24.1 in TestFlight (Bau 46) | Eindruck beim Spieltest: Sieht man den Sporenfunken, kommen Hand und Pfeil zur rechten Zeit? |

@@ -76,7 +76,7 @@ mehrere Wege ab M6 (D-147), Veteran-Stufe (D-148). Gesamtbild:
 | # | Paket | Befunde | Abh. | Stand |
 |---|---|---|---|---|
 | A-1 | **Laufen**: Kurven statt Knick, Spuren, drei Blickrichtungen, Gewicht (D-144); Kontaktabzug in der CI (D-145) | B2–B5, R3 | – | als Nächstes |
-| A-2 | **Bauen und Tafeln**: Turm-Vorschau vor dem Kauf, Errichten statt Abwerfen, Auftritt für Aufwerten und Spezialisieren, Tafel weicht Weg und Festung, Wellenvorschau | P1, P3–P5, R2 | – | – |
+| A-2 | **Bauen und Tafeln**: Turm-Vorschau vor dem Kauf, Errichten statt Abwerfen, Auftritt für Aufwerten und Spezialisieren, Tafel weicht Weg und Festung, Wellenvorschau | P1, P3–P5, R2 | – | im PR (0.31.0) |
 | A-3 | **Figuren vollständig**: Flitzer und Panzerbestie in 3D (Paket 6), Konturpass, alle Gegner in drei Richtungen | B1, G3 | – | – |
 | A-4 | **Kampfplatz Mission 1 neu** in der Kamera der Türme, mit Bauinseln und Maßstab | G1, G2, G4, G8, L1, P2 | – | – |
 | A-5 | **Eine Malweise in der Welt**: gemalte Auswahl und Ringe, Kopfleiste im Tafel-Material, sechs Spezialisierungsbilder, Türme zielen, Effektbudget | G5–G7, G9, R1 | A-4 | – |

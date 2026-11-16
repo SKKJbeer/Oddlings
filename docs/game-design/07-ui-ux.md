@@ -122,17 +122,30 @@ Aufteilung siehe Abschnitt 2. Weitere Regeln:
 
 1. Freies Feld antippen → Feld wird umrandet, drei Turmknöpfe erscheinen im Bogen
    darüber (in den oberen zwei Zeilen darunter), jeweils mit Preisschild.
-2. Turm antippen → Reichweite als gestrichelter Kreis, Vorschau des Turms auf dem
-   Feld, Preisschild wird zu „Bauen". (Die Vorschau des Turms ist bis 0.29.1 nicht
-   gebaut, Review P1; kommt mit A-2, [Konzept](../konzepte/aaa-bewegung-und-bauen.md#a-2-bauen-und-tafeln).)
-3. Denselben Turm erneut antippen → gebaut. Anderes Feld oder leere Stelle →
-   abgebrochen.
+2. Turm antippen → der Turm steht blass an seinem Platz, der Wegabschnitt in seiner
+   Reichweite leuchtet, der Kreis bleibt eine feine Linie (D-155, D-156, ab 0.31.0).
+3. Denselben Turm erneut antippen → gebaut: Er wächst aus dem Boden, ein Gerüst steht
+   kurz und fällt weg (kein Fallen, kein Bildschirmstoß). Anderes Feld oder leere
+   Stelle → abgebrochen.
 - Nicht leistbar: Knopf gedimmt, Schild orange „fehlt 30". Antippen zeigt einen
   kurzen Hinweis und gibt Warnhaptik, öffnet nichts.
 - Der Bogen klappt an Rändern nach innen und weicht den HUD-Ecken aus.
 - **Bauplätze** [ENTSCHIEDEN] (D-121, Steffen 08.11.2026) sind nur zu sehen, solange gebaut wird: vor der
   ersten Welle und solange ein freies Feld gewählt ist, als abgerundete helle Felder;
   belegte Felder zeigen keins. Sonst bleibt die gemalte Wiese ohne Raster (0.29.1).
+  Ab 0.31.0 (D-157) nur um den Finger: voll bis 1,5 Felder um die gewählte Zelle,
+  weich auslaufend bis 3 Felder; vor der ersten Welle alle gedämpft.
+- **Infotafel** (D-158) legt sich dorthin, wo sie am wenigsten Weg und nie die
+  Festung verdeckt; Fähigkeitsknopf und Wellenzettel bleiben frei. Jede Zeile passt
+  in voller Größe (`TextFitTests`).
+- **Aufwerten** zeigt vorher das Bild der nächsten Stufe blass über dem Turm; danach
+  steigt eine Lichtsäule auf und der Turm streckt sich. **Spezialisieren** hat einen
+  eigenen Auftritt: Der Turm sinkt in einen Wirbel und kommt in neuer Gestalt hoch.
+
+### Wellenvorschau
+Unter dem Knopf „Welle n" hängt ein Zettel (D-159, ab 0.31.0): je Gegnerart Bild und
+Anzahl der nächsten Welle, höchstens drei Arten, eine neue Art mit rotem
+Ausrufezeichen. VoiceOver: „Welle 2: 8 Plünderer, 4 Flitzer, neu: 4 Flitzer".
 
 ### Turm antippen, verkaufen
 Reichweite, Infotafel auf der freien Bildschirmseite (Name, eine Zeile Rolle,
@@ -346,8 +359,8 @@ häufigste Handlung.
 
 - **Bauen:** vierter Knopf im Kreismenü des freien Felds. Der Bogen bekommt vier
   Plätze (54 pt Knöpfe, Abstand reicht auf dem SE). Erstes Tippen zeigt die
-  Infotafel mit Ertrag und Deckel und in Orange: „Die 100 Gold fehlen dir in
-  den nächsten Wellen." Das ist die eigentliche Entscheidung (K3), sie soll
+  Infotafel mit Ertrag und Deckel und in Orange: „100 Gold fehlen dir vorerst."
+  (bis 0.30 „Die 100 Gold fehlen dir in den nächsten Wellen.", lief über). Das ist die eigentliche Entscheidung (K3), sie soll
   beim Kauf in Worten dastehen.
 - **Höchstzahl erreicht:** Knopf gedimmt, Schild „2/2" statt Preis.
 - **Auf der Karte:** ein Füllbalken unter der Bank zeigt, wie viel vom Deckel
