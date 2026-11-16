@@ -129,6 +129,42 @@ class AtlasPruefung(unittest.TestCase):
         self.folge([0, 1, 2, 3])
         self.assertTrue(any("Folge verlangt" in z for z in self.fehler()), self.fehler())
 
+    def test_blickrichtung_passt_zur_seitenfolge(self):
+        self.folge([0, 1, 2])
+        v = json.load(open(os.path.join(self.w, "art/asset-vertrag.json")))
+        v["assets"]["tower_x_walkFront"] = {"folge": 3, "seiteZellen": 2, "anker": 0.0, "alpha": True}
+        json.dump(v, open(os.path.join(self.w, "art/asset-vertrag.json"), "w"))
+        open(os.path.join(self.w, "art/ENTSTEHUNG.md"), "a").write(" `tower_x_walkFront`")
+        for i in range(3):
+            self.lege(f"tower_x_walkFront_{i:02d}", lambda f: self.figur(20 * f))
+        self.assertEqual(self.fehler(), [])
+        v["assets"]["tower_x_walkFront"]["anker"] = 0.1
+        json.dump(v, open(os.path.join(self.w, "art/asset-vertrag.json"), "w"))
+        self.assertTrue(any("Seitenfolge hat" in z for z in self.fehler()), self.fehler())
+
+    def test_kamera_ausserhalb_des_spielraums(self):
+        v = dict(VERTRAG, kamera={"art": "orthografisch", "hoehe": 40, "figurenSpielraum": 10})
+        json.dump(v, open(os.path.join(self.w, "art/asset-vertrag.json"), "w"))
+        os.makedirs(os.path.join(self.w, "art/figuren-3d/enemy_x"))
+        rig = os.path.join(self.w, "art/figuren-3d/enemy_x/rig.json")
+        json.dump({"kameraHoehe": 30}, open(rig, "w"))
+        self.assertEqual(self.fehler(), [])
+        json.dump({"kameraHoehe": 12}, open(rig, "w"))
+        self.assertTrue(any("gemeinsame Kamera" in z for z in self.fehler()), self.fehler())
+
+    def test_folge_ohne_kontur(self):
+        self.folge([0, 1, 2])
+        v = json.load(open(os.path.join(self.w, "art/asset-vertrag.json")))
+        v["konturPunkte"] = 1
+        json.dump(v, open(os.path.join(self.w, "art/asset-vertrag.json"), "w"))
+        # Die Testfigur ist ein helles Rot ohne Rand.
+        self.assertTrue(any("keine dunkle Kontur" in z for z in self.fehler()), self.fehler())
+        sys.path.insert(0, os.path.join(WURZEL, "tools/figuren-3d"))
+        from konturpass import kontur
+        for i in range(3):
+            self.lege(f"tower_x_walk_{i:02d}", lambda f: kontur(self.figur(20 * f), f))
+        self.assertEqual(self.fehler(), [])
+
     def test_zu_gross(self):
         import random
         r = random.Random(1)

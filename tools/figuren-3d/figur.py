@@ -111,6 +111,23 @@ def punkt(p):
     # rig.json: x quer (-0,5..0,5 der Breite), y Tiefe, z Höhe (0..1)
     return Vector((p[0] * breite, p[1] * tiefe, p[2]))
 
+# Verformen vor dem Binden (A-3): Mit der gemeinsamen Kamera (30 bis 40° von
+# oben) verdeckt eine breite Mützenkrempe das Gesicht. Wie im Gemälde wird die
+# Mütze nach hinten geschoben: Punkte oberhalb von zVon drehen um einen
+# Angelpunkt, über das Band weich eingeblendet, damit am Rand nichts reißt.
+for v in rig.get("verformen", []):
+    achse, grad = v["drehung"]
+    angel = punkt(v["um"])
+    band = max(1e-6, v.get("band", 0.05))
+    for p in koerper.data.vertices:
+        if v.get("xBis") is not None and abs(p.co.x) > v["xBis"] * breite:
+            continue
+        w = min(1.0, max(0.0, (p.co.z - v["zVon"]) / band))
+        if w > 0:
+            m = Matrix.Rotation(math.radians(grad) * w, 3, achse.upper())
+            p.co = angel + m @ (p.co - angel)
+    koerper.data.update()
+
 arm_daten = bpy.data.armatures.new("skelett")
 arm = bpy.data.objects.new("skelett", arm_daten)
 sc.collection.objects.link(arm)
