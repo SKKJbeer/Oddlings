@@ -16,6 +16,15 @@ enum BattleStyle {
     static let buildZoneCorner: CGFloat = 0.16
     static let buildZoneFade: TimeInterval = 0.18
     static let buildZoneInset: CGFloat = 0.06
+    /// Bauplätze um den Finger (A-2, D-157), in Feldern: voll bis hier, dann
+    /// weich auf null bei `buildZoneReach`. Drei Felder sind so weit, wie ein
+    /// Turm in Region 1 höchstens reicht; weiter weg braucht man den Platz nicht
+    /// zum Vergleichen.
+    static let buildZoneFullRadius = 1.5
+    static let buildZoneReach = 3.0
+    /// Vor der ersten Welle ohne Auswahl: alle Plätze, aber gedämpft, damit die
+    /// Karte lesbar bleibt und man trotzdem sieht, wo gebaut werden kann.
+    static let buildZoneIdleAlpha = 0.45
     /// So viele Zellen reicht der gemalte Boden links und rechts (`width`) und
     /// oben und unten (`height`) über das Feld hinaus. Unter der Kopfleiste ist
     /// die Karte auf dem iPhone bis zu 22,7 Zellen breit, auf dem iPad bis zu
@@ -110,6 +119,14 @@ enum BattleStyle {
 
     static let selection = SKColor(red: 1.00, green: 0.95, blue: 0.70, alpha: 1)
     static let rangeFill = SKColor(red: 1.00, green: 0.95, blue: 0.70, alpha: 0.10)
+    /// Vorschau vor dem Kauf (A-2, P1): der Turm halb durchsichtig an seinem Platz.
+    static let previewAlpha: CGFloat = 0.55
+    /// Reichweite als Weg im Kreis (D-156): Der Kreis bleibt nur als feine
+    /// Linie, der abgedeckte Weg leuchtet. Breite in Feldern, etwas schmaler als
+    /// der gemalte Weg, damit dessen Rand sichtbar bleibt.
+    static let rangeRingAlpha: CGFloat = 0.45
+    static let coverageWidth: CGFloat = 0.55
+    static let coverageColor = SKColor(red: 1.00, green: 0.93, blue: 0.55, alpha: 0.55)
 
     /// Bedienung: Apples Mindestgröße für Tippziele ist 44 pt.
     static let tapTarget: CGFloat = 48
@@ -131,6 +148,16 @@ enum BattleStyle {
     static let statPanel = CGSize(width: 256, height: 176)
     /// Flache Leiste, wenn die hohe Tafel nirgends frei liegt (iPhone SE, vier Knöpfe).
     static let statStrip = CGSize(width: 380, height: 100)
+    /// Was die Tafel lieber nicht verdeckt (A-2, D-158): je Wegzelle unter ihr
+    /// ein Punkt, die Festung so viel, dass sie jede Wegzelle aufwiegt.
+    static let panelPathPenalty: CGFloat = 1
+    static let panelFortressPenalty: CGFloat = 100
+    /// Wegzelle ist, wessen Mitte so nah am Weg liegt; der gemalte Weg ist
+    /// 0,8 Felder breit, eine Zelle daneben zählt halb sichtbar mit.
+    static let panelPathReach = 0.75
+    /// Zettel mit der Wellenvorschau unter „Welle n“ (A-2, D-159).
+    static let forecastHeight: CGFloat = 30
+    static let forecastIcon: CGFloat = 24
     static var hudMetrics: HudLayout.Metrics {
         HudLayout.Metrics(button: ringButton, gap: ringGap, margin: screenMargin, panel: infoPanel)
     }
