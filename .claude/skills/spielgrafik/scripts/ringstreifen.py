@@ -21,6 +21,7 @@ quelle, ziel = sys.argv[1], sys.argv[2]
 B = int(sys.argv[3]) if len(sys.argv) > 3 else 1536
 H = int(sys.argv[4]) if len(sys.argv) > 4 else 96
 vorschau = sys.argv[5] if len(sys.argv) > 5 else None
+ANTEIL = 0.75
 
 bild = np.asarray(Image.open(quelle).convert("RGB")).astype(np.float32) / 255
 hell = bild.mean(axis=2)
@@ -45,7 +46,7 @@ for i in range(winkel):
     profil = [hell[int(cy + r * math.sin(a)), int(cx + r * math.cos(a))] for r in range(int(rmax * 0.4), int(rmax))]
     radien.append(int(rmax * 0.4) + int(np.argmax(profil)))
 radien = np.array(radien, dtype=np.float32)
-k = 31
+k = 61
 radien = np.convolve(np.concatenate([radien[-k:], radien, radien[:k]]), np.ones(k) / k, mode="same")[k:-k]
 # Bandbreite: wo die Helligkeit quer zum Ring über die Hälfte des Gipfels liegt.
 breiten = []
@@ -54,7 +55,7 @@ for i in range(0, winkel, 8):
     r0 = radien[i]
     profil = np.array([hell[int(cy + r * math.sin(a)), int(cx + r * math.cos(a))] for r in np.arange(r0 - 40, r0 + 40)])
     breiten.append((profil > profil.max() * 0.35).sum())
-band = float(np.median(breiten)) * 1.25
+band = float(np.median(breiten)) * 1.05
 print(f"Mitte {cx:.0f},{cy:.0f}  Radius {radien.mean():.0f}±{radien.std():.1f}  Band {band:.1f} px")
 
 streifen = np.zeros((H, B, 3), np.float32)
@@ -62,7 +63,9 @@ for x in range(B):
     a = 2 * math.pi * x / B
     r0 = np.interp(x / B * winkel, np.arange(winkel + 1), np.append(radien, radien[0]))
     for y in range(H):
-        r = r0 + band / 2 - band * (y + 0.5) / H
+        # Nur der äußere Teil des Bandes: Innen sah man bei FLUX die glatte
+        # Innenwand des Rings, die abgewickelt wie verschmiertes Gold wirkt.
+        r = r0 + band * 0.55 - band * ANTEIL * (y + 0.5) / H
         streifen[y, x] = probe(cx + r * math.cos(a), cy + r * math.sin(a))
 # Naht: Ende über den Anfang blenden, danach ist Spalte 0 die Fortsetzung der letzten.
 ueber = B // 8
