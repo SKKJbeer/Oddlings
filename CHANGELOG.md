@@ -33,6 +33,13 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Tests: `PathViewTests`, `EnemyLaneTests`, `FacingTests`, `WalkSceneTests`, erweiterte
   `FxMathTests`, E2E `WalkE2ETests`, Skripttest `scripts/tests/test_kontaktabzug.py`.
 
+## Dokumente, kein Bau – 16.11.2026 (Gamedesign als Gesamtbild)
+
+- `docs/konzepte/gamedesign-gesamtbild.md`: Kampagne über drei Regionen, Komplexitätsleiter,
+  Schwierigkeitskurve aus dem Labor (gemessen gegen Ziel), Wege und Routen, Wiederspielwert.
+- Entscheidungen D-146 (fallender Sägezahn), D-147 (mehrere Wege ab M6), D-148 (Veteran-Stufe);
+  Roadmap-Pakete A-8 bis A-10.
+
 ## Dokumente, kein Bau – 16.11.2026 (Review auf AAA-Niveau)
 
 - **Review von Mechanik, Leveldesign und Grafik** an echten Bildern aus dem Simulator und
