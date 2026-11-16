@@ -106,7 +106,12 @@ enum BattleStyle {
     static let fastSpeed = 2
 
     static let selection = SKColor(red: 1.00, green: 0.95, blue: 0.70, alpha: 1)
-    static let rangeFill = SKColor(red: 1.00, green: 0.95, blue: 0.70, alpha: 0.10)
+    /// Gemalte Ringe (A-5, `GroundMarks`): Randbreite in Feldern, Schein innen 0 bis 1.
+    static let rangeRim: CGFloat = 0.16
+    static let rangeWash: Double = 0.16
+    static let cellMarkRadius: CGFloat = 0.5
+    static let cellMarkRim: CGFloat = 0.14
+    static let cellMarkWash: Double = 0.30
 
     /// Bedienung: Apples Mindestgröße für Tippziele ist 44 pt.
     static let tapTarget: CGFloat = 48
