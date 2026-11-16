@@ -88,6 +88,10 @@ verworfen: Die Vorlage muss schon grimmig und comichaft sein, der Render holt da
 nicht nach. Ob Flitzer und Panzerbestie folgen, entscheidet Steffen am Plünderer im
 Spiel. Weg und Werkzeuge: [FX 02](../konzepte/fx-02-figuren-in-3d.md).
 
+Laufen (A-1, 0.30.0): Bögen an den Ecken, eigene Spur je Gegner, Blickrichtung mit
+Vorder- und Rückansicht (Bilder aus A-3, bis dahin seitlich), Gewicht über Schatten,
+Staub und Neigung. Geprüft wird am Kontaktabzug der CI ([A-1](../konzepte/a-1-laufen.md)).
+
 ## Werkzeug
 
 `.claude/skills/spielgrafik/`: FLUX.1-schnell lokal (Apache 2.0),

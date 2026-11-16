@@ -1,6 +1,6 @@
 # Konzept A-1: Laufen wie in einem AAA-Titel (0.30.0)
 
-Status: **[VORSCHLAG]**, umgesetzt in 0.30.0 · Stand 16.11.2026 · Thread „Laufen der Figuren verbessern“
+Status: umgesetzt in 0.30.0 (D-144, D-150, D-151) · Stand 16.11.2026 · Thread „Laufen der Figuren verbessern“
 Grundlage: [Bewegung und Bauen](aaa-bewegung-und-bauen.md) Abschnitt A-1 und „Kontaktabzug“,
 [Review](aaa-review.md) Befunde B2 bis B5, D-050 (Effekte auf eigener Uhr), D-144 (Bewegung
 nur in der Darstellung glätten), D-145 (Kontaktabzug in der CI).

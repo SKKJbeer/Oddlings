@@ -11,6 +11,28 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.30.0 – 16.11.2026 (A-1: Laufen)
+
+- **Bögen statt Knicke:** Gegner laufen an jeder Ecke einen Kreisbogen (Radius ein
+  halbes Feld). Die Simulation bleibt unverändert; `PathView` legt nur das Bild auf
+  den Bogen, auf den Geraden sind Bild und Regel deckungsgleich (höchstens 0,21 Felder
+  Abstand in der Ecke, D-144).
+- **Eigene Spuren:** Jeder Gegner läuft auf einer festen seitlichen Spur aus seiner
+  Kennung, Flitzer und Plünderer breiter, Panzerbestie schmal, der Moorkönig mittig.
+  Kein Gänsemarsch mehr.
+- **Blickrichtung:** Seitenansicht, von vorn und von hinten nach der Laufrichtung, mit
+  kurzem Überblenden. Fehlen die Bilder von vorn oder hinten, bleibt die Seitenansicht
+  (D-150). Die neuen Ansichten liefert A-3.
+- **Gewicht:** Schatten wird beim Auftreten breiter, Staub an den Füßen, Neigung in die
+  Kurve, kurzer Anlauf nach dem Erscheinen. Mit „Bewegung reduzieren“ entfallen Staub,
+  Neigung und Anlauf.
+- **Kontaktabzug in der CI (D-151):** Jede Mission läuft im Simulator im Zeitraffer, fünf
+  Bilder und ein kurzer Film je Mission landen im Artefakt `kontaktabzug`;
+  `scripts/kontaktabzug.py` setzt sie zu Bögen zusammen und warnt bei Abweichung vom Weg,
+  gestapelten Figuren oder fehlenden Bögen.
+- Tests: `PathViewTests`, `EnemyLaneTests`, `FacingTests`, `WalkSceneTests`, erweiterte
+  `FxMathTests`, E2E `WalkE2ETests`, Skripttest `scripts/tests/test_kontaktabzug.py`.
+
 ## Dokumente, kein Bau – 16.11.2026 (Review auf AAA-Niveau)
 
 - **Review von Mechanik, Leveldesign und Grafik** an echten Bildern aus dem Simulator und

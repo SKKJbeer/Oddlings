@@ -24,7 +24,7 @@ Sie folgen den IDs der Simulation.
 | `tower_watch`, `tower_lightning`, `tower_spore` | Türme, ganzer Körper |
 | `tower_<id>_top` | drehbares Oberteil, nur wo es eines gibt |
 | `enemy_raider`, `enemy_runner`, `enemy_brute`, `enemy_moorKing` | Gegner, Blick nach rechts |
-| `enemy_<art>_<folge>_NN` | Bildfolgen aus 3D ([FX 02](../konzepte/fx-02-figuren-in-3d.md)): `walk`, `hit`, `die`; der Moorkönig dazu `shield` und `summon` ([FX 03](../konzepte/fx-03-moorkoenig.md)). Anzahl je Folge im Feld `folge` |
+| `enemy_<art>_<folge>_NN` | Bildfolgen aus 3D ([FX 02](../konzepte/fx-02-figuren-in-3d.md)): `walk`, `hit`, `die`; der Moorkönig dazu `shield` und `summon` ([FX 03](../konzepte/fx-03-moorkoenig.md)). Ab A-1 (D-150) dazu `walkFront` (schräg von vorn) und `walkBack` (schräg von hinten): gleiche Bildzahl und Schrittphase wie `walk`, Fußanker 0,1, Dreiviertel nach rechts gedreht; fehlt eine, läuft die Seitenfolge. Anzahl je Folge im Feld `folge` |
 | `fortress` | Festung am Wegende |
 | `map_mission01_ground` … `map_mission04_ground`, `map_mission05a_ground`, `map_mission05b_ground`, `map_mission06a_ground`, `map_mission06b_ground`, `map_mission07_ground` | Boden der ganzen Karte je Mission (Name aus der Missionskennung), Weg eingemalt; Geometrie je Bild in `art/asset-vertrag.json` unter `mission` ([Grafik 06](../konzepte/grafik-06-kampfplaetze-m2-m4.md), [Grafik 07](../konzepte/grafik-07-kampfplaetze-m5.md), [Grafik 08](../konzepte/grafik-08-kampfplaetze-m6.md), [Grafik 09](../konzepte/grafik-09-bosslichtung-m7.md)) |
 | `buildzone_tile` | Markierung einer bebaubaren Zelle, Overlay (heute von der Szene gezeichnet, nur beim Bauen sichtbar, D-121) |
@@ -87,6 +87,12 @@ leichtes Kippen, Schatten-Ellipse darunter. Dafür hat jeder Gegner eine
 Körper-Node über einer Schatten-Node. Umgesetzt in FX 01 (Gangart je Gegner in
 `FxStyle.gait`). Der nächste Schritt für echte Gliedmaßen ist eine Zerlegung in
 Teile mit Gelenken, nicht ein gemalter Zyklus; der Weg liegt Steffen als D-051 vor.
+
+Seit A-1 (0.30.0, [Konzept](../konzepte/a-1-laufen.md)) laufen Gegner an Ecken einen
+Bogen statt eines Knicks, jeder auf seiner eigenen Spur quer zum Weg, mit Blickrichtung
+aus der Laufrichtung (seitlich bis 35°, sonst vorn oder hinten, sobald die Bilder da
+sind), Staub beim Aufsetzen, Neigung in die Kurve und Anlaufen beim Erscheinen. Die
+Simulation bleibt auf der Linie (D-144).
 
 ## Oberfläche (HUD und Menüs)
 
