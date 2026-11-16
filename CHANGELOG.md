@@ -11,6 +11,27 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## Dokumente, kein Bau – 16.11.2026 (Gamedesign als Gesamtbild)
+
+- `docs/konzepte/gamedesign-gesamtbild.md`: Kampagne über drei Regionen, Komplexitätsleiter,
+  Schwierigkeitskurve aus dem Labor (gemessen gegen Ziel), Wege und Routen, Wiederspielwert.
+- Entscheidungen D-146 (fallender Sägezahn), D-147 (mehrere Wege ab M6), D-148 (Veteran-Stufe);
+  Roadmap-Pakete A-8 bis A-10.
+
+## Dokumente, kein Bau – 16.11.2026 (Review auf AAA-Niveau)
+
+- **Review von Mechanik, Leveldesign und Grafik** an echten Bildern aus dem Simulator und
+  allen Missionsdateien: 28 Befunde nach Gewicht, mit markierten Bildern unter
+  `art/review/`. Kern: Karte, Türme und Figuren stehen nicht im selben Raum (mehrere
+  Blickwinkel, zwei Malweisen, kein gemeinsamer Maßstab), Figuren laufen nur seitlich und
+  im Gänsemarsch, vor dem Kauf ist kein Turm zu sehen, und Bauland ist in jeder Mission
+  fast die ganze Karte. [Review](docs/konzepte/aaa-review.md)
+- **Konzepte** [Bewegung, Bauen, Stimmigkeit](docs/konzepte/aaa-bewegung-und-bauen.md) und
+  [Leveldesign](docs/konzepte/aaa-leveldesign.md) mit Missionsblättern für Region 1,
+  Bauinseln, Gelände, Gegnerrollen, Wellendramaturgie und Labor-Kennzahlen.
+- **Plan „AAA-Schnitt“** A-1 bis A-7 in der Roadmap; D-140 bis D-143 als Karten an Steffen
+  (S26 bis S29), D-144 und D-145 gelten. Neuer Skill `aaa-pruefung`.
+
 ## 0.29.1 – 08.11.2026 (Grafik 10: Türme stimmig in der Welt)
 
 - **Türme gehören jetzt zum Ort** (D-120): Sie stehen im Licht ihres Kampfplatzes (warmer
