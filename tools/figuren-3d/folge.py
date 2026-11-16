@@ -46,7 +46,8 @@ def box(bild):
     return bild.getchannel("A").point(lambda v: 255 if v > 24 else 0).getbbox()
 
 
-boxen = [box(b) for b in bilder.values()]
+boxen_je = {schluessel: box(b) for schluessel, b in bilder.items()}
+boxen = list(boxen_je.values())
 links, oben = min(b[0] for b in boxen), min(b[1] for b in boxen)
 rechts, unten = max(b[2] for b in boxen), max(b[3] for b in boxen)
 # Fuß je Blickrichtung: Von hinten gedreht liegt der tiefste Fuß auf dem Bild
@@ -55,6 +56,11 @@ rechts, unten = max(b[2] for b in boxen), max(b[3] for b in boxen)
 # des Bosses gehören zur Seitenansicht.
 fuesse = {f: box(bilder[(f, 0)])[3] for f in folgen if f.startswith("walk")}
 fuss = fuesse["walk"]
+
+
+def gruppe(folge):
+    return folge if folge in fuesse else "walk"
+
 regel = vertrag["assets"][f"{figur}_walk"]
 anker = regel["anker"]
 
@@ -64,9 +70,16 @@ for faktor in (2, 3):
     rand = seite * RAND + kontur_pt * faktor
     nutz = seite - 2 * rand
     # Über dem Fuß ist (1 - anker) der Seite frei, darunter anker; beides muss reichen.
-    k = min([nutz / (rechts - links)]
-            + [(seite * (1 - anker) - rand) / max(1, fu - oben) for fu in fuesse.values()]
-            + [(seite * anker - rand) / (unten - fu) for fu in fuesse.values() if unten > fu])
+    # Je Blickrichtung zählen nur ihre eigenen Bilder: Der Sturz der
+    # Seitenansicht liegt tiefer als der Fuß von hinten und soll die Figur
+    # nicht für alle Richtungen verkleinern.
+    k = nutz / (rechts - links)
+    for richtung, fu in fuesse.items():
+        eigene = [boxen_je[(f, i)] for (f, i) in bilder if gruppe(f) == richtung]
+        ob, un = min(b[1] for b in eigene), max(b[3] for b in eigene)
+        k = min(k, (seite * (1 - anker) - rand) / max(1, fu - ob))
+        if un > fu:
+            k = min(k, (seite * anker - rand) / (un - fu))
     for (f, i), bild in bilder.items():
         name = f"{figur}_{f}_{i:02d}"
         klein = bild.resize((round(bild.width * k), round(bild.height * k)), Image.LANCZOS)
