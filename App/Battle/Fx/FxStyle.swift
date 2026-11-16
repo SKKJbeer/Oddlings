@@ -44,9 +44,8 @@ enum FxStyle {
     static let deathFramesLife: TimeInterval = 0.5
 
     static let shadowAlpha: CGFloat = 0.45
-    /// Blickrichtung: so weit voraus auf dem Weg nachsehen, und erst ab
-    /// diesem Versatz umdrehen (Felder).
-    static let facingLookahead: Double = 0.15
+    /// Blickrichtung links oder rechts erst ab diesem waagerechten Anteil der
+    /// Laufrichtung (Tangente von `PathView`); darunter bleibt die letzte Seite.
     static let facingThreshold: Double = 0.03
 
     // MARK: Laufen (A-1, docs/konzepte/a-1-laufen.md)
@@ -109,6 +108,9 @@ enum FxStyle {
     static let dustPerEnemy = 3
     static let footDustLife: TimeInterval = 0.4
     static let footDustAlpha: CGFloat = 0.55
+    /// Zwei Gegner näher als so viele Felder gelten als deckungsgleich
+    /// (Messung für Tests und Kontaktabzug, keine Regel).
+    static let stackedDistance: CGFloat = 0.03
     static let spawnLife: TimeInterval = 0.28
     static let hitLife: TimeInterval = 0.12
     /// Rückstoß beim Treffer, in Feldern.

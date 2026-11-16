@@ -187,4 +187,39 @@ final class FxMathTests: XCTestCase {
         XCTAssertEqual(FxMath.onceFrame(7, frames: 6), 5)
         XCTAssertEqual(FxMath.onceFrame(-1, frames: 6), 0)
     }
+
+    // MARK: Laufen (A-1)
+
+    /// Ein Aufsetzen je Schritt, gleich ob in vielen kleinen Bildern oder einem
+    /// großen Sprung; rückwärts (Neustart) und bei Stillstand keins.
+    func testFootfallsCountEachStepOnce() {
+        let stride = 0.24
+        var small = 0, distance = 0.0
+        while distance < 4.8 {
+            small += FxMath.footfalls(from: distance, to: distance + 0.013, stride: stride, phase: 0.37)
+            distance += 0.013
+        }
+        let big = FxMath.footfalls(from: 0, to: distance, stride: stride, phase: 0.37)
+        XCTAssertEqual(small, big)
+        XCTAssertEqual(big, 20, accuracy: 1)
+        XCTAssertEqual(FxMath.footfalls(from: 2, to: 1, stride: stride, phase: 0), 0)
+        XCTAssertEqual(FxMath.footfalls(from: 1, to: 1, stride: stride, phase: 0), 0)
+        XCTAssertEqual(FxMath.footfalls(from: 0, to: 1, stride: 0, phase: 0), 0)
+    }
+
+    /// Der Schatten wird beim Aufsetzen breit, in der Luft nicht.
+    func testContactPeaksWhenTheFootLands() {
+        let gait = FxStyle.gait(.raider)
+        let landing = FxMath.pose(distance: 0, phase: 0, gait: gait)
+        let airborne = FxMath.pose(distance: gait.stride / 2, phase: 0, gait: gait)
+        XCTAssertEqual(landing.contact, 1, accuracy: 1e-9)
+        XCTAssertEqual(airborne.contact, 0, accuracy: 1e-9)
+    }
+
+    func testApproachNeverOvershoots() {
+        XCTAssertEqual(FxMath.approach(0, towards: 1, dt: 1, rate: 12), 1)
+        let half = FxMath.approach(0, towards: 1, dt: 1 / 24.0, rate: 12)
+        XCTAssertEqual(half, 0.5, accuracy: 1e-9)
+        XCTAssertEqual(FxMath.approach(0.3, towards: 1, dt: 0, rate: 12), 0.3)
+    }
 }

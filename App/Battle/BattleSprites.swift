@@ -149,6 +149,9 @@ enum BattleSprites {
 /// Bildfolgen eines Gegners; die Namen stehen im Asset-Vertrag.
 enum EnemyMotion: String, CaseIterable {
     case walk, hit, die
+    /// Laufen schräg von vorn und von hinten (A-1, Bilder aus A-3), Dreiviertel
+    /// nach rechts wie die Seitenfolge; fehlen sie, läuft die Seitenfolge.
+    case walkFront, walkBack
     /// Nur der Boss (FX 03): Schild heben, und aus der Schildhaltung rufen.
     case shield, summon
 }
@@ -171,7 +174,26 @@ final class EnemyNode: SKNode {
     /// 1 = Blick nach rechts (so sind die Bilder gemalt), −1 nach links.
     var facing: CGFloat = 1
     /// Bildfolgen (FX 02); leer, wenn die Art nur ein Standbild hat.
+    /// `walkFrames` ist die Seitenansicht, vorn und hinten kommen dazu (A-1).
     let walkFrames: [SKTexture]
+    private let viewFrames: [EnemyView: [SKTexture]]
+    /// Gezeigte Folge; ohne Bilder der gewünschten Richtung die Seitenansicht.
+    private(set) var view: EnemyView = .side
+    /// Das letzte Bild der vorigen Folge, das über `FxStyle.viewBlend` ausblendet.
+    let viewFade = SKSpriteNode()
+    /// Spur quer zum Weg in Feldern (A-1), fest aus der Kennung.
+    var lane: Double = 0
+    /// Neigung in die Kurve, wie gezeigt (folgt ihrem Ziel weich).
+    private(set) var bank: Double = 0
+    /// Effekt-Uhr des Erscheinens, für das Anlaufen; −∞ ohne Auftritt.
+    var appearedAt: Double = -.infinity
+    /// Strecke im vorigen Bild und gezählte Schritte, für Staub beim Aufsetzen.
+    var lastDistance: Double?
+    var footsteps = 0
+    /// Ob die Figur gerade im Bogen einer Ecke läuft (für den Zähler).
+    var inBend = false
+    /// Staubwölkchen, die gerade von dieser Figur stehen (Grenze je Figur).
+    var activeDust = 0
     let hitFrames: [SKTexture]
     let dieFrames: [SKTexture]
     /// Boss (FX 03): Schild heben (letztes Bild = Schildhaltung) und Ruf.
@@ -218,6 +240,8 @@ final class EnemyNode: SKNode {
         isBoss = boss
         body = BattleSprites.enemyBody(enemy.kind, field: field)
         walkFrames = BattleSprites.frames(enemy.kind, .walk)
+        viewFrames = [.side: walkFrames, .front: BattleSprites.frames(enemy.kind, .walkFront),
+                      .back: BattleSprites.frames(enemy.kind, .walkBack)]
         hitFrames = BattleSprites.frames(enemy.kind, .hit)
         dieFrames = BattleSprites.frames(enemy.kind, .die)
         shieldFrames = BattleSprites.frames(enemy.kind, .shield)
@@ -253,6 +277,13 @@ final class EnemyNode: SKNode {
         addChild(motion)
         motion.addChild(reaction)
         reaction.addChild(body)
+        if let sprite = body as? SKSpriteNode {
+            viewFade.anchorPoint = sprite.anchorPoint
+            viewFade.size = sprite.size
+            viewFade.alpha = 0
+            viewFade.zPosition = 0.1
+            reaction.addChild(viewFade)
+        }
         if let flash { reaction.addChild(flash) }
         shieldDome.texture = FxTextures.texture(.glow)
         shieldDome.color = FxStyle.shieldColor
@@ -315,22 +346,55 @@ final class EnemyNode: SKNode {
 
     /// Haltung im Lauf. Spiegeln und Kippen hängen zusammen: Nach links
     /// gespiegelt kippt die Vorneigung in die andere Richtung.
-    func apply(_ pose: Pose, field: CGFloat) {
+    /// `bank` ist die Neigung in die Kurve auf dem Bildschirm (A-1); sie hängt
+    /// nicht an der Blickrichtung, die Kurve dreht für beide Seiten gleich.
+    func apply(_ pose: Pose, field: CGFloat, bank: Double = 0) {
         motion.position = CGPoint(x: 0, y: CGFloat(pose.lift) * field)
         motion.xScale = CGFloat(pose.scaleX) * facing
         motion.yScale = CGFloat(pose.scaleY)
-        motion.zRotation = CGFloat(pose.tilt) * facing
-        shadow.setScale(CGFloat(pose.shadow))
+        motion.zRotation = CGFloat(pose.tilt) * facing + CGFloat(bank)
+        shadow.xScale = CGFloat(pose.shadow) * (1 + FxStyle.contactWidth * CGFloat(pose.contact))
+        shadow.yScale = CGFloat(pose.shadow)
+    }
+
+    /// Neigung weich ihrem Ziel nähern; mit `still` (Bewegung reduzieren) keine.
+    func lean(towards target: Double, dt: Double, still: Bool) {
+        bank = still ? 0 : FxMath.approach(bank, towards: target, dt: dt, rate: FxStyle.bankRate)
+    }
+
+    /// Bilder der gezeigten Folge.
+    var shownWalkFrames: [SKTexture] { viewFrames[view] ?? walkFrames }
+
+    /// Ob es für diese Richtung eigene Bilder gibt.
+    func hasFrames(for view: EnemyView) -> Bool { !(viewFrames[view] ?? []).isEmpty }
+
+    /// Folge zur Laufrichtung wählen (A-1). Fehlen der Art die Bilder, bleibt die
+    /// Seitenansicht. Beim Wechsel liegt das alte Bild kurz darüber und blendet aus.
+    func turn(to wanted: EnemyView, dt: Double) {
+        let next = hasFrames(for: wanted) ? wanted : .side
+        if next != view {
+            if let sprite = body as? SKSpriteNode, !holdsFrame {
+                viewFade.texture = sprite.texture
+                viewFade.alpha = 1
+            }
+            view = next
+            if !holdsFrame, !shownWalkFrames.isEmpty {
+                setTexture(shownWalkFrames[min(walkIndex, shownWalkFrames.count - 1)])
+            }
+        } else if viewFade.alpha > 0 {
+            viewFade.alpha = max(0, viewFade.alpha - CGFloat(dt / FxStyle.viewBlend))
+        }
     }
 
     /// Laufbild aus der Strecke (`FxMath.walkFrame`); ohne Folge bleibt das Standbild.
     func walk(distance: Double, phase: Double) {
-        guard hasFrames, !holdsFrame else { return }
+        let frames = shownWalkFrames
+        guard !frames.isEmpty, !holdsFrame else { return }
         let index = FxMath.walkFrame(distance: distance, phase: phase,
-                                     stride: FxStyle.frameStride, frames: walkFrames.count)
-        guard index != walkIndex else { return }
+                                     stride: FxStyle.frameStride, frames: frames.count)
+        guard index != walkIndex || (body as? SKSpriteNode)?.texture !== frames[index] else { return }
         walkIndex = index
-        setTexture(walkFrames[index])
+        setTexture(frames[index])
     }
 
     /// Treffer oder Sturz: zeigt ein Bild der Folge und hält es gegen den Lauf.
@@ -347,7 +411,8 @@ final class EnemyNode: SKNode {
             return
         }
         holdsFrame = false
-        if hasFrames { setTexture(walkFrames[walkIndex]) }
+        let frames = shownWalkFrames
+        if !frames.isEmpty { setTexture(frames[min(walkIndex, frames.count - 1)]) }
     }
 
     /// Schildhaltung setzen (nil = wieder laufen). Nur der Director ruft das.

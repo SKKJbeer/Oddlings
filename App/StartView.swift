@@ -8,6 +8,9 @@ struct StartView: View {
     @State private var flow: AppFlow
     @State private var showsSettings = false
     @Environment(\.scenePhase) private var scenePhase
+    /// Mission der Vorführung: die erste der Region, im Debug-Bau per
+    /// `--e2e-knoten` wählbar (Kontaktabzug A-1 führt jede Mission vor).
+    private let watchNode: String
 
     init() {
         let campaign: CampaignConfig
@@ -44,6 +47,7 @@ struct StartView: View {
         if arguments.contains("--e2e-frisch") { GuideMemory().reset() }
         if arguments.contains("--e2e-ohne-hinweise") { AppSettings.setGuide(false) }
         #endif
+        watchNode = first
         _flow = State(initialValue: flow)
     }
 
@@ -106,7 +110,7 @@ struct StartView: View {
                 CampaignMapView(flow: flow)
             }
         case .watch:
-            if let mission = flow.mission(for: flow.campaign.nodes[0].id) {
+            if let mission = flow.mission(for: watchNode) {
                 BattleView(mission: mission, mode: .watch, onClose: { flow.showMenu() })
             }
         case .spike:
