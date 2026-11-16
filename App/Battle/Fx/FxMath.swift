@@ -62,8 +62,17 @@ struct Pose: Equatable {
     var tilt: Double
     /// Größe des Schattens, 1 am Boden.
     var shadow: Double
+    /// Fußkontakt, 1 genau beim Aufsetzen, sonst schnell gegen 0 (A-1): Der
+    /// Schatten wird dort kurz breiter, als drücke das Gewicht auf den Boden.
+    var contact: Double = 0
 
     static let rest = Pose(lift: 0, scaleX: 1, scaleY: 1, tilt: 0, shadow: 1)
+}
+
+/// Welche Laufbildfolge eine Figur zeigt (A-1). Vorn und hinten sind wie die
+/// Seitenansicht nach rechts gedreht gerendert; nach links spiegelt die Szene.
+enum EnemyView: String, CaseIterable, Equatable {
+    case side, front, back
 }
 
 enum FxMath {
@@ -87,8 +96,41 @@ enum FxMath {
             scaleX: 1 + squash * 0.8 - stretch * 0.5,
             scaleY: 1 - squash + stretch,
             tilt: gait.sway * sin(Double.pi * steps) - gait.lean,
-            shadow: 1 - 0.3 * air
+            shadow: 1 - 0.3 * air,
+            contact: pow(contact, 4)
         )
+    }
+
+    /// Wie oft eine Figur zwischen zwei Strecken aufsetzt: einmal je Schritt,
+    /// gezählt am Takt von `pose`. Aus der Strecke, nicht aus der Uhr, damit ein
+    /// verlangsamter Gegner seltener staubt und ein großer Bildsprung keinen
+    /// Schritt verschluckt. Rückwärts (Neustart) zählt nichts.
+    static func footfalls(from: Double, to: Double, stride: Double, phase: Double) -> Int {
+        guard stride > 0, to > from else { return 0 }
+        return Int(floor(to / stride + phase) - floor(from / stride + phase))
+    }
+
+    /// Spur eines Gegners aus seiner Kennung, −1 bis 1 (A-1). Kehrwert der
+    /// plastischen Zahl statt des goldenen Schnitts von `phase`: Spur und
+    /// Schritt-Takt sollen nicht zusammenhängen. Aufeinanderfolgende Kennungen
+    /// liegen dabei fast ein Viertel des Bandes (0,49 von 2) auseinander.
+    static func lane(forID id: Int) -> Double {
+        let value = Double(id) * 0.754_877_666_25
+        return 2 * (value - floor(value)) - 1
+    }
+
+    /// Welche Bildfolge zur Laufrichtung passt. `dx`, `dy` in Kartenrichtung
+    /// (y nach unten, also nach unten auf dem Bildschirm); bis `sideAngle` zur
+    /// Waagerechten bleibt es die Seitenansicht.
+    static func facing(dx: Double, dy: Double, sideAngle: Double) -> EnemyView {
+        if abs(dy) <= abs(dx) * tan(sideAngle) { return .side }
+        return dy > 0 ? .front : .back
+    }
+
+    /// Nähert einen gezeigten Wert dem Ziel mit fester Rate je Sekunde an
+    /// (exponentiell). Für Neigung und Überblenden, damit nichts in einem Bild springt.
+    static func approach(_ shown: Double, towards target: Double, dt: Double, rate: Double) -> Double {
+        shown + (target - shown) * min(1, max(0, rate * dt))
     }
 
     /// Bild einer Laufbildfolge (FX 02) aus der zurückgelegten Strecke wie bei
