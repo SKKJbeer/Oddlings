@@ -581,3 +581,20 @@ class TuermeInDerWelt(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Konturpass(unittest.TestCase):
+    """A-3: Die Außenlinie ist so breit wie verlangt, kreisförmig und nur außen."""
+
+    def test_breite_und_nur_aussen(self):
+        sys.path.insert(0, os.path.join(WURZEL, "tools/figuren-3d"))
+        from konturpass import kontur, KONTURFARBE
+        b = Image.new("RGBA", (40, 40), (0, 0, 0, 0))
+        b.paste((200, 180, 40, 255), (15, 15, 25, 25))
+        k = kontur(b, 3)
+        self.assertEqual(k.getpixel((20, 20)), (200, 180, 40, 255))  # innen unverändert
+        self.assertEqual(k.getpixel((13, 20))[:3], KONTURFARBE)       # zwei Pixel außen: Linie
+        self.assertEqual(k.getpixel((13, 20))[3], 255)
+        self.assertEqual(k.getpixel((10, 20))[3], 0)                  # fünf Pixel außen: frei
+        self.assertLess(k.getpixel((12, 12))[3], 128)                 # Ecke rund, nicht quadratisch
+        self.assertIs(kontur(b, 0), b)

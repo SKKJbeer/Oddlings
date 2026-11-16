@@ -1,16 +1,16 @@
 {
   "_zweck": "Skelett des Plünderers (TRELLIS-Modell aus vorlage-2, Seed 1); Punkte als Anteile der Modellbox, Blick nach -y",
-  "blick": 60,
+  "blick": 45,
   "ruhe": {
     "kopf": [
       "x",
-      -25
+      -15
     ]
   },
   "bildHoehe": 1.4,
   "licht": {
     "haupt": 5.0,
-    "fuell": 2.2,
+    "fuell": 3.0,
     "welt": 1.0,
     "rand": 3.0
   },
@@ -195,5 +195,20 @@
       "folge": "walk",
       "blick": 160
     }
-  }
+  },
+  "verformen": [
+    {
+      "zVon": 0.8,
+      "band": 0.04,
+      "drehung": [
+        "x",
+        -50
+      ],
+      "um": [
+        0,
+        0.05,
+        0.8
+      ]
+    }
+  ]
 }

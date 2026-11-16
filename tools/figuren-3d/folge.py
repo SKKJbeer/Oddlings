@@ -49,7 +49,12 @@ def box(bild):
 boxen = [box(b) for b in bilder.values()]
 links, oben = min(b[0] for b in boxen), min(b[1] for b in boxen)
 rechts, unten = max(b[2] for b in boxen), max(b[3] for b in boxen)
-fuss = box(bilder[("walk", 0)])[3]
+# Fuß je Blickrichtung: Von hinten gedreht liegt der tiefste Fuß auf dem Bild
+# höher als von der Seite (das hintere Bein steht weiter in der Tiefe). Jede
+# Richtung stellt ihr erstes Bild auf den Anker; Treffer, Sturz und die Folgen
+# des Bosses gehören zur Seitenansicht.
+fuesse = {f: box(bilder[(f, 0)])[3] for f in folgen if f.startswith("walk")}
+fuss = fuesse["walk"]
 regel = vertrag["assets"][f"{figur}_walk"]
 anker = regel["anker"]
 
@@ -59,14 +64,16 @@ for faktor in (2, 3):
     rand = seite * RAND + kontur_pt * faktor
     nutz = seite - 2 * rand
     # Über dem Fuß ist (1 - anker) der Seite frei, darunter anker; beides muss reichen.
-    k = min(nutz / (rechts - links),
-            (seite * (1 - anker) - rand) / max(1, fuss - oben),
-            (seite * anker - rand) / max(1, unten - fuss) if unten > fuss else float("inf"))
+    k = min([nutz / (rechts - links)]
+            + [(seite * (1 - anker) - rand) / max(1, fu - oben) for fu in fuesse.values()]
+            + [(seite * anker - rand) / (unten - fu) for fu in fuesse.values() if unten > fu])
     for (f, i), bild in bilder.items():
         name = f"{figur}_{f}_{i:02d}"
         klein = bild.resize((round(bild.width * k), round(bild.height * k)), Image.LANCZOS)
         x = round(seite / 2 - (links + rechts) / 2 * k)
-        y = round(seite * (1 - anker) - fuss * k)
+        # Die Kontur reicht unter den Fuß; der Anker gilt für ihre Unterkante,
+        # so wie bei den gemalten Figuren, deren Kontur Teil des Bildes ist.
+        y = round(seite * (1 - anker) - fuesse.get(f, fuss) * k - kontur_pt * faktor)
         # Über eine größere Leinwand, weil alpha_composite keinen Versatz über
         # den Rand nimmt und paste mit Maske die Kanten ausdünnt.
         gross = Image.new("RGBA", (seite + 2 * klein.width, seite + 2 * klein.height))

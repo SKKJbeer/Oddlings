@@ -11,6 +11,7 @@ rotes Kreuz zeichnet. Ausserdem muss jedes Bild seine Herkunft belegen
 nachvollziehbar.
 """
 import json, os, re, sys
+import numpy as np
 from PIL import Image
 
 # Nur kommerziell nutzbare Modelle (siehe .claude/skills/spielgrafik/SKILL.md).
@@ -25,21 +26,22 @@ def hat_kontur(bild):
     34/22/18 hat eine Helligkeit um 25; eine Figur ohne Kontur zeigt dort ihre
     Farbe (Haut, Stoff) mit 80 und mehr.
     """
-    rgba = bild.convert("RGBA")
-    w, h = rgba.size
-    px = rgba.load()
-    summe = anzahl = 0
-    for y in range(1, h - 1):
-        for x in range(1, w - 1):
-            r, g, b, a = px[x, y]
-            # Halbe Deckung als Grenze: Der weiche Außenrand der Kontur zählt
-            # zu „außen“, sonst läge der gemessene Ring im Antialiasing.
-            if a < 128:
-                continue
-            if min(px[x + dx, y + dy][3] for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))) < 128:
-                summe += 0.299 * r + 0.587 * g + 0.114 * b
-                anzahl += 1
-    return anzahl > 0 and summe / anzahl < KONTUR_HELLIGKEIT
+
+    px = np.asarray(bild.convert("RGBA"), dtype=np.float32)
+    # Halbe Deckung als Grenze: Der weiche Außenrand der Kontur zählt zu
+    # „außen“, sonst läge der gemessene Ring im Antialiasing.
+    deckend = px[..., 3] >= 128
+    innen = deckend.copy()
+    innen[1:, :] &= deckend[:-1, :]
+    innen[:-1, :] &= deckend[1:, :]
+    innen[:, 1:] &= deckend[:, :-1]
+    innen[:, :-1] &= deckend[:, 1:]
+    ring = deckend & ~innen
+    ring[0, :] = ring[-1, :] = ring[:, 0] = ring[:, -1] = False
+    if not ring.any():
+        return False
+    hell = 0.299 * px[..., 0] + 0.587 * px[..., 1] + 0.114 * px[..., 2]
+    return float(hell[ring].mean()) < KONTUR_HELLIGKEIT
 
 
 # Obergrenze der mittleren Helligkeit am Rand, siehe hat_kontur.
