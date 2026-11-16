@@ -190,10 +190,10 @@ sieht noch nicht perfekt aus“), deshalb wird A-3 zusammen mit den Blickrichtun
 
 | Nr. | Frage | Empfehlung | Stand |
 |---|---|---|---|
-| D-140 | Wie die Kampfplätze in dieselbe Kamera kommen | 3D-Diorama mit Kamera der Türme, gemalt überarbeitet | Karte an Steffen |
-| D-141 | Bauland: überall oder gestaltete Bauinseln | Bauinseln (D-005 wird endlich als Zonen gebaut) | Karte an Steffen |
-| D-142 | Reihenfolge des Umbaus | Vertikalschnitt an Mission 1, dann ausrollen | Karte an Steffen |
-| D-143 | Neue Gegnerrollen in Region 1 | zwei neue Arten (Heiler, Teiler) | Karte an Steffen |
+| D-140 | Wie die Kampfplätze in dieselbe Kamera kommen | 3D-Diorama mit Kamera der Türme, gemalt überarbeitet | **ENTSCHIEDEN** 16.11.2026 |
+| D-141 | Bauland: überall oder gestaltete Bauinseln | Bauinseln (D-005 wird endlich als Zonen gebaut) | **ENTSCHIEDEN** 16.11.2026 |
+| D-142 | Reihenfolge des Umbaus | Vertikalschnitt an Mission 1, dann ausrollen | **ENTSCHIEDEN** 16.11.2026 |
+| D-143 | Neue Gegnerrollen in Region 1 | zwei neue Arten (Heiler, Teiler) | **ENTSCHIEDEN** 16.11.2026 |
 | D-144 | Bewegung glätten nur in der Darstellung | gilt (Claude, umkehrbar) | [Konzept](aaa-bewegung-und-bauen.md#a-1-laufen) |
 | D-145 | Kontaktabzug je Mission aus der CI als Prüfmethode | gilt (Claude, Werkzeug) | [Konzept](aaa-bewegung-und-bauen.md#kontaktabzug) |
 

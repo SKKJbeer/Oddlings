@@ -10,10 +10,6 @@ davor 0.27.0 (Wahl zwischen zwei Spezialisierungen, Mission 6a „Sumpfpfad II�
 
 ## Wartet auf dich
 
-0. Vier Karten aus dem Review auf AAA-Niveau (Thread „Spiel auf AAA-Niveau reviewen“):
-   wie die Kampfplätze in dieselbe Kamera kommen (S26), Bauinseln statt Wiese (S27),
-   Vertikalschnitt an Mission 1 zuerst (S28), zwei neue Gegnerrollen (S29). A-1 (Laufen)
-   und A-2 (Bauen) hängen an keiner davon und beginnen sofort.
 0. Wie viel Statistik die Tafel am Turm zeigt: Entscheidungskarte S24 im Thread
    „Aufwertungen mit Werten und Vergleich zeigen“. Gebaut ist die Empfehlung, Werte,
    Vergleich und Kampfbilanz (0.29.0, D-130, D-131).

@@ -35,7 +35,7 @@ D-005 hat „Zonen aus Rasterzellen“ entschieden; die Missionsdateien kennen a
 Mindestabstand zum Weg, also eine einzige Zone, die ganze Karte (104 bis 120 von 144
 Feldern). Bauinseln setzen D-005 erst um.
 
-**Regel [VORSCHLAG]:** Eine Karte hat 4 bis 7 Inseln mit zusammen etwa 35 bis 50 Feldern.
+**Regel [ENTSCHIEDEN] (D-141):** Eine Karte hat 4 bis 7 Inseln mit zusammen etwa 35 bis 50 Feldern.
 Innerhalb einer Insel ist jedes freie Feld bebaubar (Raster bleibt, wie D-005). Außerhalb
 ist Landschaft: Wald, Wasser, Fels, Böschung, Ruinen. Inseln sind unterschiedlich:
 
@@ -95,8 +95,8 @@ Heute drei Rollen, gelöst bis M4. Rolle und Antwort als Matrix:
 | Masse | Plünderer | Gruppenschaden | Blitzturm |
 | Tempo | Flitzer | Bremsen | Sporenturm |
 | Panzer | Panzerbestie | hohen Einzelschaden | Wachturm II, Falkenhorst, Steinregen |
-| **Heiler** [VORSCHLAG] | **Moorhexe**: heilt Gegner im Umkreis von 1 Feld alle 2 s um 6 % | Fokus: zuerst sie | Zielwahl „Stärkster“ oder ein eigener Schwerpunkt-Turm, Steinregen; Fäulnis verstärkt |
-| **Teiler** [VORSCHLAG] | **Pilzbalg**: zerfällt beim Tod in drei kleine Sporlinge | Schaden nach dem Tod, an einer zweiten Stelle | Blitzkette über die Sporlinge, Sporenturm hinter dem ersten Ort |
+| **Heiler** [ENTSCHIEDEN] | **Moorhexe**: heilt Gegner im Umkreis von 1 Feld alle 2 s um 6 % | Fokus: zuerst sie | Zielwahl „Stärkster“ oder ein eigener Schwerpunkt-Turm, Steinregen; Fäulnis verstärkt |
+| **Teiler** [ENTSCHIEDEN] | **Pilzbalg**: zerfällt beim Tod in drei kleine Sporlinge | Schaden nach dem Tod, an einer zweiten Stelle | Blitzkette über die Sporlinge, Sporenturm hinter dem ersten Ort |
 | Flieger (Region 2, D-027) | Schattenflieger | Treffer aus der Luft | Wach- und Blitzturm, Sporenturm nicht |
 
 **Empfehlung für D-143:** Heiler und Teiler in Region 1, beide mit 3D-Figur. Begründung:
@@ -187,4 +187,4 @@ P2-6b kann mit festen Inseln anfangen.
 - Keine neuen Türme in Region 1 (drei Türme plus Bank und Spezialisierungen reichen).
 - Kein Held, kein freies Bauen auf dem Weg, kein Labyrinthbau.
 - Keine Region 2: Schattenflieger und neuer Boss bleiben dort (D-027).
-- Keine Umsetzung vor Steffens Karten D-141 und D-143 und dem Urteil am Vertikalschnitt.
+- D-141 und D-143 sind entschieden (16.11.2026); umgesetzt wird nach dem Urteil am Vertikalschnitt (D-142).

@@ -39,10 +39,6 @@ zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzeln
 | S12 | Wo die App nach einem Neustart mitten in einer Mission öffnet (Entscheidungskarte seit 03.11.) | Thread „Fortsetzen nach App-Neustart bauen“, [Konzept](../konzepte/p2-2-fortsetzen.md) | nichts, gebaut ist die Empfehlung (D-074) | Direkt in der Mission, pausiert |
 | S18 | Gestalt des Moorkönigs als 3D-Figur (Entscheidungskarte seit 08.11.) | Thread „Moorkönig als 3D-Boss bauen“, [Konzept](../konzepte/fx-03-moorkoenig.md) | nichts, gebaut ist die Empfehlung (D-100) | So übernehmen (Vorlage 71) |
 | S24 | Wie viel Statistik die Tafel am Turm zeigt (Entscheidungskarte seit 08.11.) | Thread „Aufwertungen mit Werten und Vergleich zeigen“, [Konzept](../konzepte/ui-02-turmwerte.md) | nichts, gebaut ist die Empfehlung (D-130, D-131) | Werte, Vergleich und Kampfbilanz |
-| S26 | Wie die Kampfplätze in dieselbe Kamera wie Türme und Figuren kommen (Entscheidungskarte seit 16.11.) | Thread „Spiel auf AAA-Niveau reviewen“, [Review](../konzepte/aaa-review.md) | A-4 Kampfplatz Mission 1 (D-140) | 3D-Diorama aus der Missionsdatei, gemalt überarbeitet |
-| S27 | Bauland überall oder gestaltete Bauinseln (Entscheidungskarte seit 16.11.) | dito, [Leveldesign](../konzepte/aaa-leveldesign.md#bauinseln-d-141) | A-4, A-6 (D-141) | Bauinseln, 35 bis 50 Felder je Karte |
-| S28 | Erst Vertikalschnitt an Mission 1 oder Pakete über alle Missionen (Entscheidungskarte seit 16.11.) | dito | Reihenfolge A-4 bis A-7 (D-142) | Vertikalschnitt an Mission 1 |
-| S29 | Neue Gegnerrollen in Region 1 (Entscheidungskarte seit 16.11.) | dito, [Leveldesign](../konzepte/aaa-leveldesign.md#gegnerrollen-d-143) | A-6 (D-143) | Heiler und Teiler |
 | S11 | Blitz allein gewinnt Mission 2 und 3 beim ersten Spielen: wann beheben (Entscheidungskarte seit 03.11.) | Haupt-Thread, [Labor](../konzepte/p2-6b-balance-labor.md#erster-lauf-03112026-stufe-pr-164-läufe-etwa-25-sekunden) | nichts, gebaut ist die Empfehlung (P2-11, D-075) | Jetzt, als eigenes Paket |
 
 ## Als Nächstes
@@ -72,17 +68,18 @@ Spieltest läuft parallel. Nach R-7a kommt Mission 3 mit Aufwertungen (D-085, 02
 Aus dem [Review vom 16.11.2026](../konzepte/aaa-review.md): ein Ort, ein Licht, eine
 Kamera, ein Maßstab, dazu Leveldesign mit Gestalt. Methoden in
 [Bewegung, Bauen, Stimmigkeit](../konzepte/aaa-bewegung-und-bauen.md) und
-[Leveldesign](../konzepte/aaa-leveldesign.md). Reihenfolge [VORSCHLAG], Karten S26 bis S29.
+[Leveldesign](../konzepte/aaa-leveldesign.md). Entschieden am 16.11.2026: Diorama (D-140), Bauinseln (D-141), erst Vertikalschnitt
+an Mission 1 (D-142), Heiler und Teiler (D-143).
 
 | # | Paket | Befunde | Abh. | Stand |
 |---|---|---|---|---|
 | A-1 | **Laufen**: Kurven statt Knick, Spuren, drei Blickrichtungen, Gewicht (D-144); Kontaktabzug in der CI (D-145) | B2–B5, R3 | – | als Nächstes |
 | A-2 | **Bauen und Tafeln**: Turm-Vorschau vor dem Kauf, Errichten statt Abwerfen, Auftritt für Aufwerten und Spezialisieren, Tafel weicht Weg und Festung, Wellenvorschau | P1, P3–P5, R2 | – | – |
 | A-3 | **Figuren vollständig**: Flitzer und Panzerbestie in 3D (Paket 6), Konturpass, alle Gegner in drei Richtungen | B1, G3 | – | – |
-| A-4 | **Kampfplatz Mission 1 neu** in der Kamera der Türme, mit Bauinseln und Maßstab | G1, G2, G4, G8, L1, P2 | S26, S27 | – |
+| A-4 | **Kampfplatz Mission 1 neu** in der Kamera der Türme, mit Bauinseln und Maßstab | G1, G2, G4, G8, L1, P2 | – | – |
 | A-5 | **Eine Malweise in der Welt**: gemalte Auswahl und Ringe, Kopfleiste im Tafel-Material, sechs Spezialisierungsbilder, Türme zielen, Effektbudget | G5–G7, G9, R1 | A-4 | – |
-| – | Urteil Steffen am Vertikalschnitt Mission 1 | | A-1–A-5, S28 | – |
-| A-6 | **Leveldesign Region 1** nach Missionsblättern: Bauinseln und Gelände (Anhöhe, Furt), Heiler und Teiler, Wellenbogen, Labor-Kennzahlen; Mission für Mission | L1–L6 | S27, S29, Urteil | – |
+| – | Urteil Steffen am Vertikalschnitt Mission 1 | | A-1–A-5 | – |
+| A-6 | **Leveldesign Region 1** nach Missionsblättern: Bauinseln und Gelände (Anhöhe, Furt), Heiler und Teiler, Wellenbogen, Labor-Kennzahlen; Mission für Mission | L1–L6 | Urteil | – |
 | A-7 | **Kampfplätze M2 bis M7 neu**, je mit ihrem Missionsblatt | G1, G2, G8 | A-6 je Mission | – |
 
 P3-5 (Nebenmissionen) bleibt davor oder danach steuerbar; seine Karten S21 bis S23 hängen
