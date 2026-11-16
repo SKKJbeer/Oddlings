@@ -69,7 +69,9 @@ Aus dem [Review vom 16.11.2026](../konzepte/aaa-review.md): ein Ort, ein Licht, 
 Kamera, ein Maßstab, dazu Leveldesign mit Gestalt. Methoden in
 [Bewegung, Bauen, Stimmigkeit](../konzepte/aaa-bewegung-und-bauen.md) und
 [Leveldesign](../konzepte/aaa-leveldesign.md). Entschieden am 16.11.2026: Diorama (D-140), Bauinseln (D-141), erst Vertikalschnitt
-an Mission 1 (D-142), Heiler und Teiler (D-143).
+an Mission 1 (D-142), Heiler und Teiler (D-143), fallende Schwierigkeitskurve (D-146),
+mehrere Wege ab M6 (D-147), Veteran-Stufe (D-148). Gesamtbild:
+[Gamedesign](../konzepte/gamedesign-gesamtbild.md).
 
 | # | Paket | Befunde | Abh. | Stand |
 |---|---|---|---|---|
@@ -81,6 +83,9 @@ an Mission 1 (D-142), Heiler und Teiler (D-143).
 | – | Urteil Steffen am Vertikalschnitt Mission 1 | | A-1–A-5 | – |
 | A-6 | **Leveldesign Region 1** nach Missionsblättern: Bauinseln und Gelände (Anhöhe, Furt), Heiler und Teiler, Wellenbogen, Labor-Kennzahlen; Mission für Mission | L1–L6 | Urteil | – |
 | A-7 | **Kampfplätze M2 bis M7 neu**, je mit ihrem Missionsblatt | G1, G2, G8 | A-6 je Mission | – |
+| A-8 | **Schwierigkeitskurve im Labor** (D-146): Prüfung gegen die Zielkurve, naive Mischung verliert ab M4; Wellen je Mission danach ausrichten | L5 | mit A-6 je Mission | – |
+| A-9 | **Mehrere Wege** (D-147): `map.paths`, Weg je Wellengruppe; M6a zwei Eingänge, M6b Kreuzung, M7 zweiter Eingang | L2 | nach A-4 und Heiler/Teiler (Simulation nacheinander) | – |
+| A-10 | **Veteran-Stufe** (D-148): je Mission nach dem ersten Sieg, eigene Wellen und Sterne, Labor-Prüfung | – | nach A-8 | – |
 
 P3-5 (Nebenmissionen) bleibt davor oder danach steuerbar; seine Karten S21 bis S23 hängen
 nicht am AAA-Schnitt.
