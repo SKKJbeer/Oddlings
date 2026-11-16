@@ -19,6 +19,24 @@ modell, rigdatei, aus = sys.argv[-4], sys.argv[-3], sys.argv[-2]
 pixel = int(sys.argv[-1])
 rig = json.load(open(rigdatei))
 
+# Kamera und Sonne sind für Karte, Türme und Figuren dieselben (D-140, A-4) und
+# stehen darum im Asset-Vertrag, nicht je Figur. Gesucht wird er über der
+# rig.json, damit das Skript aus jedem Ordner läuft.
+def finde_vertrag(start):
+    d = os.path.abspath(start)
+    while d != os.path.dirname(d):
+        kandidat = os.path.join(d, "art", "asset-vertrag.json")
+        if os.path.exists(kandidat):
+            return json.load(open(kandidat))
+        d = os.path.dirname(d)
+    return {}
+
+# VERTRAG=<pfad> für Proben mit einer rig.json außerhalb des Repos.
+vertrag = (json.load(open(os.environ["VERTRAG"])) if os.environ.get("VERTRAG")
+           else finde_vertrag(os.path.dirname(rigdatei)))
+kamera = vertrag.get("kamera", {})
+sonne = vertrag.get("sonne")
+
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=modell)
 sc = bpy.context.scene
@@ -274,8 +292,12 @@ cam_daten.ortho_scale = rig.get("bildHoehe", 1.5)
 cam = bpy.data.objects.new("kamera", cam_daten)
 sc.collection.objects.link(cam)
 sc.camera = cam
-# 35° von oben wie die gemalten Figuren, Figur 45° zur Kamera gedreht
-el = math.radians(rig.get("kameraHoehe", 35))
+# Kamerahöhe aus dem Vertrag; eine Figur darf innerhalb des Spielraums tiefer
+# gehen, wenn sonst das Gesicht unter Mütze oder Krone verschwindet.
+hoehe = rig.get("kameraHoehe", kamera.get("hoehe", 35))
+if kamera and not (kamera["hoehe"] - kamera.get("figurenSpielraum", 0) <= hoehe <= kamera["hoehe"]):
+    sys.exit(f"kameraHoehe {hoehe}° liegt außerhalb der gemeinsamen Kamera ({kamera})")
+el = math.radians(hoehe)
 mitte = 0.5
 cam.location = (0, -6 * math.cos(el), mitte + 6 * math.sin(el))
 cam.rotation_euler = (math.radians(90) - el, 0, 0)
@@ -291,12 +313,26 @@ dreh.rotation_euler[2] = math.radians(rig.get("blick", 45))
 licht = {"haupt": 3.2, "fuell": 0.9, "welt": 0.5, **rig.get("licht", {})}
 # Randlicht von hinten oben setzt die Figur wie im Gemälde vom Boden ab.
 licht.setdefault("rand", 0.0)
+def richtung(azimut, hoehe):
+    # Vertrag: Azimut in der Bodenebene, 0 = Bildschirm rechts (+x), 90 = in
+    # die Tiefe (+y), Vektor zeigt zur Sonne. Eine Sonnenlampe strahlt entlang
+    # ihrer -Z-Achse, also wird +Z auf die Sonne gedreht.
+    a, h = math.radians(azimut), math.radians(hoehe)
+    v = Vector((math.cos(a) * math.cos(h), math.sin(a) * math.cos(h), math.sin(h)))
+    return v.to_track_quat('Z', 'Y').to_euler()
+
 for name, rot in [("haupt", (45, 0, -40)), ("fuell", (65, 0, 140)), ("rand", (-55, 0, 25))]:
     e = licht[name]
     l = bpy.data.lights.new(name, 'SUN')
     l.energy = e
     ob = bpy.data.objects.new(name, l)
-    ob.rotation_euler = tuple(math.radians(v) for v in rot)
+    if name == "haupt" and sonne:
+        ob.rotation_euler = richtung(sonne["azimut"], sonne["hoehe"])
+    elif name == "fuell" and sonne:
+        # Aufhellen von der Gegenseite, flach, damit Schatten nicht absaufen.
+        ob.rotation_euler = richtung(sonne["azimut"] + 180, 30)
+    else:
+        ob.rotation_euler = tuple(math.radians(v) for v in rot)
     sc.collection.objects.link(ob)
 welt = bpy.data.worlds.new("welt")
 sc.world = welt
@@ -312,13 +348,20 @@ sc.view_settings.view_transform = 'Standard'
 os.makedirs(aus, exist_ok=True)
 # NUR=walk,shield rendert nur diese Folgen (Proben beim Einstellen des Skeletts).
 nur = [x for x in os.environ.get("NUR", "").split(",") if x]
-for folge, f in rig["folgen"].items():
-    if nur and folge not in nur:
+# Blickrichtungen (A-3): dieselben Schlüsselbilder wie die Quellfolge, die
+# Figur nur anders vor Kamera und Sonne gedreht, wie jemand, der sich auf dem
+# Platz umdreht. Gleiche Bildnummer = gleiche Beinstellung, damit der Lauf-Code
+# (A-1) beim Wechsel der Richtung überblenden kann, ohne dass der Schritt springt.
+auftraege = [(folge, folge, rig.get("blick", 45)) for folge in rig["folgen"]]
+auftraege += [(name, a["folge"], a["blick"]) for name, a in rig.get("ansichten", {}).items()]
+for name, folge, blick in auftraege:
+    if nur and name not in nur:
         continue
-    n = f["bilder"]
+    dreh.rotation_euler[2] = math.radians(blick)
+    n = rig["folgen"][folge]["bilder"]
     for i in range(n):
         setze(folge, i, n)
         bpy.context.view_layer.update()
-        sc.render.filepath = os.path.join(aus, f"{folge}_{i:02d}.png")
+        sc.render.filepath = os.path.join(aus, f"{name}_{i:02d}.png")
         bpy.ops.render.render(write_still=True)
 print("fertig", aus)

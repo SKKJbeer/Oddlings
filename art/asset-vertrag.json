@@ -3,6 +3,16 @@
   "atlas": "App/Assets.xcassets/Battle.spriteatlas",
   "punkteJeZelle": 43,
   "maxBytesJeDatei": 1500000,
+  "kamera": {
+    "art": "orthografisch",
+    "hoehe": 40,
+    "figurenSpielraum": 10
+  },
+  "sonne": {
+    "azimut": 135,
+    "hoehe": 45
+  },
+  "konturPunkte": 1.0,
   "assets": {
     "tower_watch": {
       "seiteZellen": 1.9,
