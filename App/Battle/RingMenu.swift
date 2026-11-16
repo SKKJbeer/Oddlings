@@ -18,7 +18,9 @@ struct RingMenu: View {
             let own = geometry.safeAreaInsets
             let edges = HudLayout.Insets(top: max(insets.top, own.top), left: max(insets.left, own.leading),
                                          bottom: max(insets.bottom, own.bottom), right: max(insets.right, own.trailing))
-            let hud = HudLayout(board: board, insets: edges, metrics: BattleStyle.hudMetrics)
+            let hud = HudLayout(board: board, insets: edges, metrics: BattleStyle.hudMetrics,
+                                avoid: HudLayout.Avoid(board: board, map: controller.map,
+                                                       reserved: corners(size: geometry.size, insets: edges)))
             if let cell = controller.anchorCell {
                 menu(at: cell, hud: hud)
                     .frame(width: geometry.size.width, height: geometry.size.height)
@@ -110,6 +112,16 @@ struct RingMenu: View {
 }
 
 extension RingMenu {
+    /// Feste Ecken, die gerade auf der Karte stehen (D-158): wie `BattleView` sie legt.
+    fileprivate func corners(size: CGSize, insets: HudLayout.Insets) -> [CGRect] {
+        var rects: [CGRect] = []
+        if controller.hasAbility && !controller.isFinished { rects.append(HudLayout.abilityRect(board: size, insets: insets)) }
+        if controller.canCallNextWave, let forecast = controller.forecast {
+            rects.append(HudLayout.forecastRect(board: size, insets: insets, entries: forecast.entries.count))
+        }
+        return rects
+    }
+
     /// Mit Turmwerten die hohe Tafel oder, wo sie nicht passt, die Leiste (D-130).
     fileprivate func panelPlace(for cell: Cell, avoiding points: [CGPoint], hud: HudLayout,
                                 stats: Bool) -> (rect: CGRect, wide: Bool) {
@@ -397,7 +409,7 @@ private struct InfoPanel: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .woodPanel(padding: wide ? 8 : 10, radius: 18)
+        .woodPanel(padding: wide ? BattleStyle.statStripPadding : BattleStyle.statPanelPadding, radius: 18)
         .allowsHitTesting(false)
     }
 
@@ -431,7 +443,7 @@ private struct InfoPanel: View {
         .lineLimit(1)
         .minimumScaleFactor(0.75)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-        .woodPanel(padding: 12, radius: 18)
+        .woodPanel(padding: BattleStyle.infoPanelPadding, radius: 18)
         .allowsHitTesting(false)
     }
 

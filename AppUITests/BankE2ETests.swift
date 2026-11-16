@@ -27,7 +27,7 @@ final class BankE2ETests: XCTestCase {
         XCTAssertTrue(button.waitForExistence(timeout: 5), "Kreismenü bietet die Bank an")
         XCTAssertTrue(button.label.contains("Zwergenbank"), button.label)
         button.tap()
-        XCTAssertTrue(e2e.app.staticTexts["Die \(bank.cost) Gold fehlen dir in den nächsten Wellen."]
+        XCTAssertTrue(e2e.app.staticTexts["\(bank.cost) Gold fehlen dir vorerst."]
             .waitForExistence(timeout: 5), "Vorschau nennt den Preis des Wartens")
         button.tap()
         e2e.waitFor(e2e.gold, toBe: start - bank.cost, "Bauen zieht den Bankpreis ab")
