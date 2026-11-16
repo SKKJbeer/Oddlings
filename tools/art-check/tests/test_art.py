@@ -543,5 +543,97 @@ class TuermeInDerWelt(unittest.TestCase):
                     self.assertEqual(list(alt.getdata()), list(neu.getdata()), rel)
 
 
+class Diorama(unittest.TestCase):
+    """A-4 (D-140, D-165, D-166): eine Kamera, eine Sonne, ein Maßstab im Vertrag; der Plan
+    des Dioramas stellt nichts Hohes auf Weg oder Insel; das Bild zeigt die Inseln dort,
+    wo die Simulation sie kennt."""
+
+    MISSION = os.path.join(WURZEL, "Packages/OddlingsCore/Sources/OddlingsCore/Resources/Balance/mvp-mission-01.json")
+    ORT = os.path.join(WURZEL, "tools/kampfplatz-3d/orte/mission-01.json")
+
+    def vertrag(self):
+        return json.load(open(os.path.join(WURZEL, "art/asset-vertrag.json")))
+
+    def test_kamera_und_sonne_stehen_im_vertrag(self):
+        v = self.vertrag()
+        self.assertEqual(v["kamera"]["art"], "orthografisch")
+        self.assertTrue(30 <= v["kamera"]["hoehe"] <= 60)
+        self.assertTrue(0 <= v["kamera"]["figurenSpielraum"] <= 15)
+        # Licht von links hinten: Schatten fallen nach rechts unten (art-direction, D-120).
+        self.assertTrue(90 < v["sonne"]["azimut"] < 180)
+        self.assertTrue(20 <= v["sonne"]["hoehe"] <= 70)
+
+    def test_massstab_in_der_reihenfolge_des_reviews(self):
+        m = self.vertrag()["massstab"]
+        reihe = ["fortress", "enemy_moorKing", "tower", "enemy_brute", "enemy_raider", "enemy_runner"]
+        werte = [m[n] for n in reihe]
+        self.assertEqual(werte, sorted(werte, reverse=True), werte)
+        self.assertEqual(len(set(werte)), len(werte))
+
+    def plan(self, t):
+        sys.path.insert(0, os.path.join(WURZEL, "tools/kampfplatz-3d"))
+        import plan  # noqa: E402
+        return plan, plan.plane(self.MISSION, self.ORT, t, 24)
+
+    def test_nichts_hohes_auf_weg_oder_insel(self):
+        with tempfile.TemporaryDirectory() as t:
+            modul, p = self.plan(t)
+            kos = math.cos(math.radians(p["kamera"]["hoehe"]))
+            karte = json.load(open(self.MISSION))["map"]
+            inseln = modul.inselzellen(karte)
+            arten = {d["art"] for d in p["dinge"]}
+            self.assertTrue({"baum", "busch", "fels", "kantenstein", "hoehle"} <= arten, arten)
+            for d in p["dinge"]:
+                if d["art"] in ("kantenstein", "hoehle"):
+                    continue  # Kante der Insel, Höhle am Eingang (Gegner kommen heraus)
+                x0, y0, x1, y1 = modul.bildflaeche(d, kos)
+                # Die Spitze ragt um h·cos nach oben; dort darf keine Inselzelle liegen …
+                for cx, cy in inseln:
+                    self.assertFalse(x0 < cx + 1 and x1 > cx and y0 < cy + 1 and y1 > cy, (d, cx, cy))
+                # … und keine Zellmitte des Wegs.
+                for (ax, ay), (bx, by) in zip(karte["path"], karte["path"][1:]):
+                    for k in range(21):
+                        wx, wy = ax + (bx - ax) * k / 20, ay + (by - ay) * k / 20
+                        self.assertFalse(x0 < wx < x1 and y0 < wy < y1, (d, wx, wy))
+            # Zwischen den Inseln steht Landschaft (G2: keine leere Wiese).
+            im_feld = [d for d in p["dinge"] if d["art"] in ("busch", "fels", "stumpf", "farn")
+                       and 0 <= d["x"] <= karte["width"] and 0 <= d["y"] <= karte["height"]]
+            self.assertGreaterEqual(len(im_feld), 12)
+
+    def test_bodenplan_deckt_zellen_genau(self):
+        # Kabinettprojektion: Am Boden ist eine Zelle im Bild quadratisch und liegt wie in
+        # der Simulation. Die Masken des Plans müssen das zeigen.
+        with tempfile.TemporaryDirectory() as t:
+            _, p = self.plan(t)
+            mx, my = p["rand"]
+            c = p["px"]
+            self.assertEqual(p["bild"], [(p["breite"] + 2 * mx) * c, (p["hoehe"] + 2 * my) * c])
+            weg = Image.open(os.path.join(t, "maske-weg.png"))
+            insel = Image.open(os.path.join(t, "maske-inseln.png"))
+            px = lambda b, x, y: b.getpixel((int((x + mx) * c), int((y + my) * c)))
+            karte = json.load(open(self.MISSION))["map"]
+            for x, y in karte["path"][1:-1]:
+                self.assertEqual(px(weg, x, y), 255, (x, y))
+            for z in karte["zones"]:
+                for rx, ry, rb, rh in z["rects"]:
+                    self.assertEqual(px(insel, rx + 0.5, ry + 0.5), 255, z["id"])
+                    self.assertEqual(px(insel, rx - 0.3, ry + rh / 2), 0, z["id"])
+
+    def test_bild_zeigt_die_inseln_als_erde(self):
+        # Das ausgelieferte Bild: Inselmitten sind Erde (warm), nicht Gras.
+        bild = Image.open(os.path.join(WURZEL, "App/Assets.xcassets/Maps/map_mission01_ground.imageset/"
+                                       "map_mission01_ground@3x.jpg")).convert("RGB")
+        karte = json.load(open(self.MISSION))["map"]
+        z = bild.width / (karte["width"] + 8)
+        for zone in karte["zones"]:
+            for rx, ry, rb, rh in zone["rects"]:
+                for y in range(ry, ry + rh):
+                    for x in range(rx, rx + rb):
+                        box = (int((x + 4.3) * z), int((y + 2.3) * z), int((x + 4.7) * z), int((y + 2.7) * z))
+                        r, g, b = ImageStat.Stat(bild.crop(box)).mean
+                        self.assertGreater(r, g - 4, (zone["id"], x, y))
+                        self.assertGreater(r, b + 15, (zone["id"], x, y))
+
+
 if __name__ == "__main__":
     unittest.main()

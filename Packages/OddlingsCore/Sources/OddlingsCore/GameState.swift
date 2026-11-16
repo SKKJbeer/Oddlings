@@ -209,6 +209,8 @@ public enum Rejection: Equatable, Sendable {
     case notEnoughGold
     case cellOccupied
     case tooCloseToPath
+    /// Zwischen den Bauinseln ist Landschaft (D-141).
+    case outsideZone
     case outsideMap
     case unknownTower
     case noWaveLeft

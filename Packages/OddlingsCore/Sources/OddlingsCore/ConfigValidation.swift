@@ -50,6 +50,10 @@ public struct ConfigIssue: Hashable, Sendable, CustomStringConvertible {
         case strategyNeedsSpecialization // Bauweise spezialisiert, die Mission bietet es nicht an
         case bossSummonsBoss           // ein Boss darf keinen Boss rufen
         case tooManyBossesInWave       // höchstens ein Boss je Welle
+        case noZones                   // `zones` vorhanden, aber leer: dann gäbe es keinen Bauplatz
+        case zoneOutsideMap            // Rechteck ragt über den Kartenrand
+        case zoneOnPath                // Zelle der Insel liegt näher am Weg als minDistanceFromPath
+        case zonesOverlap              // eine Zelle gehört zu zwei Inseln
     }
 
     public init(field: String, rule: Rule) {
@@ -91,6 +95,10 @@ public struct ConfigIssue: Hashable, Sendable, CustomStringConvertible {
         case .strategyNeedsSpecialization: "\(field) spezialisiert, die Mission bietet es nicht an"
         case .bossSummonsBoss: "\(field) ruft einen Boss oder einen Gegner ohne Werte"
         case .tooManyBossesInWave: "\(field) hat mehr als einen Boss"
+        case .noZones: "\(field) braucht mindestens eine Insel, sonst gibt es keinen Bauplatz"
+        case .zoneOutsideMap: "\(field) ragt über den Rand der Karte"
+        case .zoneOnPath: "\(field) liegt zu nah am Weg"
+        case .zonesOverlap: "\(field) überschneidet eine andere Insel"
         case .starsOutOfOrder: "\(field) braucht 0 < two ≤ three ≤ fortressLives"
         case .invalidID: "\(field) darf nur Kleinbuchstaben, Ziffern und Bindestriche enthalten"
         case .duplicateID: "\(field) ist doppelt vergeben"
@@ -198,6 +206,7 @@ extension BalanceConfig {
         positive(Double(map.height), "map.height")
         nonNegative(map.minDistanceFromPath, "map.minDistanceFromPath")
         if map.path.count < 2 { found.append(.init(field: "map.path", rule: .pathTooShort)) }
+        found += zoneIssues()
 
         if towers[.bank] != nil { found.append(.init(field: "towers.bank", rule: .bankNotATower)) }
         for kind in TowerKind.combat {
@@ -303,6 +312,46 @@ extension BalanceConfig {
                 positive(group.interval, "\(groupField).interval")
                 if let delay = group.delay { nonNegative(delay, "\(groupField).delay") }
             }
+        }
+        return found
+    }
+
+    /// Bauinseln (D-141): Jede Zelle einer Insel muss ein echter Bauplatz sein.
+    /// Sonst zeigte das Bild eine Insel, auf der man an einer Stelle nicht bauen
+    /// kann, und niemand sähe warum.
+    private func zoneIssues() -> [ConfigIssue] {
+        var found: [ConfigIssue] = []
+        // Ohne gültige Kartengröße meldet `map.width`/`map.height` schon den Fehler.
+        guard let zones = map.zones, map.width > 0, map.height > 0 else { return found }
+        if zones.isEmpty { return [.init(field: "map.zones", rule: .noZones)] }
+        // Ohne gültigen Weg meldet `pathTooShort` schon den Fehler; der Abstand entfällt.
+        let path = map.path.count >= 2 ? PathGeometry(points: map.path) : nil
+        var seen: [Cell] = []
+        var ids: [String] = []
+        for (z, zone) in zones.enumerated() {
+            let field = "map.zones[\(z)]"
+            if !EquipmentTable.isValidID(zone.id) { found.append(.init(field: "\(field).id", rule: .invalidID)) }
+            if ids.contains(zone.id) { found.append(.init(field: "\(field).id", rule: .duplicateID)) }
+            ids.append(zone.id)
+            if zone.rects.isEmpty { found.append(.init(field: "\(field).rects", rule: .noZones)) }
+            for (r, rect) in zone.rects.enumerated() {
+                let rectField = "\(field).rects[\(r)]"
+                if rect.width < 1 || rect.height < 1 {
+                    found.append(.init(field: rectField, rule: .mustBePositive))
+                    continue
+                }
+                if rect.x < 0 || rect.y < 0 || rect.x + rect.width > map.width || rect.y + rect.height > map.height {
+                    found.append(.init(field: rectField, rule: .zoneOutsideMap))
+                }
+                if let path, rect.cells.contains(where: { path.distance(from: $0.center) < map.minDistanceFromPath }) {
+                    found.append(.init(field: rectField, rule: .zoneOnPath))
+                }
+            }
+            let cells = zone.cells
+            if cells.contains(where: { seen.contains($0) }) {
+                found.append(.init(field: field, rule: .zonesOverlap))
+            }
+            seen += cells
         }
         return found
     }
