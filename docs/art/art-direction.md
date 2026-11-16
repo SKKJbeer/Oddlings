@@ -34,6 +34,9 @@ Warum A und nicht die Alternativen (Bilder in `art/stilmuster/`):
 
 - Eine Kamera für alles: Aufsicht von schräg oben, etwa 45°. Die Karte ist ein
   rechteckiges Raster (D-005), Türme und Figuren stehen darauf in 3/4-Ansicht.
+  **Stand 16.11.2026: nicht eingehalten.** Die Kampfplätze sind von oben gemalt, die Figuren
+  in 25 bis 35° gerendert ([Review](../konzepte/aaa-review.md) G1). Weg zur einen Kamera:
+  D-140, [Konzept A-4](../konzepte/aaa-bewegung-und-bauen.md#a-4-ein-ort-kampfplatz-in-der-kamera-der-türme).
 - Licht von oben links, warm. Schatten nach unten rechts, als weiche Ellipse
   unter jeder Figur (von der Szene gezeichnet, nicht ins Bild gemalt).
 - Türme stehen im Licht ihres Ortes (D-120, 0.29.1): Die Szene multipliziert Turm und
