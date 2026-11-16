@@ -123,7 +123,8 @@ Aufteilung siehe Abschnitt 2. Weitere Regeln:
 1. Freies Feld antippen → Feld wird umrandet, drei Turmknöpfe erscheinen im Bogen
    darüber (in den oberen zwei Zeilen darunter), jeweils mit Preisschild.
 2. Turm antippen → Reichweite als gestrichelter Kreis, Vorschau des Turms auf dem
-   Feld, Preisschild wird zu „Bauen".
+   Feld, Preisschild wird zu „Bauen". (Die Vorschau des Turms ist bis 0.29.1 nicht
+   gebaut, Review P1; kommt mit A-2, [Konzept](../konzepte/aaa-bewegung-und-bauen.md#a-2-bauen-und-tafeln).)
 3. Denselben Turm erneut antippen → gebaut. Anderes Feld oder leere Stelle →
    abgebrochen.
 - Nicht leistbar: Knopf gedimmt, Schild orange „fehlt 30". Antippen zeigt einen
