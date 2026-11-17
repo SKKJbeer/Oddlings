@@ -46,6 +46,7 @@ final class BattleScene: SKScene {
     /// Der Hinweis auf die Panzerung kommt einmal je Mission, auch über einen
     /// Neustart hinweg: Wer neu anfängt, hat ihn schon gelesen (P2-10).
     private var armorHintShown = false
+    private var healHintShown = false
     /// „Sporenfunke!“ springt beim ersten Funken jeder Mission auf (P2-8).
     private var sparkCalloutShown = false
     /// Was vom Einstieg gerade auf der Karte steht (Hand).
@@ -533,6 +534,19 @@ final class BattleScene: SKScene {
         case .shieldAbsorbed(let id):
             // Wie die Panzerung: Funke und dumpfer Treffer, mit derselben Grenze je Gegner.
             if let node = enemyNodes[id], fx.armor(node) { audio?.play(.armored) }
+        case .enemiesHealed(let healerID, let healed, _):
+            // Klang nur, wenn auch der Ring spielt: dieselbe Grenze je Hexe.
+            guard let healer = enemyNodes[healerID] else { return }
+            let radius = model.sim.config.enemies[healer.kind]?.heal?.radius ?? 0
+            if fx.heal(healer, patients: healed.compactMap { enemyNodes[$0] }, radius: radius) { audio?.play(.healed) }
+            if !healHintShown {
+                healHintShown = true
+                fx.healHint(healer)
+            }
+        case .enemySplit(_, let into):
+            // Der Balg ist schon dem Director übergeben; die Wolke steht dort, wo der erste Sporling erscheint.
+            guard let first = model.state.enemies.first(where: { into.contains($0.id) }) else { return }
+            fx.split(at: toScene(model.sim.map.path.position(at: first.distance)))
         }
     }
 
@@ -562,6 +576,9 @@ final class BattleScene: SKScene {
         case .bossShieldDropped: return .bossShieldDown
         // Spielt `play` selbst, gedrosselt mit dem Funken.
         case .shieldAbsorbed: return nil
+        // Spielt `play` selbst, gedrosselt mit dem Ring.
+        case .enemiesHealed: return nil
+        case .enemySplit: return .split
         case .waveStarted(let index): return .waveStarted(index: index, count: model.sim.config.waves.count)
         case .missionEnded(let won): return .missionEnded(won: won)
         case .abilityCast:

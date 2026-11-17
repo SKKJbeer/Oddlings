@@ -21,6 +21,12 @@ enum FxStyle {
         case .brute: Gait(stride: 0.50, hop: 0.04, squash: 0.14, sway: 0.07, lean: 0.03)
         // Der Moorkönig (P3-4): langsam stampfend, schwer wankend, aufrecht.
         case .moorKing: Gait(stride: 0.62, hop: 0.02, squash: 0.10, sway: 0.09, lean: 0.01)
+        // Moorhexe (D-143): schlurfend, gebeugt, wenig Hüpfen.
+        case .witch: Gait(stride: 0.40, hop: 0.05, squash: 0.10, sway: 0.12, lean: 0.12)
+        // Pilzbalg: watschelnd, rund, stark wiegend.
+        case .puffball: Gait(stride: 0.38, hop: 0.06, squash: 0.22, sway: 0.16, lean: 0.02)
+        // Sporling: klein und flink, hüpft.
+        case .sporeling: Gait(stride: 0.30, hop: 0.14, squash: 0.20, sway: 0.06, lean: 0.12)
         }
     }
 
@@ -91,8 +97,25 @@ enum FxStyle {
         case .runner: SKColor(red: 0.98, green: 0.55, blue: 0.20, alpha: 1)
         case .brute: SKColor(red: 0.55, green: 0.50, blue: 0.48, alpha: 1)
         case .moorKing: SKColor(red: 0.32, green: 0.45, blue: 0.30, alpha: 1)
+        case .witch: SKColor(red: 0.45, green: 0.38, blue: 0.62, alpha: 1)
+        case .puffball: SKColor(red: 0.80, green: 0.68, blue: 0.48, alpha: 1)
+        case .sporeling: SKColor(red: 0.95, green: 0.85, blue: 0.45, alpha: 1)
         }
     }
+
+    // MARK: Heiler und Teiler (D-175, D-176)
+
+    /// Heilung: Ring um die Hexe in Reichweite der Regel, Funken über jedem
+    /// Geheilten. Höchstens ein Puls je Hexe und Sekunde, sonst flimmert eine
+    /// Gruppe ununterbrochen.
+    static let healColor = SKColor(red: 0.55, green: 1.00, blue: 0.60, alpha: 1)
+    static let healRingLife: TimeInterval = 0.6
+    static let healSparks = 3
+    static let healGap: TimeInterval = 1.0
+    /// Zerfall: Sporenwolke am Todesort.
+    static let splitColor = SKColor(red: 0.90, green: 0.85, blue: 0.50, alpha: 1)
+    static let splitPuffs = 6
+    static let splitRingLife: TimeInterval = 0.45
 
     // MARK: Türme
 

@@ -36,7 +36,7 @@ public struct Simulation: Sendable {
 
     /// Ein Tick. Die Reihenfolge ist festgeschrieben, weil sie Ergebnisse
     /// ändert (data-models.md): Befehle → Mauer fällt, Einschlag der Fähigkeit → Wellen/Spawns → Türme feuern (nach ID)
-    /// → Bosse (Schild, Ruf) → Tote auswerten und Gold gutschreiben → Banken zahlen → Bewegung → Durchbrüche → Ende.
+    /// → Bosse (Schild, Ruf) → Heiler → Tote auswerten, Teiler zerfallen und Gold gutschreiben → Banken zahlen → Bewegung → Durchbrüche → Ende.
     /// Befehle laufen in der übergebenen Reihenfolge.
     @discardableResult
     public func step(_ state: inout GameState, commands: [Command] = []) -> [Event] {
@@ -48,6 +48,7 @@ public struct Simulation: Sendable {
         spawnDue(&state, &events)
         fireTowers(&state, &events)
         runBosses(&state, &events)
+        runHealers(&state, &events)
         collectKills(&state, &events)
         payBanks(&state, &events)
         move(&state)
@@ -317,10 +318,7 @@ public struct Simulation: Sendable {
             guard let enemy = config.enemies[pending.enemy] else {
                 preconditionFailure("BalanceConfig.validate lässt Wellen ohne Gegnerwerte nicht durch")
             }
-            let hp = enemy.hp * pending.hpScale
-            let id = state.nextEntityID
-            state.nextEntityID += 1
-            state.enemies.append(Enemy(id: id, kind: pending.enemy, hp: hp, maxHP: hp, distance: 0))
+            let id = spawn(pending.enemy, hp: enemy.hp * pending.hpScale, at: 0, &state)
             events.append(.enemySpawned(id: id))
             spawned += 1
         }
@@ -535,9 +533,7 @@ public struct Simulation: Sendable {
             let hp = stats.hp * boss.summonHPScale
             var summoned: [Int] = []
             for _ in 0..<boss.summonCount {
-                let id = state.nextEntityID
-                state.nextEntityID += 1
-                state.enemies.append(Enemy(id: id, kind: boss.summon, hp: hp, maxHP: hp, distance: enemy.distance))
+                let id = spawn(boss.summon, hp: hp, at: enemy.distance, &state)
                 events.append(.enemySpawned(id: id))
                 summoned.append(id)
             }
@@ -545,8 +541,57 @@ public struct Simulation: Sendable {
         }
     }
 
+    /// Jeder neue Gegner entsteht hier: Erscheinen, Ruf des Bosses, Zerfall.
+    /// Ein Heiler bekommt seinen Takt ab dem Erscheinen (D-175).
+    private func spawn(_ kind: EnemyKind, hp: Double, at distance: Double, _ state: inout GameState) -> Int {
+        let id = state.nextEntityID
+        state.nextEntityID += 1
+        var enemy = Enemy(id: id, kind: kind, hp: hp, maxHP: hp, distance: distance)
+        if let heal = config.enemies[kind]?.heal { enemy.healTick = state.tick + max(1, ticks(heal.interval)) }
+        state.enemies.append(enemy)
+        return id
+    }
+
+    /// Moorhexen heilen (D-175): jeden anderen lebenden, verletzten Gegner im
+    /// Umkreis um einen Anteil seines Höchstlebens, nie darüber. Nicht sich
+    /// selbst, sonst hilft „zuerst sie“ nicht mehr; nicht Bosse, die an ihrer
+    /// Schildschwelle halten (P3-4). Nach den Türmen: Wer in diesem Tick auf 0
+    /// fiel, ist tot. Betäubt heilt sie nicht, und ihr Takt beginnt nach der
+    /// Betäubung neu, damit der Steinregen eine Antwort ist.
+    private func runHealers(_ state: inout GameState, _ events: inout [Event]) {
+        for index in state.enemies.indices {
+            let healer = state.enemies[index]
+            guard healer.hp > 0, let due = healer.healTick, let heal = config.enemies[healer.kind]?.heal else { continue }
+            let interval = max(1, ticks(heal.interval))
+            if let stun = healer.stunUntilTick, stun > state.tick {
+                state.enemies[index].healTick = max(due, stun + interval)
+                continue
+            }
+            guard state.tick >= due else { continue }
+            state.enemies[index].healTick = state.tick + interval
+            let center = map.path.position(at: healer.distance)
+            var healed: [Int] = [], total = 0.0
+            for other in state.enemies.indices where other != index {
+                let patient = state.enemies[other]
+                guard patient.hp > 0, patient.hp < patient.maxHP, config.enemies[patient.kind]?.boss == nil,
+                      map.path.position(at: patient.distance).distance(to: center) <= heal.radius else { continue }
+                let amount = min(patient.maxHP - patient.hp, patient.maxHP * heal.share)
+                state.enemies[other].hp += amount
+                total += amount
+                healed.append(patient.id)
+            }
+            if !healed.isEmpty { events.append(.enemiesHealed(healerID: healer.id, healed: healed, amount: total)) }
+        }
+    }
+
+    /// Tote zahlen ihre Belohnung; ein Teiler zerfällt (D-176). Die Sporlinge
+    /// kommen hinter die Überlebenden, wie Gerufene, und tragen die Stärke der
+    /// Welle über das Verhältnis von Höchst- zu Grundleben des Balgs. Der erste
+    /// steht am Todesort, die anderen dahinter: Ein Zerfall schiebt niemanden
+    /// näher an die Festung.
     private func collectKills(_ state: inout GameState, _ events: inout [Event]) {
         var alive: [Enemy] = []
+        var splits: [Enemy] = []
         for enemy in state.enemies {
             guard enemy.hp <= 0 else {
                 alive.append(enemy)
@@ -555,8 +600,21 @@ public struct Simulation: Sendable {
             let reward = config.enemies[enemy.kind]?.reward ?? 0
             state.gold += reward
             events.append(.enemyKilled(id: enemy.id, reward: reward))
+            if config.enemies[enemy.kind]?.split != nil { splits.append(enemy) }
         }
         state.enemies = alive
+        for parent in splits {
+            guard let stats = config.enemies[parent.kind], let split = stats.split,
+                  let child = config.enemies[split.into] else { continue }
+            let hp = child.hp * parent.maxHP / stats.hp
+            var born: [Int] = []
+            for number in 0..<split.count {
+                let id = spawn(split.into, hp: hp, at: max(0, parent.distance - Double(number) * split.spread), &state)
+                events.append(.enemySpawned(id: id))
+                born.append(id)
+            }
+            events.append(.enemySplit(id: parent.id, into: born))
+        }
     }
 
     private func move(_ state: inout GameState) {

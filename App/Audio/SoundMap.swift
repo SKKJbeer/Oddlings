@@ -44,6 +44,11 @@ enum SoundMap {
         case .bossShield: [Request(cue: .wallUp, semitones: AudioStyle.bossSemitones)]
         case .bossSummon: [Request(cue: .abilityCast, semitones: AudioStyle.bossSemitones)]
         case .bossShieldDown: [Request(cue: .wallDown, semitones: AudioStyle.bossSemitones)]
+        // Heiler und Teiler (D-175, D-176): keine neuen Klänge (D-082), sondern
+        // höher bzw. tiefer gestimmte vorhandene. Heilen hell und glockig wie der
+        // Sporenfunke, Platzen dumpf wie ein Sporenpuls.
+        case .healed: [Request(cue: .combo, semitones: AudioStyle.healSemitones)]
+        case .split: [Request(cue: .sporePuff, semitones: AudioStyle.splitSemitones)]
         case .user(let action): [Request(cue: cue(for: action))]
         }
     }

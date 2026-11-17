@@ -162,6 +162,8 @@ enum BattleTexts {
     }
     /// Beim ersten gepanzerten Gegner einer Mission (P2-10).
     static let armorHint = "Gepanzert: Steine schlagen durch"
+    /// Erste Heilung einer Mission (D-175): was sie tut und was hilft, in einem Satz.
+    static let healHint = "Heilt ihre Nachbarn: zuerst sie"
     /// Boss (P3-4). Der Satz zum Schild sagt, was jetzt zählt: die Gerufenen.
     static let bossName = "Moorkönig"
     static let bossArrives = "Der Moorkönig kommt!"
