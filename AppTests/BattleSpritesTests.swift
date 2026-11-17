@@ -161,11 +161,12 @@ final class BattleSpritesTests: XCTestCase {
         }
     }
 
-    /// FX 02/03: Plünderer und Moorkönig haben ihre Bildfolgen, gleich groß wie
-    /// ihr Standbild; die anderen Gegner bleiben beim Standbild.
-    func testRaiderAndKingHaveFramesOthersKeepTheirPicture() throws {
+    /// FX 02/03, A-3: Plünderer, Flitzer und Moorkönig haben ihre Bildfolgen,
+    /// gleich groß wie ihr Standbild; die anderen Gegner bleiben beim Standbild.
+    func testAnimatedEnemiesHaveFramesOthersKeepTheirPicture() throws {
         let counts: [EnemyKind: [EnemyMotion: Int]] = [
             .raider: [.walk: 8, .hit: 3, .die: 6, .shield: 0, .summon: 0],
+            .runner: [.walk: 8, .hit: 3, .die: 6, .shield: 0, .summon: 0],
             .moorKing: [.walk: 8, .hit: 3, .die: 8, .shield: 4, .summon: 5],
         ]
         for (kind, expected) in counts.sorted(by: { $0.key.rawValue < $1.key.rawValue }) {
