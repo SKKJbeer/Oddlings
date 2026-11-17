@@ -139,6 +139,36 @@
       "anker": 0.1,
       "alpha": true
     },
+    "enemy_brute_walk": {
+      "folge": 8,
+      "seiteZellen": 1.2,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_brute_walkFront": {
+      "folge": 8,
+      "seiteZellen": 1.2,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_brute_walkBack": {
+      "folge": 8,
+      "seiteZellen": 1.2,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_brute_hit": {
+      "folge": 3,
+      "seiteZellen": 1.2,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_brute_die": {
+      "folge": 6,
+      "seiteZellen": 1.2,
+      "anker": 0.1,
+      "alpha": true
+    },
     "enemy_moorKing": {
       "seiteZellen": 2.3,
       "anker": 0.1,
