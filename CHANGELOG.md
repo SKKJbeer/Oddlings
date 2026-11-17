@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.40.0 – 17.11.2026 (A-2: Bauen und Tafeln)
+## 0.41.0 – 17.11.2026 (A-2: Bauen und Tafeln)
 
 ### Neu
 - **Vorschau vor dem Kauf** (D-155, Steffens Karte S33): Nach dem ersten Tippen auf
@@ -38,6 +38,17 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - App: `BuildAidsTests`, `TextFitTests`, neue Fälle in `HudLayoutTests`,
   `BattleSceneTests`, `FxDirectorTests`. E2E: Wellenvorschau in `HUDE2ETests`,
   Bank-Warnung in `BankE2ETests`.
+
+## 0.40.0 – 17.11.2026 (A-3, Teil 2: die Panzerbestie in 3D)
+
+- **Die Panzerbestie läuft auf vier Beinen:** eigene 3D-Figur nach dem Gemälde (dunkler
+  Keiler, Hauer, stahlblaue Platten, goldene Rückenplatte). Die Beine gehen diagonal
+  paarweise, der Kopf nickt; beim Treffer ruckt der Kopf hoch, beim Sturz kippt sie auf
+  die Seite (D-162). Folgen `walk`, `walkFront`, `walkBack` (je 8), `hit` (3), `die` (6),
+  gemeinsame Kamera und Außenlinie. Damit hat jeder Gegner Bildfolgen; die gemalten
+  Standbilder bleiben als Rückfall.
+- Tests: `BattleSpritesTests` verlangt die Bildfolgen der Panzerbestie (8/3/6, gleich groß
+  wie ihr Standbild); `check_assets.py` über den Atlas grün.
 
 ## 0.39.0 – 17.11.2026 (A-3, Teil 2: der Flitzer in 3D)
 
@@ -70,7 +81,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Tests: `BuildZoneTests`, Prüfregeln für Inseln, Mission-1-Budget, App-Test für
   Landschaft, `art-check` für Kamera, Maßstab, Plan und Inselboden.
 - [Konzept A-4](docs/konzepte/a-4-diorama-mission-1.md)
-## 0.34.0 – 17.11.2026 (A-5, Teil 1: Spezialisierungen als Bilder, gemalte Ringe)
+## 0.34.0 – 17.11.2026 (A-5, Teil 1: Spezialisierungen als Bilder, gemalte Ringe) · Bau 58
 
 - **Die größte Entscheidung ist auf dem Feld zu sehen:** Salve und Falkenhorst, Gewitterkrone
   und Funkensäule, Moorherz und Fäulnis haben je ein eigenes Turmbild. Gemalt aus dem Bild der

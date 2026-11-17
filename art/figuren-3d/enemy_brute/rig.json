@@ -1,0 +1,194 @@
+{
+  "_zweck": "Skelett der Panzerbestie (TRELLIS-Modell aus vorlage.png, Seed 1), vierbeinig; Punkte als Anteile der Modellbox, Blick nach -y",
+  "blick": 45,
+  "bildHoehe": 1.4,
+  "licht": {
+    "haupt": 5.0,
+    "fuell": 3.0,
+    "welt": 1.0,
+    "rand": 3.0
+  },
+  "knochen": {
+    "becken": {
+      "von": [
+        0,
+        0.25,
+        0.42
+      ],
+      "bis": [
+        0,
+        0.0,
+        0.45
+      ]
+    },
+    "rumpf": {
+      "von": [
+        0,
+        0.0,
+        0.45
+      ],
+      "bis": [
+        0,
+        -0.2,
+        0.5
+      ],
+      "eltern": "becken"
+    },
+    "kopf": {
+      "von": [
+        0,
+        -0.2,
+        0.55
+      ],
+      "bis": [
+        0,
+        -0.48,
+        0.55
+      ],
+      "eltern": "rumpf"
+    },
+    "bein_vl": {
+      "von": [
+        -0.28,
+        -0.18,
+        0.35
+      ],
+      "bis": [
+        -0.28,
+        -0.2,
+        0.02
+      ],
+      "eltern": "rumpf"
+    },
+    "bein_vr": {
+      "von": [
+        0.28,
+        -0.18,
+        0.35
+      ],
+      "bis": [
+        0.28,
+        -0.2,
+        0.02
+      ],
+      "eltern": "rumpf"
+    },
+    "bein_hl": {
+      "von": [
+        -0.27,
+        0.22,
+        0.35
+      ],
+      "bis": [
+        -0.27,
+        0.22,
+        0.02
+      ],
+      "eltern": "becken"
+    },
+    "bein_hr": {
+      "von": [
+        0.27,
+        0.22,
+        0.35
+      ],
+      "bis": [
+        0.27,
+        0.22,
+        0.02
+      ],
+      "eltern": "becken"
+    }
+  },
+  "folgen": {
+    "walk": {
+      "bilder": 8,
+      "hub": 0.02,
+      "schwingen": {
+        "bein_vl": [
+          "x",
+          32,
+          0
+        ],
+        "bein_hr": [
+          "x",
+          32,
+          0
+        ],
+        "bein_vr": [
+          "x",
+          32,
+          0.5
+        ],
+        "bein_hl": [
+          "x",
+          32,
+          0.5
+        ],
+        "kopf": [
+          "x",
+          5,
+          0.25
+        ],
+        "rumpf": [
+          "z",
+          3,
+          0
+        ]
+      }
+    },
+    "hit": {
+      "bilder": 3,
+      "verlauf": {
+        "kopf": [
+          "x",
+          -35
+        ],
+        "rumpf": [
+          "x",
+          -10
+        ]
+      }
+    },
+    "die": {
+      "bilder": 6,
+      "verlauf": {
+        "becken": [
+          "y",
+          85
+        ],
+        "bein_vl": [
+          "x",
+          20
+        ],
+        "bein_hl": [
+          "x",
+          -20
+        ],
+        "kopf": [
+          "x",
+          10
+        ]
+      }
+    }
+  },
+  "requisiten": [],
+  "kameraHoehe": 30,
+  "stil": {
+    "saettigung": 1.5,
+    "helligkeit": 1.4,
+    "eigenlicht": 0.35,
+    "kontur": 0.008
+  },
+  "ansichten": {
+    "walkFront": {
+      "folge": "walk",
+      "blick": 20
+    },
+    "walkBack": {
+      "folge": "walk",
+      "blick": 160
+    }
+  },
+  "splitterBis": 30
+}

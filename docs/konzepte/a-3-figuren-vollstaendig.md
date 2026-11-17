@@ -1,6 +1,6 @@
 # Konzept: Figuren vollständig (AAA-Schnitt A-3)
 
-Status: **Teil 1 ausgeliefert** (0.32.0: Werkzeug, Plünderer, Moorkönig; D-160), **Flitzer** (0.39.0, D-161) · Stand 16.11.2026 · Thread „Gegnerfiguren in 3D vervollständigen“
+Status: **Teil 1 ausgeliefert** (0.32.0: Werkzeug, Plünderer, Moorkönig; D-160), **Flitzer** (0.39.0, D-161), **Panzerbestie** (0.40.0, D-162) · Stand 16.11.2026 · Thread „Gegnerfiguren in 3D vervollständigen“
 Grundlage: [AAA-Review](aaa-review.md) (B1, B2, G3), [Bewegung und Bauen](aaa-bewegung-und-bauen.md#a-3-figuren-vollständig),
 [FX 02](fx-02-figuren-in-3d.md), [FX 03](fx-03-moorkoenig.md), D-016 Stylized 3D, D-051 3D zu
 Bildfolgen, D-052 Werkzeuge, D-068 Comic-Look, D-140 eine Kamera.
