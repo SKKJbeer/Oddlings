@@ -77,7 +77,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   Landschaft, `art-check` für Kamera, Maßstab, Plan und Inselboden.
 - [Konzept A-4](docs/konzepte/a-4-diorama-mission-1.md)
 
-## 0.34.0 – 17.11.2026 (A-5, Teil 1: Spezialisierungen als Bilder, gemalte Ringe)
+## 0.34.0 – 17.11.2026 (A-5, Teil 1: Spezialisierungen als Bilder, gemalte Ringe) · Bau 58
 
 - **Die größte Entscheidung ist auf dem Feld zu sehen:** Salve und Falkenhorst, Gewitterkrone
   und Funkensäule, Moorherz und Fäulnis haben je ein eigenes Turmbild. Gemalt aus dem Bild der
