@@ -60,6 +60,22 @@ struct MissionSevenTests {
         #expect(sim.config.map == proposal.map)
     }
 
+    /// D-177: M7 setzt nur eine der Gabeln M6a/M6b voraus. Darum zeigt eine
+    /// frühe Welle beide neuen Gegner einzeln, bevor sie gemischt kommen.
+    @Test("Moorhexe und Pilzbalg erscheinen früh einzeln und später gemischt (D-177)")
+    func newEnemiesIntroducedEarly() throws {
+        let config = try BalanceConfig.bundledMission(named: "mission-07")
+        func count(_ kind: EnemyKind, _ wave: Int) -> Int {
+            config.waves[wave].groups.filter { $0.enemy == kind }.reduce(0) { $0 + $1.count }
+        }
+        for kind: EnemyKind in [.witch, .puffball] {
+            let first = try #require(config.waves.indices.first { count(kind, $0) > 0 }, "\(kind)")
+            #expect(first <= 2, "\(kind) zuerst in Welle \(first + 1)")
+            #expect(count(kind, first) <= 2, "\(kind) wird vorgestellt, nicht gestapelt")
+            #expect(config.waves.indices.filter { count(kind, $0) > 0 }.count >= 3, "\(kind) kommt wieder")
+        }
+    }
+
     @Test("Mischungen mit beiden Seiten gewinnen, jede Monokultur verliert")
     func outcomes() throws {
         for name in ["Mix mit freier Wahl", "Mix mit Ruinen-Spezialisierungen", "Fäulnis mit Falkenhorsten"] {
