@@ -25,17 +25,43 @@ enum BattleSprites {
     static func towerName(_ kind: TowerKind, level: Int) -> String {
         level >= 2 ? "tower_\(kind.rawValue)_\(level)" : towerName(kind)
     }
+    /// Jede Spezialisierung hat eine eigene Gestalt (A-5, G7): Die größte
+    /// Entscheidung des Spiels soll man auf dem Feld sehen, ohne zu tippen.
+    /// Die Namen stammen aus Grafik 02 und sind kürzer als die Fälle.
+    static func towerName(_ kind: TowerKind, level: Int, specialization: Specialization?) -> String {
+        guard let specialization else { return towerName(kind, level: level) }
+        return "\(towerName(kind))_\(pictureSuffix(specialization))"
+    }
+    static func pictureSuffix(_ specialization: Specialization) -> String {
+        switch specialization {
+        case .volley: "volley"
+        case .falconHold: "falcon"
+        case .stormCrown: "crown"
+        case .sparkColumn: "spark"
+        case .bogHeart: "moor"
+        case .rot: "rot"
+        }
+    }
+    /// Bildnamen von der genauesten Gestalt abwärts: Spezialisierung, dann die
+    /// Stufen bis 1. Fehlt ein Bild, steht die nächstgröbere da statt eines Lochs.
+    static func towerNames(_ kind: TowerKind, level: Int, specialization: Specialization?) -> [String] {
+        let levels = stride(from: level, through: 1, by: -1).map { towerName(kind, level: $0) }
+        return specialization.map { [towerName(kind, level: level, specialization: $0)] + levels } ?? levels
+    }
+    /// Erstes Bild dieser Folge, das im Katalog liegt.
+    static func towerNameAvailable(_ kind: TowerKind, level: Int, specialization: Specialization? = nil) -> String {
+        towerNames(kind, level: level, specialization: specialization).first { texture(named: $0) != nil } ?? towerName(kind)
+    }
     static func enemyName(_ kind: EnemyKind) -> String { "enemy_\(kind.rawValue)" }
     static let fortressName = "fortress"
     /// Schatten eines Turmbildes (D-120), gerechnet von `turmboden.py`.
-    static func shadowName(_ kind: TowerKind, level: Int) -> String { towerName(kind, level: level) + "_shadow" }
-    /// Schatten der höchsten Stufe bis `level`, die ein eigenes Bild hat: Stufe 3
-    /// (Spezialisierung) trägt das Bild der Stufe 2 und damit auch ihren Schatten.
-    static func shadowNameAvailable(_ kind: TowerKind, level: Int) -> String {
-        for candidate in stride(from: level, to: 1, by: -1) where texture(named: shadowName(kind, level: candidate)) != nil {
-            return shadowName(kind, level: candidate)
-        }
-        return shadowName(kind, level: 1)
+    static func shadowName(_ kind: TowerKind, level: Int, specialization: Specialization? = nil) -> String {
+        towerName(kind, level: level, specialization: specialization) + "_shadow"
+    }
+    /// Schatten zur genauesten Gestalt, die einen hat.
+    static func shadowNameAvailable(_ kind: TowerKind, level: Int, specialization: Specialization? = nil) -> String {
+        let names = towerNames(kind, level: level, specialization: specialization).map { $0 + "_shadow" }
+        return names.first { texture(named: $0) != nil } ?? shadowName(kind, level: 1)
     }
     /// Fleck festgetretene Erde unter jedem Turm, aus dem Weg dieser Karte.
     static func footingName(missionID: String) -> String {
@@ -520,8 +546,10 @@ final class TowerNode: SKNode {
         kind = tower.kind
         self.light = light
         art = BattleSprites.tower(tower.kind, field: field)
+        pictureName = BattleSprites.towerName(tower.kind)
         footing = footingName.flatMap { BattleSprites.groundDecal(named: $0, side: BattleStyle.footingSide * field) }
-        shadow = BattleSprites.groundDecal(named: BattleSprites.shadowNameAvailable(tower.kind, level: tower.level),
+        shadow = BattleSprites.groundDecal(named: BattleSprites.shadowNameAvailable(tower.kind, level: tower.level,
+                                                                                       specialization: tower.specialization),
                                            side: BattleStyle.towerShadowSide * field)
         if tower.kind == .lightning {
             let glow = SKSpriteNode(texture: FxTextures.texture(.glow))
@@ -596,38 +624,29 @@ final class TowerNode: SKNode {
         }
     }
 
-    /// Stufe aus dem Zustand: Bild der Stufe, wenn es im Katalog liegt, und
-    /// ein Schild „II“ bzw. „III“ oben rechts, damit man es auch ohne neues Bild sieht (07).
+    /// Gestalt aus dem Zustand (A-5): Bild der Stufe bzw. der Spezialisierung.
+    /// Kein Schild „II“/„III“ mehr: Jede Stufe und jede Spezialisierung hat ihr
+    /// eigenes Bild, eine Vektorplakette daneben wäre ein Fremdkörper in der
+    /// gemalten Welt (G5). Die Zahl steht auf der Tafel.
     private(set) var level = 1
-    private var badge: SKNode?
+    private(set) var specialization: Specialization?
+    /// Name des Bildes, das gerade zu sehen ist; für Tests und den E2E-Zähler.
+    private(set) var pictureName: String
 
-    func showLevel(_ newLevel: Int, field: CGFloat) {
-        guard newLevel != level else { return }
+    func show(level newLevel: Int, specialization newSpecialization: Specialization?) {
+        guard newLevel != level || newSpecialization != specialization else { return }
         level = newLevel
-        if let texture = BattleSprites.texture(named: BattleSprites.towerName(kind, level: newLevel)) {
+        specialization = newSpecialization
+        let name = BattleSprites.towerNameAvailable(kind, level: newLevel, specialization: newSpecialization)
+        if name != pictureName, let texture = BattleSprites.texture(named: name) {
             for case let sprite as SKSpriteNode in art.children { sprite.texture = texture }
+            pictureName = name
         }
-        if let shadow, let texture = BattleSprites.texture(named: BattleSprites.shadowNameAvailable(kind, level: newLevel)) {
+        let shadowName = BattleSprites.shadowNameAvailable(kind, level: newLevel, specialization: newSpecialization)
+        if let shadow, shadow.name != shadowName, let texture = BattleSprites.texture(named: shadowName) {
             shadow.texture = texture
+            shadow.name = shadowName
         }
-        badge?.removeFromParent()
-        badge = nil
-        guard newLevel >= 2 else { return }
-        let plate = SKShapeNode(rectOf: CGSize(width: field * 0.36, height: field * 0.24), cornerRadius: field * 0.08)
-        plate.fillColor = BattleStyle.levelBadgeFill
-        plate.strokeColor = BattleStyle.levelBadgeStroke
-        plate.lineWidth = 1.5
-        let text = SKLabelNode(text: BattleTexts.levelTag(newLevel))
-        text.fontName = BattleStyle.font
-        text.fontSize = field * 0.2
-        text.fontColor = BattleStyle.levelBadgeStroke
-        text.verticalAlignmentMode = .center
-        plate.addChild(text)
-        plate.position = CGPoint(x: field * 0.38, y: field * 1.15)
-        plate.zPosition = 3
-        plate.name = "level.badge"
-        addChild(plate)
-        badge = plate
     }
 
     @available(*, unavailable)

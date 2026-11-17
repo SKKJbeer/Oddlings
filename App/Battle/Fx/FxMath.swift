@@ -113,7 +113,7 @@ enum FxMath {
     /// Spur eines Gegners aus seiner Kennung, −1 bis 1 (A-1). Goldener Schnitt:
     /// Gegner einer Gruppe erscheinen mit nahen Kennungen, und bis fünf
     /// Kennungen Abstand liegen ihre Spuren mindestens 0,18 von 2 auseinander,
-    /// aufeinanderfolgende 0,76. Die plastische Zahl (bis 0.33.0 im Entwurf) gab
+    /// aufeinanderfolgende 0,76. Die plastische Zahl (erster Entwurf) gab
     /// Kennungen im Abstand 4 fast dieselbe Spur, und gemeinsam erscheinende
     /// Plünderer liefen in Mission 6a deckungsgleich.
     static func lane(forID id: Int) -> Double {

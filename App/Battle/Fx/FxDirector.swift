@@ -495,7 +495,7 @@ final class FxDirector {
     }
 
     /// Aufwerten: der Turm federt hoch, ein Ring in Gold und das Stufenschild darüber.
-    /// Das neue Bild setzt `TowerNode.showLevel`; hier nur der Augenblick.
+    /// Das neue Bild setzt `TowerNode.show(level:specialization:)`; hier nur der Augenblick.
     func upgrade(_ tower: TowerNode) {
         stats.upgrades += 1
         animate(tower.lift, key: "lift", duration: FxStyle.buildLife) { node, t in

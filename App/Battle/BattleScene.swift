@@ -205,20 +205,43 @@ final class BattleScene: SKScene {
         case .aiming: cell = nil
         }
         guard let cell else { return }
-        let mark = SKShapeNode(rectOf: CGSize(width: field, height: field), cornerRadius: field * 0.12)
-        mark.strokeColor = BattleStyle.selection
-        mark.lineWidth = max(2, field * 0.05)
-        mark.fillColor = BattleStyle.selection.withAlphaComponent(0.15)
-        mark.position = toScene(cell.center)
-        selectionLayer.addChild(mark)
-        if let preview = controller?.previewRange {
-            let ring = SKShapeNode(circleOfRadius: CGFloat(preview.range) * field)
-            ring.strokeColor = BattleStyle.selection
-            ring.lineWidth = max(1.5, field * 0.03)
-            ring.fillColor = BattleStyle.rangeFill
-            ring.position = toScene(preview.center)
-            selectionLayer.addChild(ring)
+        // Gemalt (A-5); die Linien bleiben nur als Rückfall, falls der Streifen fehlt.
+        if let mark = GroundMarks.cell(field: field) {
+            mark.position = toScene(cell.center)
+            selectionLayer.addChild(mark)
+        } else {
+            let mark = SKShapeNode(rectOf: CGSize(width: field, height: field), cornerRadius: field * 0.12)
+            mark.strokeColor = BattleStyle.selection
+            mark.lineWidth = max(2, field * 0.05)
+            mark.position = toScene(cell.center)
+            selectionLayer.addChild(mark)
         }
+        if let preview = controller?.previewRange {
+            let radius = CGFloat(preview.range) * field
+            if let ring = GroundMarks.range(radius: radius, field: field) {
+                ring.position = toScene(preview.center)
+                selectionLayer.addChild(ring)
+            } else {
+                let ring = SKShapeNode(circleOfRadius: radius)
+                ring.strokeColor = BattleStyle.selection
+                ring.lineWidth = max(1.5, field * 0.03)
+                ring.position = toScene(preview.center)
+                selectionLayer.addChild(ring)
+            }
+        }
+    }
+
+    /// Für den E2E-Test (A-5): welche Bilder die Türme zeigen und wie die Auswahl
+    /// gezeichnet ist, z. B. `towers=tower_watch_volley selection=gemalt`.
+    var artSummary: String {
+        let pictures = towerNodes.keys.sorted().compactMap { towerNodes[$0]?.pictureName }
+        return "towers=\(pictures.joined(separator: ",")) selection=\(selectionStyle)"
+    }
+
+    /// Für Tests und den E2E-Zähler: was die Auswahl zeigt („gemalt“ oder „linien“).
+    var selectionStyle: String {
+        if selectionLayer.children.isEmpty { return "leer" }
+        return selectionLayer.children.allSatisfy { $0 is SKSpriteNode } ? "gemalt" : "linien"
     }
 
     /// Bauplätze nur beim Bauen (D-121): vor der ersten Welle und solange eine
@@ -359,7 +382,7 @@ final class BattleScene: SKScene {
             if pendingBuilds.remove(tower.id) != nil { fx.build(node) }
             node.idle(time: fx.time, still: fx.reduceMotion)
             if tower.kind == .bank, let bank = model.sim.config.bank { node.showBank(paid: tower.paid, cap: bank.cap) }
-            node.showLevel(tower.level, field: field)
+            node.show(level: tower.level, specialization: tower.specialization)
         }
         for (id, node) in towerNodes where liveTowers[id] == nil {
             node.removeFromParent()
@@ -549,7 +572,7 @@ final class BattleScene: SKScene {
             if let node = towerNodes.removeValue(forKey: id) { fx.sell(node, refund: refund) }
         case .towerUpgraded(let id, let level):
             if let node = towerNodes[id] {
-                node.showLevel(level, field: field)
+                node.show(level: level, specialization: model.state.towers.first { $0.id == id }?.specialization)
                 fx.upgrade(node)
             }
         case .targetModeChanged(let id, let mode):
