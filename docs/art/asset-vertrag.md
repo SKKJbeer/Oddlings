@@ -99,7 +99,7 @@ Körper-Node über einer Schatten-Node. Umgesetzt in FX 01 (Gangart je Gegner in
 `FxStyle.gait`). Der nächste Schritt für echte Gliedmaßen ist eine Zerlegung in
 Teile mit Gelenken, nicht ein gemalter Zyklus; der Weg liegt Steffen als D-051 vor.
 
-Seit A-1 (0.39.0, [Konzept](../konzepte/a-1-laufen.md)) laufen Gegner an Ecken einen
+Seit A-1 (0.41.0, [Konzept](../konzepte/a-1-laufen.md)) laufen Gegner an Ecken einen
 Bogen statt eines Knicks, jeder auf seiner eigenen Spur quer zum Weg, mit Blickrichtung
 aus der Laufrichtung (seitlich bis 35°, sonst vorn oder hinten, sobald die Bilder da
 sind), Staub beim Aufsetzen, Neigung in die Kurve und Anlaufen beim Erscheinen. Die

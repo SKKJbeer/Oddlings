@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.39.0 – 17.11.2026 (A-1: Laufen)
+## 0.41.0 – 17.11.2026 (A-1: Laufen)
 
 - **Bögen statt Knicke:** Gegner laufen an jeder Ecke einen Kreisbogen (Radius ein
   halbes Feld). Die Simulation bleibt unverändert; `PathView` legt nur das Bild auf
@@ -30,10 +30,32 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   Bilder und ein kurzer Film je Mission landen im Artefakt `kontaktabzug`;
   `scripts/kontaktabzug.py` setzt sie zu Bögen zusammen und warnt bei Abweichung vom Weg,
   gestapelten Figuren oder fehlenden Bögen.
-- Plünderer und Moorkönig zeigen jetzt wirklich Vorder- und Rückansicht (Bilder aus A-3,
-  0.32.0); Flitzer und Panzerbestie bleiben bis zu ihren Bildern bei der Seitenansicht.
+- Alle vier Gegner zeigen jetzt wirklich Vorder- und Rückansicht (Bilder aus A-3,
+  0.32.0, 0.39.0, 0.40.0).
 - Tests: `PathViewTests`, `EnemyLaneTests`, `FacingTests`, `WalkSceneTests`, erweiterte
   `FxMathTests`, E2E `WalkE2ETests`, Skripttest `scripts/tests/test_kontaktabzug.py`.
+## 0.40.0 – 17.11.2026 (A-3, Teil 2: die Panzerbestie in 3D)
+
+- **Die Panzerbestie läuft auf vier Beinen:** eigene 3D-Figur nach dem Gemälde (dunkler
+  Keiler, Hauer, stahlblaue Platten, goldene Rückenplatte). Die Beine gehen diagonal
+  paarweise, der Kopf nickt; beim Treffer ruckt der Kopf hoch, beim Sturz kippt sie auf
+  die Seite (D-162). Folgen `walk`, `walkFront`, `walkBack` (je 8), `hit` (3), `die` (6),
+  gemeinsame Kamera und Außenlinie. Damit hat jeder Gegner Bildfolgen; die gemalten
+  Standbilder bleiben als Rückfall.
+- Tests: `BattleSpritesTests` verlangt die Bildfolgen der Panzerbestie (8/3/6, gleich groß
+  wie ihr Standbild); `check_assets.py` über den Atlas grün.
+
+## 0.39.0 – 17.11.2026 (A-3, Teil 2: der Flitzer in 3D)
+
+- **Der Flitzer läuft mit Armen und Beinen:** eigene 3D-Figur nach dem Gemälde (lange
+  Fühler, roter Schal, Rucksack), vorgekippt und mit weitem Schritt. Folgen `walk`,
+  `walkFront`, `walkBack` (je 8 Bilder), `hit` (3, Rumpf knickt zurück), `die` (6, fällt
+  vornüber), aus der gemeinsamen Kamera und mit derselben Außenlinie wie Plünderer und
+  Moorkönig (D-161). Das gemalte Standbild bleibt als Rückfall.
+- Werkzeug: `trellis.py` lädt nur noch das GLB; das Vorschauvideo der Space kommt
+  inzwischen mit 403 zurück und brach den Abruf ab.
+- Tests: `BattleSpritesTests` verlangt die Bildfolgen des Flitzers (8/3/6, gleich groß wie
+  sein Standbild); `check_assets.py` über den Atlas grün.
 
 ## 0.38.0 – 17.11.2026 (Kampfplatz Mission 1 als Diorama mit Bauinseln, A-4)
 

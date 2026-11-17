@@ -104,7 +104,67 @@
       "anker": 0.1,
       "alpha": true
     },
+    "enemy_runner_walk": {
+      "folge": 8,
+      "seiteZellen": 0.9,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_runner_walkFront": {
+      "folge": 8,
+      "seiteZellen": 0.9,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_runner_walkBack": {
+      "folge": 8,
+      "seiteZellen": 0.9,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_runner_hit": {
+      "folge": 3,
+      "seiteZellen": 0.9,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_runner_die": {
+      "folge": 6,
+      "seiteZellen": 0.9,
+      "anker": 0.1,
+      "alpha": true
+    },
     "enemy_brute": {
+      "seiteZellen": 1.2,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_brute_walk": {
+      "folge": 8,
+      "seiteZellen": 1.2,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_brute_walkFront": {
+      "folge": 8,
+      "seiteZellen": 1.2,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_brute_walkBack": {
+      "folge": 8,
+      "seiteZellen": 1.2,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_brute_hit": {
+      "folge": 3,
+      "seiteZellen": 1.2,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_brute_die": {
+      "folge": 6,
       "seiteZellen": 1.2,
       "anker": 0.1,
       "alpha": true
