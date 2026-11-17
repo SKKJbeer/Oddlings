@@ -119,7 +119,7 @@ def fundament(boden_name):
 if __name__ == "__main__":
     for eintrag in sorted(os.listdir(ATLAS)):
         name = eintrag[: -len(".imageset")]
-        if re.fullmatch(r"tower_[a-z]+(_\d)?", name):
+        if re.fullmatch(r"tower_[a-z]+(_(\d|[a-z]+))?", name) and not name.endswith("_shadow"):
             schatten(name)
     for eintrag in sorted(os.listdir(KARTEN)):
         if re.fullmatch(r"map_mission\w+_ground\.imageset", eintrag):

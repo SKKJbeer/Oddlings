@@ -447,6 +447,67 @@
     "footing_mission07": {
       "seiteZellen": 1.2,
       "alpha": true
+    },
+    "mark_ring": {
+      "pixel": [
+        1536,
+        96
+      ],
+      "alpha": true
+    },
+    "tower_watch_volley": {
+      "seiteZellen": 1.9,
+      "anker": 0.2,
+      "alpha": true
+    },
+    "tower_watch_volley_shadow": {
+      "seiteZellen": 2.4,
+      "alpha": true
+    },
+    "tower_watch_falcon": {
+      "seiteZellen": 1.9,
+      "anker": 0.2,
+      "alpha": true
+    },
+    "tower_watch_falcon_shadow": {
+      "seiteZellen": 2.4,
+      "alpha": true
+    },
+    "tower_lightning_crown": {
+      "seiteZellen": 1.9,
+      "anker": 0.2,
+      "alpha": true
+    },
+    "tower_lightning_crown_shadow": {
+      "seiteZellen": 2.4,
+      "alpha": true
+    },
+    "tower_lightning_spark": {
+      "seiteZellen": 1.9,
+      "anker": 0.2,
+      "alpha": true
+    },
+    "tower_lightning_spark_shadow": {
+      "seiteZellen": 2.4,
+      "alpha": true
+    },
+    "tower_spore_moor": {
+      "seiteZellen": 1.9,
+      "anker": 0.2,
+      "alpha": true
+    },
+    "tower_spore_moor_shadow": {
+      "seiteZellen": 2.4,
+      "alpha": true
+    },
+    "tower_spore_rot": {
+      "seiteZellen": 1.9,
+      "anker": 0.2,
+      "alpha": true
+    },
+    "tower_spore_rot_shadow": {
+      "seiteZellen": 2.4,
+      "alpha": true
     }
   }
 }

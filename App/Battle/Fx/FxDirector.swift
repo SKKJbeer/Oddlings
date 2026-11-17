@@ -504,7 +504,7 @@ final class FxDirector {
     }
 
     /// Aufwerten (A-2): Eine Lichtsäule in Turmfarbe steigt aus dem Fuß, der
-    /// Turm streckt sich, Funken. Das neue Bild setzt `TowerNode.showLevel`,
+    /// Turm streckt sich, Funken. Das neue Bild setzt `TowerNode.show(level:specialization:)`,
     /// im selben Bild, in dem die Säule am hellsten ist.
     func upgrade(_ tower: TowerNode) {
         stats.upgrades += 1

@@ -11,15 +11,15 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-
-## 0.33.0 – 17.11.2026 (A-2: Bauen und Tafeln)
+## 0.37.0 – 17.11.2026 (A-2: Bauen und Tafeln)
 
 ### Neu
 - **Vorschau vor dem Kauf** (D-155, Steffens Karte S33): Nach dem ersten Tippen auf
   einen Turm steht er blass an seinem Platz, im Licht des Kampfplatzes. Beim
-  Aufwerten zeigt die Vorschau das Bild der nächsten Stufe.
-- **Weg im Kreis** (D-156): Der Wegabschnitt in Reichweite leuchtet, der Kreis ist
-  nur noch eine feine Linie. Gleiche Rechnung wie die Simulation.
+  Aufwerten zeigt die Vorschau das Bild der nächsten Stufe, vor einer Spezialisierung
+  ihr eigenes Bild (A-5).
+- **Weg im Kreis** (D-156): Der Wegabschnitt in Reichweite leuchtet im gemalten Ring
+  (A-5). Gleiche Rechnung wie die Simulation.
 - **Bauplätze um den Finger** (D-157): voll an der gewählten Zelle, weich auslaufend.
 - **Wellenvorschau** (D-159): Zettel unter „Welle n" mit Gegnerbildern und Anzahl,
   neue Arten mit Ausrufezeichen.
@@ -38,6 +38,22 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - App: `BuildAidsTests`, `TextFitTests`, neue Fälle in `HudLayoutTests`,
   `BattleSceneTests`, `FxDirectorTests`. E2E: Wellenvorschau in `HUDE2ETests`,
   Bank-Warnung in `BankE2ETests`.
+
+## 0.34.0 – 17.11.2026 (A-5, Teil 1: Spezialisierungen als Bilder, gemalte Ringe)
+
+- **Die größte Entscheidung ist auf dem Feld zu sehen:** Salve und Falkenhorst, Gewitterkrone
+  und Funkensäule, Moorherz und Fäulnis haben je ein eigenes Turmbild. Gemalt aus dem Bild der
+  Stufe 2 (Bild-zu-Bild, Stärke 0,82), damit Stein, Kupferringe und Pilzstiel bleiben und
+  oben die Silhouette wechselt. Schatten wie bei jedem Turm aus `turmboden.py` (D-170).
+- **Kein Schild „II“/„III“ mehr am Turm:** Stufe 2 zeigt ihr Bild, die Stufe steht auf der Tafel.
+- **Gemalter Ring statt Linien** (D-171): Auswahl und Reichweite sind ein goldener Ring aus dem
+  Streifen `mark_ring`, zur Laufzeit um den Kreis gewickelt, Rand bei jeder Reichweite gleich
+  breit, innen ein leiser Schein. Fehlt der Streifen, zeichnet die Szene die alten Linien.
+- Tests: `GroundMarksTests` (kachelbar, Randbreite, Mitte frei, Zwischenspeicher, Szene malt),
+  Bild und Schatten je Spezialisierung, kein Schild, E2E meldet `towers=tower_watch_volley`
+  und `selection=gemalt`.
+- Werkzeug: `ringstreifen.py` (Ring abwickeln), `schatten_schneiden.py` (mitgemalten
+  Bodenschatten rechts am Fuß abschneiden), `turmboden.py` kennt Spezialisierungsnamen.
 
 ## Dokumente, kein Bau – 16.11.2026 (Gamedesign als Gesamtbild)
 

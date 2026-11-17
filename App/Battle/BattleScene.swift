@@ -192,21 +192,30 @@ final class BattleScene: SKScene {
         case .aiming: cell = nil
         }
         guard let cell else { return showPreview(.none) }
-        let mark = SKShapeNode(rectOf: CGSize(width: field, height: field), cornerRadius: field * 0.12)
-        mark.strokeColor = BattleStyle.selection
-        mark.lineWidth = max(2, field * 0.05)
-        mark.fillColor = BattleStyle.selection.withAlphaComponent(0.15)
-        mark.position = toScene(cell.center)
-        selectionLayer.addChild(mark)
+        // Gemalt (A-5); die Linien bleiben nur als Rückfall, falls der Streifen fehlt.
+        if let mark = GroundMarks.cell(field: field) {
+            mark.position = toScene(cell.center)
+            selectionLayer.addChild(mark)
+        } else {
+            let mark = SKShapeNode(rectOf: CGSize(width: field, height: field), cornerRadius: field * 0.12)
+            mark.strokeColor = BattleStyle.selection
+            mark.lineWidth = max(2, field * 0.05)
+            mark.position = toScene(cell.center)
+            selectionLayer.addChild(mark)
+        }
         if let preview = controller?.previewRange {
-            // Reichweite als Weg im Kreis (D-156): Der Weg leuchtet, der Kreis
-            // bleibt nur als feine Linie.
-            let ring = SKShapeNode(circleOfRadius: CGFloat(preview.range) * field)
-            ring.strokeColor = BattleStyle.selection.withAlphaComponent(BattleStyle.rangeRingAlpha)
-            ring.lineWidth = max(1, field * 0.02)
-            ring.fillColor = .clear
-            ring.position = toScene(preview.center)
-            selectionLayer.addChild(ring)
+            let radius = CGFloat(preview.range) * field
+            if let ring = GroundMarks.range(radius: radius, field: field) {
+                ring.position = toScene(preview.center)
+                selectionLayer.addChild(ring)
+            } else {
+                let ring = SKShapeNode(circleOfRadius: radius)
+                ring.strokeColor = BattleStyle.selection.withAlphaComponent(BattleStyle.rangeRingAlpha)
+                ring.lineWidth = max(1.5, field * 0.03)
+                ring.position = toScene(preview.center)
+                selectionLayer.addChild(ring)
+            }
+            // Reichweite als Weg im Kreis (D-156): Was leuchtet, erreicht der Turm.
             let line = CGMutablePath()
             for piece in PathCoverage.pieces(of: model.sim.map.path, around: preview.center, radius: preview.range) {
                 line.addLines(between: piece.map(toScene))
@@ -222,6 +231,21 @@ final class BattleScene: SKScene {
         showPreview(selection)
     }
 
+    /// Für den E2E-Test (A-5): welche Bilder die Türme zeigen und wie die Auswahl
+    /// gezeichnet ist, z. B. `towers=tower_watch_volley selection=gemalt`.
+    var artSummary: String {
+        let pictures = towerNodes.keys.sorted().compactMap { towerNodes[$0]?.pictureName }
+        return "towers=\(pictures.joined(separator: ",")) selection=\(selectionStyle)"
+    }
+
+    /// Für Tests und den E2E-Zähler: was die Auswahl zeigt („gemalt“ oder „linien“).
+    /// Der leuchtende Weg (A-2) und die Vorschau sind keine Auswahlmarke und zählen nicht.
+    var selectionStyle: String {
+        let marks = selectionLayer.children.filter { $0.name != Self.coverageName && $0.name != Self.previewName }
+        if marks.isEmpty { return "leer" }
+        return marks.allSatisfy { $0 is SKSpriteNode } ? "gemalt" : "linien"
+    }
+
     static let previewName = "build.preview"
     static let coverageName = "range.coverage"
 
@@ -232,16 +256,21 @@ final class BattleScene: SKScene {
     /// davor und dahinter richtig stehen.
     private func showPreview(_ selection: BattleController.Selection) {
         towerLayer.childNode(withName: Self.previewName)?.removeFromParent()
+        previewPicture = nil
         let ghost: SKNode
         let cell: Cell
         switch selection {
         case .cell(let c, let kind?):
+            previewPicture = BattleSprites.towerName(kind)
             ghost = BattleSprites.tower(kind, field: field)
             cell = c
-        case .tower(_, _, true, let choice):
-            guard let tower = controller?.selectedTower, choice == nil, tower.specialization == nil,
-                  let texture = BattleSprites.texture(named: BattleSprites.towerName(tower.kind, level: tower.level + 1))
-            else { return }
+        case .tower(_, _, true, _):
+            // Vor einer Spezialisierung zeigt die Vorschau die neue Gestalt (A-5, G7).
+            guard let tower = controller?.selectedTower, tower.specialization == nil else { return }
+            let name = BattleSprites.towerName(tower.kind, level: tower.level + 1,
+                                               specialization: controller?.armedSpecialization)
+            guard let texture = BattleSprites.texture(named: name) else { return }
+            previewPicture = name
             ghost = BattleSprites.tower(tower.kind, field: field)
             for case let sprite as SKSpriteNode in ghost.children { sprite.texture = texture }
             cell = tower.cell
@@ -260,6 +289,8 @@ final class BattleScene: SKScene {
         towerLayer.addChild(ghost)
     }
 
+    /// Für Tests: welches Bild die Vorschau zeigt.
+    private(set) var previewPicture: String?
     /// Für Tests: der Vorschau-Turm, wenn einer steht.
     var previewNode: SKNode? { towerLayer.childNode(withName: Self.previewName) }
     var coverageNode: SKNode? { selectionLayer.childNode(withName: Self.coverageName) }
@@ -411,7 +442,7 @@ final class BattleScene: SKScene {
             if pendingBuilds.remove(tower.id) != nil { fx.build(node) }
             node.idle(time: fx.time, still: fx.reduceMotion)
             if tower.kind == .bank, let bank = model.sim.config.bank { node.showBank(paid: tower.paid, cap: bank.cap) }
-            node.showLevel(tower.level, field: field)
+            node.show(level: tower.level, specialization: tower.specialization)
         }
         for (id, node) in towerNodes where liveTowers[id] == nil {
             node.removeFromParent()
@@ -531,10 +562,11 @@ final class BattleScene: SKScene {
             if let node = towerNodes.removeValue(forKey: id) { fx.sell(node, refund: refund) }
         case .towerUpgraded(let id, let level):
             if let node = towerNodes[id] {
-                node.showLevel(level, field: field)
+                let specialization = model.state.towers.first { $0.id == id }?.specialization
+                node.show(level: level, specialization: specialization)
                 // Eine Spezialisierung ist eine neue Gestalt, keine weitere Stufe:
                 // eigener Auftritt, damit man den Unterschied sieht (A-2, P3).
-                if model.state.towers.first(where: { $0.id == id })?.specialization != nil {
+                if specialization != nil {
                     fx.specialize(node)
                 } else {
                     fx.upgrade(node)

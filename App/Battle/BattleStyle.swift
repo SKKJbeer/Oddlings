@@ -44,13 +44,10 @@ enum BattleStyle {
     static let bankBarDrop: CGFloat = 0.32
     static let bankFill = SKColor(red: 1.00, green: 0.84, blue: 0.25, alpha: 1)
     static let bankSpent = SKColor(white: 0.55, alpha: 1)
-    /// Schild „II“ oben rechts an einem aufgewerteten Turm (P2-6): Gold auf Dunkel wie die Preisschilder.
-    static let levelBadgeFill = SKColor(red: 1.00, green: 0.84, blue: 0.25, alpha: 1)
     /// Schild gepanzerter Gegner (P2-10): kühles Eisen, dunkler Rand, Höhe in Feldern.
     static let armorBadgeFill = SKColor(red: 0.72, green: 0.76, blue: 0.82, alpha: 1)
     static let armorBadgeStroke = SKColor(red: 0.20, green: 0.22, blue: 0.27, alpha: 1)
     static let armorBadgeSize: CGFloat = 0.26
-    static let levelBadgeStroke = SKColor(red: 0x22 / 255, green: 0x16 / 255, blue: 0x0F / 255, alpha: 1)
     static let bankEmptyAlpha: CGFloat = 0.6
 
     static func enemyColor(_ kind: EnemyKind) -> SKColor {
@@ -118,7 +115,6 @@ enum BattleStyle {
     static let fastSpeed = 2
 
     static let selection = SKColor(red: 1.00, green: 0.95, blue: 0.70, alpha: 1)
-    static let rangeFill = SKColor(red: 1.00, green: 0.95, blue: 0.70, alpha: 0.10)
     /// Vorschau vor dem Kauf (A-2, P1): der Turm halb durchsichtig an seinem Platz.
     static let previewAlpha: CGFloat = 0.55
     /// Reichweite als Weg im Kreis (D-156): Der Kreis bleibt nur als feine
@@ -127,6 +123,12 @@ enum BattleStyle {
     static let rangeRingAlpha: CGFloat = 0.45
     static let coverageWidth: CGFloat = 0.55
     static let coverageColor = SKColor(red: 1.00, green: 0.93, blue: 0.55, alpha: 0.55)
+    /// Gemalte Ringe (A-5, `GroundMarks`): Randbreite in Feldern, Schein innen 0 bis 1.
+    static let rangeRim: CGFloat = 0.16
+    static let rangeWash: Double = 0.16
+    static let cellMarkRadius: CGFloat = 0.5
+    static let cellMarkRim: CGFloat = 0.14
+    static let cellMarkWash: Double = 0.30
 
     /// Bedienung: Apples Mindestgröße für Tippziele ist 44 pt.
     static let tapTarget: CGFloat = 48

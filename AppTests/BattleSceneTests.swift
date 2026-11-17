@@ -133,6 +133,35 @@ final class BattleSceneTests: XCTestCase {
         XCTAssertNil(scene.previewNode, "nach dem Bau steht der echte Turm")
     }
 
+    /// Vor einer Spezialisierung zeigt die Vorschau das Bild der neuen Gestalt
+    /// (A-2 mit A-5), nicht noch einmal Stufe 2.
+    func testPreviewShowsSpecializationPicture() throws {
+        var config = try BalanceConfig.bundledMission(named: "mission-05a")
+        config.mission.startGold = 1_000
+        config.mission.firstWaveDelay = 600
+        let model = BattleModel(config: config, seed: 1, autoplay: false)
+        let controller = BattleController(model: model, interactive: true)
+        let scene = BattleScene(model: model)
+        scene.controller = controller
+        scene.size = CGSize(width: 852, height: 393)
+        let cell = try XCTUnwrap(model.sim.map.buildableCells.first)
+        model.enqueue(.build(.watch, cell))
+        scene.frame(after: 1 / Double(model.sim.config.simulation.ticksPerSecond))
+        let tower = try XCTUnwrap(model.state.towers.first)
+        model.enqueue(.upgrade(towerID: tower.id))
+        scene.frame(after: 1 / Double(model.sim.config.simulation.ticksPerSecond))
+        XCTAssertEqual(model.state.towers.first?.level, 2)
+
+        controller.tap(cell)
+        let special = try XCTUnwrap(controller.armedSpecialization ?? {
+            controller.upgrade()
+            return controller.armedSpecialization
+        }())
+        scene.frame(after: 0)
+        XCTAssertNotNil(scene.previewNode)
+        XCTAssertEqual(scene.previewPicture, BattleSprites.towerName(.watch, level: 3, specialization: special))
+    }
+
     /// Bauplätze nur um den Finger (P2, D-157): nah voll, weit weg unsichtbar.
     func testBuildZonesFadeAwayFromTheFinger() throws {
         let (scene, controller, model) = try interactiveScene()
