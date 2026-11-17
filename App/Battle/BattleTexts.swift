@@ -140,7 +140,7 @@ enum BattleTexts {
         case .stormCrown: "Springt öfter und weiter."
         case .bogHeart: "Größerer Kreis, bremst stärker."
         case .falconHold: "Sieht weit, durchschlägt Rüstung."
-        case .sparkColumn: "Schwerer Schlag, ein Sprung weiter."
+        case .sparkColumn: "Schwerer Schlag, springt einmal."
         case .rot: "Gebremste nehmen mehr Schaden."
         }
     }
@@ -148,7 +148,7 @@ enum BattleTexts {
     /// Zwei zur Wahl (P3-3, S15).
     static let chooseSpecialization = "Wähle eine Spezialisierung."
     static let chooseOneStar = "Tippe einen Stern an."
-    static func specializeDrops(_ other: Specialization) -> String { "Endgültig: \(name(other)) fällt weg." }
+    static func specializeDrops(_ other: Specialization) -> String { "\(name(other)) entfällt endgültig." }
     /// Anfangsbuchstabe auf dem Stern und später am Turmschild (07).
     static func initial(_ specialization: Specialization) -> String { String(name(specialization).prefix(1)) }
     /// Spezialisieren lässt sich nicht zurücknehmen, nur durch Verkaufen (07).

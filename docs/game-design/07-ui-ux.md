@@ -320,7 +320,7 @@ prüft `HudLayoutTests` für jede Zelle von Mission 3.
 **Wahl zwischen zwei (P3-3, 0.27.0, Mission 6, D-079, Karte S15):** Auf Stufe 2 stehen
 an der Stelle von „Aufwerten“ zwei Sterne nebeneinander, je mit Anfangsbuchstabe und
 Preis (`specialize.<name>`). Erstes Tippen: Tafel mit Name, Satz und in Orange
-„Endgültig: <die andere> fällt weg.“, der Kreis zeigt schon die neue Reichweite. Der
+„<die andere> entfällt endgültig.“, der Kreis zeigt schon die neue Reichweite. Der
 andere Stern wechselt nur die Vorschau, das zweite Tippen auf denselben kauft. Ohne
 Gold warnt der Stern wie Aufwerten. Bei einer einzigen Spezialisierung (M5a, M5b)
 bleibt der eine Sternknopf `specialize`. Bilder statt Buchstaben kommen mit den
