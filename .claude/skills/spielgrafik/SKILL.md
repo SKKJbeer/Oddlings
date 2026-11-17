@@ -19,6 +19,16 @@ description: Hochwertige Spielgrafik (App-Symbole, Figuren, Store-Bilder, Hinter
   `freistellen.py` (rembg, isnet-general-use; schneidet zu und zieht eine
   Kontur #22160F, 0,9 % der Höhe) und `atlas.py <frei.png> <name> <höhe_zellen>`.
   `$SPIELGRAFIK_HOME/rv/bin/python -I` nehmen (eigene Umgebung mit rembg).
+- **Spätere Stufe eines Turms** (Stufe 2, Spezialisierung): Bild-zu-Bild aus dem
+  Rohbild der vorigen Stufe, nicht aus dem Grundturm (`INIT=… STAERKE=0.82`). 0,68
+  blieb zu nah an der Vorlage, aus dem Grundturm entstand ein anderer Turm (A-5).
+  „no cast shadow, no ground" im Prompt hilft nur halb: Liegt rechts am Fuß noch ein
+  grauer Schlagschatten, nach dem Freistellen `schatten_schneiden.py` (rechnet die
+  Rumpfachse und schneidet, was rechts über das Spiegelbild hinausragt).
+- **Gemalte Ringe** (Reichweite, Auswahl): einen Ring malen und mit
+  `ringstreifen.py` in einen waagerecht kachelbaren Streifen abwickeln; die App
+  wickelt ihn um den Kreis (`GroundMarks`). Nur die äußeren 75 % des Bandes nehmen,
+  innen lag sonst die Innenwand als Goldschliere.
 - **„facing right" wirkt nicht**: Figuren blicken meist nach links. Spiegeln,
   nicht neu rechnen.
 - **Karten:** NICHT frei malen und nicht per Bild-zu-Bild mit hoher Stärke —
