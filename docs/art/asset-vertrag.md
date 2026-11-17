@@ -38,8 +38,16 @@ Sie folgen den IDs der Simulation.
 
 ## Kamera, Licht, Maße
 
-- Eine Kamera für alles: Aufsicht von schräg oben, etwa 45°. Licht von oben links,
-  Schatten fallen nach unten rechts.
+- **Eine Kamera für alles (D-165):** orthografisch, 40° über dem Boden, ohne
+  Gierwinkel; Werte in `art/asset-vertrag.json` unter `kamera`. Damit das Raster der
+  Simulation quadratisch bleibt, streckt das Diorama die Tiefe der Szene um 1/sin 40°
+  (Kabinettprojektion): Eine Bodenzelle ist im Bild quadratisch, alles mit Höhe zeigt
+  seine Seite. Figuren dürfen bis `figurenSpielraum` Grad flacher gerendert sein.
+- **Sonne (D-165):** Azimut 135° (links hinten), 45° hoch, unter `sonne`; Schatten
+  fallen nach unten rechts. Lichtfarbe je Ort in `App/Battle/kampfplatzlicht.json`.
+- **Zielmaßstab (D-166):** `massstab` nennt die sichtbare Höhe in Feldern (Flitzer 0,7 ·
+  Plünderer 0,8 · Panzerbestie 1,15 · Turm 1,4 · Boss 2,0 · Festung 2,6). Bilder werden
+  von den Paketen umgestellt, die sie malen; `art-check` hält die Reihenfolge.
 - Maßeinheit ist die Zelle (≈ 43 pt im Querformat, D-004).
 - **Figuren sind Quadrate.** Die Szene setzt jedes Bild als Quadrat mit festem
   `anchorPoint`; die Figur steht mittig, ihr Fuß (unterste deckende Zeile) liegt
@@ -91,7 +99,7 @@ Körper-Node über einer Schatten-Node. Umgesetzt in FX 01 (Gangart je Gegner in
 `FxStyle.gait`). Der nächste Schritt für echte Gliedmaßen ist eine Zerlegung in
 Teile mit Gelenken, nicht ein gemalter Zyklus; der Weg liegt Steffen als D-051 vor.
 
-Seit A-1 (0.35.0, [Konzept](../konzepte/a-1-laufen.md)) laufen Gegner an Ecken einen
+Seit A-1 (0.39.0, [Konzept](../konzepte/a-1-laufen.md)) laufen Gegner an Ecken einen
 Bogen statt eines Knicks, jeder auf seiner eigenen Spur quer zum Weg, mit Blickrichtung
 aus der Laufrichtung (seitlich bis 35°, sonst vorn oder hinten, sobald die Bilder da
 sind), Staub beim Aufsetzen, Neigung in die Kurve und Anlaufen beim Erscheinen. Die

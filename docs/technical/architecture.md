@@ -134,7 +134,7 @@ ohne Simulator, und auch unter Linux (CI-Job `core-linux`, Cloud-Sitzungen).
 | Datei | Aufgabe |
 |---|---|
 | `BalanceConfig.swift`, `ConfigValidation.swift` | Werte einer Mission aus JSON lesen und **vollständig** prüfen, mit Ort jedes Verstoßes |
-| `MissionMap.swift`, `PathGeometry.swift` | Raster, Bauzonen, Weg als Polylinie; Position aus zurückgelegter Strecke |
+| `MissionMap.swift`, `PathGeometry.swift` | Raster, Bauinseln (`zones`, `zone(of:)`, A-4), Weg als Polylinie; Position aus zurückgelegter Strecke |
 | `GameState.swift`, `Simulation.swift` | Zustand als Wert, `step` mit fester Reihenfolge (siehe [Datenmodelle](data-models.md#befehle-und-ereignisse)); Zwergenbank zahlt in `payBanks`, Bonus fürs frühe Rufen in `callNextWave` (P2-5); Aufwerten und Zielwahl in `apply`, Türme feuern mit `config.stats(of: tower)` und `target(…mode:)` (P2-6); jeder Turmtreffer schreibt dem Schützen Schaden und Erledigte gut (`damage(… tower:)`, D-131); jeder Treffer über `strike` mit Mondmal und Rüstung, Ereignis `armorAbsorbed` (P2-10) |
 | `SplitMix64.swift`, `Checksum.swift` | Einziger Zufall; Prüfsumme für Determinismus und Replays |
 | `Autoplayer.swift` | Mitspieler für Vorführung, Oberflächen- und Balancetests |

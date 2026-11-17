@@ -1,3 +1,4 @@
+import Foundation
 import Testing
 @testable import OddlingsCore
 
@@ -51,14 +52,19 @@ struct MapZoneTests {
         #expect(map.placement(of: Cell(x: 4, y: 4), occupied: []) == .tooCloseToPath)
     }
 
-    @Test("Zelle neben dem Weg ist frei")
-    func besidePath() {
-        #expect(map.placement(of: Cell(x: 0, y: 0), occupied: []) == .free)
+    @Test("Zelle in einer Insel ist frei")
+    func inZone() {
+        #expect(map.placement(of: Cell(x: 2, y: 2), occupied: []) == .free)
+    }
+
+    @Test("Zelle neben dem Weg, aber außerhalb jeder Insel ist Landschaft")
+    func landscape() {
+        #expect(map.placement(of: Cell(x: 0, y: 0), occupied: []) == .outsideZone)
     }
 
     @Test("Belegte Zelle")
     func occupied() {
-        #expect(map.placement(of: Cell(x: 0, y: 0), occupied: [Cell(x: 0, y: 0)]) == .occupied)
+        #expect(map.placement(of: Cell(x: 2, y: 2), occupied: [Cell(x: 2, y: 2)]) == .occupied)
     }
 
     @Test("Außerhalb der Karte", arguments: [Cell(x: -1, y: 0), Cell(x: 16, y: 0), Cell(x: 0, y: 9), Cell(x: 3, y: -2)])
@@ -68,31 +74,112 @@ struct MapZoneTests {
 
     @Test("Jede Zelle ist eindeutig klassifiziert")
     func everyCellClassified() {
-        var free = 0, blocked = 0
+        var free = 0, blocked = 0, landscape = 0
         for y in 0..<map.height {
             for x in 0..<map.width {
                 switch map.placement(of: Cell(x: x, y: y), occupied: []) {
                 case .free: free += 1
                 case .tooCloseToPath: blocked += 1
+                case .outsideZone: landscape += 1
                 case .occupied, .outsideMap: Issue.record("Zelle \(x),\(y) innerhalb der Karte falsch eingeordnet")
                 }
             }
         }
-        #expect(free + blocked == 16 * 9)
+        #expect(free + blocked + landscape == 16 * 9)
         #expect(free == map.buildableCells.count)
     }
 
-    @Test("Gleiche Bauplätze wie das Prüfskript")
-    func matchesBalanceSim() {
-        // Das Phase-0-Prüfskript zählte 114 Kandidaten (25.10.2026); seine
-        // Balancewerte gelten nur für diese Karte.
-        #expect(map.buildableCells.count == 114)
+    @Test("Mission 1 hat 4 bis 7 Inseln mit 35 bis 50 Feldern (D-141)")
+    func zoneBudget() {
+        #expect((4...7).contains(map.zones.count))
+        #expect((35...50).contains(map.buildableCells.count))
+        // Ohne Inseln waren es 114 (Phase-0-Prüfskript, 25.10.2026); die Inseln sind eine Auswahl daraus.
+        #expect(map.buildableCells.count == map.zones.reduce(0) { $0 + $1.cells.count })
+    }
+
+    @Test("Jede Insel hat genau ihre Zellen als Bauplätze")
+    func everyZoneBuildable() {
+        for zone in map.zones {
+            for cell in zone.cells {
+                #expect(map.zone(of: cell) == zone, "\(zone.id) \(cell)")
+                #expect(map.isBuildable(cell), "\(zone.id) \(cell)")
+            }
+        }
+        #expect(map.zone(of: Cell(x: 0, y: 0)) == nil)
+        #expect(map.zone(of: Cell(x: -1, y: 0)) == nil)
+    }
+
+    @Test("Mission 1 hat beide Arten von starkem Ort: Kehre und lange Seite")
+    func zoneKinds() {
+        let kinds = map.zones.map(\.kind)
+        #expect(kinds.filter { $0 == .turn }.count >= 2)
+        #expect(kinds.contains(.longSide))
+        #expect(kinds.contains(.lastLine))
     }
 
     @Test("Bauplätze stehen zeilenweise sortiert")
     func sortedRowMajor() {
         let sorted = map.buildableCells.sorted { ($0.y, $0.x) < ($1.y, $1.x) }
         #expect(map.buildableCells == sorted)
+    }
+}
+
+@Suite("Bauinseln")
+struct BuildZoneTests {
+    /// Weg in Zeile 0 bis x = 5; Insel „a“ 2 × 2 unten links, „b“ ein L rechts.
+    let config = MapConfig(width: 6, height: 4, minDistanceFromPath: 0.9,
+                           path: [Point(x: -1, y: 0.5), Point(x: 7, y: 0.5)],
+                           zones: [BuildZone(id: "a", kind: .turn, rects: [CellRect(x: 0, y: 2, width: 2, height: 2)]),
+                                   BuildZone(id: "b", kind: .longSide, rects: [CellRect(x: 4, y: 1, width: 2, height: 1),
+                                                                               CellRect(x: 5, y: 2, width: 1, height: 2)])])
+
+    @Test("Ohne Inseln ist jede Zelle mit Abstand Bauplatz, wie bis 0.29")
+    func withoutZones() {
+        var plain = config
+        plain.zones = nil
+        let map = MissionMap(config: plain)
+        #expect(map.buildableCells.count == 18)
+        #expect(map.zones.isEmpty)
+        #expect(map.zone(of: Cell(x: 2, y: 2)) == nil)
+        #expect(map.placement(of: Cell(x: 2, y: 2), occupied: []) == .free)
+    }
+
+    @Test("Mit Inseln nur Inselzellen, zeilenweise")
+    func onlyZoneCells() {
+        let map = MissionMap(config: config)
+        #expect(map.buildableCells == [Cell(x: 4, y: 1), Cell(x: 5, y: 1), Cell(x: 0, y: 2), Cell(x: 1, y: 2),
+                                       Cell(x: 5, y: 2), Cell(x: 0, y: 3), Cell(x: 1, y: 3), Cell(x: 5, y: 3)])
+        #expect(map.zone(of: Cell(x: 5, y: 3))?.id == "b")
+        #expect(map.placement(of: Cell(x: 2, y: 2), occupied: []) == .outsideZone)
+        #expect(map.placement(of: Cell(x: 2, y: 0), occupied: []) == .tooCloseToPath)
+    }
+
+    @Test("Bauen auf Landschaft wird abgewiesen und kostet nichts")
+    func buildRejected() throws {
+        var balance = try BalanceConfig.missionOne()
+        balance.map = config
+        let sim = Simulation(config: balance)
+        var state = sim.newGame(seed: 1)
+        let gold = state.gold
+        let events = sim.step(&state, commands: [.build(.watch, Cell(x: 2, y: 2))])
+        #expect(events.contains(.commandRejected(.build(.watch, Cell(x: 2, y: 2)), reason: .outsideZone)))
+        #expect(state.towers.isEmpty)
+        #expect(state.gold == gold)
+        _ = sim.step(&state, commands: [.build(.watch, Cell(x: 1, y: 3))])
+        #expect(state.towers.count == 1)
+    }
+
+    @Test("Rechtecke lesen und schreiben sich als [x, y, b, h]")
+    func rectCoding() throws {
+        let json = #"{"id":"a","kind":"outpost","rects":[[1,2,3,1]]}"#
+        let zone = try JSONDecoder().decode(BuildZone.self, from: Data(json.utf8))
+        #expect(zone.rects == [CellRect(x: 1, y: 2, width: 3, height: 1)])
+        #expect(zone.cells == [Cell(x: 1, y: 2), Cell(x: 2, y: 2), Cell(x: 3, y: 2)])
+        let again = try JSONDecoder().decode(BuildZone.self, from: JSONEncoder().encode(zone))
+        #expect(again == zone)
+        #expect(throws: (any Error).self) {
+            try JSONDecoder().decode(BuildZone.self, from: Data(#"{"id":"a","kind":"turn","rects":[[1,2,3]]}"#.utf8))
+        }
     }
 }
 

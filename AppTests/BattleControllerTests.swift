@@ -57,6 +57,19 @@ final class BattleControllerTests: XCTestCase {
         XCTAssertEqual(controller.selection, .none)
     }
 
+    /// Bauinseln (A-4, D-141): Landschaft zwischen den Inseln öffnet kein Baumenü
+    /// und hat einen eigenen Grund, der nicht „Zu nah am Weg“ lautet.
+    func testTapOnLandscapeOpensNothing() throws {
+        let map = model.sim.map
+        let landscape = try XCTUnwrap((0..<map.height).lazy.flatMap { y in
+            (0..<map.width).lazy.map { Cell(x: $0, y: y) }
+        }.first { map.placement(of: $0, occupied: []) == .outsideZone })
+        controller.tap(landscape)
+        XCTAssertEqual(controller.selection, .none)
+        XCTAssertEqual(BattleTexts.rejection(.outsideZone), "Hier ist kein Bauplatz")
+        XCTAssertNotEqual(BattleTexts.rejection(.outsideZone), BattleTexts.rejection(.tooCloseToPath))
+    }
+
     func testFirstChoiceShowsRangeSecondBuilds() throws {
         controller.tap(freeCell)
         controller.choose(.watch)

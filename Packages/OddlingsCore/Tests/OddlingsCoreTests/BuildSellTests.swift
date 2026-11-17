@@ -6,7 +6,7 @@ struct BuildSellTests {
     let sim: Simulation
     let free = Cell(x: 0, y: 0)
 
-    init() throws { sim = Simulation(config: try BalanceConfig.missionOne()) }
+    init() throws { sim = Simulation(config: try BalanceConfig.missionOneOpen()) }
 
     @Test("Bauen zieht die Kosten ab und belegt die Zelle")
     func build() {
@@ -84,7 +84,7 @@ struct BuildSellTests {
 
     @Test("Turmtyp ohne Werte wird abgelehnt statt abzustürzen")
     func towerWithoutConfig() throws {
-        var config = try BalanceConfig.missionOne()
+        var config = try BalanceConfig.missionOneOpen()
         config.towers[.spore] = nil
         let sim = Simulation(config: config)
         var state = sim.newGame(seed: 1)

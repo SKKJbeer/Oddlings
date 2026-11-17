@@ -32,3 +32,15 @@ enum TestConfig {
         Enemy(id: id, kind: kind, hp: hp, maxHP: hp, distance: distance)
     }
 }
+
+extension BalanceConfig {
+    /// Mission 1 ohne Bauinseln (D-141): Regeltests, die einen Turm an eine bestimmte
+    /// Zelle stellen, prüfen Türme und Gegner, nicht das Leveldesign. Mit den Inseln
+    /// bräche jede Inseländerung Dutzende Regeltests; die Inseln selbst prüfen
+    /// MapTests, ihre Balance prüfen BalanceTests und das Labor.
+    static func missionOneOpen() throws -> BalanceConfig {
+        var config = try missionOne()
+        config.map.zones = nil
+        return config
+    }
+}

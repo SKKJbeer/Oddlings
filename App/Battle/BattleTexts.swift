@@ -17,6 +17,7 @@ enum BattleTexts {
         case .notEnoughGold: "Zu wenig Gold"
         case .cellOccupied: "Feld belegt"
         case .tooCloseToPath: "Zu nah am Weg"
+        case .outsideZone: "Hier ist kein Bauplatz"
         case .outsideMap: "Außerhalb der Karte"
         case .unknownTower: "Turm nicht gefunden"
         case .noWaveLeft: "Keine Welle mehr"

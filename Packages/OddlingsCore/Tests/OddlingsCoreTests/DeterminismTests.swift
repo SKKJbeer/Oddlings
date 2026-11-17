@@ -7,7 +7,7 @@ import OddlingsLab
 struct DeterminismTests {
     let sim: Simulation
 
-    init() throws { sim = Simulation(config: try BalanceConfig.missionOne()) }
+    init() throws { sim = Simulation(config: try BalanceConfig.missionOneOpen()) }
 
     /// Spielt ein Protokoll nach, bis die Mission endet oder `stop` erreicht ist.
     private func replay(_ log: [(tick: Int, commands: [Command])], on state: inout GameState,
