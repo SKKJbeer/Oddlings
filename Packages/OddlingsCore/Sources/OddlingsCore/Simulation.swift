@@ -66,6 +66,7 @@ public struct Simulation: Sendable {
             switch map.placement(of: cell, occupied: state.towers.map(\.cell)) {
             case .outsideMap: return events.append(.commandRejected(command, reason: .outsideMap))
             case .tooCloseToPath: return events.append(.commandRejected(command, reason: .tooCloseToPath))
+            case .outsideZone: return events.append(.commandRejected(command, reason: .outsideZone))
             case .occupied: return events.append(.commandRejected(command, reason: .cellOccupied))
             case .free: break
             }

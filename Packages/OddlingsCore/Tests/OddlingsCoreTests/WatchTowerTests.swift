@@ -5,7 +5,7 @@ import Testing
 struct WatchTowerTests {
     let sim: Simulation
 
-    init() throws { sim = Simulation(config: try BalanceConfig.missionOne()) }
+    init() throws { sim = Simulation(config: try BalanceConfig.missionOneOpen()) }
 
     /// Gegner direkt in den Zustand legen, um Zielwahl ohne Wellen zu prüfen.
     private func enemy(_ id: Int, at distance: Double, hp: Double = 70) -> Enemy {
@@ -33,7 +33,7 @@ struct WatchTowerTests {
     }
 
     private func waveOne(towers: Int) throws -> (leaks: Int, kills: Int, gold: Int) {
-        var config = try BalanceConfig.missionOne()
+        var config = try BalanceConfig.missionOneOpen()
         config.waves = Array(config.waves.prefix(1))
         let sim = Simulation(config: config)
         var state = sim.newGame(seed: 1)

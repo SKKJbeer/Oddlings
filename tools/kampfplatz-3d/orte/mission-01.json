@@ -1,0 +1,213 @@
+{
+  "_ort": "Mission 1: Lichtung im Fluesterwald vor der Zwergenfeste, Nachmittag (Missionsblatt M1 in docs/konzepte/aaa-leveldesign.md). Licht = kampfplatzlicht.json mission-01.",
+  "seed": 7,
+  "rand": [
+    4,
+    2
+  ],
+  "licht": [
+    255,
+    238,
+    210
+  ],
+  "himmel": [
+    150,
+    175,
+    205
+  ],
+  "inselhoehe": 0.09,
+  "texturen": {
+    "gras": "art/karten/region01/textur-gras-rohbild.jpg",
+    "weg": "art/karten/region01/textur-weg-rohbild.jpg"
+  },
+  "farben": {
+    "stamm": [
+      92,
+      62,
+      40
+    ],
+    "fels": [
+      [
+        128,
+        124,
+        116
+      ],
+      [
+        112,
+        110,
+        104
+      ],
+      [
+        142,
+        132,
+        118
+      ]
+    ],
+    "busch": [
+      [
+        58,
+        112,
+        44
+      ],
+      [
+        74,
+        124,
+        40
+      ],
+      [
+        48,
+        98,
+        52
+      ]
+    ],
+    "stumpf": [
+      [
+        120,
+        86,
+        56
+      ],
+      [
+        104,
+        74,
+        50
+      ],
+      [
+        132,
+        96,
+        62
+      ]
+    ],
+    "farn": [
+      [
+        70,
+        130,
+        52
+      ],
+      [
+        88,
+        140,
+        48
+      ],
+      [
+        60,
+        116,
+        60
+      ]
+    ],
+    "blumen": [
+      [
+        236,
+        214,
+        92
+      ],
+      [
+        232,
+        150,
+        170
+      ],
+      [
+        240,
+        240,
+        236
+      ]
+    ],
+    "kantenstein": [
+      [
+        150,
+        144,
+        132
+      ],
+      [
+        132,
+        128,
+        120
+      ],
+      [
+        164,
+        154,
+        138
+      ]
+    ],
+    "hoehle": [
+      96,
+      88,
+      82
+    ]
+  },
+  "wald": {
+    "versuche": 900,
+    "hoehe": [
+      1.5,
+      2.6
+    ],
+    "farben": [
+      [
+        46,
+        98,
+        44
+      ],
+      [
+        58,
+        112,
+        46
+      ],
+      [
+        38,
+        86,
+        50
+      ],
+      [
+        70,
+        120,
+        42
+      ]
+    ]
+  },
+  "landschaft": [
+    [
+      "busch",
+      14,
+      [
+        0.35,
+        0.6
+      ],
+      0.6
+    ],
+    [
+      "fels",
+      9,
+      [
+        0.18,
+        0.4
+      ],
+      0.7
+    ],
+    [
+      "stumpf",
+      4,
+      [
+        0.18,
+        0.26
+      ],
+      0.5
+    ],
+    [
+      "farn",
+      16,
+      [
+        0.15,
+        0.3
+      ],
+      0.7
+    ],
+    [
+      "blumen",
+      18,
+      [
+        0.04,
+        0.08
+      ],
+      1.6
+    ]
+  ]
+}

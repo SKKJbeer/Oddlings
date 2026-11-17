@@ -2,6 +2,27 @@
 
 ## `map_mission01_ground` (Mission 1, Lichtung im Flüsterwald)
 
+### Ab 0.32.0: Diorama mit Bauinseln (A-4, D-140, D-165)
+
+Konzept: [A-4](../../docs/konzepte/a-4-diorama-mission-1.md). Gleiche Fläche wie zuvor
+(24 × 13 Zellen, Rand 4 × 2), aber aus einer 3D-Szene in der gemeinsamen Kamera.
+
+1. **Plan:** `tools/kampfplatz-3d/plan.py mvp-mission-01.json orte/mission-01.json <ordner> 64`
+   (Zufall 7, Licht 255,238,210 wie `kampfplatzlicht.json`, Texturen aus `region01/`).
+2. **Render:** `diorama.py <ordner> render.png 24` (Blender Cycles, 1536 × 832, 24 Proben,
+   Sonne 135°/45°, Energie 3,5) → `diorama/mission01-render.jpg`.
+3. **Übermalen:** Render auf 1024 × 576, `INIT=init.png STAERKE=0.4 VERSCHIEBUNG=0.5
+   erzeugen.sh aus 5 "<prompt>" 1024x576` → `diorama/mission01-rohbild.png`. Prompt:
+   `hand-painted mobile strategy game battlefield seen from above at a 40 degree angle, stylized 3D, warm afternoon light, lush deep green meadow with small flowers, a winding packed-dirt road, raised square building plots of packed earth framed by grey field stones, round leafy forest trees around the edge with soft shadows, small bushes, mossy rocks and tree stumps scattered in the grass, a cave entrance of mossy boulders at the left, rich painterly textures, high detail, no text, no characters`.
+4. **Hochrechnen:** `hochskalieren.sh rohbild aus 3096x1677`, `atlas.py aus
+   map_mission01_ground 24x13 voll _ App/Assets.xcassets/Maps`.
+
+Maßstabsbild `diorama/massstab-mission01.jpg` (`massstab.py`, D-166) und
+`diorama/vorher-nachher-mission01.jpg` zum Vergleich. Die Fassung darunter (Grafik 05)
+galt bis 0.29.1.
+
+### Bis 0.29.1: gemalte Lichtung (Grafik 05)
+
 Grafik 05 (26.10.2026, [Konzept](../../docs/konzepte/grafik-05-kampfplatz.md)).
 Das Bild deckt das Feld **plus 4 Zellen Rand links und rechts und 2 oben und
 unten** (24 × 13 Zellen). Der Rand ist Wald und füllt die Karte unter der

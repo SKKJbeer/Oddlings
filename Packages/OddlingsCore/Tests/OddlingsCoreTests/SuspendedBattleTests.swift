@@ -119,7 +119,7 @@ struct SuspendedBattleTests {
 
     @Test("Ohne Bank in der Mission ist eine Bank im Zustand ungültig")
     func bankWithoutBankConfig() throws {
-        let one = Simulation(config: try BalanceConfig.missionOne())
+        let one = Simulation(config: try BalanceConfig.missionOneOpen())
         var state = one.newGame(seed: 1)
         let cell = try #require(one.map.buildableCells.first)
         state.towers.append(Tower(id: 1, kind: .bank, cell: cell, cooldownTicks: 0, spent: 0))
