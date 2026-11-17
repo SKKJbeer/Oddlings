@@ -50,7 +50,7 @@ freie Zelle wählbar.
 | **B: Raster in Bauzonen (gewählt)** | Fühlt sich frei an, eindeutige Treffer per Antippen, einfache Regeln, Datenmodell trivial | Etwas weniger Feinplatzierung |
 | C: Feste Bauplätze (wie viele Mobile-TD) | Einfachste Bedienung | Weniger Entscheidungen, widerspricht der Übergabe |
 
-**Bauinseln (D-141, ab 0.33.0 in Mission 1):** Die Bauzonen sind gestaltete Inseln aus
+**Bauinseln (D-141, ab 0.38.0 in Mission 1):** Die Bauzonen sind gestaltete Inseln aus
 festgetretener Erde mit Steinkante, 4 bis 7 je Karte mit zusammen 35 bis 50 Feldern;
 dazwischen liegt Landschaft, auf der nichts gebaut wird. Kehren sind die starken Orte,
 lange Seiten bieten Platz und wenig Weg. Missionen ohne Inseln in ihrer Datei behalten

@@ -2,14 +2,14 @@ import OddlingsCore
 import XCTest
 
 /// Spezialisieren auf dem Sumpfpfad, mit echtem Tippen (P3-1). Preise aus
-/// `mission-05a.json`. Das Schild „III“ ist SpriteKit; geprüft werden Tafel,
-/// Knopf und Gold.
+/// `mission-05a.json`. Geprüft werden Tafel, Knopf und Gold; was SpriteKit
+/// zeigt (Turmbild, gemalte Auswahl, A-5), liest der Zähler `scene.art`.
 final class SpecializationE2ETests: XCTestCase {
     override func setUp() { continueAfterFailure = false }
 
     @MainActor
     func testUpgradeThenSpecializeIntoAVolley() throws {
-        let e2e = try E2EApp(["--play", "--e2e-knoten", "m5a", "--e2e-erste-welle", E2EApp.wavesOnHold],
+        let e2e = try E2EApp(["--play", "--e2e-knoten", "m5a", "--e2e-erste-welle", E2EApp.wavesOnHold, "--e2e-fx"],
                              mission: "mission-05a")
         e2e.waitForBoard()
         let start = e2e.config.mission.startGold
@@ -39,6 +39,13 @@ final class SpecializationE2ETests: XCTestCase {
         XCTAssertEqual(e2e.app.staticTexts["panel.title"].label, "Salve")
         XCTAssertFalse(specialize.exists, "Stufe 3 ist die letzte")
         XCTAssertTrue(e2e.app.buttons["target"].exists, "die Zielwahl bleibt")
+        // A-5: Die Salve steht als eigene Gestalt da, die Auswahl ist gemalt.
+        let art = e2e.app.staticTexts["scene.art"]
+        XCTAssertTrue(art.waitForExistence(timeout: 5), "Bildzähler da")
+        let end = Date().addingTimeInterval(5)
+        while !art.label.contains("tower_watch_volley"), Date() < end { RunLoop.current.run(until: Date().addingTimeInterval(0.5)) }
+        XCTAssertTrue(art.label.contains("towers=tower_watch_volley"), art.label)
+        XCTAssertTrue(art.label.contains("selection=gemalt"), art.label)
         e2e.screenshot("p3-1-salve", in: self)
     }
 

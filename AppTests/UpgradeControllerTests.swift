@@ -114,18 +114,21 @@ final class UpgradeControllerTests: XCTestCase {
         XCTAssertEqual(controller.towersUpgraded, 0)
     }
 
-    func testTowerNodeShowsLevelWithBadgeAndPicture() throws {
+    /// Stufe 2 zeigt ihr eigenes Bild, ohne Vektorschild daneben (A-5, G5).
+    func testTowerNodeShowsLevelByPictureWithoutBadge() throws {
         let tower = Tower(id: 1, kind: .watch, cell: Cell(x: 0, y: 0), cooldownTicks: 0, spent: 1)
         let node = TowerNode(tower: tower, field: 40)
-        XCTAssertNil(node.childNode(withName: "level.badge"))
         let before = (node.art.children.first as? SKSpriteNode)?.texture
-        node.showLevel(2, field: 40)
+        node.show(level: 2, specialization: nil)
         XCTAssertEqual(node.level, 2)
-        XCTAssertNotNil(node.childNode(withName: "level.badge"))
+        XCTAssertEqual(node.pictureName, "tower_watch_2")
         let after = (node.art.children.first as? SKSpriteNode)?.texture
         XCTAssertNotNil(after)
         XCTAssertFalse(before === after, "Stufe 2 hat ein eigenes Bild")
-        node.showLevel(2, field: 40)
-        XCTAssertEqual(node.children.filter { $0.name == "level.badge" }.count, 1, "nicht doppelt")
+        XCTAssertEqual(Self.shapes(in: node), 0, "keine Vektorform am Turm")
+    }
+
+    static func shapes(in node: SKNode) -> Int {
+        node.children.reduce(0) { $0 + ($1 is SKShapeNode ? 1 : 0) + shapes(in: $1) }
     }
 }

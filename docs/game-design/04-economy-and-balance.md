@@ -145,13 +145,13 @@ Spiel: Unterstützende Türme müssen im Zweifel großzügig sein, weil ihr Nutz
 für Spieler schwer zu sehen ist (Risiko P1 in der
 [Analyse](../production/phase-0-analyse.md)).
 
-### Bauinseln in Mission 1 (A-4, 0.33.0) [HYPOTHESE]
+### Bauinseln in Mission 1 (A-4, 0.38.0) [HYPOTHESE]
 
 Mission 1 baut nur noch auf sechs Inseln mit 41 Feldern (D-141, D-167) statt auf
 114 freien Feldern. Gemessen mit `oddlings-balance --mission m1`, gieriger Bot, erstes
 Spielen, Reserve der Bauweise:
 
-| Bauweise | ohne Inseln | erster Entwurf (36 Felder) | Inseln 0.33.0, Zwerge | Elfen |
+| Bauweise | ohne Inseln | erster Entwurf (36 Felder) | Inseln 0.38.0, Zwerge | Elfen |
 |---|---|---|---|---|
 | Mix Wach/Sporen/Blitz | 1,40 | 1,18 | 1,40 | 1,42 |
 | Nur Wachtürme | 1,31 | 1,19 | 1,22 | 1,18 |
