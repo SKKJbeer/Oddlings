@@ -11,6 +11,17 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.40.0 – 17.11.2026 (A-3, Teil 2: die Panzerbestie in 3D)
+
+- **Die Panzerbestie läuft auf vier Beinen:** eigene 3D-Figur nach dem Gemälde (dunkler
+  Keiler, Hauer, stahlblaue Platten, goldene Rückenplatte). Die Beine gehen diagonal
+  paarweise, der Kopf nickt; beim Treffer ruckt der Kopf hoch, beim Sturz kippt sie auf
+  die Seite (D-162). Folgen `walk`, `walkFront`, `walkBack` (je 8), `hit` (3), `die` (6),
+  gemeinsame Kamera und Außenlinie. Damit hat jeder Gegner Bildfolgen; die gemalten
+  Standbilder bleiben als Rückfall.
+- Tests: `BattleSpritesTests` verlangt die Bildfolgen der Panzerbestie (8/3/6, gleich groß
+  wie ihr Standbild); `check_assets.py` über den Atlas grün.
+
 ## 0.39.0 – 17.11.2026 (A-3, Teil 2: der Flitzer in 3D)
 
 - **Der Flitzer läuft mit Armen und Beinen:** eigene 3D-Figur nach dem Gemälde (lange
