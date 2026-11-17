@@ -24,7 +24,7 @@ struct AutoplayerTests {
 
     @Test("Abdeckung stimmt mit der Abtastung überein")
     func coverageMatchesSampling() throws {
-        let sim = Simulation(config: try BalanceConfig.missionOne())
+        let sim = Simulation(config: try BalanceConfig.missionOneOpen())
         let center = Cell(x: 11, y: 4).center
         var sampled = 0, d = 0.0
         while d < sim.map.path.length {
@@ -36,7 +36,7 @@ struct AutoplayerTests {
 
     @Test("Vorführbauweise kommt aus der Konfiguration und gewinnt Mission 1")
     func demoWins() throws {
-        let config = try BalanceConfig.missionOne()
+        let config = try BalanceConfig.missionOneOpen()
         let sim = Simulation(config: config)
         var player = Autoplayer(demoOf: config)
         #expect(!player.order.isEmpty)
@@ -50,7 +50,7 @@ struct AutoplayerTests {
 
     @Test("Baut nur, was er bezahlen kann, und nie auf belegte Zellen")
     func respectsGoldAndCells() throws {
-        let sim = Simulation(config: try BalanceConfig.missionOne())
+        let sim = Simulation(config: try BalanceConfig.missionOneOpen())
         var player = Autoplayer(order: [.build(.watch), .build(.watch), .build(.watch), .build(.watch)])
         let state = sim.newGame(seed: 1)
         let commands = player.commands(for: state, in: sim)

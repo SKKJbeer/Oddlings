@@ -18,13 +18,24 @@ struct BalanceConfig: Codable {
     var simulation: SimulationConfig        // ticksPerSecond
     var mission: MissionConfig               // fortressLives, startGold, firstWaveDelay, timeBetweenWaves, sellRefundRate,
                                              // earlyCallBonus: Double? (Gold je eingesparter Sekunde, P2-5)
-    var map: MapConfig                       // width, height, path [[x,y]], buildZones (ab WP-03)
+    var map: MapConfig                       // width, height, path [[x,y]], minDistanceFromPath,
+                                             // zones: [BuildZone]? (Bauinseln, A-4, D-141)
     var towers: [TowerKind: TowerConfig]     // nur Kampftürme (TowerKind.combat)
     var bank: BankConfig?                    // Zwergenbank, nur wo die Mission sie anbietet (P2-5, D-083)
     var upgrades: [TowerKind: UpgradeConfig]? // Stufe 2 je Kampfturm, ab Mission 3 (P2-6, D-084)
     var enemies: [EnemyKind: EnemyConfig]
     var waves: [WaveConfig]
 }
+
+// Bauinsel (A-4): id (Kennung wie bei Ausrüstung), kind (turn, longSide, outpost,
+// lastLine; nur Beschreibung, keine Regel), rects als [x, y, Breite, Höhe] in Zellen.
+// Fehlt `zones`, ist jede Zelle mit Abstand zum Weg Bauplatz (wie bis 0.29) und das
+// Feld wird nicht kodiert, Prüfsummen anderer Missionen bleiben gleich. Mit `zones`
+// ist Bauplatz nur, was in genau einer Insel liegt; sonst `Placement.outsideZone`,
+// Bauen dort `Rejection.outsideZone`. ConfigValidation prüft: Liste nicht leer, ids
+// gültig und eindeutig, Rechteck ≥ 1 Zelle und in der Karte, jede Zelle mit Abstand
+// zum Weg, keine Zelle in zwei Inseln.
+struct BuildZone: Codable { var id: String; var kind: Kind; var rects: [CellRect] }
 
 struct TowerConfig: Codable {               // ein Typ, optionale Felder je Rolle
     var cost: Int; var range: Double; var damage: Double; var attackInterval: Double

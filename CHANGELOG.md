@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.36.0 – 17.11.2026 (A-3, Teil 2: der Flitzer in 3D)
+## 0.39.0 – 17.11.2026 (A-3, Teil 2: der Flitzer in 3D)
 
 - **Der Flitzer läuft mit Armen und Beinen:** eigene 3D-Figur nach dem Gemälde (lange
   Fühler, roter Schal, Rucksack), vorgekippt und mit weitem Schritt. Folgen `walk`,
@@ -23,6 +23,25 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Tests: `BattleSpritesTests` verlangt die Bildfolgen des Flitzers (8/3/6, gleich groß wie
   sein Standbild); `check_assets.py` über den Atlas grün.
 
+## 0.38.0 – 17.11.2026 (Kampfplatz Mission 1 als Diorama mit Bauinseln, A-4)
+
+- **Bauinseln** (D-141): Mission 1 baut nur noch auf sechs gestalteten Inseln mit
+  41 Feldern statt auf 114 freien Feldern. Neu in der Simulation: `map.zones` mit
+  Rechtecken je Insel, `Placement.outsideZone`, `Rejection.outsideZone`
+  („Hier ist kein Bauplatz“), `MissionMap.zone(of:)`. Ohne `zones` gilt alles wie bisher;
+  die übrigen Missionen und ihre Prüfsummen bleiben unverändert. Eine angehaltene
+  Mission 1 aus 0.29 öffnet nicht wieder (Fingerabdruck der Konfiguration), Sterne und
+  Fortschritt bleiben.
+- **Labor:** Der erste Entwurf der Inseln ließ Blitz allein gewinnen; die ausgelieferten
+  Inseln halten alle Balancetests (Zahlen in 04).
+- **Eine Kamera** (D-165): 40° orthografisch mit Kabinettstreckung, Sonne 135°/45°, im
+  Asset-Vertrag. **Zielmaßstab** (D-166) im Vertrag mit Maßstabsbild.
+- **Neuer Kampfplatz Mission 1** aus dem Werkzeug `tools/kampfplatz-3d` (Blender-Diorama aus
+  der Missionsdatei, mit FLUX übermalt): Inseln aus Erde mit Steinkante, Landschaft
+  zwischen den Inseln, Wald mit Seiten im Winkel der Türme.
+- Tests: `BuildZoneTests`, Prüfregeln für Inseln, Mission-1-Budget, App-Test für
+  Landschaft, `art-check` für Kamera, Maßstab, Plan und Inselboden.
+- [Konzept A-4](docs/konzepte/a-4-diorama-mission-1.md)
 ## 0.34.0 – 17.11.2026 (A-5, Teil 1: Spezialisierungen als Bilder, gemalte Ringe)
 
 - **Die größte Entscheidung ist auf dem Feld zu sehen:** Salve und Falkenhorst, Gewitterkrone

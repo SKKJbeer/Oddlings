@@ -2,7 +2,17 @@
   "_zweck": "Maschinenlesbarer Teil von docs/art/asset-vertrag.md. Figuren sind Quadrate mit Seite seiteZellen, Fuss auf Hoehe anker (= anchorPoint.y in der Szene). tools/art-check/check_assets.py prueft den Atlas dagegen. Effekte (fx_*) haben keine feste Groesse: die Szene setzt sie nach Seitenverhaeltnis; weiss oder grau gemalt, eingefaerbt in der Szene.",
   "atlas": "App/Assets.xcassets/Battle.spriteatlas",
   "punkteJeZelle": 43,
+  "_massstab": "Zielhoehen in Zellen (D-166, aus aaa-bewegung-und-bauen.md). Reihenfolge Festung > Boss > Turm > Panzerbestie > Pluenderer > Flitzer; art-check prueft sie. Umgestellt werden die Bilder von den Paketen, die sie malen (A-3 Figuren, A-5 Tuerme).",
+  "massstab": {
+    "enemy_runner": 0.7,
+    "enemy_raider": 0.8,
+    "enemy_brute": 1.15,
+    "tower": 1.4,
+    "enemy_moorKing": 2.0,
+    "fortress": 2.6
+  },
   "maxBytesJeDatei": 1500000,
+  "_kamera": "Eine Kamera fuer alles (D-140, D-165): orthografisch, hoehe = Grad ueber dem Boden, ohne Gierwinkel. Der Boden wird in der Tiefe um 1/sin(hoehe) gestreckt, damit eine Zelle im Bild quadratisch bleibt. Figuren duerfen bis figurenSpielraum Grad flacher sein, damit das Gesicht lesbar bleibt. Sonne: azimut in der Bodenebene (0 = Bildschirm rechts, 90 = in die Tiefe, gegen den Uhrzeigersinn, zeigt zur Sonne), hoehe in Grad.",
   "kamera": {
     "art": "orthografisch",
     "hoehe": 40,

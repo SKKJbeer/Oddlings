@@ -394,12 +394,94 @@ public struct MapConfig: Codable, Equatable, Sendable {
     /// Mindestabstand einer Zellmitte zum Weg, damit dort gebaut werden darf.
     public var minDistanceFromPath: Double
     public var path: [Point]
+    /// Bauinseln (D-141, A-4). Fehlt das Feld, ist jede Zelle mit Abstand zum Weg
+    /// Bauplatz wie bis 0.29; so bleiben die Missionen, die noch keine Inseln
+    /// haben, und ihre Prüfsummen unverändert.
+    public var zones: [BuildZone]?
 
-    public init(width: Int, height: Int, minDistanceFromPath: Double, path: [Point]) {
+    public init(width: Int, height: Int, minDistanceFromPath: Double, path: [Point], zones: [BuildZone]? = nil) {
         self.width = width
         self.height = height
         self.minDistanceFromPath = minDistanceFromPath
         self.path = path
+        self.zones = zones
+    }
+}
+
+/// Eine Bauinsel: ein gestalteter Ort, an dem gebaut werden darf, aus einem oder
+/// mehreren Rechtecken (eine Insel darf ein L sein). Die Art beschreibt nur die
+/// Absicht des Leveldesigns ([aaa-leveldesign](docs/konzepte/aaa-leveldesign.md))
+/// und wirkt nicht als Regel; das Labor zählt Siege je Insel über `id`.
+public struct BuildZone: Codable, Equatable, Sendable {
+    public var id: String
+    public var kind: Kind
+    public var rects: [CellRect]
+
+    public enum Kind: String, Codable, Sendable, CaseIterable {
+        /// Innen an einer Kehre, sieht mehrere Wegstücke: der starke, enge Ort.
+        case turn
+        /// An einer langen Geraden: viel Platz, wenig Weg je Turm.
+        case longSide
+        /// Nahe am Eingang: früh treffen, wenig Zeit im Bereich.
+        case outpost
+        /// Vor der Festung: Sicherheit, wenn vorn etwas durchbricht.
+        case lastLine
+    }
+
+    public init(id: String, kind: Kind, rects: [CellRect]) {
+        self.id = id
+        self.kind = kind
+        self.rects = rects
+    }
+
+    /// Zellen der Insel, zeilenweise sortiert (y, dann x), ohne Doppelte.
+    public var cells: [Cell] {
+        var found: [Cell] = []
+        for rect in rects {
+            for cell in rect.cells where !found.contains(cell) { found.append(cell) }
+        }
+        return found.sorted { ($0.y, $0.x) < ($1.y, $1.x) }
+    }
+}
+
+/// Rechteck aus ganzen Zellen. Im JSON als `[x, y, breite, höhe]`, wie Punkte als Liste.
+public struct CellRect: Codable, Equatable, Sendable {
+    public var x: Int
+    public var y: Int
+    public var width: Int
+    public var height: Int
+
+    public init(x: Int, y: Int, width: Int, height: Int) {
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+    }
+
+    public init(from decoder: any Decoder) throws {
+        var container = try decoder.unkeyedContainer()
+        x = try container.decode(Int.self)
+        y = try container.decode(Int.self)
+        width = try container.decode(Int.self)
+        height = try container.decode(Int.self)
+        if !container.isAtEnd {
+            throw DecodingError.dataCorruptedError(
+                in: container, debugDescription: "Rechteck braucht genau vier Zahlen: x, y, Breite, Höhe")
+        }
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.unkeyedContainer()
+        try container.encode(x)
+        try container.encode(y)
+        try container.encode(width)
+        try container.encode(height)
+    }
+
+    /// Zeilenweise; leer bei Breite oder Höhe unter 1.
+    public var cells: [Cell] {
+        guard width > 0, height > 0 else { return [] }
+        return (y..<(y + height)).flatMap { row in (x..<(x + width)).map { Cell(x: $0, y: row) } }
     }
 }
 
