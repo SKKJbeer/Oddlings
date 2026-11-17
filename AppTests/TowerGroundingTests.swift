@@ -82,15 +82,21 @@ final class TowerGroundingTests: XCTestCase {
 
     func testUpgradeSwapsTheShadow() throws {
         let node = TowerNode(tower: watch, field: 40)
-        node.showLevel(2, field: 40)
+        node.show(level: 2, specialization: nil)
         let expected = try XCTUnwrap(BattleSprites.texture(named: "tower_watch_2_shadow"))
         XCTAssertEqual(node.shadow?.texture?.size(), expected.size())
         XCTAssertEqual(BattleSprites.shadowName(.watch, level: 2), "tower_watch_2_shadow")
-        // Stufe 3 hat kein eigenes Bild: Schatten der Stufe 2, auch wenn der Turm so geladen wird.
+        XCTAssertEqual(node.shadow?.name, "tower_watch_2_shadow")
+        // Stufe 3 ohne Spezialisierung hat kein eigenes Bild: Schatten der Stufe 2.
         XCTAssertEqual(BattleSprites.shadowNameAvailable(.watch, level: 3), "tower_watch_2_shadow")
+        // Mit Spezialisierung ihr eigener (A-5), auch wenn der Turm so geladen wird.
+        XCTAssertEqual(BattleSprites.shadowNameAvailable(.watch, level: 3, specialization: .falconHold), "tower_watch_falcon_shadow")
         var resumed = watch
         resumed.level = 3
-        XCTAssertEqual(TowerNode(tower: resumed, field: 40).shadow?.name, "tower_watch_2_shadow")
+        resumed.specialization = .falconHold
+        XCTAssertEqual(TowerNode(tower: resumed, field: 40).shadow?.name, "tower_watch_falcon_shadow")
+        node.show(level: 3, specialization: .falconHold)
+        XCTAssertEqual(node.shadow?.name, "tower_watch_falcon_shadow")
     }
 
     func testSceneTintsAndShadesBuiltTowers() throws {

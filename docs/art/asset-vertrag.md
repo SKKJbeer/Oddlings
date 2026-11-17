@@ -22,6 +22,8 @@ Sie folgen den IDs der Simulation.
 | Name | Inhalt |
 |---|---|
 | `tower_watch`, `tower_lightning`, `tower_spore` | Türme, ganzer Körper |
+| `tower_<id>_2` | Stufe 2 (Anbau auf dem Grundturm) |
+| `tower_watch_volley`, `tower_watch_falcon`, `tower_lightning_crown`, `tower_lightning_spark`, `tower_spore_moor`, `tower_spore_rot` | Spezialisierungen (Stufe 3), aus dem Rohbild der Stufe 2 nachgemalt; fehlt eines, zeigt die Szene das Bild der Stufe darunter ([A-5](../konzepte/a-5-spezialisierungen-und-ringe.md), D-170) |
 | `tower_<id>_top` | drehbares Oberteil, nur wo es eines gibt |
 | `enemy_raider`, `enemy_runner`, `enemy_brute`, `enemy_moorKing` | Gegner, Blick nach rechts |
 | `enemy_<art>_<folge>_NN` | Bildfolgen aus 3D ([FX 02](../konzepte/fx-02-figuren-in-3d.md)): `walk`, `hit`, `die`; der Moorkönig dazu `shield` und `summon` ([FX 03](../konzepte/fx-03-moorkoenig.md)). Anzahl je Folge im Feld `folge`. Blickrichtungen (A-3): `walkFront` (auf den Betrachter zu), `walkBack` (weg), gleiche Bildzahl, Größe und Anker wie `walk`, Fuß je Richtung auf dem Anker. Dazu oben im Vertrag `kamera`, `sonne` (D-140) und `konturPunkte` (Breite der Außenlinie jeder Bildfolge) |
@@ -32,6 +34,7 @@ Sie folgen den IDs der Simulation.
 | `footing_<mission>` | Fundament unter jedem Turm, Quadrat 1,2 Zellen, Fuß in der Mitte, Erde aus dem Weg der Karte (D-120) |
 | `fx_glow`, `fx_spark`, `fx_ring`, `fx_puff`, `fx_coin`, `fx_arrow`, `fx_bolt`, `fx_confetti`, `fx_star`, `fx_stone`, `fx_wall`, `fx_hand` | Effekte, siehe „Effekte“ unten |
 | `icon_slowed` | Zustandssymbol über dem Gegner (E3) |
+| `mark_ring` | gemalter Streifen 1536 × 96 px (@3x), oben Außenkante, waagerecht kachelbar; die Szene wickelt ihn um Auswahl und Reichweite (`GroundMarks`, D-171) |
 
 ## Kamera, Licht, Maße
 
