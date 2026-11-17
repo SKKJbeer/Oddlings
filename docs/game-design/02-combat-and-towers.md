@@ -192,6 +192,8 @@ Säule 1 und 3.
 | Plünderer | Referenz: mittlere Geschwindigkeit und Zähigkeit | ja |
 | Flitzer | Schnell, wenig Leben; bestraft Lücken und fehlende Kontrolle | ja |
 | Panzerbestie | Langsam, sehr zäh; prüft nachhaltigen Einzelschaden. Ab Mission 4 mit Rüstung ([unten](#rüstung-wie-gebaut-p2-10-0200)) | **[VORSCHLAG]** in Mission 1 ab Welle 7, abschaltbar, weil datengetrieben fast kostenlos |
+| Moorhexe | Heilerin: heilt Nachbarn im Takt, fordert Fokus „zuerst sie“. Ab M6a ([unten](#moorhexe-und-pilzbalg-wie-gebaut-0410)) | nein; ab Phase 3 |
+| Pilzbalg | Teiler: zerfällt beim Tod in drei schnelle Sporlinge, fordert Gruppenschaden hinter dem Todesort. Ab M6b | nein; ab Phase 3 |
 | Schattenflieger | Fliegt, umgeht etwas | nein, später |
 | Bosse | Taktische Herausforderung (Phasen, Schild, Beschwörung). Erster Boss: der Moorkönig in Mission 7 ([unten](#der-moorkönig-wie-gebaut-p3-4-0280)) | nein; ab Phase 3 |
 
@@ -211,6 +213,17 @@ Panzerbestie. Werte in `mission-07.json`, Begründung in
 
 Was das prüft: Während des Schilds zählt Gruppenschaden gegen die Gerufenen, danach
 Einzelschaden durch die Rüstung. Wer nur eine Seite gebaut hat, verliert.
+
+### Moorhexe und Pilzbalg, wie gebaut (0.41.0)
+
+Zwei Gegnerrollen aus D-143, Regeln D-175 und D-176 ([Konzept](../konzepte/a-6-heiler-und-teiler.md)).
+Die **Moorhexe** heilt alle zwei Sekunden jeden anderen verletzten Gegner in einem Feld
+Umkreis um einen festen Anteil seines Höchstlebens, nie darüber, nie sich selbst und nie
+einen Boss. Betäubt (Steinregen) heilt sie nicht. Antworten: Zielwahl „Stärkster“,
+Falkenhorst, Steinregen. Der **Pilzbalg** zerfällt beim Tod in drei Sporlinge am Todesort
+und dahinter; sie tragen die Stärke seiner Welle. Bricht er durch, zerfällt er nicht.
+Antworten: Blitz und Salve über den Sporlingen, Sporenturm hinter dem Todesort. M7
+setzt nur eine Gabel voraus und stellt darum beide früh einzeln vor (D-177).
 
 ## Schaden
 

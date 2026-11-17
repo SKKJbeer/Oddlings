@@ -453,6 +453,39 @@ liegen die Elfen höher: „Mix mit Aufwertung“ +0,12, „Mix ohne Aufwertung�
 Mit dem Mondmal vor der Rüstung waren es +0,15; deshalb rechnet die Simulation
 erst die Rüstung, dann das Mal (02). Bemerkt, nicht weiter geändert, wie in M3.
 
+### Moorhexe und Pilzbalg in M6a, M6b und M7, Ergebnis der Prüfung (0.41.0) [HYPOTHESE]
+
+Regeln D-175, D-176, Einsatz D-177 ([Konzept](../konzepte/a-6-heiler-und-teiler.md)).
+Werte in den Missionsdateien:
+
+| Gegner | Leben | Tempo | Belohnung | Durchbruch | Besonderes |
+|---|---|---|---|---|---|
+| Moorhexe | 160 | 0,6 | 10 | 2 | heilt alle 2 s im Umkreis 1 um 6 % |
+| Pilzbalg | 150 | 0,7 | 4 | 2 | zerfällt in 3 Sporlinge, Abstand 0,35 |
+| Sporling | 34 (× Wellenstärke des Balgs) | 2,0 | 2 | 1 | – |
+
+**M6a** bekommt Hexen ab Welle 2 (eine, leicht), dann zwei bis vier hinter den Wänden;
+Welle 4 bis 10 sind dafür 5 bis 10 % leichter. **M6b** bekommt Pilzbälge ab Welle 2 (drei),
+dafür weniger Panzerbestien. **M7** zeigt in Welle 2 eine Hexe und einen Balg, danach
+kommen beide je dreimal einzeln oder gemischt.
+
+Was die Prüfung zeigt: Die Heilung trifft viele kleine Treffer. In M6a fällt „Salven mit
+Moorherz“ von 1,19 auf 0,55, „Fäulnis mit Falkenhorsten“ verliert kaum (Test
+`healingPunishesSmallHits`). Der Zerfall kostet die Mischungen in M6b nur etwa 0,02,
+weil Blitz und Salve die Sporlinge mitnehmen; ohne Gruppenschaden kommen sie durch.
+
+Labor, Stufe pr:
+
+| Mission | Zwerge | Elfen | Menschenbot |
+|---|---|---|---|
+| M6a | Gewitterkronen mit Fäulnis 1,38 vor Mix mit freier Wahl 1,23 (0,14) | Gewitterkronen mit Fäulnis 1,45 vor Mix mit freier Wahl 1,23 (0,22) | 83 % (Ziel 45 %) |
+| M6b | Gewitterkronen mit Fäulnis 1,24 vor Mix mit Ruinen-Spezialisierungen 1,14 (0,10) | Gewitterkronen mit Fäulnis 1,27 vor Fäulnis mit Falkenhorsten 1,16 (0,12) | 50 % (Ziel 45 %) |
+| M7 | Fäulnis mit Falkenhorsten 1,43 vor Gewitterkronen mit Fäulnis 1,40 (0,03) | Gewitterkronen mit Fäulnis 1,77 vor Fäulnis mit Falkenhorsten 1,44 (0,33) | 42 % (Ziel 40 %) |
+
+**Offen:** Elfen liegen in M7 mit 0,33 knapp unter der Grenze 0,35. Mehr Hexen in M7
+schieben sie darüber, weil die Heilung Fäulnis mit Falkenhorsten stärker trifft als die
+Gewitterkrone. Wird mit A-8 (Zielkurve) wieder angesehen.
+
 ### Mission 7 – der Moorkönig, Ergebnis der Prüfung (0.28.0) [HYPOTHESE]
 
 Werte in `mission-07.json`: Startgold 290, zehn Wellen, Flitzer und Panzerbestien

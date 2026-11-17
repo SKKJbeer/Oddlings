@@ -82,17 +82,15 @@ ihrer Mission (wer M6b spielt, sieht die Hexe nie).
 
 ## Werte [HYPOTHESE bis Spieltest]
 
-In der Missionsdatei, gemessen mit dem Labor:
+In den Missionsdateien, gemessen mit dem Labor. Zahlen, Wellen und Laborergebnis stehen in
+[04](../game-design/04-economy-and-balance.md#moorhexe-und-pilzbalg-in-m6a-m6b-und-m7-ergebnis-der-prüfung-0410-hypothese).
+Kurz: Die Hexe ist so zäh wie zwei Plünderer und langsam, der Balg etwas weniger zäh,
+der Sporling hat ein Drittel eines Plünderers und läuft wie ein Flitzer.
 
-- Moorhexe: zäh wie ein Plünderer mal zwei, langsam (sie läuft hinter der Wand), mittlere
-  Belohnung; Heilung wie D-143.
-- Pilzbalg: zäh wie zwei Plünderer, langsam, wenig Belohnung (der Großteil kommt über die
-  Sporlinge).
-- Sporling: wenig Leben, schnell wie ein Flitzer, kleine Belohnung, kostet beim Durchbruch 1.
-
-Zielkurve D-146: M6a und M6b etwa 1,20 Reserve der besten Bauweise. Prüfung im Labor:
-die Mischung ohne Antwort auf die Neuheit verliert Reserve gegenüber der Mischung mit
-Antwort (Zielwahl „Stärkster“ bzw. Blitz hinter dem Sporenturm).
+Ergebnis: Alle Mischungen gewinnen M6a, M6b und M7, jede Monokultur verliert. Die
+Heilung bestraft Salven mit Moorherz in M6a deutlich (1,19 → 0,55), Falkenhorste kaum.
+Der Zerfall kostet Mischungen wenig, weil sie die Antwort schon haben. Elfen liegen in
+M7 mit 0,33 knapp unter der Dominanzgrenze 0,35; mehr Hexen in M7 schieben sie darüber.
 
 ## Darstellung und Ton
 
