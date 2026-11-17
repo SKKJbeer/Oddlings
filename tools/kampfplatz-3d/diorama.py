@@ -207,7 +207,7 @@ for i, d in enumerate(plan["dinge"]):
 az, alt = math.radians(plan["sonne"]["azimut"]), math.radians(plan["sonne"]["hoehe"])
 zur_sonne = Vector((math.cos(az) * math.cos(alt), math.sin(az) * math.cos(alt), math.sin(alt)))
 sonne = bpy.data.lights.new("sonne", "SUN")
-sonne.energy = 4.2
+sonne.energy = 3.5
 sonne.angle = math.radians(4)
 sonne.color = lin(plan["licht"])[:3]
 so = bpy.data.objects.new("sonne", sonne)

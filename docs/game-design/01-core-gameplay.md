@@ -50,6 +50,13 @@ freie Zelle wählbar.
 | **B: Raster in Bauzonen (gewählt)** | Fühlt sich frei an, eindeutige Treffer per Antippen, einfache Regeln, Datenmodell trivial | Etwas weniger Feinplatzierung |
 | C: Feste Bauplätze (wie viele Mobile-TD) | Einfachste Bedienung | Weniger Entscheidungen, widerspricht der Übergabe |
 
+**Bauinseln (D-141, ab 0.32.0 in Mission 1):** Die Bauzonen sind gestaltete Inseln aus
+festgetretener Erde mit Steinkante, 4 bis 7 je Karte mit zusammen 35 bis 50 Feldern;
+dazwischen liegt Landschaft, auf der nichts gebaut wird. Kehren sind die starken Orte,
+lange Seiten bieten Platz und wenig Weg. Missionen ohne Inseln in ihrer Datei behalten
+das alte Verhalten, bis sie ihr Missionsblatt bekommen (A-6). Inseln von Mission 1:
+[Konzept A-4](../konzepte/a-4-diorama-mission-1.md#inseln-in-mission-1).
+
 Ein Feld ist die Grundeinheit für alle Strecken (Reichweite, Geschwindigkeit).
 
 **[ENTSCHIEDEN – D-004, 25.10.2026]** Querformat. Begründung: Wege lesen sich in der Breite

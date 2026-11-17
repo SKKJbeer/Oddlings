@@ -11,6 +11,26 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.32.0 – 16.11.2026 (Kampfplatz Mission 1 als Diorama mit Bauinseln, A-4)
+
+- **Bauinseln** (D-141): Mission 1 baut nur noch auf sechs gestalteten Inseln mit
+  41 Feldern statt auf 114 freien Feldern. Neu in der Simulation: `map.zones` mit
+  Rechtecken je Insel, `Placement.outsideZone`, `Rejection.outsideZone`
+  („Hier ist kein Bauplatz“), `MissionMap.zone(of:)`. Ohne `zones` gilt alles wie bisher;
+  die übrigen Missionen und ihre Prüfsummen bleiben unverändert. Eine angehaltene
+  Mission 1 aus 0.29 öffnet nicht wieder (Fingerabdruck der Konfiguration), Sterne und
+  Fortschritt bleiben.
+- **Labor:** Der erste Entwurf der Inseln ließ Blitz allein gewinnen; die ausgelieferten
+  Inseln halten alle Balancetests (Zahlen in 04).
+- **Eine Kamera** (D-165): 40° orthografisch mit Kabinettstreckung, Sonne 135°/45°, im
+  Asset-Vertrag. **Zielmaßstab** (D-166) im Vertrag mit Maßstabsbild.
+- **Neuer Kampfplatz Mission 1** aus dem Werkzeug `tools/kampfplatz-3d` (Blender-Diorama aus
+  der Missionsdatei, mit FLUX übermalt): Inseln aus Erde mit Steinkante, Landschaft
+  zwischen den Inseln, Wald mit Seiten im Winkel der Türme.
+- Tests: `BuildZoneTests`, Prüfregeln für Inseln, Mission-1-Budget, App-Test für
+  Landschaft, `art-check` für Kamera, Maßstab, Plan und Inselboden.
+- [Konzept A-4](docs/konzepte/a-4-diorama-mission-1.md)
+
 ## Dokumente, kein Bau – 16.11.2026 (Gamedesign als Gesamtbild)
 
 - `docs/konzepte/gamedesign-gesamtbild.md`: Kampagne über drei Regionen, Komplexitätsleiter,

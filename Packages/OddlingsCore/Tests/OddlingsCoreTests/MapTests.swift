@@ -54,7 +54,7 @@ struct MapZoneTests {
 
     @Test("Zelle in einer Insel ist frei")
     func inZone() {
-        #expect(map.placement(of: Cell(x: 1, y: 3), occupied: []) == .free)
+        #expect(map.placement(of: Cell(x: 2, y: 2), occupied: []) == .free)
     }
 
     @Test("Zelle neben dem Weg, aber außerhalb jeder Insel ist Landschaft")
@@ -64,7 +64,7 @@ struct MapZoneTests {
 
     @Test("Belegte Zelle")
     func occupied() {
-        #expect(map.placement(of: Cell(x: 1, y: 3), occupied: [Cell(x: 1, y: 3)]) == .occupied)
+        #expect(map.placement(of: Cell(x: 2, y: 2), occupied: [Cell(x: 2, y: 2)]) == .occupied)
     }
 
     @Test("Außerhalb der Karte", arguments: [Cell(x: -1, y: 0), Cell(x: 16, y: 0), Cell(x: 0, y: 9), Cell(x: 3, y: -2)])

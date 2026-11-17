@@ -35,8 +35,16 @@ Sie folgen den IDs der Simulation.
 
 ## Kamera, Licht, Maße
 
-- Eine Kamera für alles: Aufsicht von schräg oben, etwa 45°. Licht von oben links,
-  Schatten fallen nach unten rechts.
+- **Eine Kamera für alles (D-165):** orthografisch, 40° über dem Boden, ohne
+  Gierwinkel; Werte in `art/asset-vertrag.json` unter `kamera`. Damit das Raster der
+  Simulation quadratisch bleibt, streckt das Diorama die Tiefe der Szene um 1/sin 40°
+  (Kabinettprojektion): Eine Bodenzelle ist im Bild quadratisch, alles mit Höhe zeigt
+  seine Seite. Figuren dürfen bis `figurenSpielraum` Grad flacher gerendert sein.
+- **Sonne (D-165):** Azimut 135° (links hinten), 45° hoch, unter `sonne`; Schatten
+  fallen nach unten rechts. Lichtfarbe je Ort in `App/Battle/kampfplatzlicht.json`.
+- **Zielmaßstab (D-166):** `massstab` nennt die sichtbare Höhe in Feldern (Flitzer 0,7 ·
+  Plünderer 0,8 · Panzerbestie 1,15 · Turm 1,4 · Boss 2,0 · Festung 2,6). Bilder werden
+  von den Paketen umgestellt, die sie malen; `art-check` hält die Reihenfolge.
 - Maßeinheit ist die Zelle (≈ 43 pt im Querformat, D-004).
 - **Figuren sind Quadrate.** Die Szene setzt jedes Bild als Quadrat mit festem
   `anchorPoint`; die Figur steht mittig, ihr Fuß (unterste deckende Zeile) liegt

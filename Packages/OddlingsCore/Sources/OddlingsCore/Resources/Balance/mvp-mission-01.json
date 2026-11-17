@@ -16,14 +16,14 @@
     "height": 9,
     "minDistanceFromPath": 0.9,
     "path": [[-1, 1.5], [4.5, 1.5], [4.5, 6.5], [9.5, 6.5], [9.5, 2.5], [13.5, 2.5], [13.5, 7.5], [17, 7.5]],
-    "_zones": "Bauinseln (D-141, A-4): Rechtecke [x, y, Breite, Hoehe] in Zellen. 6 Inseln, 36 Felder. Kehren eng und stark, lange Seiten breit und schwach, Vorposten frueh, letzte Linie vor der Festung. Das Diorama (tools/kampfplatz-3d) baut sie als Grund. HYPOTHESE bis zum Spieltest.",
+    "_zones": "Bauinseln (D-141, A-4): Rechtecke [x, y, Breite, Hoehe] in Zellen. 6 Inseln, 41 Felder. Die Kehren umfassen das Innere der Schleifen, damit Blitz allein dort ballt und verliert (Labor: verstreute kleine Inseln liessen Blitz allein gewinnen); lange Seiten schwach, Vorposten frueh, letzte Linie vor der Festung. Das Diorama (tools/kampfplatz-3d) baut sie als Grund. HYPOTHESE bis zum Spieltest.",
     "zones": [
-      { "id": "vorposten",    "kind": "outpost",  "rects": [[1, 3, 2, 3]] },
-      { "id": "hang-nord",    "kind": "longSide", "rects": [[5, 0, 3, 2]] },
-      { "id": "kehre-west",   "kind": "turn",     "rects": [[6, 4, 2, 2]] },
-      { "id": "wiese-sued",   "kind": "longSide", "rects": [[5, 7, 5, 2]] },
-      { "id": "kehre-ost",    "kind": "turn",     "rects": [[10, 4, 2, 2]] },
-      { "id": "letzte-linie", "kind": "lastLine", "rects": [[14, 3, 2, 3]] }
+      { "id": "vorposten",    "kind": "outpost",  "rects": [[2, 2, 2, 3]] },
+      { "id": "hang-nord",    "kind": "longSide", "rects": [[9, 0, 3, 2]] },
+      { "id": "kehre-west",   "kind": "turn",     "rects": [[5, 4, 4, 2]] },
+      { "id": "wiese-sued",   "kind": "longSide", "rects": [[5, 7, 4, 2]] },
+      { "id": "kehre-ost",    "kind": "turn",     "rects": [[10, 3, 3, 3]] },
+      { "id": "letzte-linie", "kind": "lastLine", "rects": [[14, 4, 2, 2]] }
     ]
   },
   "_ability": "Steinregen (D-025, R-3). HYPOTHESE bis zum Spieltest; Mission 1 hat ihn, solange sie die einzige spielbare ist (D-060).",

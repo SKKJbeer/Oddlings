@@ -21,7 +21,7 @@ Messbar:
   wie die Türme.
 - Die Wiese ist nicht mehr leer: zwischen den Inseln liegt Landschaft (Büsche, Felsen,
   Baumstümpfe, Blumen), nie auf Weg oder Insel.
-- Mission 1 hat 6 Inseln mit 36 Feldern statt 114 bebaubarer Felder.
+- Mission 1 hat 6 Inseln mit 41 Feldern statt 114 bebaubarer Felder.
 - Der gemalte Weg liegt dort, wo die Simulation ihn führt (Test wie bisher).
 
 ## Umfang
@@ -67,21 +67,28 @@ Simulation           .build auf .outsideZone → commandRejected(reason: .outsid
 ### Inseln in Mission 1
 
 ```
-......BBB.......      A vorposten    outpost   2×3   früh, sieht Eingang und erste Kehre
-#####.BBB.......      B hang-nord    longSide  3×2   oben, sieht Ende der ersten Geraden
-....#....#####..      C kehre-west   turn      2×2   in der ersten Schleife, sieht drei Wegstücke
-.AA.#....#...#FF      D wiese-sued   longSide  5×2   breit, schwach: Sporen, später Bank
-.AA.#.CC.#EE.#FF      E kehre-ost    turn      2×2   in der zweiten Schleife
-.AA.#.CC.#EE.#FF      F letzte-linie lastLine  2×3   vor der Festung
+.........BBB....      A vorposten    outpost   2×3   früh, im Knick der ersten Kurve
+#####....BBB....      B hang-nord    longSide  3×2   oben über der zweiten Geraden
+..AA#....#####..      C kehre-west   turn      4×2   im Inneren der ersten Schleife
+..AA#....#EEE#..      D wiese-sued   longSide  4×2   unten, breit und schwach
+..AA#CCCC#EEE#FF      E kehre-ost    turn      3×3   füllt die zweite Schleife, stärkster Ort
+..AA#CCCC#EEE#FF      F letzte-linie lastLine  2×2   vor der Festung
 ....######...#..
-.....DDDDD...###      36 Felder, davon 8 an Kehren (eng, stark) und 15 an langen Seiten
-.....DDDDD......
+.....DDDD....###      41 Felder, davon 17 in den Kehren
+.....DDDD.......
 ```
 
-Die beiden Kehren sind die starken, engen Orte (4 Felder je Insel, 4 bis 6,7 Felder Weg
-im Bereich eines Turms), die langen Seiten bieten Platz und wenig Weg. Damit ist „wohin
-mit dem nächsten Turm“ eine Abwägung, nicht „an die Kehre“. Werte [HYPOTHESE] bis zum
-Spieltest; die Balancetests und das Labor laufen mit den Inseln.
+Die Kehren sind die starken Orte (bis 9 Felder Weg im Bereich eines Wachturms), die
+langen Seiten bieten Platz und wenig Weg. Damit ist „wohin mit dem nächsten Turm“ eine
+Abwägung, nicht „an die Kehre“.
+
+**Was das Labor gelehrt hat:** Der erste Entwurf (36 Felder, Kehren nur 2×2, Vorposten
+und Hang weit weg vom Weg) ließ **Blitz allein gewinnen** (Reserve 1,09 statt 0,99) und
+die Mischung fiel von 1,40 auf 1,18. Verstreute kleine Inseln zwingen Blitztürme
+auseinander, und genau das hilft der Kette; die Mischung verliert dagegen ihre guten
+Plätze. Mit Kehren, die das Innere der Schleifen ganz umfassen, stehen die Zahlen wie
+vor den Inseln (Blitz allein 0,99 bzw. 0,86 mit Elfen, Mischung 1,40). Regel für A-6:
+Inseln einer Mission erst ins Labor, dann ins Bild. Werte [HYPOTHESE] bis zum Spieltest.
 
 ### Diorama-Werkzeug
 
@@ -122,7 +129,8 @@ Tabelle die Reihenfolge Festung > Boss > Turm > Panzerbestie > Plünderer > Flit
 
 ## Bedienentscheidungen
 
-- Ein Tipp auf Landschaft meldet „Hier ist kein Bauplatz“, wie bisher „Zu nah am Weg“.
+- Ein Tipp auf Landschaft öffnet nichts und meldet nichts, wie bisher ein Tipp auf den
+  Weg. Ein abgewiesener Baubefehl dort heißt „Hier ist kein Bauplatz“ (`BattleTexts`).
 - Bauplätze beim Bauen (D-121) zeigen nur noch die Inselzellen; wie die Inseln dabei
   aufleuchten, gestaltet A-2.
 
@@ -149,4 +157,4 @@ Eingabe von außen, kein Netz. Neue Bilder mit Herkunft in `art/karten/ENTSTEHUN
 |---|---|---|
 | D-165 | Gemeinsame Kamera 40° orthografisch mit Kabinettstreckung, Sonne 135°/45° | gilt (Claude, Werkzeug, mit A-3 abgestimmt) |
 | D-166 | Zielmaßstab im Vertrag, Umstellung durch die malenden Pakete | gilt (Claude, aus dem Review) |
-| D-167 | Inseln von Mission 1 (6 Inseln, 36 Felder) | [HYPOTHESE] bis zum Spieltest |
+| D-167 | Inseln von Mission 1 (6 Inseln, 41 Felder) | [HYPOTHESE] bis zum Spieltest |
