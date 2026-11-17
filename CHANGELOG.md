@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.35.0 – 17.11.2026 (A-3, Teil 2: der Flitzer in 3D)
+## 0.36.0 – 17.11.2026 (A-3, Teil 2: der Flitzer in 3D)
 
 - **Der Flitzer läuft mit Armen und Beinen:** eigene 3D-Figur nach dem Gemälde (lange
   Fühler, roter Schal, Rucksack), vorgekippt und mit weitem Schritt. Folgen `walk`,
