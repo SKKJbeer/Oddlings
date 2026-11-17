@@ -96,7 +96,7 @@ enum BattleTexts {
         "Ab \(seconds(bank.delay)) s alle \(seconds(bank.interval)) s +\(bank.payout), bis \(bank.cap) Gold"
     }
     /// Die eigentliche Entscheidung (07, „Zwergenbank“), in Worten beim Kauf.
-    static func bankWarning(cost: Int) -> String { "Die \(cost) Gold fehlen dir in den nächsten Wellen." }
+    static func bankWarning(cost: Int) -> String { "\(cost) Gold fehlen dir vorerst." }
     static func bankPaid(_ paid: Int, of cap: Int) -> String { "Ausgezahlt \(paid) von \(cap) Gold" }
     static let bankEmpty = "Leer. Verkaufen gibt den Platz frei."
     static let bankEmptyTag = "leer"
@@ -139,31 +139,49 @@ enum BattleTexts {
         switch specialization {
         case .volley: "Trifft zwei Ziele je Schuss."
         case .stormCrown: "Springt öfter und weiter."
-        case .bogHeart: "Größerer Kreis, bremst stärker und länger."
-        case .falconHold: "Sieht weit, schießt schwer, Rüstung hält wenig davon ab."
-        case .sparkColumn: "Ein schwerer Schlag, springt nur einmal weiter, lädt langsamer."
-        case .rot: "Gebremste nehmen von allen Türmen mehr Schaden."
+        case .bogHeart: "Größerer Kreis, bremst stärker."
+        case .falconHold: "Sieht weit, durchschlägt Rüstung."
+        case .sparkColumn: "Schwerer Schlag, springt einmal."
+        case .rot: "Gebremste nehmen mehr Schaden."
         }
     }
     static let specialize = "Spezialisieren"
     /// Zwei zur Wahl (P3-3, S15).
     static let chooseSpecialization = "Wähle eine Spezialisierung."
     static let chooseOneStar = "Tippe einen Stern an."
-    static func specializeDrops(_ other: Specialization) -> String { "Endgültig: \(name(other)) fällt weg." }
+    static func specializeDrops(_ other: Specialization) -> String { "\(name(other)) entfällt endgültig." }
     /// Anfangsbuchstabe auf dem Stern und später am Turmschild (07).
     static func initial(_ specialization: Specialization) -> String { String(name(specialization).prefix(1)) }
     /// Spezialisieren lässt sich nicht zurücknehmen, nur durch Verkaufen (07).
-    static let specializeFinal = "Endgültig, nur Verkaufen nimmt es zurück."
+    static let specializeFinal = "Endgültig, nur Verkaufen hebt es auf."
     static func specializeLine(_ specialization: Specialization, cost: Int) -> String {
         "\(name(specialization)) für \(cost) Gold"
     }
     static func confirmSpecialize(_ specialization: Specialization, cost: Int) -> String {
-        "Nochmal tippen: \(name(specialization)) für \(cost) Gold"
+        "Nochmal tippen: \(name(specialization)) (\(cost))"
     }
     /// Beim ersten gepanzerten Gegner einer Mission (P2-10).
     static let armorHint = "Gepanzert: Steine schlagen durch"
     /// Boss (P3-4). Der Satz zum Schild sagt, was jetzt zählt: die Gerufenen.
     static let bossName = "Moorkönig"
+
+    /// Gegnernamen für die Wellenvorschau (A-2), mit Anzahl gebeugt.
+    static func enemy(_ kind: EnemyKind, count: Int) -> String {
+        switch kind {
+        case .raider: "\(count) Plünderer"
+        case .runner: "\(count) Flitzer"
+        case .brute: count == 1 ? "1 Panzerbestie" : "\(count) Panzerbestien"
+        case .moorKing: count == 1 ? "der \(bossName)" : "\(count) Moorkönige"
+        }
+    }
+
+    /// Was VoiceOver am Zettel liest: „Welle 2: 8 Plünderer, 4 Flitzer, neu: Flitzer“.
+    static func forecast(_ forecast: WaveForecast) -> String {
+        let parts = forecast.entries.map { enemy($0.kind, count: $0.count) }.joined(separator: ", ")
+        let fresh = forecast.entries.filter(\.isNew).map { enemy($0.kind, count: $0.count) }
+        let head = "\(nextWaveShort(forecast.wave + 1)): \(parts)"
+        return fresh.isEmpty ? head : "\(head), neu: \(fresh.joined(separator: ", "))"
+    }
     static let bossArrives = "Der Moorkönig kommt!"
     static let bossShield = "Schild! Er ruft Verstärkung."
     static let bossShieldDown = "Schild fällt"
@@ -181,7 +199,7 @@ enum BattleTexts {
     static let upgradeArmed = "Stufe 2: gleiche Rolle, spürbar stärker."
     static let upgradeUnlocks = "Schaltet die Zielwahl frei."
     static let upgradeUnlocksNothing = "Größere Wirkung im selben Kreis."
-    static func confirmUpgrade(_ cost: Int) -> String { "Nochmal tippen: aufwerten für \(cost) Gold" }
+    static func confirmUpgrade(_ cost: Int) -> String { "Nochmal tippen: aufwerten (\(cost))" }
     static func upgradeLine(_ cost: Int) -> String { "Aufwerten für \(cost) Gold" }
     static func targetMode(_ mode: TargetMode) -> String {
         switch mode {

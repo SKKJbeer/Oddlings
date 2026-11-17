@@ -73,6 +73,8 @@ final class BattleController {
     private(set) var towersUpgraded = 0
     /// Leiste oben, solange ein Boss auf dem Weg ist (P3-4); nil ohne Boss.
     private(set) var boss: BossStatus?
+    /// Was die nächste Welle bringt (A-2, R2); nil, solange keine ansteht.
+    private(set) var forecast: WaveForecast?
 
     /// Rückmeldung an den Finger. Austauschbar, damit Tests mitschreiben können.
     @ObservationIgnored var haptics: @MainActor (Haptic) -> Void
@@ -586,6 +588,8 @@ final class BattleController {
             let perSecond = model.sim.config.simulation.ticksPerSecond
             return (ticks + perSecond - 1) / perSecond
         }
+        let next = seconds == nil ? nil : WaveForecast(waves: model.sim.config.waves, index: state.waveIndex + 1)
+        if forecast != next { forecast = next }
         if secondsToNextWave != seconds {
             // Ein Countdown beginnt, wo die Restzeit springt statt sinkt.
             if let seconds, seconds > (secondsToNextWave ?? 0) { countdownTotal = max(1, seconds) }

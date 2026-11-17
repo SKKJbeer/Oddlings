@@ -61,7 +61,7 @@ struct BattleTopBar: View {
                 Text(BattleTexts.speed(controller.speed))
                     .font(UITheme.display(18))
                     .foregroundStyle(controller.speed > 1 ? UITheme.outline : UITheme.cream)
-                    .frame(width: 52, height: BattleStyle.hudHeight)
+                    .frame(width: BattleStyle.speedButtonWidth, height: BattleStyle.hudHeight)
                     .background(BarBackground(fill: controller.speed > 1 ? UITheme.goldFace : UITheme.wood))
             }
             .buttonStyle(.plain)
@@ -440,6 +440,64 @@ private struct StatTile: View {
             }
             // Der letzte Wert ist der echte, nicht eine gerundete Zwischenstufe.
             shown = nil
+        }
+    }
+}
+
+/// Zettel unter „Welle n“ (A-2, D-159): wer kommt und wie viele, neue Arten
+/// mit rotem Ausrufezeichen. Fängt kein Tippen ab; die Karte darunter bleibt
+/// bedienbar. Breite fest aus `BattleStyle.forecastWidth`, damit Tafel und
+/// Bogen genau dieses Rechteck meiden (`HudLayout.forecastRect`).
+struct WaveForecastTag: View {
+    let forecast: WaveForecast
+
+    var body: some View {
+        HStack(spacing: BattleStyle.forecastSpacing) {
+            ForEach(forecast.entries, id: \.kind) { entry in
+                HStack(spacing: 2) {
+                    EnemyPicture(kind: entry.kind)
+                        .frame(width: BattleStyle.forecastIcon, height: BattleStyle.forecastIcon)
+                        .overlay(alignment: .topTrailing) {
+                            if entry.isNew {
+                                Text("!")
+                                    .font(UITheme.display(11))
+                                    .foregroundStyle(UITheme.cream)
+                                    .frame(width: 13, height: 13)
+                                    .background(Circle().fill(UITheme.heart))
+                                    .overlay(Circle().strokeBorder(UITheme.outline, lineWidth: 1.5))
+                                    .offset(x: 4, y: -3)
+                            }
+                        }
+                    Text("\(entry.count)")
+                        .font(UITheme.display(15))
+                        .monospacedDigit()
+                        .foregroundStyle(UITheme.cream)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                }
+                .frame(width: BattleStyle.forecastEntry, alignment: .leading)
+            }
+        }
+        .padding(.horizontal, BattleStyle.forecastPadding)
+        .frame(width: BattleStyle.forecastWidth(entries: forecast.entries.count),
+               height: BattleStyle.forecastHeight)
+        .background(BarBackground())
+        .allowsHitTesting(false)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(BattleTexts.forecast(forecast))
+        .accessibilityIdentifier("hud.forecast")
+    }
+}
+
+/// Gegnerbild aus dem Atlas; fehlt es, ein Punkt in der Farbe der Art.
+private struct EnemyPicture: View {
+    let kind: EnemyKind
+
+    var body: some View {
+        if let picture = UITheme.image(BattleSprites.enemyName(kind)) {
+            Image(uiImage: picture).resizable().scaledToFit()
+        } else {
+            Circle().fill(Color(uiColor: BattleStyle.enemyColor(kind))).padding(4)
         }
     }
 }

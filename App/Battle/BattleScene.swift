@@ -28,6 +28,8 @@ final class BattleScene: SKScene {
     private var zoneTiles: [Cell: SKSpriteNode] = [:]
     private(set) var zonesShown = false
     private var zonesOccupied: Set<Cell> = []
+    /// Zelle, um die die Bauplätze gerade leuchten (D-157); nil = alle gedämpft.
+    private var zonesFocus: Cell??
     /// Fundamente und Schatten aller Türme (D-120), unter den Türmen und unter
     /// der Auswahl, damit die Markierung darüber lesbar bleibt.
     private let shadeLayer = SKNode()
@@ -189,7 +191,7 @@ final class BattleScene: SKScene {
         case .tower: cell = controller?.selectedTower?.cell
         case .aiming: cell = nil
         }
-        guard let cell else { return }
+        guard let cell else { return showPreview(.none) }
         // Gemalt (A-5); die Linien bleiben nur als Rückfall, falls der Streifen fehlt.
         if let mark = GroundMarks.cell(field: field) {
             mark.position = toScene(cell.center)
@@ -208,12 +210,25 @@ final class BattleScene: SKScene {
                 selectionLayer.addChild(ring)
             } else {
                 let ring = SKShapeNode(circleOfRadius: radius)
-                ring.strokeColor = BattleStyle.selection
+                ring.strokeColor = BattleStyle.selection.withAlphaComponent(BattleStyle.rangeRingAlpha)
                 ring.lineWidth = max(1.5, field * 0.03)
                 ring.position = toScene(preview.center)
                 selectionLayer.addChild(ring)
             }
+            // Reichweite als Weg im Kreis (D-156): Was leuchtet, erreicht der Turm.
+            let line = CGMutablePath()
+            for piece in PathCoverage.pieces(of: model.sim.map.path, around: preview.center, radius: preview.range) {
+                line.addLines(between: piece.map(toScene))
+            }
+            let cover = SKShapeNode(path: line)
+            cover.name = Self.coverageName
+            cover.strokeColor = BattleStyle.coverageColor
+            cover.lineWidth = BattleStyle.coverageWidth * field
+            cover.lineCap = .round
+            cover.lineJoin = .round
+            selectionLayer.addChild(cover)
         }
+        showPreview(selection)
     }
 
     /// Für den E2E-Test (A-5): welche Bilder die Türme zeigen und wie die Auswahl
@@ -224,10 +239,63 @@ final class BattleScene: SKScene {
     }
 
     /// Für Tests und den E2E-Zähler: was die Auswahl zeigt („gemalt“ oder „linien“).
+    /// Der leuchtende Weg (A-2) und die Vorschau sind keine Auswahlmarke und zählen nicht.
     var selectionStyle: String {
-        if selectionLayer.children.isEmpty { return "leer" }
-        return selectionLayer.children.allSatisfy { $0 is SKSpriteNode } ? "gemalt" : "linien"
+        let marks = selectionLayer.children.filter { $0.name != Self.coverageName && $0.name != Self.previewName }
+        if marks.isEmpty { return "leer" }
+        return marks.allSatisfy { $0 is SKSpriteNode } ? "gemalt" : "linien"
     }
+
+    static let previewName = "build.preview"
+    static let coverageName = "range.coverage"
+
+    /// Der Turm halb durchsichtig an seinem Platz, bevor er bezahlt ist (A-2,
+    /// P1, D-155); beim Aufwerten das Bild der nächsten Stufe über dem Turm.
+    /// Kein Schatten, keine eigene Rechnung: dasselbe Bild wie der echte Turm,
+    /// im selben Licht, nur blass. Liegt in der Turmebene, damit Nachbartürme
+    /// davor und dahinter richtig stehen.
+    private func showPreview(_ selection: BattleController.Selection) {
+        towerLayer.childNode(withName: Self.previewName)?.removeFromParent()
+        previewPicture = nil
+        let ghost: SKNode
+        let cell: Cell
+        switch selection {
+        case .cell(let c, let kind?):
+            previewPicture = BattleSprites.towerName(kind)
+            ghost = BattleSprites.tower(kind, field: field)
+            cell = c
+        case .tower(_, _, true, _):
+            // Vor einer Spezialisierung zeigt die Vorschau die neue Gestalt (A-5, G7).
+            guard let tower = controller?.selectedTower, tower.specialization == nil else { return }
+            let name = BattleSprites.towerName(tower.kind, level: tower.level + 1,
+                                               specialization: controller?.armedSpecialization)
+            guard let texture = BattleSprites.texture(named: name) else { return }
+            previewPicture = name
+            ghost = BattleSprites.tower(tower.kind, field: field)
+            for case let sprite as SKSpriteNode in ghost.children { sprite.texture = texture }
+            cell = tower.cell
+        default:
+            return
+        }
+        ghost.name = Self.previewName
+        for case let sprite as SKSpriteNode in ghost.children {
+            sprite.color = light ?? .white
+            sprite.colorBlendFactor = light == nil ? 0 : 1
+        }
+        ghost.alpha = BattleStyle.previewAlpha
+        ghost.position = toScene(cell.center)
+        // Knapp vor dem Turm derselben Zelle, sonst in der Reihe nach Höhe.
+        ghost.zPosition = 1 - ghost.position.y / max(size.height, 1) + 0.001
+        towerLayer.addChild(ghost)
+    }
+
+    /// Für Tests: welches Bild die Vorschau zeigt.
+    private(set) var previewPicture: String?
+    /// Für Tests: der Vorschau-Turm, wenn einer steht.
+    var previewNode: SKNode? { towerLayer.childNode(withName: Self.previewName) }
+    var coverageNode: SKNode? { selectionLayer.childNode(withName: Self.coverageName) }
+    /// Für Tests: Deckkraft des Bauplatzes einer Zelle, nil ohne Bauplatz.
+    func zoneAlpha(at cell: Cell) -> CGFloat? { zoneTiles[cell]?.alpha }
 
     /// Bauplätze nur beim Bauen (D-121): vor der ersten Welle und solange eine
     /// leere Zelle gewählt ist. Sonst bleibt die gemalte Wiese frei. Belegte
@@ -239,6 +307,12 @@ final class BattleScene: SKScene {
             if occupied != zonesOccupied {
                 zonesOccupied = occupied
                 for (cell, tile) in zoneTiles { tile.isHidden = occupied.contains(cell) }
+            }
+            // Nur bei neuer Auswahl, nicht in jedem Bild: 120 Kacheln.
+            let focus: Cell? = if case .cell(let cell, _) = controller?.selection { cell } else { nil }
+            if zonesFocus != .some(focus) {
+                zonesFocus = .some(focus)
+                for (cell, tile) in zoneTiles { tile.alpha = CGFloat(BuildZoneFocus.alpha(of: cell, focus: focus)) }
             }
         }
         zonesShown = wanted
@@ -283,6 +357,7 @@ final class BattleScene: SKScene {
         zoneLayer.removeAllChildren()
         zoneTiles = [:]
         zonesOccupied = []
+        zonesFocus = nil
         let tileTexture = buildZoneTexture(side: field - 2 * inset)
         for cell in map.buildableCells {
             let tile = SKSpriteNode(texture: tileTexture)
@@ -487,8 +562,15 @@ final class BattleScene: SKScene {
             if let node = towerNodes.removeValue(forKey: id) { fx.sell(node, refund: refund) }
         case .towerUpgraded(let id, let level):
             if let node = towerNodes[id] {
-                node.show(level: level, specialization: model.state.towers.first { $0.id == id }?.specialization)
-                fx.upgrade(node)
+                let specialization = model.state.towers.first { $0.id == id }?.specialization
+                node.show(level: level, specialization: specialization)
+                // Eine Spezialisierung ist eine neue Gestalt, keine weitere Stufe:
+                // eigener Auftritt, damit man den Unterschied sieht (A-2, P3).
+                if specialization != nil {
+                    fx.specialize(node)
+                } else {
+                    fx.upgrade(node)
+                }
             }
         case .targetModeChanged(let id, let mode):
             // Die Wahl steht auf dem Knopf; am Turm ein kurzer Hinweis, was sie heißt.

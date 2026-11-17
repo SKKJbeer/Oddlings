@@ -49,4 +49,24 @@ final class HUDE2ETests: XCTestCase {
         e2e.speed.tap()
         e2e.waitFor(e2e.speed, label: "1×")
     }
+
+    /// Wellenvorschau (A-2, R2, D-159): Unter dem Knopf steht, was Welle 1
+    /// bringt, mit den Zahlen der Missionsdatei; nach dem Rufen die nächste.
+    @MainActor
+    func testForecastNamesTheNextWave() throws {
+        let e2e = try E2EApp(["--play", "--e2e-ohne-hinweise"])
+        e2e.waitForBoard()
+        let tag = e2e.app.descendants(matching: .any)["hud.forecast"]
+        XCTAssertTrue(tag.waitForExistence(timeout: 5), "Zettel unter dem Wellenknopf")
+        let raiders = e2e.config.waves[0].groups.filter { $0.enemy == .raider }.reduce(0) { $0 + $1.count }
+        XCTAssertTrue(tag.label.hasPrefix("Welle 1: "), tag.label)
+        XCTAssertTrue(tag.label.contains("\(raiders) Plünderer"), tag.label)
+        XCTAssertFalse(tag.label.contains("neu"), "in der ersten Welle ist nichts neu: \(tag.label)")
+
+        e2e.nextWave.tap()
+        e2e.waitFor(e2e.app.staticTexts["hud.wave"], label: "Welle 1/\(e2e.config.waves.count)")
+        let second = NSPredicate(format: "label BEGINSWITH %@", "Welle 2: ")
+        expectation(for: second, evaluatedWith: tag)
+        waitForExpectations(timeout: 10)
+    }
 }

@@ -26,12 +26,27 @@ final class HudLayoutTests: XCTestCase {
 
     private lazy var map: MissionMap = Simulation(config: try! BalanceConfig.missionOne()).map
 
-    private func layout(_ device: Device) -> HudLayout {
+    private func layout(_ device: Device, avoiding: Bool = false) -> HudLayout {
         let bar = BattleStyle.hudHeight + 2 * BattleStyle.hudMargin
         let size = CGSize(width: device.screen.width, height: device.screen.height - bar)
         let board = BoardLayout(size: size, map: map)
-        return HudLayout(board: board, insets: .init(left: device.side, bottom: device.bottom, right: device.side),
-                         metrics: BattleStyle.hudMetrics)
+        let insets = HudLayout.Insets(left: device.side, bottom: device.bottom, right: device.side)
+        let avoid = avoiding ? HudLayout.Avoid(board: board, map: map, reserved: corners(size, insets)) : HudLayout.Avoid()
+        return HudLayout(board: board, insets: insets, metrics: BattleStyle.hudMetrics, avoid: avoid)
+    }
+
+    /// Fähigkeitsknopf und Wellenvorschau mit drei Arten, wie `RingMenu` sie meidet.
+    private func corners(_ size: CGSize, _ insets: HudLayout.Insets) -> [CGRect] {
+        [HudLayout.abilityRect(board: size, insets: insets),
+         HudLayout.forecastRect(board: size, insets: insets, entries: WaveForecast.maxEntries)]
+    }
+
+    private var allMissions: [BalanceConfig] {
+        get throws {
+            let names = ["mission-02", "mission-03", "mission-04", "mission-05a", "mission-05b",
+                         "mission-06a", "mission-06b", "mission-07"]
+            return [try BalanceConfig.missionOne()] + (try names.map { try BalanceConfig.bundledMission(named: $0) })
+        }
     }
 
     func testButtonsAreLargeTapTargets() {
@@ -142,5 +157,104 @@ final class HudLayoutTests: XCTestCase {
                 XCTAssertFalse(buttons.map(hud.buttonRect).contains { $0.intersects(panel) }, "verdeckt Knopf: \(context)")
             }
         }
+    }
+
+    // MARK: Tafel kennt die Lage (A-2, D-158)
+
+    /// Review P4: Die Tafel lag auf Weg und Festung, genau wo die Gegner
+    /// ankommen, und unter dem Fähigkeitsknopf. Jetzt: nie auf einer festen
+    /// Ecke, wo es eine freie Lage gibt; auf der Festung nur auf dem iPhone SE,
+    /// wenn Zelle und Knöpfe in der Mitte jede andere Lage belegen.
+    func testStatPanelKeepsFortressAndCornersFree() throws {
+        var onFortress = 0, cases = 0
+        for config in try allMissions {
+            map = Simulation(config: config).map
+            for device in devices {
+                let hud = layout(device, avoiding: true)
+                let fortress = try XCTUnwrap(hud.avoid.fortress)
+                for cell in map.buildableCells {
+                    for count in 1...4 {
+                        cases += 1
+                        let buttons = hud.ring(at: cell, count: count)
+                        let place = hud.statPanel(for: cell, avoiding: buttons,
+                                                  tall: BattleStyle.statPanel, wide: BattleStyle.statStrip)
+                        let context = "\(config.mission.id), \(device.name), Zelle \(cell.x),\(cell.y), \(count) Knöpfe"
+                        let free = hud.freePanel(for: cell, avoiding: buttons, size: BattleStyle.statPanel) != nil
+                            || hud.freePanel(for: cell, avoiding: buttons, size: BattleStyle.statStrip) != nil
+                        if free {
+                            XCTAssertFalse(hud.avoid.reserved.contains { $0.intersects(place.rect) }, "auf fester Ecke: \(context)")
+                        }
+                        if fortress.intersects(place.rect.insetBy(dx: 1, dy: 1)) {
+                            onFortress += 1
+                            XCTAssertEqual(device.name, "iPhone SE", "auf der Festung: \(context)")
+                        }
+                    }
+                }
+            }
+        }
+        // Gemessen 16.11.2026: 65 von 16 288 Fällen, alle iPhone SE.
+        XCTAssertLessThan(Double(onFortress) / Double(cases), 0.01)
+    }
+
+    /// Unter den freien Lagen gewinnt die mit der kleinsten Strafe.
+    func testPanelTakesTheLeastCoveringFreeSpot() throws {
+        for config in try allMissions {
+            map = Simulation(config: config).map
+            for device in devices {
+                let hud = layout(device, avoiding: true)
+                for cell in map.buildableCells {
+                    let buttons = hud.ring(at: cell, count: 3)
+                    let size = BattleStyle.statPanel
+                    guard let chosen = hud.freePanel(for: cell, avoiding: buttons, size: size) else { continue }
+                    let best = hud.candidates(size, for: cell)
+                        .map { CGRect(origin: $0, size: size) }
+                        .filter { hud.bounds.insetBy(dx: -0.5, dy: -0.5).contains($0) && hud.isFree($0, for: cell, avoiding: buttons) }
+                        .map(hud.penalty(of:)).min()
+                    XCTAssertEqual(hud.penalty(of: chosen), best, "\(config.mission.id), \(device.name), Zelle \(cell.x),\(cell.y)")
+                }
+            }
+        }
+    }
+
+    /// Weg und Festung zählen: Ohne Strafe läge die Tafel in Mission 1 auf
+    /// dem iPhone 15 öfter auf der Festung (Gegenprobe zu D-158).
+    func testPenaltyMovesPanelOffTheFortress() throws {
+        map = Simulation(config: try BalanceConfig.missionOne()).map
+        let hud = layout(devices[2], avoiding: true)
+        let blind = HudLayout(board: hud.board, insets: .init(left: devices[2].side, bottom: devices[2].bottom,
+                                                               right: devices[2].side),
+                              metrics: BattleStyle.hudMetrics,
+                              avoid: HudLayout.Avoid(path: hud.avoid.path, fortress: hud.avoid.fortress,
+                                                     reserved: hud.avoid.reserved))
+        var seeing: CGFloat = 0, notSeeing: CGFloat = 0
+        for cell in map.buildableCells {
+            let buttons = hud.ring(at: cell, count: 3)
+            seeing += hud.penalty(of: hud.statPanel(for: cell, avoiding: buttons, tall: BattleStyle.statPanel,
+                                                    wide: BattleStyle.statStrip).rect)
+            notSeeing += hud.penalty(of: blind.statPanel(for: cell, avoiding: buttons, tall: BattleStyle.statPanel,
+                                                         wide: BattleStyle.statStrip).rect)
+        }
+        XCTAssertLessThan(seeing, notSeeing / 2)
+    }
+
+    /// Der Bogen liegt nie unter dem Fähigkeitsknopf oder dem Zettel, wo er
+    /// anderswo Platz hat.
+    func testRingKeepsCornersFree() throws {
+        var blocked = 0, cases = 0
+        for config in try allMissions {
+            map = Simulation(config: config).map
+            for device in devices {
+                let hud = layout(device, avoiding: true)
+                for cell in map.buildableCells {
+                    for count in 1...4 {
+                        cases += 1
+                        let rects = hud.ring(at: cell, count: count).map(hud.buttonRect)
+                        if rects.contains(where: { r in hud.avoid.reserved.contains { $0.intersects(r) } }) { blocked += 1 }
+                    }
+                }
+            }
+        }
+        // Gemessen 16.11.2026: 16 Fälle am Rand, in denen kein Bogen frei liegt.
+        XCTAssertLessThan(Double(blocked) / Double(cases), 0.002)
     }
 }
