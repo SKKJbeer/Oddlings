@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.38.0 – 17.11.2026 (Kampfplatz Mission 1 als Diorama mit Bauinseln, A-4)
+## 0.38.0 – 17.11.2026 (Kampfplatz Mission 1 als Diorama mit Bauinseln, A-4) · Bau 59
 
 - **Bauinseln** (D-141): Mission 1 baut nur noch auf sechs gestalteten Inseln mit
   41 Feldern statt auf 114 freien Feldern. Neu in der Simulation: `map.zones` mit
