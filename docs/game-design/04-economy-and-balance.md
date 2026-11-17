@@ -145,6 +145,27 @@ Spiel: Unterstützende Türme müssen im Zweifel großzügig sein, weil ihr Nutz
 für Spieler schwer zu sehen ist (Risiko P1 in der
 [Analyse](../production/phase-0-analyse.md)).
 
+### Bauinseln in Mission 1 (A-4, 0.38.0) [HYPOTHESE]
+
+Mission 1 baut nur noch auf sechs Inseln mit 41 Feldern (D-141, D-167) statt auf
+114 freien Feldern. Gemessen mit `oddlings-balance --mission m1`, gieriger Bot, erstes
+Spielen, Reserve der Bauweise:
+
+| Bauweise | ohne Inseln | erster Entwurf (36 Felder) | Inseln 0.38.0, Zwerge | Elfen |
+|---|---|---|---|---|
+| Mix Wach/Sporen/Blitz | 1,40 | 1,18 | 1,40 | 1,42 |
+| Nur Wachtürme | 1,31 | 1,19 | 1,22 | 1,18 |
+| Nur Blitztürme | 0,99 | **1,09 (gewinnt)** | 0,99 | 0,86 |
+| Nur Sporentürme | 0,51 | 0,00 | 0,51 | 0,55 |
+| Blitz + Sporen | 1,31 | 1,28 | 1,31 | 1,91 |
+
+Der erste Entwurf verstreute kleine Inseln über die Karte. Das zwang Blitztürme
+auseinander, half ihrer Kette und ließ Blitz allein gewinnen (bricht D-071 und D-075);
+die Mischung verlor ihre guten Plätze. Die ausgelieferten Inseln umfassen das Innere
+beider Schleifen, dort ballen sich die besten Plätze wie zuvor. Alle `BalanceTests` und
+die Labor-Invarianten laufen grün. Die Wachturm-Monokultur verliert dabei 0,09 und liegt
+weiter hinter der Mischung.
+
 ### Steinregen (R-3, 25.10.2026) [HYPOTHESE]
 
 Prüfung aus [03](03-races-and-avatar.md#eine-aktive-festungsfähigkeit-phase-2):

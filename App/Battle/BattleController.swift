@@ -370,7 +370,7 @@ final class BattleController {
                 feedback(.selectCell)
             }
         } else {
-            // Weg oder Rand: Dort kann nie etwas stehen, also kein Menü und keine
+            // Weg, Landschaft oder Rand: Dort kann nie etwas stehen, also kein Menü und keine
             // Fehlermeldung. Der Tipp schließt nur, was offen war.
             selection = .none
         }

@@ -123,7 +123,7 @@ Aufteilung siehe Abschnitt 2. Weitere Regeln:
 1. Freies Feld antippen → Feld wird umrandet, drei Turmknöpfe erscheinen im Bogen
    darüber (in den oberen zwei Zeilen darunter), jeweils mit Preisschild.
 2. Turm antippen → der Turm steht blass an seinem Platz, der Wegabschnitt in seiner
-   Reichweite leuchtet, der Kreis bleibt eine feine Linie (D-155, D-156, ab 0.37.0).
+   Reichweite leuchtet, der Kreis bleibt eine feine Linie (D-155, D-156, ab 0.39.0).
 3. Denselben Turm erneut antippen → gebaut: Er wächst aus dem Boden, ein Gerüst steht
    kurz und fällt weg (kein Fallen, kein Bildschirmstoß). Anderes Feld oder leere
    Stelle → abgebrochen.
@@ -133,7 +133,7 @@ Aufteilung siehe Abschnitt 2. Weitere Regeln:
 - **Bauplätze** [ENTSCHIEDEN] (D-121, Steffen 08.11.2026) sind nur zu sehen, solange gebaut wird: vor der
   ersten Welle und solange ein freies Feld gewählt ist, als abgerundete helle Felder;
   belegte Felder zeigen keins. Sonst bleibt die gemalte Wiese ohne Raster (0.29.1).
-  Ab 0.37.0 (D-157) nur um den Finger: voll bis 1,5 Felder um die gewählte Zelle,
+  Ab 0.39.0 (D-157) nur um den Finger: voll bis 1,5 Felder um die gewählte Zelle,
   weich auslaufend bis 3 Felder; vor der ersten Welle alle gedämpft.
 - **Infotafel** (D-158) legt sich dorthin, wo sie am wenigsten Weg und nie die
   Festung verdeckt; Fähigkeitsknopf und Wellenzettel bleiben frei. Jede Zeile passt
@@ -143,7 +143,7 @@ Aufteilung siehe Abschnitt 2. Weitere Regeln:
   eigenen Auftritt: Der Turm sinkt in einen Wirbel und kommt in neuer Gestalt hoch.
 
 ### Wellenvorschau
-Unter dem Knopf „Welle n" hängt ein Zettel (D-159, ab 0.37.0): je Gegnerart Bild und
+Unter dem Knopf „Welle n" hängt ein Zettel (D-159, ab 0.39.0): je Gegnerart Bild und
 Anzahl der nächsten Welle, höchstens drei Arten, eine neue Art mit rotem
 Ausrufezeichen. VoiceOver: „Welle 2: 8 Plünderer, 4 Flitzer, neu: 4 Flitzer".
 

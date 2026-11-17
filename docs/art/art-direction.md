@@ -37,6 +37,8 @@ Warum A und nicht die Alternativen (Bilder in `art/stilmuster/`):
   **Stand 16.11.2026: nicht eingehalten.** Die Kampfplätze sind von oben gemalt, die Figuren
   in 25 bis 35° gerendert ([Review](../konzepte/aaa-review.md) G1). Weg zur einen Kamera:
   D-140, [Konzept A-4](../konzepte/aaa-bewegung-und-bauen.md#a-4-ein-ort-kampfplatz-in-der-kamera-der-türme).
+  Festgelegt ist sie seit A-4 (D-165): 40° orthografisch mit Kabinettstreckung, Sonne
+  135°/45°, Werkzeug `tools/kampfplatz-3d` ([Konzept](../konzepte/a-4-diorama-mission-1.md)).
 - Licht von oben links, warm. Schatten nach unten rechts, als weiche Ellipse
   unter jeder Figur (von der Szene gezeichnet, nicht ins Bild gemalt).
 - Türme stehen im Licht ihres Ortes (D-120, 0.29.1): Die Szene multipliziert Turm und

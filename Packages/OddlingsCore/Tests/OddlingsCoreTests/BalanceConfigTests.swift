@@ -100,6 +100,29 @@ struct ValidationTests {
     @Test func mapHeight() { expectOnly("map.height", .mustBePositive) { $0.map.height = -3 } }
     @Test func minDistance() { expectOnly("map.minDistanceFromPath", .mustNotBeNegative) { $0.map.minDistanceFromPath = -1 } }
     @Test func pathTooShort() { expectOnly("map.path", .pathTooShort) { $0.map.path = [Point(x: 0, y: 0)] } }
+    @Test func zonesEmpty() { expectOnly("map.zones", .noZones) { $0.map.zones = [] } }
+    @Test func zoneOutsideMap() {
+        expectOnly("map.zones[0].rects[0]", .zoneOutsideMap) { $0.map.zones?[0].rects = [CellRect(x: 0, y: 7, width: 1, height: 3)] }
+    }
+    @Test func zoneOnPath() {
+        // (1, 1) liegt auf dem ersten Wegstück von Mission 1.
+        expectOnly("map.zones[0].rects[0]", .zoneOnPath) { $0.map.zones?[0].rects = [CellRect(x: 1, y: 1, width: 1, height: 1)] }
+    }
+    @Test func zoneEmptyRect() {
+        expectOnly("map.zones[0].rects[0]", .mustBePositive) { $0.map.zones?[0].rects = [CellRect(x: 1, y: 3, width: 0, height: 2)] }
+    }
+    @Test func zoneWithoutRects() { expectOnly("map.zones[0].rects", .noZones) { $0.map.zones?[0].rects = [] } }
+    @Test func zonesOverlap() {
+        expectOnly("map.zones[1]", .zonesOverlap) { config in
+            let first = config.map.zones?[0].rects ?? []
+            config.map.zones?[1].rects = first
+        }
+    }
+    @Test func zoneDuplicateID() { expectOnly("map.zones[1].id", .duplicateID) { config in
+        let first = config.map.zones?[0].id ?? ""
+        config.map.zones?[1].id = first
+    } }
+    @Test func zoneInvalidID() { expectOnly("map.zones[0].id", .invalidID) { $0.map.zones?[0].id = "Kehre West" } }
     @Test func missingTower() { expectOnly("towers.spore", .missingTower) { $0.towers[.spore] = nil } }
     @Test func towerCost() { expectOnly("towers.watch.cost", .mustBePositive) { $0.towers[.watch]?.cost = 0 } }
     @Test func towerRange() { expectOnly("towers.watch.range", .mustBePositive) { $0.towers[.watch]?.range = 0 } }
