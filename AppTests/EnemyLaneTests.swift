@@ -20,10 +20,22 @@ final class EnemyLaneTests: XCTestCase {
     }
 
     /// Nacheinander erscheinende Gegner liegen weit auseinander, nicht zufällig
-    /// nebeneinander: mindestens 0,48 von 2.
+    /// nebeneinander: mindestens 0,75 von 2.
     func testNeighbouringIDsAreFarApart() {
         for id in 0..<500 {
-            XCTAssertGreaterThanOrEqual(abs(FxMath.lane(forID: id + 1) - FxMath.lane(forID: id)), 0.48, "\(id)")
+            XCTAssertGreaterThanOrEqual(abs(FxMath.lane(forID: id + 1) - FxMath.lane(forID: id)), 0.75, "\(id)")
+        }
+    }
+
+    /// Eine Gruppe erscheint mit nahen Kennungen und oft auf derselben Strecke.
+    /// Bis fünf Kennungen Abstand bleiben die Spuren getrennt (mindestens 0,17
+    /// von 2, beim Plünderer 0,03 Felder); mit der plastischen Zahl lagen
+    /// Kennungen im Abstand 4 nur 0,04 auseinander.
+    func testGroupMatesKeepSeparateLanes() {
+        for id in 0..<500 {
+            for gap in 1...5 {
+                XCTAssertGreaterThanOrEqual(abs(FxMath.lane(forID: id + gap) - FxMath.lane(forID: id)), 0.17, "\(id) + \(gap)")
+            }
         }
     }
 

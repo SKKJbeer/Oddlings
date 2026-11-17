@@ -3,6 +3,16 @@
   "atlas": "App/Assets.xcassets/Battle.spriteatlas",
   "punkteJeZelle": 43,
   "maxBytesJeDatei": 1500000,
+  "kamera": {
+    "art": "orthografisch",
+    "hoehe": 40,
+    "figurenSpielraum": 10
+  },
+  "sonne": {
+    "azimut": 135,
+    "hoehe": 45
+  },
+  "konturPunkte": 1.0,
   "assets": {
     "tower_watch": {
       "seiteZellen": 1.9,
@@ -55,6 +65,18 @@
       "anker": 0.1,
       "alpha": true
     },
+    "enemy_raider_walkFront": {
+      "folge": 8,
+      "seiteZellen": 0.9,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_raider_walkBack": {
+      "folge": 8,
+      "seiteZellen": 0.9,
+      "anker": 0.1,
+      "alpha": true
+    },
     "enemy_raider_hit": {
       "folge": 3,
       "seiteZellen": 0.9,
@@ -83,6 +105,18 @@
       "alpha": true
     },
     "enemy_moorKing_walk": {
+      "folge": 8,
+      "seiteZellen": 2.3,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_moorKing_walkFront": {
+      "folge": 8,
+      "seiteZellen": 2.3,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_moorKing_walkBack": {
       "folge": 8,
       "seiteZellen": 2.3,
       "anker": 0.1,

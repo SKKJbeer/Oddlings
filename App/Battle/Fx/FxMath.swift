@@ -110,12 +110,14 @@ enum FxMath {
         return Int(floor(to / stride + phase) - floor(from / stride + phase))
     }
 
-    /// Spur eines Gegners aus seiner Kennung, −1 bis 1 (A-1). Kehrwert der
-    /// plastischen Zahl statt des goldenen Schnitts von `phase`: Spur und
-    /// Schritt-Takt sollen nicht zusammenhängen. Aufeinanderfolgende Kennungen
-    /// liegen dabei fast ein Viertel des Bandes (0,49 von 2) auseinander.
+    /// Spur eines Gegners aus seiner Kennung, −1 bis 1 (A-1). Goldener Schnitt:
+    /// Gegner einer Gruppe erscheinen mit nahen Kennungen, und bis fünf
+    /// Kennungen Abstand liegen ihre Spuren mindestens 0,18 von 2 auseinander,
+    /// aufeinanderfolgende 0,76. Die plastische Zahl (bis 0.33.0 im Entwurf) gab
+    /// Kennungen im Abstand 4 fast dieselbe Spur, und gemeinsam erscheinende
+    /// Plünderer liefen in Mission 6a deckungsgleich.
     static func lane(forID id: Int) -> Double {
-        let value = Double(id) * 0.754_877_666_25
+        let value = Double(id) * 0.618_033_988_75
         return 2 * (value - floor(value)) - 1
     }
 

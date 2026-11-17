@@ -33,8 +33,12 @@ final class WalkSceneTests: XCTestCase {
                     let now = enemy.position
                     guard let (before, heading) = last[id] else { seen[id] = (now, nil); continue }
                     let step = hypot(now.x - before.x, now.y - before.y)
-                    // Stehen (Bollwerk, Betäubung) hat keine Richtung.
-                    guard step > scene.layout.field * 0.005 else { seen[id] = (now, heading); continue }
+                    // Stehen (Bollwerk, Betäubung) hat keine Richtung, und ein
+                    // kleiner Schritt auch nicht: Erst ab 0,005 Feldern zählt die
+                    // Richtung, bis dahin bleibt der Ausgangspunkt stehen. Sonst
+                    // drehte die Innenspur im Bogen unbemerkt in kleinen Schritten
+                    // und der erste große Schritt danach sähe wie ein Knick aus.
+                    guard step > scene.layout.field * 0.005 else { seen[id] = (before, heading); continue }
                     let angle = atan2(now.y - before.y, now.x - before.x)
                     if let heading {
                         var turn = abs(angle - heading)
@@ -92,8 +96,8 @@ final class WalkSceneTests: XCTestCase {
         if let runner = most[.runner] { XCTAssertGreaterThan(runner, raider) }
     }
 
-    /// Mit Spuren stehen zwei Gegner fast nie deckungsgleich, auch wenn ein
-    /// Flitzer einen Plünderer überholt (höchstens 1 % der Bilder).
+    /// Mit Spuren laufen zwei Gegner nie länger als eine halbe Sekunde
+    /// deckungsgleich; Überholen berührt die Spuren nur kurz.
     func testEnemiesRarelyStack() throws {
         let scene = try scene()
         var frames = 0, busy = 0
@@ -103,7 +107,7 @@ final class WalkSceneTests: XCTestCase {
             if scene.enemyNodes.count > 1 { busy += 1 }
         }
         XCTAssertGreaterThan(busy, 600)
-        XCTAssertLessThanOrEqual(scene.stackedFrames, busy / 100, "\(scene.stackedFrames) von \(busy)")
+        XCTAssertEqual(scene.stackedFrames, 0, "\(scene.stackedFrames) von \(busy)")
     }
 
     /// Bild und Regel bleiben nah beieinander: Bogen plus Spur, nie mehr.

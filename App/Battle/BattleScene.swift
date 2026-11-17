@@ -58,6 +58,8 @@ final class BattleScene: SKScene {
     /// Gezählt für Tests und den Zähler `fx.stats`: Bilder, in denen zwei Gegner
     /// fast deckungsgleich standen (nur Debug-Bau).
     private(set) var stackedFrames = 0
+    /// Wie lange jedes Paar schon deckungsgleich steht, Schlüssel aus beiden Kennungen.
+    private var stackedPairs: [Int: TimeInterval] = [:]
     private var field: CGFloat { layout.field }
     private var lastTime: TimeInterval?
     /// Ereignisse des letzten Bildes, für Tests.
@@ -420,7 +422,7 @@ final class BattleScene: SKScene {
             }
         }
         #if DEBUG
-        countStacked()
+        countStacked(dt: dt)
         frameDeviation = 0
         let path = model.sim.map.path
         for enemy in state.enemies {
@@ -461,17 +463,25 @@ final class BattleScene: SKScene {
     /// Zwei Gegner fast an derselben Stelle (Bruchteil eines Felds): Das soll
     /// mit Spuren nicht mehr vorkommen. Zählt nur, liefert die Messung für
     /// Tests, E2E-Zähler und Kontaktabzug.
-    private func countStacked() {
-        let points = enemyNodes.values.map(\.position)
+    private func countStacked(dt: TimeInterval) {
+        let nodes = enemyNodes.sorted { $0.key < $1.key }
         let limit = FxStyle.stackedDistance * field
-        for i in points.indices {
-            for j in points.indices where j > i {
-                if hypot(points[i].x - points[j].x, points[i].y - points[j].y) < limit {
-                    stackedFrames += 1
-                    fx.noteStacked()
-                    return
-                }
+        var together: [Int: TimeInterval] = [:]
+        var held = false
+        for i in nodes.indices {
+            for j in nodes.indices where j > i {
+                let a = nodes[i].value.position, b = nodes[j].value.position
+                guard hypot(a.x - b.x, a.y - b.y) < limit else { continue }
+                let pair = nodes[i].key * 1_000_000 + nodes[j].key
+                let time = (stackedPairs[pair] ?? 0) + dt
+                together[pair] = time
+                held = held || time >= FxStyle.stackedHold
             }
+        }
+        stackedPairs = together
+        if held {
+            stackedFrames += 1
+            fx.noteStacked()
         }
     }
     #endif

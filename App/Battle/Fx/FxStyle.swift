@@ -111,6 +111,10 @@ enum FxStyle {
     /// Zwei Gegner näher als so viele Felder gelten als deckungsgleich
     /// (Messung für Tests und Kontaktabzug, keine Regel).
     static let stackedDistance: CGFloat = 0.03
+    /// Erst so lange zusammen gilt ein Paar als deckungsgleich: Beim Überholen
+    /// berühren sich zwei Spuren kurz (gemessen höchstens 0,42 s in Region 1),
+    /// das ist kein Gänsemarsch.
+    static let stackedHold: TimeInterval = 0.5
     static let spawnLife: TimeInterval = 0.28
     static let hitLife: TimeInterval = 0.12
     /// Rückstoß beim Treffer, in Feldern.

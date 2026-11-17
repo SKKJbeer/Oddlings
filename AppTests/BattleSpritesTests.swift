@@ -140,8 +140,8 @@ final class BattleSpritesTests: XCTestCase {
     /// ihr Standbild; die anderen Gegner bleiben beim Standbild.
     func testRaiderAndKingHaveFramesOthersKeepTheirPicture() throws {
         let counts: [EnemyKind: [EnemyMotion: Int]] = [
-            .raider: [.walk: 8, .hit: 3, .die: 6, .shield: 0, .summon: 0, .walkFront: 0, .walkBack: 0],
-            .moorKing: [.walk: 8, .hit: 3, .die: 8, .shield: 4, .summon: 5, .walkFront: 0, .walkBack: 0],
+            .raider: [.walk: 8, .hit: 3, .die: 6, .shield: 0, .summon: 0, .walkFront: 8, .walkBack: 8],
+            .moorKing: [.walk: 8, .hit: 3, .die: 8, .shield: 4, .summon: 5, .walkFront: 8, .walkBack: 8],
         ]
         for (kind, expected) in counts.sorted(by: { $0.key.rawValue < $1.key.rawValue }) {
             let still = try XCTUnwrap(BattleSprites.texture(named: BattleSprites.enemyName(kind)))

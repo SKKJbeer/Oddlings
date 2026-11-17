@@ -1,6 +1,6 @@
-# Konzept A-1: Laufen wie in einem AAA-Titel (0.30.0)
+# Konzept A-1: Laufen wie in einem AAA-Titel (0.33.0)
 
-Status: umgesetzt in 0.30.0 (D-144, D-150, D-151) · Stand 16.11.2026 · Thread „Laufen der Figuren verbessern“
+Status: umgesetzt in 0.33.0 (D-144, D-150, D-151) · Stand 16.11.2026 · Thread „Laufen der Figuren verbessern“
 Grundlage: [Bewegung und Bauen](aaa-bewegung-und-bauen.md) Abschnitt A-1 und „Kontaktabzug“,
 [Review](aaa-review.md) Befunde B2 bis B5, D-050 (Effekte auf eigener Uhr), D-144 (Bewegung
 nur in der Darstellung glätten), D-145 (Kontaktabzug in der CI).
@@ -76,9 +76,11 @@ die Figur, kein Treffer geht sichtbar daneben.
 
 ### Spuren statt Gänsemarsch
 
-`FxMath.lane(forID:)` gibt einen Wert in −1…1 aus der Folge `frac(id · 0,7549)`
-(Kehrwert der plastischen Zahl; aufeinanderfolgende IDs liegen fast ein Viertel des
-Bandes auseinander, 0,49 von 2). Mal `FxStyle.laneWidth(kind)`: Plünderer und Flitzer ±0,18, Panzerbestie
+`FxMath.lane(forID:)` gibt einen Wert in −1…1 aus der Folge `frac(id · 0,618)`
+(goldener Schnitt; aufeinanderfolgende IDs liegen 0,76 von 2 auseinander, bis fünf IDs
+Abstand mindestens 0,18). Der erste Entwurf nahm den Kehrwert der plastischen Zahl; dort
+lagen IDs im Abstand 4 nur 0,04 auseinander, und gemeinsam erscheinende Gegner liefen in
+Mission 6a und 7 sekundenlang deckungsgleich (CI-Lauf zu PR #100, unter Linux nachgestellt). Mal `FxStyle.laneWidth(kind)`: Plünderer und Flitzer ±0,18, Panzerbestie
 ±0,08, Boss 0. Der Versatz liegt quer zur Tangente von `PathView`; im Bogen ist die
 Innenspur dadurch kürzer, wie bei echten Läufern. Gesamtabweichung zur Regelposition höchstens
 0,39 Felder.
@@ -165,4 +167,8 @@ eigenen Lauf und läuft nur in der CI mit festen Versionen (Pillow 11.3.0).
   Rückfall. Der Code ist getestet; sichtbar wird es Figur für Figur.
 - **Spur und Effekte:** Pfeile und Blitze zielen auf die Node, also auf die Spur, nicht auf
   die Mittellinie. Gewollt: Der Treffer sitzt an der Figur, die man sieht.
+- **Stau am Bollwerk:** Steht eine Menge an der Mauer, stehen alle auf derselben Strecke.
+  Die Spuren trennen sie, aber zwei Panzerbestien (schmales Band) können in Mission 7
+  sekundenlang zusammenstehen; der Kontaktabzug warnt dort. Auffächern im Stehen wäre ein
+  eigener kleiner Schritt nach Steffens Blick auf den Abzug.
 - **Kontaktabzug kostet CI-Zeit:** neun Missionen je rund 25 s, etwa 4 Minuten im Mac-Lauf.

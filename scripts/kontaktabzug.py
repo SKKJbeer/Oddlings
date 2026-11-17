@@ -19,7 +19,8 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 # Grenzen der Messung. Abweichung: Bogen r·(√2−1) = 0,21 plus breiteste Spur 0,18
-# (FxStyle). Deckungsgleich: höchstens 1 % der Bilder, wie WalkSceneTests.
+# (FxStyle). Deckungsgleich (ein Paar länger als 0,5 s zusammen, FxStyle.stackedHold):
+# höchstens 1 % der Bilder. WalkSceneTests verlangt für Mission 1 keines.
 GRENZE_ABWEICHUNG = 0.40
 GRENZE_DECKUNG = 0.01
 BREITE_BILD = 480

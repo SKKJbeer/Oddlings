@@ -12,7 +12,7 @@ Entscheidungskarte beantwortet. Alles, was auf ihn wartet, steht unter
 zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzelnen:
 [backlog.md](backlog.md), offene Fragen: [offene-fragen.md](offene-fragen.md).
 
-**Stand: 16.11.2026** · Review auf AAA-Niveau mit Plan [AAA-Schnitt](#aaa-schnitt-d-140-bis-d-149) · neueste Version 0.29.1 (Türme stimmig in der Welt), davor 0.29.0 (Turmwerte und Vergleich beim Aufwerten, UI-02, Bau 55), davor 0.28.3 (gemalter Kampfplatz Bosslichtung M7, Bau 54), davor 0.28.2 (der Moorkönig als eigene 3D-Figur), davor 0.28.1 (gemalte Kampfplätze für M6a und M6b, Bau 52), davor 0.28.0 (Mission 7 „Der Moorkönig“, Bau 51), davor 0.27.0 (Wahl zwischen zwei Spezialisierungen, Mission 6a und 6b, Bau 50), davor 0.26.1 (gemalte Kampfplätze für M5a Sumpfpfad und M5b Ruinen, Bau 49), davor 0.26.0 (Mission 5b „Ruinen“, Bau 48), davor 0.25.0 (Spezialisierungen und Mission 5a „Sumpfpfad“, Bau 47), davor 0.24.1 (Korrektur für den Release-Bau, Bau 46), davor 0.24.0 (Synergie sichtbar, Einstieg ohne Erklärtext, Bau 45 gescheitert), davor 0.23.0 (Blitz allein verliert Mission 2 und 3, Bau 44), 0.22.0 (Fortsetzen nach Neustart, Bau 43), neuester VALID-Bau 55 (0.29.0)
+**Stand: 16.11.2026** · Review auf AAA-Niveau mit Plan [AAA-Schnitt](#aaa-schnitt-d-140-bis-d-149) · neueste Version 0.32.0 (Plünderer und Moorkönig in drei Blickrichtungen, A-3 Teil 1), davor 0.29.1 (Türme stimmig in der Welt), davor 0.29.0 (Turmwerte und Vergleich beim Aufwerten, UI-02, Bau 55), davor 0.28.3 (gemalter Kampfplatz Bosslichtung M7, Bau 54), davor 0.28.2 (der Moorkönig als eigene 3D-Figur), davor 0.28.1 (gemalte Kampfplätze für M6a und M6b, Bau 52), davor 0.28.0 (Mission 7 „Der Moorkönig“, Bau 51), davor 0.27.0 (Wahl zwischen zwei Spezialisierungen, Mission 6a und 6b, Bau 50), davor 0.26.1 (gemalte Kampfplätze für M5a Sumpfpfad und M5b Ruinen, Bau 49), davor 0.26.0 (Mission 5b „Ruinen“, Bau 48), davor 0.25.0 (Spezialisierungen und Mission 5a „Sumpfpfad“, Bau 47), davor 0.24.1 (Korrektur für den Release-Bau, Bau 46), davor 0.24.0 (Synergie sichtbar, Einstieg ohne Erklärtext, Bau 45 gescheitert), davor 0.23.0 (Blitz allein verliert Mission 2 und 3, Bau 44), 0.22.0 (Fortsetzen nach Neustart, Bau 43), neuester VALID-Bau 55 (0.29.0)
 
 ## Phasen
 
@@ -75,9 +75,9 @@ mehrere Wege ab M6 (D-147), Veteran-Stufe (D-148). Gesamtbild:
 
 | # | Paket | Befunde | Abh. | Stand |
 |---|---|---|---|---|
-| A-1 | ~~**Laufen**: Kurven statt Knick, Spuren, drei Blickrichtungen, Gewicht (D-144); Kontaktabzug in der CI (D-145)~~ ([Konzept](../konzepte/a-1-laufen.md), D-150, D-151); Vorder- und Rückbilder kommen mit A-3 | B2–B5, R3 | – | ✓ 0.30.0 |
+| A-1 | ~~**Laufen**: Kurven statt Knick, Spuren, drei Blickrichtungen, Gewicht (D-144); Kontaktabzug in der CI (D-145)~~ ([Konzept](../konzepte/a-1-laufen.md), D-150, D-151); Vorder- und Rückbilder kommen mit A-3 | B2–B5, R3 | – | ✓ 0.33.0 |
 | A-2 | **Bauen und Tafeln**: Turm-Vorschau vor dem Kauf, Errichten statt Abwerfen, Auftritt für Aufwerten und Spezialisieren, Tafel weicht Weg und Festung, Wellenvorschau | P1, P3–P5, R2 | – | – |
-| A-3 | **Figuren vollständig**: Flitzer und Panzerbestie in 3D (Paket 6), Konturpass, alle Gegner in drei Richtungen | B1, G3 | – | – |
+| A-3 | **Figuren vollständig**: Flitzer und Panzerbestie in 3D (Paket 6), Konturpass, alle Gegner in drei Richtungen ([Konzept](../konzepte/a-3-figuren-vollstaendig.md)) | B1, G3 | – | Teil 1 ✓ 0.32.0 (Werkzeug, Plünderer, Moorkönig); Flitzer und Panzerbestie in Arbeit |
 | A-4 | **Kampfplatz Mission 1 neu** in der Kamera der Türme, mit Bauinseln und Maßstab | G1, G2, G4, G8, L1, P2 | – | – |
 | A-5 | **Eine Malweise in der Welt**: gemalte Auswahl und Ringe, Kopfleiste im Tafel-Material, sechs Spezialisierungsbilder, Türme zielen, Effektbudget | G5–G7, G9, R1 | A-4 | – |
 | – | Urteil Steffen am Vertikalschnitt Mission 1 | | A-1–A-5 | – |
@@ -134,7 +134,7 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | FX 03: der Moorkönig als 3D-Figur mit Schild- und Ruffolge (D-100, D-101) | 0.28.2 | folgt | [Konzept](../konzepte/fx-03-moorkoenig.md) |
 | Grafik 09: gemalter Kampfplatz Bosslichtung M7 | 0.28.3 | 54 | [Konzept](../konzepte/grafik-09-bosslichtung-m7.md) |
 | Grafik 10: Türme stimmig in der Welt (Licht, Schatten, Fundament, Bauplätze nur beim Bauen) | 0.29.1 | – | [Konzept](../konzepte/grafik-10-tuerme-in-der-welt.md) |
-| A-1 Laufen: Bögen an Ecken, Spuren, Blickrichtungen mit Rückfall, Gewicht, Kontaktabzug | 0.30.0 | – | [Konzept](../konzepte/a-1-laufen.md) |
+| A-1 Laufen: Bögen an Ecken, Spuren, Blickrichtungen mit Rückfall, Gewicht, Kontaktabzug | 0.33.0 | – | [Konzept](../konzepte/a-1-laufen.md) |
 
 ## Gilt für jedes Paket
 
