@@ -11,6 +11,30 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.42.0 – 17.11.2026 (Moorhexe und Pilzbalg: Heiler und Teiler)
+
+- **Moorhexe** (D-143, D-175): heilt alle 2 s jeden anderen verletzten Gegner im Umkreis
+  von einem Feld um 6 % seines Höchstlebens. Nicht sich selbst, keine Bosse, betäubt nicht.
+  Antwort: Zielwahl „Stärkster“, Falkenhorst, Steinregen. Neu in M6a ab Welle 2.
+- **Pilzbalg** (D-176): zerfällt beim Tod in drei schnelle Sporlinge am Todesort und
+  dahinter, mit der Stärke seiner Welle. Bricht er durch, zerfällt er nicht. Antwort: Blitz
+  und Salve über den Sporlingen. Neu in M6b ab Welle 2.
+- **Mission 7** stellt beide früh einzeln vor und mischt sie danach, weil sie nur eine der
+  beiden Gabeln voraussetzt (D-177, Entscheidungskarte S33).
+- Simulation: `EnemyConfig.heal`, `.split`, `Enemy.healTick` (optional, alte Spielstände
+  laden), Ereignisse `enemiesHealed`, `enemySplit`, Prüfung beim Laden. Missionen ohne die
+  beiden bleiben bitgleich.
+- App: grüner Heilring mit Funken über den Geheilten, Sporenwolke beim Zerfall, je ein
+  gedrosselter Klang, einmaliger Hinweis „Heilt ihre Nachbarn: zuerst sie“.
+- Figuren (D-178): Die Moorhexe ist eine 3D-Figur nach der Kette von A-3 (drei
+  Blickrichtungen, Treffer, Sturz), mit eigenem Knochen für den Stab. Pilzbalg und
+  Sporling haben vorerst ein gemaltes Standbild und laufen mit ihrer Gangart; ihre
+  3D-Figuren folgen, sobald das Rechenkontingent für TRELLIS wieder frei ist.
+- Labor: alle Mischungen gewinnen, Monokulturen verlieren; Heilung trifft Salven hart,
+  Falkenhorste kaum (Zahlen in 04).
+- Tests: `HealerSplitterTests` (15), neue Fälle in `MissionSixTests`, `MissionSevenTests`;
+  App: `HealerSplitterAppTests`, `SoundMapTests`, `BattleSpritesTests`.
+
 ## 0.41.0 – 17.11.2026 (A-1: Laufen)
 
 - **Bögen statt Knicke:** Gegner laufen an jeder Ecke einen Kreisbogen (Radius ein

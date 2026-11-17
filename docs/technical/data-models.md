@@ -56,6 +56,8 @@ struct UpgradeConfig: Codable {             // Faktoren auf die Werte der Stufe 
 
 struct EnemyConfig: Codable { var hp: Double; var speed: Double; var reward: Int; var leakDamage: Int
                               var armor: Double?; var armorMinShare: Double? }   // Rüstung, nur M4 (P2-10)
+                              // ab 0.42.0 optional: heal: HealConfig? (radius, interval, share), Moorhexe, D-175
+                              //                     split: SplitConfig? (into, count, spread), Pilzbalg, D-176
 struct WaveConfig: Codable { var hpScale: Double; var groups: [SpawnGroup] }
 struct SpawnGroup: Codable { var enemy: EnemyKind; var count: Int; var interval: Double; var delay: Double? }
 ```
@@ -115,6 +117,7 @@ struct Enemy: Codable, Equatable {
     var hp: Double; var maxHP: Double
     var distance: Double              // zurückgelegte Weglänge in Feldern
     var slow: SlowEffect?             // factor, untilTick
+    var healTick: Int?                // nächste Heilung einer Moorhexe (0.42.0), sonst nil und nicht im JSON
 }
 ```
 
@@ -157,14 +160,16 @@ enum Event: Equatable {
     case bankPaid(towerID: Int, gold: Int, paid: Int), bankEmptied(towerID: Int)   // Zwergenbank (P2-5)
     case earlyCallBonus(gold: Int)                        // frühes Rufen der nächsten Welle
     case towerUpgraded(id: Int, level: Int), targetModeChanged(id: Int, mode: TargetMode)   // P2-6
+    case enemiesHealed(healerID: Int, healed: [Int], amount: Double)   // Moorhexe (0.42.0), nur mit Geheilten
+    case enemySplit(id: Int, into: [Int])                 // Pilzbalg zerfiel (0.42.0), dazu enemySpawned je Sporling
 }
 
 func step(_ state: inout GameState, commands: [Command], config: BalanceConfig) -> [Event]
 ```
 
 **Reihenfolge innerhalb eines Schritts** (festgeschrieben, weil sie Ergebnisse
-ändert): Befehle → Mauer fällt, Einschlag von Stein oder Mal → Wellen/Spawns → Türme feuern (nach ID) → Tote auswerten und
-Gold gutschreiben → Banken zahlen (nach ID) → Bewegung (Angehaltene stehen, niemand läuft durch die Mauer)
+ändert): Befehle → Mauer fällt, Einschlag von Stein oder Mal → Wellen/Spawns → Türme feuern (nach ID) → Bosse
+→ Moorhexen heilen (nach ID, 0.42.0) → Tote auswerten, Gold gutschreiben, Pilzbälge zerfallen (Sporlinge hinten in der Liste) → Banken zahlen (nach ID) → Bewegung (Angehaltene stehen, niemand läuft durch die Mauer)
 → Durchbrüche → Sieg/Niederlage.
 Fähigkeit im Zustand: `GameState.ability { readyTick, strike, barrier }`, am
 Gegner `stunUntilTick` und `vulnerable { factor, untilTick }`; alles zählt in

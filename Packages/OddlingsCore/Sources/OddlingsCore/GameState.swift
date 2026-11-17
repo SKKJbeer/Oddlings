@@ -118,6 +118,8 @@ public struct Enemy: Codable, Equatable, Sendable {
     public var shieldUntilTick: Int? = nil
     /// Boss (P3-4): Der Schild ist verbraucht, es gibt nur einen.
     public var shieldSpent: Bool? = nil
+    /// Heiler (D-175): Tick der nächsten Heilung; nil bei Gegnern, die nicht heilen.
+    public var healTick: Int? = nil
 
     /// Öffentlich für die Darstellungstests der App; die Simulation legt
     /// Gegner sonst selbst an.
@@ -267,4 +269,8 @@ public enum Event: Equatable, Sendable {
     case bossShieldDropped(id: Int)
     /// Der Schild hat einen Treffer ganz geschluckt.
     case shieldAbsorbed(id: Int)
+    /// Eine Moorhexe hat `healed` (Zustandsreihenfolge) zusammen um `amount` geheilt (D-175).
+    case enemiesHealed(healerID: Int, healed: [Int], amount: Double)
+    /// Ein Pilzbalg ist zerfallen; `into` sind die neuen Gegner (D-176).
+    case enemySplit(id: Int, into: [Int])
 }

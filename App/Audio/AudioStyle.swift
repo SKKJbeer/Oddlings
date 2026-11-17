@@ -50,6 +50,9 @@ enum AudioStyle {
 
     /// Alles, was der Moorkönig auslöst, eine Quarte tiefer (P3-4): schwer und fremd.
     static let bossSemitones: Float = -5
+    /// Heilen der Moorhexe hell, Platzen des Pilzbalgs tief (D-175, D-176).
+    static let healSemitones: Float = 7
+    static let splitSemitones: Float = -4
 
     /// Tonhöhenstufe je Kettenglied des Blitzes („Knistern, je Sprung höher").
     static let boltStepSemitones: Float = 1

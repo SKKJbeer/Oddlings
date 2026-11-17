@@ -13,7 +13,7 @@ final class SoundMapTests: XCTestCase {
             .waveStarted(index: 0, count: 5), .abilityCast, .abilityImpact(moon: false), .abilityImpact(moon: true),
             .wallRaised, .wallFell, .user(.selectCell), .user(.callWave), .user(.cannotAfford),
             .bankPaid, .earlyCallBonus, .upgraded, .armored,
-            .bossArrived, .bossShield, .bossSummon, .bossShieldDown,
+            .bossArrived, .bossShield, .bossSummon, .bossShieldDown, .healed, .split,
         ]
         for moment in moments { XCTAssertFalse(cues(moment).isEmpty, "\(moment) klingt") }
         // Das Ende trägt die Musik, nicht ein Klang.
@@ -26,6 +26,14 @@ final class SoundMapTests: XCTestCase {
             XCTAssertEqual(SoundMap.requests(for: moment).map(\.semitones), [AudioStyle.bossSemitones], "\(moment)")
         }
         XCTAssertLessThan(AudioStyle.bossSemitones, 0)
+    }
+
+    /// D-175, D-176: Heilen klingt hell, Platzen tief, beide aus vorhandenen Klängen (D-082).
+    func testHealSoundsBrightAndSplitSoundsDull() {
+        XCTAssertEqual(SoundMap.requests(for: .healed).map(\.semitones), [AudioStyle.healSemitones])
+        XCTAssertEqual(SoundMap.requests(for: .split).map(\.semitones), [AudioStyle.splitSemitones])
+        XCTAssertGreaterThan(AudioStyle.healSemitones, 0)
+        XCTAssertLessThan(AudioStyle.splitSemitones, 0)
     }
 
     func testEachTowerHasItsOwnVoice() {

@@ -1,0 +1,212 @@
+{
+  "_zweck": "Skelett der Moorhexe (TRELLIS-Modell aus vorlage.png, Seed 1); Punkte als Anteile der Modellbox, Blick nach -y. Der Stab hat einen eigenen, starren Knochen an der rechten Hand, sonst zöge das Bein sein unteres Ende mit",
+  "blick": 45,
+  "ruhe": {
+    "kopf": [
+      "x",
+      -10
+    ]
+  },
+  "bildHoehe": 1.4,
+  "licht": {
+    "haupt": 5.0,
+    "fuell": 3.0,
+    "welt": 1.0,
+    "rand": 3.0
+  },
+  "knochen": {
+    "becken": {
+      "von": [
+        -0.075,
+        0,
+        0.18
+      ],
+      "bis": [
+        -0.075,
+        0,
+        0.3
+      ]
+    },
+    "rumpf": {
+      "von": [
+        -0.075,
+        0,
+        0.3
+      ],
+      "bis": [
+        -0.075,
+        -0.05,
+        0.55
+      ],
+      "eltern": "becken"
+    },
+    "kopf": {
+      "von": [
+        -0.075,
+        -0.05,
+        0.55
+      ],
+      "bis": [
+        -0.075,
+        -0.1,
+        1.0
+      ],
+      "eltern": "rumpf"
+    },
+    "bein_l": {
+      "von": [
+        -0.15,
+        0,
+        0.2
+      ],
+      "bis": [
+        -0.2,
+        -0.05,
+        0.02
+      ],
+      "eltern": "becken"
+    },
+    "bein_r": {
+      "von": [
+        0.0,
+        0,
+        0.2
+      ],
+      "bis": [
+        0.045,
+        -0.05,
+        0.02
+      ],
+      "eltern": "becken"
+    },
+    "arm_l": {
+      "von": [
+        -0.24,
+        -0.05,
+        0.55
+      ],
+      "bis": [
+        -0.4,
+        -0.33,
+        0.45
+      ],
+      "eltern": "rumpf"
+    },
+    "arm_r": {
+      "von": [
+        0.075,
+        0,
+        0.55
+      ],
+      "bis": [
+        0.38,
+        0.05,
+        0.48
+      ],
+      "eltern": "rumpf"
+    },
+    "stab": {
+      "von": [
+        0.4,
+        0.05,
+        0.0
+      ],
+      "bis": [
+        0.4,
+        0.05,
+        0.92
+      ],
+      "eltern": "arm_r"
+    }
+  },
+  "folgen": {
+    "walk": {
+      "bilder": 8,
+      "hub": 0.02,
+      "schwingen": {
+        "bein_l": [
+          "x",
+          22,
+          0
+        ],
+        "bein_r": [
+          "x",
+          22,
+          0.5
+        ],
+        "arm_l": [
+          "x",
+          16,
+          0.5
+        ],
+        "arm_r": [
+          "x",
+          5,
+          0
+        ],
+        "rumpf": [
+          "z",
+          6,
+          0
+        ],
+        "kopf": [
+          "y",
+          4,
+          0.25
+        ]
+      }
+    },
+    "hit": {
+      "bilder": 3,
+      "verlauf": {
+        "rumpf": [
+          "x",
+          -18
+        ],
+        "kopf": [
+          "x",
+          -12
+        ]
+      }
+    },
+    "die": {
+      "bilder": 6,
+      "verlauf": {
+        "becken": [
+          "x",
+          -80
+        ],
+        "arm_l": [
+          "y",
+          60
+        ],
+        "arm_r": [
+          "y",
+          -30
+        ],
+        "kopf": [
+          "x",
+          -20
+        ]
+      }
+    }
+  },
+  "requisiten": [],
+  "kameraHoehe": 30,
+  "stil": {
+    "saettigung": 1.5,
+    "helligkeit": 1.4,
+    "eigenlicht": 0.35,
+    "kontur": 0.008
+  },
+  "ansichten": {
+    "walkFront": {
+      "folge": "walk",
+      "blick": 20
+    },
+    "walkBack": {
+      "folge": "walk",
+      "blick": 160
+    }
+  }
+}

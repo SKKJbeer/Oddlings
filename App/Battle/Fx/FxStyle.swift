@@ -21,6 +21,12 @@ enum FxStyle {
         case .brute: Gait(stride: 0.50, hop: 0.04, squash: 0.14, sway: 0.07, lean: 0.03)
         // Der Moorkönig (P3-4): langsam stampfend, schwer wankend, aufrecht.
         case .moorKing: Gait(stride: 0.62, hop: 0.02, squash: 0.10, sway: 0.09, lean: 0.01)
+        // Moorhexe (D-143): schlurfend, gebeugt, wenig Hüpfen.
+        case .witch: Gait(stride: 0.40, hop: 0.05, squash: 0.10, sway: 0.12, lean: 0.12)
+        // Pilzbalg: watschelnd, rund, stark wiegend.
+        case .puffball: Gait(stride: 0.38, hop: 0.06, squash: 0.22, sway: 0.16, lean: 0.02)
+        // Sporling: klein und flink, hüpft.
+        case .sporeling: Gait(stride: 0.30, hop: 0.14, squash: 0.20, sway: 0.06, lean: 0.12)
         }
     }
 
@@ -58,8 +64,8 @@ enum FxStyle {
     /// Sand. Die Panzerbestie ist breit, der Boss läuft in der Mitte.
     static func laneWidth(_ kind: EnemyKind) -> Double {
         switch kind {
-        case .raider, .runner: 0.18
-        case .brute: 0.08
+        case .raider, .runner, .witch, .sporeling: 0.18
+        case .brute, .puffball: 0.08
         case .moorKing: 0
         }
     }
@@ -72,9 +78,10 @@ enum FxStyle {
     /// Radius ist die Krümmung 2: Flitzer 7°, Plünderer 3°, Panzerbestie 1°.
     static func bankLean(_ kind: EnemyKind) -> Double {
         switch kind {
-        case .runner: 0.06
+        case .runner, .sporeling: 0.06
         case .raider: 0.03
-        case .brute: 0.01
+        case .witch: 0.02
+        case .brute, .puffball: 0.01
         case .moorKing: 0.005
         }
     }
@@ -91,15 +98,17 @@ enum FxStyle {
     /// trippeln oft und leicht, die Panzerbestie stampft selten und schwer.
     static func dustEvery(_ kind: EnemyKind) -> Int {
         switch kind {
-        case .runner: 1
-        case .raider, .moorKing: 2
-        case .brute: 3
+        case .runner, .sporeling: 1
+        case .raider, .moorKing, .witch: 2
+        case .brute, .puffball: 3
         }
     }
     static func dustSize(_ kind: EnemyKind) -> Double {
         switch kind {
+        case .sporeling: 0.12
         case .runner: 0.16
-        case .raider: 0.2
+        case .raider, .witch: 0.2
+        case .puffball: 0.28
         case .brute: 0.32
         case .moorKing: 0.4
         }
@@ -158,8 +167,25 @@ enum FxStyle {
         case .runner: SKColor(red: 0.98, green: 0.55, blue: 0.20, alpha: 1)
         case .brute: SKColor(red: 0.55, green: 0.50, blue: 0.48, alpha: 1)
         case .moorKing: SKColor(red: 0.32, green: 0.45, blue: 0.30, alpha: 1)
+        case .witch: SKColor(red: 0.45, green: 0.38, blue: 0.62, alpha: 1)
+        case .puffball: SKColor(red: 0.80, green: 0.68, blue: 0.48, alpha: 1)
+        case .sporeling: SKColor(red: 0.95, green: 0.85, blue: 0.45, alpha: 1)
         }
     }
+
+    // MARK: Heiler und Teiler (D-175, D-176)
+
+    /// Heilung: Ring um die Hexe in Reichweite der Regel, Funken über jedem
+    /// Geheilten. Höchstens ein Puls je Hexe und Sekunde, sonst flimmert eine
+    /// Gruppe ununterbrochen.
+    static let healColor = SKColor(red: 0.55, green: 1.00, blue: 0.60, alpha: 1)
+    static let healRingLife: TimeInterval = 0.6
+    static let healSparks = 3
+    static let healGap: TimeInterval = 1.0
+    /// Zerfall: Sporenwolke am Todesort.
+    static let splitColor = SKColor(red: 0.90, green: 0.85, blue: 0.50, alpha: 1)
+    static let splitPuffs = 6
+    static let splitRingLife: TimeInterval = 0.45
 
     // MARK: Türme
 
