@@ -79,3 +79,9 @@ Gangart aus `FxStyle`.
   outlines, full body, standing straight, three-quarter view, arms held slightly away from
   the body, centered, on a plain flat light grey background, no ground, no shadow, no
   text, no letters". Seed 12 verworfen: Gesicht weicher, weniger Flecken.
+- `enemy_sporeling` (`enemy_sporeling-rohbild.png`, `enemy_sporeling-frei.png`): Seed 12.
+  Prompt: "a tiny mischievous mushroom sprite, a small pale beige mushroom cap with brown
+  spots on a thin white stalk body, skinny little arms and legs, a small grinning face
+  with two black dot eyes under the cap", dann derselbe Stilteil wie beim Pilzbalg.
+  Seed 11 verworfen: langer dünner Stiel, Arme vor dem Bauch, das Gesicht sitzt klein auf
+  dem Hut. Gleiche Kappe wie der Pilzbalg, damit man sieht, woher er kommt.

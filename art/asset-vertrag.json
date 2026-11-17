@@ -173,7 +173,7 @@
       "alpha": true
     },
     "enemy_puffball": {
-      "seiteZellen": 0.85,
+      "seiteZellen": 0.75,
       "anker": 0.1,
       "alpha": true
     },

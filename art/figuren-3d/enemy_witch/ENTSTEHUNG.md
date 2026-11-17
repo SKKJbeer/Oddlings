@@ -26,7 +26,7 @@ Seitlich 45° gedreht, `walkFront` 20°, `walkBack` 160°.
 
 **Bildfolgen im Atlas** (`enemy_witch_walk`, `enemy_witch_walkFront`,
 `enemy_witch_walkBack`, `enemy_witch_hit`, `enemy_witch_die`): `figur.py` mit 512
-Pixeln, `angleichen.py` (Stärke 0,5, Kontur 0) gegen `vorlage.png`, dann
+Pixeln, `angleichen.py` (Stärke 1,0, Kontur 0) gegen `vorlage.png`; mit 0,5 blieb sie neben Plünderer und Flitzer zu dunkel, dann
 `tools/figuren-3d/folge.py` mit dem Konturpass. Das Standbild `enemy_witch` ist das
 erste Laufbild (gleicher Anker, gleicher Maßstab). Abnahme:
 `tools/figuren-3d/bildpaar.py enemy_witch`.
