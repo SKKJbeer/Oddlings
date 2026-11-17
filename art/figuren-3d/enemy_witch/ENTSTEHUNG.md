@@ -1,4 +1,4 @@
-# Moorhexe: 3D-Figur (0.41.0)
+# Moorhexe: 3D-Figur (0.42.0)
 
 Entstanden am 17.11.2026 für die Gegnerrolle Heiler (D-143, D-178,
 [Konzept](../../../docs/konzepte/a-6-heiler-und-teiler.md)), nach der Kette von A-3.

@@ -34,6 +34,9 @@ final class FxDirector {
         var guards = 0, unguards = 0
         /// Heilpulse der Moorhexe, Zerfälle des Pilzbalgs, Hinweise auf die Heilung (D-175, D-176).
         var heals = 0, splits = 0, healHints = 0
+        /// Laufen (A-1): Staub beim Aufsetzen, Figuren, die einen Eckbogen
+        /// betreten, und Bilder mit zwei fast deckungsgleichen Gegnern.
+        var footfalls = 0, bends = 0, stacked = 0
 
         var summary: String {
             "arrows=\(arrows) bolts=\(bolts) combos=\(combos) spores=\(spores) hits=\(hits) deaths=\(deaths) "
@@ -43,6 +46,7 @@ final class FxDirector {
                 + " armorSparks=\(armorSparks) armorHints=\(armorHints)"
                 + " callouts=\(callouts) sentences=\(sentences) guides=\(guides) summons=\(summons)"
                 + " guards=\(guards) unguards=\(unguards) heals=\(heals) splits=\(splits) healHints=\(healHints)"
+                + " footfalls=\(footfalls) bends=\(bends) stacked=\(stacked)"
         }
     }
 
@@ -227,6 +231,39 @@ final class FxDirector {
         animate(enemy, key: "fade", duration: FxStyle.spawnLife * 0.6) { node, t in node.alpha = CGFloat(t) }
         dust(at: enemy.position, count: 3, radius: 0.3, size: 0.35)
     }
+
+    /// Staub beim Aufsetzen (A-1): ein bis zwei kleine Wölkchen an den Füßen,
+    /// höchstens `FxStyle.dustPerEnemy` je Figur gleichzeitig. Zierde, fällt
+    /// bei voller Grenze als Erstes weg.
+    func footfall(_ enemy: EnemyNode, size: Double) {
+        guard !reduceMotion, enemy.activeDust < FxStyle.dustPerEnemy else { return }
+        let count = size > 0.25 ? 2 : 1
+        var made = 0
+        for index in 0..<count {
+            guard enemy.activeDust < FxStyle.dustPerEnemy, let puff = sprite(.puff, essential: false) else { break }
+            made += 1
+            enemy.activeDust += 1
+            tinted(puff, FxStyle.dust)
+            let side = field * CGFloat(size * spread(0.85...1.15))
+            puff.size = CGSize(width: side, height: side)
+            // Hinter der Figur, nach außen treibend: Staub bleibt zurück.
+            let away = -enemy.facing * (index == 0 ? 1 : -0.4)
+            let start = enemy.position
+            let reach = Double(field) * size * 0.9
+            animate(puff, duration: FxStyle.footDustLife, end: .recycle,
+                    onEnd: { [weak enemy] in enemy.map { $0.activeDust = max(0, $0.activeDust - 1) } }) { [field = self.field] node, t in
+                let s = Ease.cubicOut(t)
+                node.position = CGPoint(x: start.x + CGFloat(Double(away) * reach * s),
+                                        y: start.y + field * 0.12 * CGFloat(s))
+                node.setScale(CGFloat(0.5 + 0.8 * s))
+                node.alpha = FxStyle.footDustAlpha * CGFloat(1 - Ease.quadIn(t))
+            }
+        }
+        if made > 0 { stats.footfalls += 1 }
+    }
+
+    func noteBend() { stats.bends += 1 }
+    func noteStacked() { stats.stacked += 1 }
 
     /// Treffer: helles Aufblitzen, Rückstoß gegen die Laufrichtung, kurzes
     /// Stauchen, mit Bildfolge dazu das Zucken. Wartet auf einen fliegenden Pfeil.

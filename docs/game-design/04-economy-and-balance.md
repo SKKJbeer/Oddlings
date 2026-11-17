@@ -453,7 +453,7 @@ liegen die Elfen höher: „Mix mit Aufwertung“ +0,12, „Mix ohne Aufwertung�
 Mit dem Mondmal vor der Rüstung waren es +0,15; deshalb rechnet die Simulation
 erst die Rüstung, dann das Mal (02). Bemerkt, nicht weiter geändert, wie in M3.
 
-### Moorhexe und Pilzbalg in M6a, M6b und M7, Ergebnis der Prüfung (0.41.0) [HYPOTHESE]
+### Moorhexe und Pilzbalg in M6a, M6b und M7, Ergebnis der Prüfung (0.42.0) [HYPOTHESE]
 
 Regeln D-175, D-176, Einsatz D-177 ([Konzept](../konzepte/a-6-heiler-und-teiler.md)).
 Werte in den Missionsdateien:

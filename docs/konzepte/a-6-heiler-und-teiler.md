@@ -83,7 +83,7 @@ ihrer Mission (wer M6b spielt, sieht die Hexe nie).
 ## Werte [HYPOTHESE bis Spieltest]
 
 In den Missionsdateien, gemessen mit dem Labor. Zahlen, Wellen und Laborergebnis stehen in
-[04](../game-design/04-economy-and-balance.md#moorhexe-und-pilzbalg-in-m6a-m6b-und-m7-ergebnis-der-prüfung-0410-hypothese).
+[04](../game-design/04-economy-and-balance.md#moorhexe-und-pilzbalg-in-m6a-m6b-und-m7-ergebnis-der-prüfung-0420-hypothese).
 Kurz: Die Hexe ist so zäh wie zwei Plünderer und langsam, der Balg etwas weniger zäh,
 der Sporling hat ein Drittel eines Plünderers und läuft wie ein Flitzer.
 
@@ -98,7 +98,7 @@ M7 mit 0,33 knapp unter der Dominanzgrenze 0,35; mehr Hexen in M7 schieben sie d
   FLUX-Vorlage → TRELLIS → `rig.json` → `figur.py` mit Kamera und Sonne aus dem
   Asset-Vertrag → `folge.py` mit Kontur), Folgen `walk`, `walkFront`, `walkBack` (je 8),
   `hit` (3), `die` (6). Abgestimmt mit dem Coordinator, damit A-3 sie nicht doppelt baut.
-  Stand 0.41.0: Die Moorhexe ist fertig (eigener Knochen für den Stab). Für Pilzbalg und
+  Stand 0.42.0: Die Moorhexe ist fertig (eigener Knochen für den Stab). Für Pilzbalg und
   Sporling war das freie TRELLIS-Kontingent aufgebraucht; sie haben bis dahin ein
   gemaltes FLUX-Standbild im Atlas und laufen mit der Gangart aus `FxStyle`.
 - **Heilung**: grüner Puls um die Hexe, ein heller Funke über jedem Geheilten, Lebensleiste

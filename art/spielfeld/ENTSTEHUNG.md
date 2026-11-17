@@ -61,7 +61,7 @@ Modell, fester Seed je Name. Konzept: [Türme in der Welt](../../docs/konzepte/g
   Fleck aus dem gemalten Weg der jeweiligen Karte (Mitte des längsten waagerechten
   Wegstücks), weicher Rand. Neuer Kampfplatz: Skript erneut laufen lassen.
 
-## Pilzbalg und Sporling, gemalte Standbilder (0.41.0)
+## Pilzbalg und Sporling, gemalte Standbilder (0.42.0)
 
 Für die Gegnerrolle Teiler (D-143, [Konzept](../../docs/konzepte/a-6-heiler-und-teiler.md)).
 FLUX.1-schnell Q4_0 (Apache 2.0), euler, 4 Schritte, cfg 1,0, 512 × 512, freigestellt mit
