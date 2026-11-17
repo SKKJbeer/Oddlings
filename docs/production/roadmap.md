@@ -75,7 +75,7 @@ mehrere Wege ab M6 (D-147), Veteran-Stufe (D-148). Gesamtbild:
 
 | # | Paket | Befunde | Abh. | Stand |
 |---|---|---|---|---|
-| A-1 | **Laufen**: Kurven statt Knick, Spuren, drei Blickrichtungen, Gewicht (D-144); Kontaktabzug in der CI (D-145) | B2–B5, R3 | – | als Nächstes |
+| A-1 | ~~**Laufen**: Kurven statt Knick, Spuren, drei Blickrichtungen, Gewicht (D-144); Kontaktabzug in der CI (D-145)~~ ([Konzept](../konzepte/a-1-laufen.md), D-150, D-151); Vorder- und Rückbilder kommen mit A-3 | B2–B5, R3 | – | ✓ 0.41.0 |
 | A-2 | **Bauen und Tafeln**: Turm-Vorschau vor dem Kauf, Errichten statt Abwerfen, Auftritt für Aufwerten und Spezialisieren, Tafel weicht Weg und Festung, Wellenvorschau | P1, P3–P5, R2 | – | – |
 | A-3 | **Figuren vollständig**: Flitzer und Panzerbestie in 3D (Paket 6), Konturpass, alle Gegner in drei Richtungen ([Konzept](../konzepte/a-3-figuren-vollstaendig.md)) | B1, G3 | – | Teil 1 ✓ 0.32.0 (Werkzeug, Plünderer, Moorkönig); Flitzer ✓ 0.39.0; Panzerbestie ✓ 0.40.0; Umstellung auf den Zielmaßstab offen |
 | A-4 | **Kampfplatz Mission 1 neu** in der Kamera der Türme, mit Bauinseln und Maßstab ([Konzept](../konzepte/a-4-diorama-mission-1.md), D-165 bis D-167) | G1, G2, G4, G8, L1, P2 | – | ausgeliefert 0.38.0 |
@@ -134,6 +134,7 @@ Jede Zeile ist eine Version im [CHANGELOG](../../CHANGELOG.md).
 | FX 03: der Moorkönig als 3D-Figur mit Schild- und Ruffolge (D-100, D-101) | 0.28.2 | folgt | [Konzept](../konzepte/fx-03-moorkoenig.md) |
 | Grafik 09: gemalter Kampfplatz Bosslichtung M7 | 0.28.3 | 54 | [Konzept](../konzepte/grafik-09-bosslichtung-m7.md) |
 | Grafik 10: Türme stimmig in der Welt (Licht, Schatten, Fundament, Bauplätze nur beim Bauen) | 0.29.1 | – | [Konzept](../konzepte/grafik-10-tuerme-in-der-welt.md) |
+| A-1 Laufen: Bögen an Ecken, Spuren, Blickrichtungen mit Rückfall, Gewicht, Kontaktabzug | 0.41.0 | – | [Konzept](../konzepte/a-1-laufen.md) |
 
 ## Gilt für jedes Paket
 

@@ -44,10 +44,77 @@ enum FxStyle {
     static let deathFramesLife: TimeInterval = 0.5
 
     static let shadowAlpha: CGFloat = 0.45
-    /// Blickrichtung: so weit voraus auf dem Weg nachsehen, und erst ab
-    /// diesem Versatz umdrehen (Felder).
-    static let facingLookahead: Double = 0.15
+    /// Blickrichtung links oder rechts erst ab diesem waagerechten Anteil der
+    /// Laufrichtung (Tangente von `PathView`); darunter bleibt die letzte Seite.
     static let facingThreshold: Double = 0.03
+
+    // MARK: Laufen (A-1, docs/konzepte/a-1-laufen.md)
+
+    /// Radius des Bogens an jeder Wegecke, in Feldern: die halbe Wegbreite, mit
+    /// der das Wegwerkzeug die Ecken der gemalten Kampfplätze rundet.
+    static let pathCornerRadius: Double = 0.5
+    /// Halbe Breite der Spur je Art. Der Weg ist ein Feld breit; 0,18 lässt
+    /// Plünderer und Flitzer sichtbar nebeneinander laufen und bleibt auf dem
+    /// Sand. Die Panzerbestie ist breit, der Boss läuft in der Mitte.
+    static func laneWidth(_ kind: EnemyKind) -> Double {
+        switch kind {
+        case .raider, .runner: 0.18
+        case .brute: 0.08
+        case .moorKing: 0
+        }
+    }
+    /// Bis zu diesem Winkel zur Waagerechten zeigt eine Figur die Seitenansicht
+    /// (35°, Konzept aaa-bewegung-und-bauen.md); steiler vorn oder hinten.
+    static let sideAngle: Double = 35 * Double.pi / 180
+    /// Überblenden beim Wechsel der Bildfolge, statt hart zu springen.
+    static let viewBlend: TimeInterval = 0.12
+    /// Neigung in die Kurve, im Bogenmaß je Krümmung (1/Felder). Bei 0,5 Feldern
+    /// Radius ist die Krümmung 2: Flitzer 7°, Plünderer 3°, Panzerbestie 1°.
+    static func bankLean(_ kind: EnemyKind) -> Double {
+        switch kind {
+        case .runner: 0.06
+        case .raider: 0.03
+        case .brute: 0.01
+        case .moorKing: 0.005
+        }
+    }
+    /// Wie schnell die Neigung ihrem Ziel folgt (je Sekunde): Sie kippt nicht
+    /// in einem Bild, wenn die Figur in den Bogen läuft.
+    static let bankRate: Double = 12
+    /// Anlaufen nach dem Erscheinen: so lange und so viel zusätzliche Vorneigung,
+    /// abklingend. Nur Bild, die Regel lässt den Gegner sofort mit voller Geschwindigkeit laufen.
+    static let startupLife: TimeInterval = 0.4
+    static let startupLean: Double = 0.18
+    /// Schatten beim Aufsetzen so viel breiter (Anteil).
+    static let contactWidth: CGFloat = 0.22
+    /// Staub bei jedem n-ten Aufsetzen und seine Größe in Feldern. Flitzer
+    /// trippeln oft und leicht, die Panzerbestie stampft selten und schwer.
+    static func dustEvery(_ kind: EnemyKind) -> Int {
+        switch kind {
+        case .runner: 1
+        case .raider, .moorKing: 2
+        case .brute: 3
+        }
+    }
+    static func dustSize(_ kind: EnemyKind) -> Double {
+        switch kind {
+        case .runner: 0.16
+        case .raider: 0.2
+        case .brute: 0.32
+        case .moorKing: 0.4
+        }
+    }
+    /// Höchstens so viele Staubwölkchen je Figur gleichzeitig.
+    static let dustPerEnemy = 3
+    static let footDustLife: TimeInterval = 0.4
+    static let footDustAlpha: CGFloat = 0.55
+    /// Zwei Gegner näher als so viele Felder gelten als deckungsgleich
+    /// (Messung für Tests und Kontaktabzug, keine Regel).
+    static let stackedDistance: CGFloat = 0.03
+    /// Erst so lange zusammen gilt ein Paar als deckungsgleich: Beim Überholen
+    /// berühren sich zwei Spuren kurz (gemessen höchstens 0,42 s in Region 1),
+    /// das ist kein Gänsemarsch.
+    static let stackedHold: TimeInterval = 0.5
     static let spawnLife: TimeInterval = 0.28
     static let hitLife: TimeInterval = 0.12
     /// Rückstoß beim Treffer, in Feldern.
