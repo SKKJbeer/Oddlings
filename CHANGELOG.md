@@ -25,8 +25,11 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   laden), Ereignisse `enemiesHealed`, `enemySplit`, Prüfung beim Laden. Missionen ohne die
   beiden bleiben bitgleich.
 - App: grüner Heilring mit Funken über den Geheilten, Sporenwolke beim Zerfall, je ein
-  gedrosselter Klang, einmaliger Hinweis „Heilt ihre Nachbarn: zuerst sie“. Drei neue
-  3D-Figuren (Moorhexe, Pilzbalg, Sporling) nach der Kette von A-3 (D-178).
+  gedrosselter Klang, einmaliger Hinweis „Heilt ihre Nachbarn: zuerst sie“.
+- Figuren (D-178): Die Moorhexe ist eine 3D-Figur nach der Kette von A-3 (drei
+  Blickrichtungen, Treffer, Sturz), mit eigenem Knochen für den Stab. Pilzbalg und
+  Sporling haben vorerst ein gemaltes Standbild und laufen mit ihrer Gangart; ihre
+  3D-Figuren folgen, sobald das Rechenkontingent für TRELLIS wieder frei ist.
 - Labor: alle Mischungen gewinnen, Monokulturen verlieren; Heilung trifft Salven hart,
   Falkenhorste kaum (Zahlen in 04).
 - Tests: `HealerSplitterTests` (15), neue Fälle in `MissionSixTests`, `MissionSevenTests`;

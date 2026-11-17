@@ -98,8 +98,9 @@ M7 mit 0,33 knapp unter der Dominanzgrenze 0,35; mehr Hexen in M7 schieben sie d
   FLUX-Vorlage → TRELLIS → `rig.json` → `figur.py` mit Kamera und Sonne aus dem
   Asset-Vertrag → `folge.py` mit Kontur), Folgen `walk`, `walkFront`, `walkBack` (je 8),
   `hit` (3), `die` (6). Abgestimmt mit dem Coordinator, damit A-3 sie nicht doppelt baut.
-  Bis die Figuren im Atlas liegen, zeichnet `BattleSprites` die Platzhalterform in der
-  Farbe der Art (wie bisher für jede Art ohne Bild).
+  Stand 0.41.0: Die Moorhexe ist fertig (eigener Knochen für den Stab). Für Pilzbalg und
+  Sporling war das freie TRELLIS-Kontingent aufgebraucht; sie haben bis dahin ein
+  gemaltes FLUX-Standbild im Atlas und laufen mit der Gangart aus `FxStyle`.
 - **Heilung**: grüner Puls um die Hexe, ein heller Funke über jedem Geheilten, Lebensleiste
   wächst sichtbar. **Zerfall**: Sporenwolke am Todesort, Sporlinge springen heraus.
 - **Ton**: Heilen und Zerfallen bekommen je einen Klang aus den vorhandenen CC0-Quellen
