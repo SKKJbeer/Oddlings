@@ -35,7 +35,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Tests: `HealerSplitterTests` (15), neue Fälle in `MissionSixTests`, `MissionSevenTests`;
   App: `HealerSplitterAppTests`, `SoundMapTests`, `BattleSpritesTests`.
 
-## 0.41.0 – 17.11.2026 (A-1: Laufen)
+## 0.41.0 – 17.11.2026 (A-1: Laufen) · Bau 62
 
 - **Bögen statt Knicke:** Gegner laufen an jeder Ecke einen Kreisbogen (Radius ein
   halbes Feld). Die Simulation bleibt unverändert; `PathView` legt nur das Bild auf
