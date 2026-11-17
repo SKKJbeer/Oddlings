@@ -47,3 +47,11 @@ Eigenlicht 0,45, Kontur 0,006.
 `figur.py` mit 512 Pixeln, `angleichen.py` (Stärke 0,5) gegen `vorlage.png`, dann
 `tools/figuren-3d/folge.py` (ein Maßstab für alle 28 Bilder). Das Standbild
 `enemy_moorKing` ist eine Kopie von `walk_00`.
+
+## A-3: gemeinsame Kamera, drei Blickrichtungen, Konturpass (16.11.2026)
+
+Neu gerendert für die gemeinsame Kamera (D-140): 30° statt 12° von oben, Sonne aus
+dem Vertrag. Seitlich 60° gedreht statt 35°. Neue Folgen `enemy_moorKing_walkFront`
+(20°) und `enemy_moorKing_walkBack` (160°) mit denselben Schlüsselbildern wie `walk`.
+`angleichen.py` (Stärke 0,5, Kontur 0) gegen `vorlage.png`, dann `folge.py` mit dem
+Konturpass (1 Punkt).
