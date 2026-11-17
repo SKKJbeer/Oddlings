@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.42.0 – 17.11.2026 (Moorhexe und Pilzbalg: Heiler und Teiler)
+## 0.42.0 – 17.11.2026 (Moorhexe und Pilzbalg: Heiler und Teiler) · Bau 63
 
 - **Moorhexe** (D-143, D-175): heilt alle 2 s jeden anderen verletzten Gegner im Umkreis
   von einem Feld um 6 % seines Höchstlebens. Nicht sich selbst, keine Bosse, betäubt nicht.
