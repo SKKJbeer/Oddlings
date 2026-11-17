@@ -11,10 +11,41 @@ rotes Kreuz zeichnet. Ausserdem muss jedes Bild seine Herkunft belegen
 nachvollziehbar.
 """
 import json, os, re, sys
+import numpy as np
 from PIL import Image
 
 # Nur kommerziell nutzbare Modelle (siehe .claude/skills/spielgrafik/SKILL.md).
 VERBOTENE_MODELLE = re.compile(r"FLUX\.1-dev|SDXL-Turbo|SD-Turbo|RMBG", re.I)
+
+
+def hat_kontur(bild):
+    """Ob die äußersten deckenden Pixel dunkel sind wie die gemalte Kontur.
+
+    Alle Gegner sollen dieselbe Linie tragen (A-3, Befund G3): Gemessen wird
+    der Ring der deckenden Pixel, die an Durchsichtiges grenzen. Die Kontur
+    34/22/18 hat eine Helligkeit um 25; eine Figur ohne Kontur zeigt dort ihre
+    Farbe (Haut, Stoff) mit 80 und mehr.
+    """
+
+    px = np.asarray(bild.convert("RGBA"), dtype=np.float32)
+    # Halbe Deckung als Grenze: Der weiche Außenrand der Kontur zählt zu
+    # „außen“, sonst läge der gemessene Ring im Antialiasing.
+    deckend = px[..., 3] >= 128
+    innen = deckend.copy()
+    innen[1:, :] &= deckend[:-1, :]
+    innen[:-1, :] &= deckend[1:, :]
+    innen[:, 1:] &= deckend[:, :-1]
+    innen[:, :-1] &= deckend[:, 1:]
+    ring = deckend & ~innen
+    ring[0, :] = ring[-1, :] = ring[:, 0] = ring[:, -1] = False
+    if not ring.any():
+        return False
+    hell = 0.299 * px[..., 0] + 0.587 * px[..., 1] + 0.114 * px[..., 2]
+    return float(hell[ring].mean()) < KONTUR_HELLIGKEIT
+
+
+# Obergrenze der mittleren Helligkeit am Rand, siehe hat_kontur.
+KONTUR_HELLIGKEIT = 60
 
 
 def pruefe(wurzel):
@@ -48,6 +79,36 @@ def pruefe(wurzel):
     for name, regel in vertrag["assets"].items():
         if "folge" in regel and folgen_da.get(name, set()) != set(range(regel["folge"])):
             fehler.append(f"{name}: Folge verlangt _00 bis _{regel['folge'] - 1:02d}, da sind {sorted(folgen_da.get(name, []))}")
+
+    # Blickrichtungen (A-3): walkFront/walkBack wechseln mit walk hin und her
+    # (A-1 blendet über). Andere Bildzahl, Größe oder Anker ließe den Schritt
+    # springen oder die Figur beim Umdrehen wachsen.
+    for name, regel in vertrag["assets"].items():
+        m = re.fullmatch(r"(.+)_walk(Front|Back)", name)
+        if not m:
+            continue
+        seite = vertrag["assets"].get(f"{m.group(1)}_walk")
+        if seite is None:
+            fehler.append(f"{name}: Blickrichtung ohne Seitenfolge {m.group(1)}_walk")
+            continue
+        for feld in ("folge", "seiteZellen", "anker"):
+            if regel.get(feld) != seite.get(feld):
+                fehler.append(f"{name}: {feld} {regel.get(feld)}, Seitenfolge hat {seite.get(feld)}")
+
+    # Gemeinsame Kamera (D-140): Jede 3D-Figur rendert in der Höhe aus dem
+    # Vertrag, höchstens um den Spielraum tiefer. Sonst steht sie in einem
+    # anderen Raum als Karte und Türme (Befund G1 im AAA-Review).
+    kamera = vertrag.get("kamera")
+    figuren = os.path.join(wurzel, "art/figuren-3d")
+    if kamera and os.path.isdir(figuren):
+        for figur in sorted(os.listdir(figuren)):
+            rigpfad = os.path.join(figuren, figur, "rig.json")
+            if not os.path.exists(rigpfad):
+                continue
+            hoehe = json.load(open(rigpfad)).get("kameraHoehe", kamera["hoehe"])
+            if not kamera["hoehe"] - kamera.get("figurenSpielraum", 0) <= hoehe <= kamera["hoehe"]:
+                fehler.append(f"{figur}: kameraHoehe {hoehe}°, gemeinsame Kamera {kamera['hoehe']}° "
+                              f"(Spielraum {kamera.get('figurenSpielraum', 0)}°)")
 
     for basis, eintrag in eintraege:
         name = eintrag[: -len(".imageset")]
@@ -88,6 +149,8 @@ def pruefe(wurzel):
                         fuss = (bild.height - box[3]) / bild.height
                         if abs(fuss - regel["anker"]) > 0.03:
                             fehler.append(f"{name}@{f}x: Fuss bei {fuss:.2f}, Vertrag {regel['anker']}")
+                    if folge and vertrag.get("konturPunkte") and not hat_kontur(bild):
+                        fehler.append(f"{name}@{f}x: keine dunkle Kontur am Rand (Konturpass, A-3)")
             if "punkte" in regel:
                 # Symbole: Quadrat in Punkten, Inhalt mittig, weil SwiftUI sie zentriert in den Knopf setzt.
                 soll = round(regel["punkte"] * f)

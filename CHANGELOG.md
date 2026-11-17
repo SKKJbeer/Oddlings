@@ -11,6 +11,29 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.34.0 – 17.11.2026 (A-5, Teil 1: Spezialisierungen als Bilder, gemalte Ringe)
+
+- **Die größte Entscheidung ist auf dem Feld zu sehen:** Salve und Falkenhorst, Gewitterkrone
+  und Funkensäule, Moorherz und Fäulnis haben je ein eigenes Turmbild. Gemalt aus dem Bild der
+  Stufe 2 (Bild-zu-Bild, Stärke 0,82), damit Stein, Kupferringe und Pilzstiel bleiben und
+  oben die Silhouette wechselt. Schatten wie bei jedem Turm aus `turmboden.py` (D-170).
+- **Kein Schild „II“/„III“ mehr am Turm:** Stufe 2 zeigt ihr Bild, die Stufe steht auf der Tafel.
+- **Gemalter Ring statt Linien** (D-171): Auswahl und Reichweite sind ein goldener Ring aus dem
+  Streifen `mark_ring`, zur Laufzeit um den Kreis gewickelt, Rand bei jeder Reichweite gleich
+  breit, innen ein leiser Schein. Fehlt der Streifen, zeichnet die Szene die alten Linien.
+- Tests: `GroundMarksTests` (kachelbar, Randbreite, Mitte frei, Zwischenspeicher, Szene malt),
+  Bild und Schatten je Spezialisierung, kein Schild, E2E meldet `towers=tower_watch_volley`
+  und `selection=gemalt`.
+- Werkzeug: `ringstreifen.py` (Ring abwickeln), `schatten_schneiden.py` (mitgemalten
+  Bodenschatten rechts am Fuß abschneiden), `turmboden.py` kennt Spezialisierungsnamen.
+
+## Dokumente, kein Bau – 16.11.2026 (Gamedesign als Gesamtbild)
+
+- `docs/konzepte/gamedesign-gesamtbild.md`: Kampagne über drei Regionen, Komplexitätsleiter,
+  Schwierigkeitskurve aus dem Labor (gemessen gegen Ziel), Wege und Routen, Wiederspielwert.
+- Entscheidungen D-146 (fallender Sägezahn), D-147 (mehrere Wege ab M6), D-148 (Veteran-Stufe);
+  Roadmap-Pakete A-8 bis A-10.
+
 ## Dokumente, kein Bau – 16.11.2026 (Review auf AAA-Niveau)
 
 - **Review von Mechanik, Leveldesign und Grafik** an echten Bildern aus dem Simulator und
@@ -24,6 +47,25 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   Bauinseln, Gelände, Gegnerrollen, Wellendramaturgie und Labor-Kennzahlen.
 - **Plan „AAA-Schnitt“** A-1 bis A-7 in der Roadmap; D-140 bis D-143 als Karten an Steffen
   (S26 bis S29), D-144 und D-145 gelten. Neuer Skill `aaa-pruefung`.
+
+## 0.32.0 – 16.11.2026 (A-3, Teil 1: Gegner in drei Blickrichtungen)
+
+- **Plünderer und Moorkönig schauen, wohin sie gehen:** Neben dem Lauf zur Seite gibt es
+  jetzt `walkFront` (kommt auf den Betrachter zu) und `walkBack` (geht weg), je 8 Bilder
+  mit derselben Schrittfolge. Der Lauf-Code aus A-1 wählt sie nach Wegrichtung; bis dahin
+  ändert sich im Spiel nur das Seitenbild.
+- **Eine Kamera, ein Licht** (D-140): Die Figuren werden aus 30° statt 12° von oben
+  gerendert, im Sonnenstand aus dem Asset-Vertrag (`kamera`, `sonne`). Damit die Mütze des
+  Plünderers das Gesicht nicht verdeckt, ist sie nach hinten geschoben.
+- **Konturpass:** Jede Figur trägt dieselbe dunkle Außenlinie, 1 Punkt breit
+  (`konturPunkte`), gerechnet nach dem Verkleinern statt je Bild verschieden.
+- Werkzeug: `figur.py` (Blickrichtungen, Kamera und Sonne aus dem Vertrag, `verformen`),
+  `folge.py` (Fuß je Blickrichtung, Konturpass), `konturpass.py`, `bildpaar.py` (Abnahme am
+  Bildpaar auf dem Kampfplatz).
+- Tests (art-check): Blickrichtungen haben Bildzahl, Größe und Anker der Seitenfolge;
+  jede 3D-Figur liegt im Spielraum der gemeinsamen Kamera; erste Bilder jeder Folge haben
+  eine dunkle Kontur; Breite und Rundung des Konturpasses. Jede Prüfung einmal rot gesehen.
+- Konzept [A-3 Figuren vollständig](docs/konzepte/a-3-figuren-vollstaendig.md), D-160.
 
 ## 0.29.1 – 08.11.2026 (Grafik 10: Türme stimmig in der Welt)
 

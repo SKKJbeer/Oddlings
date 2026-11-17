@@ -1,6 +1,6 @@
 # Konzept A-5 Teil 1: Spezialisierungen als Bilder, gemalte Ringe
 
-Status: **in Umsetzung** · Stil D-016 · Plan [AAA-Schnitt](aaa-review.md#plan), Paket A-5
+Status: **ausgeliefert (0.34.0)** · Stil D-016 · Plan [AAA-Schnitt](aaa-review.md#plan), Paket A-5
 Befunde: G5 (Vektorformen in der gemalten Welt), G7 (Spezialisierungen sehen aus wie Stufe 2)
 Entscheidungen: [D-170, D-171](../decisions/decision-log.md)
 
@@ -26,10 +26,10 @@ Funkensäule hatten eine andere Grundform als der Turm, aus dem sie entstehen (P
 Gittermast), drei Bilder trugen einen eingebrannten Bodenschatten, der Falke war ein Adler.
 Neben den Türmen der Stufe 1 und 2 sahen sie aus wie aus einem anderen Spiel.
 
-Deshalb nachgemalt **aus dem Rohbild der Stufe 2** (Bild-zu-Bild, Stärke 0,68): Stufe 3 baut auf
+Deshalb nachgemalt **aus dem Rohbild der Stufe 2** (Bild-zu-Bild, Stärke 0,82; 0,68 blieb zu nah an Stufe 2): Stufe 3 baut auf
 Stufe 2 auf, also bleiben Grundkörper, Stein, Kupferringe und Pilzstiel; oben wechselt die
 Silhouette so deutlich, dass A und B einfarbig unterscheidbar sind (Tabelle in
-[Grafik 02](grafik-02-phase-2.md#gestaltung)). Ohne Schatten gemalt, den rechnet `turmboden.py`
+[Grafik 02](grafik-02-phase-2.md#gestaltung)). Ohne Schatten gemalt (wo FLUX doch einen malte, schneidet ihn `schatten_schneiden.py` ab), den rechnet `turmboden.py`
 wie bei jedem Turm. Herkunft: [art/phase-2/ENTSTEHUNG.md](../../art/phase-2/ENTSTEHUNG.md).
 
 ## Ringe

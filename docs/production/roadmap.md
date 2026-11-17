@@ -12,7 +12,7 @@ Entscheidungskarte beantwortet. Alles, was auf ihn wartet, steht unter
 zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzelnen:
 [backlog.md](backlog.md), offene Fragen: [offene-fragen.md](offene-fragen.md).
 
-**Stand: 16.11.2026** · Review auf AAA-Niveau mit Plan [AAA-Schnitt](#aaa-schnitt-d-140-bis-d-149) · neueste Version 0.29.1 (Türme stimmig in der Welt), davor 0.29.0 (Turmwerte und Vergleich beim Aufwerten, UI-02, Bau 55), davor 0.28.3 (gemalter Kampfplatz Bosslichtung M7, Bau 54), davor 0.28.2 (der Moorkönig als eigene 3D-Figur), davor 0.28.1 (gemalte Kampfplätze für M6a und M6b, Bau 52), davor 0.28.0 (Mission 7 „Der Moorkönig“, Bau 51), davor 0.27.0 (Wahl zwischen zwei Spezialisierungen, Mission 6a und 6b, Bau 50), davor 0.26.1 (gemalte Kampfplätze für M5a Sumpfpfad und M5b Ruinen, Bau 49), davor 0.26.0 (Mission 5b „Ruinen“, Bau 48), davor 0.25.0 (Spezialisierungen und Mission 5a „Sumpfpfad“, Bau 47), davor 0.24.1 (Korrektur für den Release-Bau, Bau 46), davor 0.24.0 (Synergie sichtbar, Einstieg ohne Erklärtext, Bau 45 gescheitert), davor 0.23.0 (Blitz allein verliert Mission 2 und 3, Bau 44), 0.22.0 (Fortsetzen nach Neustart, Bau 43), neuester VALID-Bau 55 (0.29.0)
+**Stand: 16.11.2026** · Review auf AAA-Niveau mit Plan [AAA-Schnitt](#aaa-schnitt-d-140-bis-d-149) · neueste Version 0.32.0 (Plünderer und Moorkönig in drei Blickrichtungen, A-3 Teil 1), davor 0.29.1 (Türme stimmig in der Welt), davor 0.29.0 (Turmwerte und Vergleich beim Aufwerten, UI-02, Bau 55), davor 0.28.3 (gemalter Kampfplatz Bosslichtung M7, Bau 54), davor 0.28.2 (der Moorkönig als eigene 3D-Figur), davor 0.28.1 (gemalte Kampfplätze für M6a und M6b, Bau 52), davor 0.28.0 (Mission 7 „Der Moorkönig“, Bau 51), davor 0.27.0 (Wahl zwischen zwei Spezialisierungen, Mission 6a und 6b, Bau 50), davor 0.26.1 (gemalte Kampfplätze für M5a Sumpfpfad und M5b Ruinen, Bau 49), davor 0.26.0 (Mission 5b „Ruinen“, Bau 48), davor 0.25.0 (Spezialisierungen und Mission 5a „Sumpfpfad“, Bau 47), davor 0.24.1 (Korrektur für den Release-Bau, Bau 46), davor 0.24.0 (Synergie sichtbar, Einstieg ohne Erklärtext, Bau 45 gescheitert), davor 0.23.0 (Blitz allein verliert Mission 2 und 3, Bau 44), 0.22.0 (Fortsetzen nach Neustart, Bau 43), neuester VALID-Bau 55 (0.29.0)
 
 ## Phasen
 
@@ -69,18 +69,23 @@ Aus dem [Review vom 16.11.2026](../konzepte/aaa-review.md): ein Ort, ein Licht, 
 Kamera, ein Maßstab, dazu Leveldesign mit Gestalt. Methoden in
 [Bewegung, Bauen, Stimmigkeit](../konzepte/aaa-bewegung-und-bauen.md) und
 [Leveldesign](../konzepte/aaa-leveldesign.md). Entschieden am 16.11.2026: Diorama (D-140), Bauinseln (D-141), erst Vertikalschnitt
-an Mission 1 (D-142), Heiler und Teiler (D-143).
+an Mission 1 (D-142), Heiler und Teiler (D-143), fallende Schwierigkeitskurve (D-146),
+mehrere Wege ab M6 (D-147), Veteran-Stufe (D-148). Gesamtbild:
+[Gamedesign](../konzepte/gamedesign-gesamtbild.md).
 
 | # | Paket | Befunde | Abh. | Stand |
 |---|---|---|---|---|
 | A-1 | **Laufen**: Kurven statt Knick, Spuren, drei Blickrichtungen, Gewicht (D-144); Kontaktabzug in der CI (D-145) | B2–B5, R3 | – | als Nächstes |
 | A-2 | **Bauen und Tafeln**: Turm-Vorschau vor dem Kauf, Errichten statt Abwerfen, Auftritt für Aufwerten und Spezialisieren, Tafel weicht Weg und Festung, Wellenvorschau | P1, P3–P5, R2 | – | – |
-| A-3 | **Figuren vollständig**: Flitzer und Panzerbestie in 3D (Paket 6), Konturpass, alle Gegner in drei Richtungen | B1, G3 | – | – |
+| A-3 | **Figuren vollständig**: Flitzer und Panzerbestie in 3D (Paket 6), Konturpass, alle Gegner in drei Richtungen ([Konzept](../konzepte/a-3-figuren-vollstaendig.md)) | B1, G3 | – | Teil 1 ✓ 0.32.0 (Werkzeug, Plünderer, Moorkönig); Flitzer und Panzerbestie in Arbeit |
 | A-4 | **Kampfplatz Mission 1 neu** in der Kamera der Türme, mit Bauinseln und Maßstab | G1, G2, G4, G8, L1, P2 | – | – |
-| A-5 | **Eine Malweise in der Welt**: gemalte Auswahl und Ringe, Kopfleiste im Tafel-Material, sechs Spezialisierungsbilder, Türme zielen, Effektbudget | G5–G7, G9, R1 | A-4 | – |
+| A-5 | **Eine Malweise in der Welt**: gemalte Auswahl und Ringe, Kopfleiste im Tafel-Material, sechs Spezialisierungsbilder, Türme zielen, Effektbudget | G5–G7, G9, R1 | A-4 | Teil 1 ausgeliefert (0.34.0): Spezialisierungsbilder, gemalte Ringe. Rest (Kopfleiste, Türme zielen, Effektbudget) nach A-4 |
 | – | Urteil Steffen am Vertikalschnitt Mission 1 | | A-1–A-5 | – |
 | A-6 | **Leveldesign Region 1** nach Missionsblättern: Bauinseln und Gelände (Anhöhe, Furt), Heiler und Teiler, Wellenbogen, Labor-Kennzahlen; Mission für Mission | L1–L6 | Urteil | – |
 | A-7 | **Kampfplätze M2 bis M7 neu**, je mit ihrem Missionsblatt | G1, G2, G8 | A-6 je Mission | – |
+| A-8 | **Schwierigkeitskurve im Labor** (D-146): Prüfung gegen die Zielkurve, naive Mischung verliert ab M4; Wellen je Mission danach ausrichten | L5 | mit A-6 je Mission | – |
+| A-9 | **Mehrere Wege** (D-147): `map.paths`, Weg je Wellengruppe; M6a zwei Eingänge, M6b Kreuzung, M7 zweiter Eingang | L2 | nach A-4 und Heiler/Teiler (Simulation nacheinander) | – |
+| A-10 | **Veteran-Stufe** (D-148): je Mission nach dem ersten Sieg, eigene Wellen und Sterne, Labor-Prüfung | – | nach A-8 | – |
 
 P3-5 (Nebenmissionen) bleibt davor oder danach steuerbar; seine Karten S21 bis S23 hängen
 nicht am AAA-Schnitt.
