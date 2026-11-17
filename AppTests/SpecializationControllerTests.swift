@@ -95,10 +95,21 @@ final class SpecializationControllerTests: XCTestCase {
         }
         XCTAssertEqual(Set(Specialization.allCases.map(BattleTexts.name)).count, Specialization.allCases.count,
                        "jede Spezialisierung hat ihren eigenen Namen")
-        let node = TowerNode(tower: Tower(id: 1, kind: .watch, cell: Cell(x: 0, y: 0), cooldownTicks: 0, spent: 1), field: 40)
-        node.showLevel(3, field: 40)
-        let badge = node.childNode(withName: "level.badge")
-        XCTAssertEqual((badge?.children.first as? SKLabelNode)?.text, "III")
+    }
+
+    /// A-5 (G7): Die Spezialisierung wechselt das Bild, die Tafel nennt die Stufe.
+    func testSpecializedTowerShowsItsOwnPicture() {
+        for specialization in Specialization.allCases {
+            let tower = Tower(id: 1, kind: specialization.tower, cell: Cell(x: 0, y: 0), cooldownTicks: 0, spent: 1, level: 2)
+            let node = TowerNode(tower: tower, field: 40)
+            node.show(level: 2, specialization: nil)
+            let levelTwo = (node.art.children.first as? SKSpriteNode)?.texture
+            node.show(level: 3, specialization: specialization)
+            XCTAssertEqual(node.pictureName, BattleSprites.towerName(specialization.tower, level: 3, specialization: specialization))
+            XCTAssertFalse((node.art.children.first as? SKSpriteNode)?.texture === levelTwo, "\(specialization)")
+            XCTAssertNil(node.childNode(withName: "level.badge"), "kein Schild III")
+            XCTAssertEqual(UpgradeControllerTests.shapes(in: node), 0)
+        }
     }
 
     // MARK: Wahl zwischen zwei Spezialisierungen (P3-3, S15)

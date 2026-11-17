@@ -11,6 +11,34 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.35.0 – 17.11.2026 (A-3, Teil 2: der Flitzer in 3D)
+
+- **Der Flitzer läuft mit Armen und Beinen:** eigene 3D-Figur nach dem Gemälde (lange
+  Fühler, roter Schal, Rucksack), vorgekippt und mit weitem Schritt. Folgen `walk`,
+  `walkFront`, `walkBack` (je 8 Bilder), `hit` (3, Rumpf knickt zurück), `die` (6, fällt
+  vornüber), aus der gemeinsamen Kamera und mit derselben Außenlinie wie Plünderer und
+  Moorkönig (D-161). Das gemalte Standbild bleibt als Rückfall.
+- Werkzeug: `trellis.py` lädt nur noch das GLB; das Vorschauvideo der Space kommt
+  inzwischen mit 403 zurück und brach den Abruf ab.
+- Tests: `BattleSpritesTests` verlangt die Bildfolgen des Flitzers (8/3/6, gleich groß wie
+  sein Standbild); `check_assets.py` über den Atlas grün.
+
+## 0.34.0 – 17.11.2026 (A-5, Teil 1: Spezialisierungen als Bilder, gemalte Ringe)
+
+- **Die größte Entscheidung ist auf dem Feld zu sehen:** Salve und Falkenhorst, Gewitterkrone
+  und Funkensäule, Moorherz und Fäulnis haben je ein eigenes Turmbild. Gemalt aus dem Bild der
+  Stufe 2 (Bild-zu-Bild, Stärke 0,82), damit Stein, Kupferringe und Pilzstiel bleiben und
+  oben die Silhouette wechselt. Schatten wie bei jedem Turm aus `turmboden.py` (D-170).
+- **Kein Schild „II“/„III“ mehr am Turm:** Stufe 2 zeigt ihr Bild, die Stufe steht auf der Tafel.
+- **Gemalter Ring statt Linien** (D-171): Auswahl und Reichweite sind ein goldener Ring aus dem
+  Streifen `mark_ring`, zur Laufzeit um den Kreis gewickelt, Rand bei jeder Reichweite gleich
+  breit, innen ein leiser Schein. Fehlt der Streifen, zeichnet die Szene die alten Linien.
+- Tests: `GroundMarksTests` (kachelbar, Randbreite, Mitte frei, Zwischenspeicher, Szene malt),
+  Bild und Schatten je Spezialisierung, kein Schild, E2E meldet `towers=tower_watch_volley`
+  und `selection=gemalt`.
+- Werkzeug: `ringstreifen.py` (Ring abwickeln), `schatten_schneiden.py` (mitgemalten
+  Bodenschatten rechts am Fuß abschneiden), `turmboden.py` kennt Spezialisierungsnamen.
+
 ## Dokumente, kein Bau – 16.11.2026 (Gamedesign als Gesamtbild)
 
 - `docs/konzepte/gamedesign-gesamtbild.md`: Kampagne über drei Regionen, Komplexitätsleiter,
@@ -31,18 +59,6 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   Bauinseln, Gelände, Gegnerrollen, Wellendramaturgie und Labor-Kennzahlen.
 - **Plan „AAA-Schnitt“** A-1 bis A-7 in der Roadmap; D-140 bis D-143 als Karten an Steffen
   (S26 bis S29), D-144 und D-145 gelten. Neuer Skill `aaa-pruefung`.
-
-## 0.34.0 – 17.11.2026 (A-3, Teil 2: der Flitzer in 3D)
-
-- **Der Flitzer läuft mit Armen und Beinen:** eigene 3D-Figur nach dem Gemälde (lange
-  Fühler, roter Schal, Rucksack), vorgekippt und mit weitem Schritt. Folgen `walk`,
-  `walkFront`, `walkBack` (je 8 Bilder), `hit` (3, Rumpf knickt zurück), `die` (6, fällt
-  vornüber), aus der gemeinsamen Kamera und mit derselben Außenlinie wie Plünderer und
-  Moorkönig (D-161). Das gemalte Standbild bleibt als Rückfall.
-- Werkzeug: `trellis.py` lädt nur noch das GLB; das Vorschauvideo der Space kommt
-  inzwischen mit 403 zurück und brach den Abruf ab.
-- Tests: `BattleSpritesTests` verlangt die Bildfolgen des Flitzers (8/3/6, gleich groß wie
-  sein Standbild); `check_assets.py` über den Atlas grün.
 
 ## 0.32.0 – 16.11.2026 (A-3, Teil 1: Gegner in drei Blickrichtungen)
 

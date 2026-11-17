@@ -49,7 +49,9 @@ Modell, fester Seed je Name. Konzept: [Türme in der Welt](../../docs/konzepte/g
 
 - Schatten `tower_watch_shadow`, `tower_watch_2_shadow`, `tower_lightning_shadow`,
   `tower_lightning_2_shadow`, `tower_spore_shadow`, `tower_spore_2_shadow`,
-  `tower_bank_shadow`: aus dem Umriss des jeweiligen Turmbildes, oberhalb des
+  `tower_bank_shadow`, seit A-5 auch `tower_watch_volley_shadow`, `tower_watch_falcon_shadow`,
+  `tower_lightning_crown_shadow`, `tower_lightning_spark_shadow`, `tower_spore_moor_shadow`,
+  `tower_spore_rot_shadow`: aus dem Umriss des jeweiligen Turmbildes, oberhalb des
   Fußes gespiegelt, auf 42 % gestaucht und nach rechts geschert (Licht von oben
   links), weich gezeichnet, dazu eine Kontaktellipse am Fuß. Neuer Turm oder neue
   Stufe: Skript erneut laufen lassen.
