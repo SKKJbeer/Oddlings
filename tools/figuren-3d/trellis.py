@@ -7,6 +7,8 @@ import os
 import shutil
 import sys
 
+import httpx
+
 from gradio_client import Client, handle_file
 
 SPACE = "trellis-community/TRELLIS"
@@ -15,7 +17,10 @@ SPACE = "trellis-community/TRELLIS"
 def main() -> None:
     vorlage, ziel = sys.argv[1], sys.argv[2]
     seed = int(sys.argv[3]) if len(sys.argv) > 3 else 1
-    client = Client(SPACE, token=os.environ.get("HF_TOKEN") or None)
+    token = os.environ.get("HF_TOKEN") or None
+    # Nur das GLB laden: Die Space liefert das Vorschauvideo inzwischen mit 403 aus,
+    # und das automatische Herunterladen aller Ausgaben bräche daran ab.
+    client = Client(SPACE, token=token, download_files=False)
     # Die Space legt je Sitzung ein Arbeitsverzeichnis an; ohne diesen Aufruf fehlt es.
     client.predict(api_name="/start_session")
     ergebnis = client.predict(
@@ -31,8 +36,16 @@ def main() -> None:
         texture_size=1024,
         api_name="/generate_and_extract_glb",
     )
-    glb = next(p for p in _pfade(ergebnis) if str(p).endswith(".glb"))
-    shutil.copyfile(glb, ziel)
+    glb = next(p for p in _pfade(ergebnis) if p.endswith(".glb") and (p.startswith("http") or os.path.exists(p)))
+    if os.path.exists(glb):
+        shutil.copyfile(glb, ziel)
+    else:
+        kopf = {"Authorization": f"Bearer {token}"} if token else {}
+        with httpx.stream("GET", glb, headers=kopf, follow_redirects=True, timeout=300) as antwort:
+            antwort.raise_for_status()
+            with open(ziel, "wb") as datei:
+                for stueck in antwort.iter_bytes():
+                    datei.write(stueck)
     print(ziel)
 
 

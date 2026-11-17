@@ -32,6 +32,18 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - **Plan „AAA-Schnitt“** A-1 bis A-7 in der Roadmap; D-140 bis D-143 als Karten an Steffen
   (S26 bis S29), D-144 und D-145 gelten. Neuer Skill `aaa-pruefung`.
 
+## 0.34.0 – 17.11.2026 (A-3, Teil 2: der Flitzer in 3D)
+
+- **Der Flitzer läuft mit Armen und Beinen:** eigene 3D-Figur nach dem Gemälde (lange
+  Fühler, roter Schal, Rucksack), vorgekippt und mit weitem Schritt. Folgen `walk`,
+  `walkFront`, `walkBack` (je 8 Bilder), `hit` (3, Rumpf knickt zurück), `die` (6, fällt
+  vornüber), aus der gemeinsamen Kamera und mit derselben Außenlinie wie Plünderer und
+  Moorkönig (D-161). Das gemalte Standbild bleibt als Rückfall.
+- Werkzeug: `trellis.py` lädt nur noch das GLB; das Vorschauvideo der Space kommt
+  inzwischen mit 403 zurück und brach den Abruf ab.
+- Tests: `BattleSpritesTests` verlangt die Bildfolgen des Flitzers (8/3/6, gleich groß wie
+  sein Standbild); `check_assets.py` über den Atlas grün.
+
 ## 0.32.0 – 16.11.2026 (A-3, Teil 1: Gegner in drei Blickrichtungen)
 
 - **Plünderer und Moorkönig schauen, wohin sie gehen:** Neben dem Lauf zur Seite gibt es
