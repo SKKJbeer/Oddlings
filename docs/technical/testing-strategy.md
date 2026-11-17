@@ -49,7 +49,7 @@ Status: **gilt**, umgesetzt bis 0.12.0; Ende-zu-Ende-Tests **[ENTSCHIEDEN D-029]
   Architektur, Sicherheit, Verweise, Doku-Stand nach D-067), `art` (`tools/art-check`;
   seit 0.15.0 auch `tools/ton`: jede Tondatei mit Herkunft und CC0-Lizenz, D-082;
   seit 0.16.1 prüft es jeden Kampfplatz mit `mission` im Vertrag: Weg im Bild auf der
-  Geometrie, dunkler Waldrand, Deko nie auf Bauzellen, Wegvorschlag gleich Missionsdatei; seit 0.32.0 für das Diorama (A-4): Kamera, Sonne und
+  Geometrie, dunkler Waldrand, Deko nie auf Bauzellen, Wegvorschlag gleich Missionsdatei; seit 0.33.0 für das Diorama (A-4): Kamera, Sonne und
   Maßstab im Vertrag, nichts Hohes auf Weg oder Insel im Plan von `tools/kampfplatz-3d`,
   Inselmitten im Bild sind Erde),
   `core-linux` (Paket unter Linux), `iphone` (Paket im Release-Bau, App-Bau, seit 0.24.1 auch die App im Release-Bau wie für TestFlight,

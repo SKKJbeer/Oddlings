@@ -21,5 +21,17 @@ in der Grundhaltung); `basis` legt eine andere Folge voll ausgeführt darunter
 (der Ruf beginnt in der Schildhaltung); `splitterBis` entfernt lose Netzinseln bis
 zu so vielen Punkten. `NUR=walk,shield` rendert nur diese Folgen.
 
+Felder für A-3 ([Konzept](../../docs/konzepte/a-3-figuren-vollstaendig.md)):
+`ansichten` rendert weitere Folgen mit derselben Bewegung, nur anders gedreht
+(`{"walkFront": {"folge": "walk", "blick": 20}}`); `verformen` dreht Punkte oberhalb
+`zVon` vor dem Binden um einen Angelpunkt (Mütze nach hinten). Kamerahöhe und
+Sonne kommen aus `art/asset-vertrag.json` (`kamera`, `sonne`); `kameraHoehe` in
+`rig.json` darf nur im Spielraum liegen. `VERTRAG=<pfad>` für Proben außerhalb
+des Repos.
+
+`folge.py` stellt den Fuß jeder Blickrichtung auf den Anker und legt danach den
+Konturpass (`konturpass.py`, Breite `konturPunkte`) um jedes Bild. Darum
+`angleichen.py` mit Kontur 0 aufrufen. Abnahme: `bildpaar.py <figur> <aus.jpg>`.
+
 Blender (`bpy`) steht unter GPL und ist nur Werkzeug; gerenderte Bilder sind
 davon nicht berührt. Es wird nicht in die App gebaut.

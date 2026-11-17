@@ -8,10 +8,17 @@ figur       Name im Asset-Vertrag, z. B. enemy_raider; geschrieben wird
 
 EINE Umrechnung für alle Bilder einer Figur: Fuß von walk_00 auf dem Anker aus
 dem Vertrag, Maßstab so, dass jedes Bild ganz ins Quadrat passt. Je Bild
-eingepasst, würde die Figur beim Laufen pumpen und beim Sturz wachsen.
+eingepasst, würde die Figur beim Laufen pumpen und beim Sturz wachsen. Das gilt
+auch für die Blickrichtungen walkFront/walkBack (A-3): Beim Umdrehen darf die
+Figur weder wachsen noch hüpfen.
+
+Danach der Konturpass (A-3): eine dunkle Außenlinie aus der Silhouette, breit
+`konturPunkte` aus dem Vertrag. Gerechnet nach dem Verkleinern, damit jede
+Figur auf dem Schirm dieselbe Linie trägt, egal wie stark sie skaliert wurde.
 """
 import glob, json, os, re, sys
 from PIL import Image
+from konturpass import kontur
 
 ein, figur = sys.argv[1], sys.argv[2]
 wurzel = sys.argv[3] if len(sys.argv) > 3 else "."
@@ -19,10 +26,11 @@ vertrag = json.load(open(os.path.join(wurzel, "art/asset-vertrag.json")))
 pt = vertrag["punkteJeZelle"]
 atlas = os.path.join(wurzel, vertrag["atlas"])
 RAND = 0.02  # Anteil der Seite, der frei bleibt, damit die Kontur nicht anstößt
+kontur_pt = vertrag.get("konturPunkte", 0)
 
 bilder = {}
 for pfad in sorted(glob.glob(os.path.join(ein, "*.png"))):
-    m = re.fullmatch(r"([a-z]+)_(\d\d)\.png", os.path.basename(pfad))
+    m = re.fullmatch(r"([a-z][A-Za-z]*)_(\d\d)\.png", os.path.basename(pfad))
     if m:
         bilder[(m.group(1), int(m.group(2)))] = Image.open(pfad).convert("RGBA")
 folgen = sorted({f for f, _ in bilder})
@@ -38,30 +46,53 @@ def box(bild):
     return bild.getchannel("A").point(lambda v: 255 if v > 24 else 0).getbbox()
 
 
-boxen = [box(b) for b in bilder.values()]
+boxen_je = {schluessel: box(b) for schluessel, b in bilder.items()}
+boxen = list(boxen_je.values())
 links, oben = min(b[0] for b in boxen), min(b[1] for b in boxen)
 rechts, unten = max(b[2] for b in boxen), max(b[3] for b in boxen)
-fuss = box(bilder[("walk", 0)])[3]
+# Fuß je Blickrichtung: Von hinten gedreht liegt der tiefste Fuß auf dem Bild
+# höher als von der Seite (das hintere Bein steht weiter in der Tiefe). Jede
+# Richtung stellt ihr erstes Bild auf den Anker; Treffer, Sturz und die Folgen
+# des Bosses gehören zur Seitenansicht.
+fuesse = {f: box(bilder[(f, 0)])[3] for f in folgen if f.startswith("walk")}
+fuss = fuesse["walk"]
+
+
+def gruppe(folge):
+    return folge if folge in fuesse else "walk"
+
 regel = vertrag["assets"][f"{figur}_walk"]
 anker = regel["anker"]
 
 for faktor in (2, 3):
     seite = round(regel["seiteZellen"] * pt * faktor)
-    nutz = seite * (1 - 2 * RAND)
+    # Die Kontur wächst nach außen; ihr Platz geht vom Rand ab, sonst stößt sie an.
+    rand = seite * RAND + kontur_pt * faktor
+    nutz = seite - 2 * rand
     # Über dem Fuß ist (1 - anker) der Seite frei, darunter anker; beides muss reichen.
-    k = min(nutz / (rechts - links),
-            (seite * (1 - anker) - seite * RAND) / max(1, fuss - oben),
-            (seite * anker - seite * RAND) / max(1, unten - fuss) if unten > fuss else float("inf"))
+    # Je Blickrichtung zählen nur ihre eigenen Bilder: Der Sturz der
+    # Seitenansicht liegt tiefer als der Fuß von hinten und soll die Figur
+    # nicht für alle Richtungen verkleinern.
+    k = nutz / (rechts - links)
+    for richtung, fu in fuesse.items():
+        eigene = [boxen_je[(f, i)] for (f, i) in bilder if gruppe(f) == richtung]
+        ob, un = min(b[1] for b in eigene), max(b[3] for b in eigene)
+        k = min(k, (seite * (1 - anker) - rand) / max(1, fu - ob))
+        if un > fu:
+            k = min(k, (seite * anker - rand) / (un - fu))
     for (f, i), bild in bilder.items():
         name = f"{figur}_{f}_{i:02d}"
         klein = bild.resize((round(bild.width * k), round(bild.height * k)), Image.LANCZOS)
         x = round(seite / 2 - (links + rechts) / 2 * k)
-        y = round(seite * (1 - anker) - fuss * k)
+        # Die Kontur reicht unter den Fuß; der Anker gilt für ihre Unterkante,
+        # so wie bei den gemalten Figuren, deren Kontur Teil des Bildes ist.
+        y = round(seite * (1 - anker) - fuesse.get(f, fuss) * k - kontur_pt * faktor)
         # Über eine größere Leinwand, weil alpha_composite keinen Versatz über
         # den Rand nimmt und paste mit Maske die Kanten ausdünnt.
         gross = Image.new("RGBA", (seite + 2 * klein.width, seite + 2 * klein.height))
         gross.alpha_composite(klein, (x + klein.width, y + klein.height))
-        leinwand = gross.crop((klein.width, klein.height, klein.width + seite, klein.height + seite))
+        leinwand = kontur(gross.crop((klein.width, klein.height, klein.width + seite, klein.height + seite)),
+                          kontur_pt * faktor)
         ordner = os.path.join(atlas, f"{name}.imageset")
         os.makedirs(ordner, exist_ok=True)
         leinwand.save(os.path.join(ordner, f"{name}@{faktor}x.png"), optimize=True)

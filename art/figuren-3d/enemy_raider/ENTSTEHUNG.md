@@ -42,3 +42,17 @@ Randlicht von hinten.
 `art/spielfeld/enemy_raider-frei.png`, dann `tools/figuren-3d/folge.py` (ein
 Maßstab für alle 17 Bilder, Fuß von `walk_00` auf dem Anker 0,1). Vergleich mit
 dem Gemälde: `/mnt/project-files/fx-02/raider-v2-vergleich.jpg`.
+
+## A-3: gemeinsame Kamera, drei Blickrichtungen, Konturpass (16.11.2026)
+
+Neu gerendert für die gemeinsame Kamera (D-140): 30° statt 12° von oben (Spielraum
+des Vertrags 30 bis 40°), Sonne aus dem Vertrag (Azimut 135°, Höhe 45°), Aufhellung
+von der Gegenseite. Bei 30° verdeckte die breite Krempe das Gesicht; `verformen` in
+`rig.json` schiebt die Mütze nach hinten (Punkte über 0,80 der Höhe um 50° gekippt),
+der Kopf ist in der Grundhaltung um 15° gehoben. Seitlich jetzt 45° gedreht statt 35°.
+
+Neue Folgen `enemy_raider_walkFront` (Figur 20° gedreht, kommt auf den Betrachter zu)
+und `enemy_raider_walkBack` (160°, geht weg), dieselben Schlüsselbilder wie `walk`.
+`angleichen.py` (Stärke 0,5, Kontur 0) gegen `art/spielfeld/enemy_raider-frei.png`,
+dann `folge.py` mit dem Konturpass (1 Punkt) statt der Kontur aus `angleichen.py`.
+Abnahme am Bildpaar: `tools/figuren-3d/bildpaar.py enemy_raider`.

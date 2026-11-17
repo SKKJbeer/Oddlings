@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.32.0 – 16.11.2026 (Kampfplatz Mission 1 als Diorama mit Bauinseln, A-4)
+## 0.33.0 – 17.11.2026 (Kampfplatz Mission 1 als Diorama mit Bauinseln, A-4)
 
 - **Bauinseln** (D-141): Mission 1 baut nur noch auf sechs gestalteten Inseln mit
   41 Feldern statt auf 114 freien Feldern. Neu in der Simulation: `map.zones` mit
@@ -51,6 +51,25 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   Bauinseln, Gelände, Gegnerrollen, Wellendramaturgie und Labor-Kennzahlen.
 - **Plan „AAA-Schnitt“** A-1 bis A-7 in der Roadmap; D-140 bis D-143 als Karten an Steffen
   (S26 bis S29), D-144 und D-145 gelten. Neuer Skill `aaa-pruefung`.
+
+## 0.32.0 – 16.11.2026 (A-3, Teil 1: Gegner in drei Blickrichtungen)
+
+- **Plünderer und Moorkönig schauen, wohin sie gehen:** Neben dem Lauf zur Seite gibt es
+  jetzt `walkFront` (kommt auf den Betrachter zu) und `walkBack` (geht weg), je 8 Bilder
+  mit derselben Schrittfolge. Der Lauf-Code aus A-1 wählt sie nach Wegrichtung; bis dahin
+  ändert sich im Spiel nur das Seitenbild.
+- **Eine Kamera, ein Licht** (D-140): Die Figuren werden aus 30° statt 12° von oben
+  gerendert, im Sonnenstand aus dem Asset-Vertrag (`kamera`, `sonne`). Damit die Mütze des
+  Plünderers das Gesicht nicht verdeckt, ist sie nach hinten geschoben.
+- **Konturpass:** Jede Figur trägt dieselbe dunkle Außenlinie, 1 Punkt breit
+  (`konturPunkte`), gerechnet nach dem Verkleinern statt je Bild verschieden.
+- Werkzeug: `figur.py` (Blickrichtungen, Kamera und Sonne aus dem Vertrag, `verformen`),
+  `folge.py` (Fuß je Blickrichtung, Konturpass), `konturpass.py`, `bildpaar.py` (Abnahme am
+  Bildpaar auf dem Kampfplatz).
+- Tests (art-check): Blickrichtungen haben Bildzahl, Größe und Anker der Seitenfolge;
+  jede 3D-Figur liegt im Spielraum der gemeinsamen Kamera; erste Bilder jeder Folge haben
+  eine dunkle Kontur; Breite und Rundung des Konturpasses. Jede Prüfung einmal rot gesehen.
+- Konzept [A-3 Figuren vollständig](docs/konzepte/a-3-figuren-vollstaendig.md), D-160.
 
 ## 0.29.1 – 08.11.2026 (Grafik 10: Türme stimmig in der Welt)
 
