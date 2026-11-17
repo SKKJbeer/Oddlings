@@ -1,7 +1,7 @@
 # Konzept A-2: Bauen und Tafeln
 
 Status: **[VORSCHLAG]** · Stand 16.11.2026 · Thread „Türme bauen hochwertig inszenieren“
-Zielversion 0.31.0 · D-Block D-155 bis D-159
+Zielversion 0.33.0 · D-Block D-155 bis D-159
 Grundlage: [AAA-Review](aaa-review.md) Befunde P1, P2, P3, P4, P5, R2;
 [Bewegung und Bauen](aaa-bewegung-und-bauen.md#a-2-bauen-und-tafeln); D-121 (Bauplätze nur beim
 Bauen), D-130 bis D-132 (Turmwerte), D-141 (Bauinseln, baut A-4).
