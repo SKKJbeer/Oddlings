@@ -11,6 +11,22 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.43.0 – 18.11.2026 (Pilzbalg und Sporling als 3D-Figuren)
+
+- **Pilzbalg und Sporling** laufen jetzt als eigene 3D-Figuren statt als gemaltes
+  Standbild (D-178), nach der Kette von A-3: TRELLIS-Modell aus der gemalten Vorlage,
+  Skelett, Bildfolgen `walk`, `walkFront`, `walkBack` (je 8), `hit` (3), `die` (6),
+  angeglichen und mit Kontur. Der Balg watschelt, der Sporling trippelt mit
+  zurückgekipptem Hut, damit sein Gesicht frei bleibt.
+- **Größe auf dem Feld** gleich der Seite im Asset-Vertrag, wie bei den übrigen
+  3D-Figuren: Moorhexe 0,85, Pilzbalg 0,8, Sporling 0,65 Felder (vorher 1,0, 1,1 und
+  0,6).
+- **Werkzeug:** `drehungZ` in `figur.py` dreht jetzt wirklich das Netz; vorher blieb es
+  ohne Wirkung (gemessen am Pilzbalg, dessen Gesicht TRELLIS nach hinten legt).
+- **Tests:** `BattleSpritesTests` verlangt die Bildfolgen für Pilzbalg und Sporling,
+  jedes Bild so groß wie das Standbild. Art-Check mit Herkunft je Folge.
+- Keine Regeländerung, Simulation und Balance unverändert.
+
 ## 0.42.0 – 17.11.2026 (Moorhexe und Pilzbalg: Heiler und Teiler) · Bau 63
 
 - **Moorhexe** (D-143, D-175): heilt alle 2 s jeden anderen verletzten Gegner im Umkreis

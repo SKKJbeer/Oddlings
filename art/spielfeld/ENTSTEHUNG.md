@@ -61,16 +61,16 @@ Modell, fester Seed je Name. Konzept: [Türme in der Welt](../../docs/konzepte/g
   Fleck aus dem gemalten Weg der jeweiligen Karte (Mitte des längsten waagerechten
   Wegstücks), weicher Rand. Neuer Kampfplatz: Skript erneut laufen lassen.
 
-## Pilzbalg und Sporling, gemalte Standbilder (0.42.0)
+## Pilzbalg und Sporling, gemalte Vorlagen (0.42.0, seit 0.43.0 Vorlage der 3D-Figuren)
 
 Für die Gegnerrolle Teiler (D-143, [Konzept](../../docs/konzepte/a-6-heiler-und-teiler.md)).
 FLUX.1-schnell Q4_0 (Apache 2.0), euler, 4 Schritte, cfg 1,0, 512 × 512, freigestellt mit
-`freistellen.py` (isnet-general-use, Kontur Standard), in den Atlas mit `atlas.py`
-(Seite und Anker aus dem Vertrag). Die 3D-Figuren nach der Kette von A-3 folgen, sobald
-das Rechenkontingent von TRELLIS wieder frei ist; bis dahin laufen beide mit der
-Gangart aus `FxStyle`.
+`freistellen.py` (isnet-general-use, Kontur Standard). In 0.42.0 standen sie als
+Standbilder im Atlas; seit 0.43.0 sind sie die Vorlagen der 3D-Figuren
+([Pilzbalg](../figuren-3d/enemy_puffball/ENTSTEHUNG.md),
+[Sporling](../figuren-3d/enemy_sporeling/ENTSTEHUNG.md)), die Standbilder kommen von dort.
 
-- `enemy_puffball` (`enemy_puffball-rohbild.png`, `enemy_puffball-frei.png`): Seed 11.
+- Pilzbalg (`enemy_puffball-rohbild.png`, `enemy_puffball-frei.png`): Seed 11.
   Prompt: "a round fat puffball mushroom creature, its whole body is one big bloated pale
   beige mushroom ball with brown spots and cracks leaking faint green spore dust, a small
   grumpy face with tiny dark eyes in the front of the ball, short stubby legs and two tiny
@@ -79,7 +79,7 @@ Gangart aus `FxStyle`.
   outlines, full body, standing straight, three-quarter view, arms held slightly away from
   the body, centered, on a plain flat light grey background, no ground, no shadow, no
   text, no letters". Seed 12 verworfen: Gesicht weicher, weniger Flecken.
-- `enemy_sporeling` (`enemy_sporeling-rohbild.png`, `enemy_sporeling-frei.png`): Seed 12.
+- Sporling (`enemy_sporeling-rohbild.png`, `enemy_sporeling-frei.png`): Seed 12.
   Prompt: "a tiny mischievous mushroom sprite, a small pale beige mushroom cap with brown
   spots on a thin white stalk body, skinny little arms and legs, a small grinning face
   with two black dot eyes under the cap", dann derselbe Stilteil wie beim Pilzbalg.

@@ -173,12 +173,72 @@
       "alpha": true
     },
     "enemy_puffball": {
-      "seiteZellen": 0.75,
+      "seiteZellen": 0.8,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_puffball_walk": {
+      "folge": 8,
+      "seiteZellen": 0.8,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_puffball_walkFront": {
+      "folge": 8,
+      "seiteZellen": 0.8,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_puffball_walkBack": {
+      "folge": 8,
+      "seiteZellen": 0.8,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_puffball_hit": {
+      "folge": 3,
+      "seiteZellen": 0.8,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_puffball_die": {
+      "folge": 6,
+      "seiteZellen": 0.8,
       "anker": 0.1,
       "alpha": true
     },
     "enemy_sporeling": {
-      "seiteZellen": 0.6,
+      "seiteZellen": 0.65,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_sporeling_walk": {
+      "folge": 8,
+      "seiteZellen": 0.65,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_sporeling_walkFront": {
+      "folge": 8,
+      "seiteZellen": 0.65,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_sporeling_walkBack": {
+      "folge": 8,
+      "seiteZellen": 0.65,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_sporeling_hit": {
+      "folge": 3,
+      "seiteZellen": 0.65,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_sporeling_die": {
+      "folge": 6,
+      "seiteZellen": 0.65,
       "anker": 0.1,
       "alpha": true
     },
