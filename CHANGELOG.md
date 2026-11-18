@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.43.0 – 18.11.2026 (Pilzbalg und Sporling als 3D-Figuren)
+## 0.43.0 – 18.11.2026 (Pilzbalg und Sporling als 3D-Figuren) · Bau 64
 
 - **Pilzbalg und Sporling** laufen jetzt als eigene 3D-Figuren statt als gemaltes
   Standbild (D-178), nach der Kette von A-3: TRELLIS-Modell aus der gemalten Vorlage,
