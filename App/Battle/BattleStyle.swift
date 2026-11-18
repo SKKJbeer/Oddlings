@@ -79,10 +79,12 @@ enum BattleStyle {
         case .brute: 1.2
         // Der Boss soll sich wie ein Auftritt anfühlen (P3-4): deutlich größer als die Panzerbestie.
         case .moorKing: 2.3
-        case .witch: 1.0
-        case .puffball: 1.1
+        // Seit 0.43.0 gleich der Seite im Asset-Vertrag, wie bei den anderen
+        // 3D-Figuren: Der Pilzbalg ist breit, nicht hoch, und wirkt mit 0,8 schon schwer.
+        case .witch: 0.85
+        case .puffball: 0.8
         // Klein, damit man drei aus einem Balg sofort als „wenig, aber viele“ liest.
-        case .sporeling: 0.6
+        case .sporeling: 0.65
         }
     }
 
