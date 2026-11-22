@@ -11,6 +11,92 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.43.0 – 18.11.2026 (Pilzbalg und Sporling als 3D-Figuren) · Bau 64
+
+- **Pilzbalg und Sporling** laufen jetzt als eigene 3D-Figuren statt als gemaltes
+  Standbild (D-178), nach der Kette von A-3: TRELLIS-Modell aus der gemalten Vorlage,
+  Skelett, Bildfolgen `walk`, `walkFront`, `walkBack` (je 8), `hit` (3), `die` (6),
+  angeglichen und mit Kontur. Der Balg watschelt, der Sporling trippelt mit
+  zurückgekipptem Hut, damit sein Gesicht frei bleibt.
+- **Größe auf dem Feld** gleich der Seite im Asset-Vertrag, wie bei den übrigen
+  3D-Figuren: Moorhexe 0,85, Pilzbalg 0,8, Sporling 0,65 Felder (vorher 1,0, 1,1 und
+  0,6).
+- **Werkzeug:** `drehungZ` in `figur.py` dreht jetzt wirklich das Netz; vorher blieb es
+  ohne Wirkung (gemessen am Pilzbalg, dessen Gesicht TRELLIS nach hinten legt).
+- **Tests:** `BattleSpritesTests` verlangt die Bildfolgen für Pilzbalg und Sporling,
+  jedes Bild so groß wie das Standbild. Art-Check mit Herkunft je Folge.
+- Keine Regeländerung, Simulation und Balance unverändert.
+
+## 0.42.0 – 17.11.2026 (Moorhexe und Pilzbalg: Heiler und Teiler) · Bau 63
+
+- **Moorhexe** (D-143, D-175): heilt alle 2 s jeden anderen verletzten Gegner im Umkreis
+  von einem Feld um 6 % seines Höchstlebens. Nicht sich selbst, keine Bosse, betäubt nicht.
+  Antwort: Zielwahl „Stärkster“, Falkenhorst, Steinregen. Neu in M6a ab Welle 2.
+- **Pilzbalg** (D-176): zerfällt beim Tod in drei schnelle Sporlinge am Todesort und
+  dahinter, mit der Stärke seiner Welle. Bricht er durch, zerfällt er nicht. Antwort: Blitz
+  und Salve über den Sporlingen. Neu in M6b ab Welle 2.
+- **Mission 7** stellt beide früh einzeln vor und mischt sie danach, weil sie nur eine der
+  beiden Gabeln voraussetzt (D-177, Entscheidungskarte S33).
+- Simulation: `EnemyConfig.heal`, `.split`, `Enemy.healTick` (optional, alte Spielstände
+  laden), Ereignisse `enemiesHealed`, `enemySplit`, Prüfung beim Laden. Missionen ohne die
+  beiden bleiben bitgleich.
+- App: grüner Heilring mit Funken über den Geheilten, Sporenwolke beim Zerfall, je ein
+  gedrosselter Klang, einmaliger Hinweis „Heilt ihre Nachbarn: zuerst sie“.
+- Figuren (D-178): Die Moorhexe ist eine 3D-Figur nach der Kette von A-3 (drei
+  Blickrichtungen, Treffer, Sturz), mit eigenem Knochen für den Stab. Pilzbalg und
+  Sporling haben vorerst ein gemaltes Standbild und laufen mit ihrer Gangart; ihre
+  3D-Figuren folgen, sobald das Rechenkontingent für TRELLIS wieder frei ist.
+- Labor: alle Mischungen gewinnen, Monokulturen verlieren; Heilung trifft Salven hart,
+  Falkenhorste kaum (Zahlen in 04).
+- Tests: `HealerSplitterTests` (15), neue Fälle in `MissionSixTests`, `MissionSevenTests`;
+  App: `HealerSplitterAppTests`, `SoundMapTests`, `BattleSpritesTests`.
+
+## 0.41.0 – 17.11.2026 (A-1: Laufen)
+
+- **Bögen statt Knicke:** Gegner laufen an jeder Ecke einen Kreisbogen (Radius ein
+  halbes Feld). Die Simulation bleibt unverändert; `PathView` legt nur das Bild auf
+  den Bogen, auf den Geraden sind Bild und Regel deckungsgleich (höchstens 0,21 Felder
+  Abstand in der Ecke, D-144).
+- **Eigene Spuren:** Jeder Gegner läuft auf einer festen seitlichen Spur aus seiner
+  Kennung, Flitzer und Plünderer breiter, Panzerbestie schmal, der Moorkönig mittig.
+  Kein Gänsemarsch mehr.
+- **Blickrichtung:** Seitenansicht, von vorn und von hinten nach der Laufrichtung, mit
+  kurzem Überblenden. Fehlen die Bilder von vorn oder hinten, bleibt die Seitenansicht
+  (D-150). Die neuen Ansichten liefert A-3.
+- **Gewicht:** Schatten wird beim Auftreten breiter, Staub an den Füßen, Neigung in die
+  Kurve, kurzer Anlauf nach dem Erscheinen. Mit „Bewegung reduzieren“ entfallen Staub,
+  Neigung und Anlauf.
+- **Kontaktabzug in der CI (D-151):** Jede Mission läuft im Simulator im Zeitraffer, fünf
+  Bilder und ein kurzer Film je Mission landen im Artefakt `kontaktabzug`;
+  `scripts/kontaktabzug.py` setzt sie zu Bögen zusammen und warnt bei Abweichung vom Weg,
+  gestapelten Figuren oder fehlenden Bögen.
+- Alle vier Gegner zeigen jetzt wirklich Vorder- und Rückansicht (Bilder aus A-3,
+  0.32.0, 0.39.0, 0.40.0).
+- Tests: `PathViewTests`, `EnemyLaneTests`, `FacingTests`, `WalkSceneTests`, erweiterte
+  `FxMathTests`, E2E `WalkE2ETests`, Skripttest `scripts/tests/test_kontaktabzug.py`.
+## 0.40.0 – 17.11.2026 (A-3, Teil 2: die Panzerbestie in 3D)
+
+- **Die Panzerbestie läuft auf vier Beinen:** eigene 3D-Figur nach dem Gemälde (dunkler
+  Keiler, Hauer, stahlblaue Platten, goldene Rückenplatte). Die Beine gehen diagonal
+  paarweise, der Kopf nickt; beim Treffer ruckt der Kopf hoch, beim Sturz kippt sie auf
+  die Seite (D-162). Folgen `walk`, `walkFront`, `walkBack` (je 8), `hit` (3), `die` (6),
+  gemeinsame Kamera und Außenlinie. Damit hat jeder Gegner Bildfolgen; die gemalten
+  Standbilder bleiben als Rückfall.
+- Tests: `BattleSpritesTests` verlangt die Bildfolgen der Panzerbestie (8/3/6, gleich groß
+  wie ihr Standbild); `check_assets.py` über den Atlas grün.
+
+## 0.39.0 – 17.11.2026 (A-3, Teil 2: der Flitzer in 3D)
+
+- **Der Flitzer läuft mit Armen und Beinen:** eigene 3D-Figur nach dem Gemälde (lange
+  Fühler, roter Schal, Rucksack), vorgekippt und mit weitem Schritt. Folgen `walk`,
+  `walkFront`, `walkBack` (je 8 Bilder), `hit` (3, Rumpf knickt zurück), `die` (6, fällt
+  vornüber), aus der gemeinsamen Kamera und mit derselben Außenlinie wie Plünderer und
+  Moorkönig (D-161). Das gemalte Standbild bleibt als Rückfall.
+- Werkzeug: `trellis.py` lädt nur noch das GLB; das Vorschauvideo der Space kommt
+  inzwischen mit 403 zurück und brach den Abruf ab.
+- Tests: `BattleSpritesTests` verlangt die Bildfolgen des Flitzers (8/3/6, gleich groß wie
+  sein Standbild); `check_assets.py` über den Atlas grün.
+
 ## 0.38.0 – 17.11.2026 (Kampfplatz Mission 1 als Diorama mit Bauinseln, A-4) · Bau 59
 
 - **Bauinseln** (D-141): Mission 1 baut nur noch auf sechs gestalteten Inseln mit
@@ -30,7 +116,8 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Tests: `BuildZoneTests`, Prüfregeln für Inseln, Mission-1-Budget, App-Test für
   Landschaft, `art-check` für Kamera, Maßstab, Plan und Inselboden.
 - [Konzept A-4](docs/konzepte/a-4-diorama-mission-1.md)
-## 0.34.0 – 17.11.2026 (A-5, Teil 1: Spezialisierungen als Bilder, gemalte Ringe)
+
+## 0.34.0 – 17.11.2026 (A-5, Teil 1: Spezialisierungen als Bilder, gemalte Ringe) · Bau 58
 
 - **Die größte Entscheidung ist auf dem Feld zu sehen:** Salve und Falkenhorst, Gewitterkrone
   und Funkensäule, Moorherz und Fäulnis haben je ein eigenes Turmbild. Gemalt aus dem Bild der

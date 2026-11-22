@@ -24,7 +24,9 @@ zu so vielen Punkten. `NUR=walk,shield` rendert nur diese Folgen.
 Felder für A-3 ([Konzept](../../docs/konzepte/a-3-figuren-vollstaendig.md)):
 `ansichten` rendert weitere Folgen mit derselben Bewegung, nur anders gedreht
 (`{"walkFront": {"folge": "walk", "blick": 20}}`); `verformen` dreht Punkte oberhalb
-`zVon` vor dem Binden um einen Angelpunkt (Mütze nach hinten). Kamerahöhe und
+`zVon` vor dem Binden um einen Angelpunkt (Mütze nach hinten). `drehungZ` dreht das
+ganze Modell um die Hochachse, wenn TRELLIS das Gesicht nicht nach -y legt (Pilzbalg:
+180; wirkt seit 0.43.0, vorher blieb das Netz unverändert). Kamerahöhe und
 Sonne kommen aus `art/asset-vertrag.json` (`kamera`, `sonne`); `kameraHoehe` in
 `rig.json` darf nur im Spielraum liegen. `VERTRAG=<pfad>` für Proben außerhalb
 des Repos.

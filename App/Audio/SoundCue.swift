@@ -21,6 +21,8 @@ enum SoundMoment: Equatable, Sendable {
     case bankPaid, earlyCallBonus
     /// Boss (P3-4): Auftritt, Schild, Ruf, Schild fällt.
     case bossArrived, bossShield, bossSummon, bossShieldDown
+    /// Moorhexe heilt, Pilzbalg platzt (D-175, D-176).
+    case healed, split
     case user(UserAction)
 }
 

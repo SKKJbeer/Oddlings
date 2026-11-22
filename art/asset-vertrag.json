@@ -9,7 +9,10 @@
     "enemy_brute": 1.15,
     "tower": 1.4,
     "enemy_moorKing": 2.0,
-    "fortress": 2.6
+    "fortress": 2.6,
+    "enemy_witch": 0.8,
+    "enemy_puffball": 0.85,
+    "enemy_sporeling": 0.5
   },
   "maxBytesJeDatei": 1500000,
   "_kamera": "Eine Kamera fuer alles (D-140, D-165): orthografisch, hoehe = Grad ueber dem Boden, ohne Gierwinkel. Der Boden wird in der Tiefe um 1/sin(hoehe) gestreckt, damit eine Zelle im Bild quadratisch bleibt. Figuren duerfen bis figurenSpielraum Grad flacher sein, damit das Gesicht lesbar bleibt. Sonne: azimut in der Bodenebene (0 = Bildschirm rechts, 90 = in die Tiefe, gegen den Uhrzeigersinn, zeigt zur Sonne), hoehe in Grad.",
@@ -104,7 +107,172 @@
       "anker": 0.1,
       "alpha": true
     },
+    "enemy_runner_walk": {
+      "folge": 8,
+      "seiteZellen": 0.9,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_runner_walkFront": {
+      "folge": 8,
+      "seiteZellen": 0.9,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_runner_walkBack": {
+      "folge": 8,
+      "seiteZellen": 0.9,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_runner_hit": {
+      "folge": 3,
+      "seiteZellen": 0.9,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_runner_die": {
+      "folge": 6,
+      "seiteZellen": 0.9,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_witch": {
+      "seiteZellen": 0.85,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_witch_walk": {
+      "folge": 8,
+      "seiteZellen": 0.85,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_witch_walkFront": {
+      "folge": 8,
+      "seiteZellen": 0.85,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_witch_walkBack": {
+      "folge": 8,
+      "seiteZellen": 0.85,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_witch_hit": {
+      "folge": 3,
+      "seiteZellen": 0.85,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_witch_die": {
+      "folge": 6,
+      "seiteZellen": 0.85,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_puffball": {
+      "seiteZellen": 0.8,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_puffball_walk": {
+      "folge": 8,
+      "seiteZellen": 0.8,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_puffball_walkFront": {
+      "folge": 8,
+      "seiteZellen": 0.8,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_puffball_walkBack": {
+      "folge": 8,
+      "seiteZellen": 0.8,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_puffball_hit": {
+      "folge": 3,
+      "seiteZellen": 0.8,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_puffball_die": {
+      "folge": 6,
+      "seiteZellen": 0.8,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_sporeling": {
+      "seiteZellen": 0.65,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_sporeling_walk": {
+      "folge": 8,
+      "seiteZellen": 0.65,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_sporeling_walkFront": {
+      "folge": 8,
+      "seiteZellen": 0.65,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_sporeling_walkBack": {
+      "folge": 8,
+      "seiteZellen": 0.65,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_sporeling_hit": {
+      "folge": 3,
+      "seiteZellen": 0.65,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_sporeling_die": {
+      "folge": 6,
+      "seiteZellen": 0.65,
+      "anker": 0.1,
+      "alpha": true
+    },
     "enemy_brute": {
+      "seiteZellen": 1.2,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_brute_walk": {
+      "folge": 8,
+      "seiteZellen": 1.2,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_brute_walkFront": {
+      "folge": 8,
+      "seiteZellen": 1.2,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_brute_walkBack": {
+      "folge": 8,
+      "seiteZellen": 1.2,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_brute_hit": {
+      "folge": 3,
+      "seiteZellen": 1.2,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "enemy_brute_die": {
+      "folge": 6,
       "seiteZellen": 1.2,
       "anker": 0.1,
       "alpha": true

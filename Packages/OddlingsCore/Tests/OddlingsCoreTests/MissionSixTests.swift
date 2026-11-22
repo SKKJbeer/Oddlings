@@ -93,6 +93,40 @@ struct MissionSixTests {
         }
     }
 
+    /// D-143, D-175: Die Moorhexe ist die Frage von M6a. Ihre Heilung frisst
+    /// viele kleine Treffer (Salven, Sporen) und kaum große (Falkenhorst).
+    @Test("M6a: Die Heilung trifft Salven härter als Falkenhorste")
+    func healingPunishesSmallHits() throws {
+        let (sim, strategies) = try setup("mission-06a")
+        #expect(sim.config.waves[1].groups.contains { $0.enemy == .witch }, "Welle 2 stellt die Hexe vor")
+        var calm = sim.config
+        calm.enemies[.witch]?.heal = nil
+        let without = Simulation(config: calm)
+        func loss(_ name: String) throws -> Double {
+            let order = try order(name, in: strategies)
+            return without.reserve(order) - sim.reserve(order)
+        }
+        let volleys = try loss("Salven mit Moorherz"), falcons = try loss("Fäulnis mit Falkenhorsten")
+        #expect(volleys >= falcons + 0.2, "Salven verlieren \(volleys), Falkenhorste \(falcons)")
+        #expect(falcons >= 0, "geheilt wird immer, auch gegen große Treffer")
+    }
+
+    /// D-143, D-176: Der Pilzbalg ist die Frage von M6b; ohne Zerfall wäre er
+    /// nur ein zäher Plünderer. Die Mischungen beantworten ihn (Blitz und Salve
+    /// über den Sporlingen), darum kostet er sie wenig, aber nie nichts.
+    @Test("M6b: Der Zerfall kostet jede Mischung Reserve")
+    func splittingCostsReserve() throws {
+        let (sim, strategies) = try setup("mission-06b")
+        #expect(sim.config.waves[1].groups.contains { $0.enemy == .puffball }, "Welle 2 stellt den Balg vor")
+        var whole = sim.config
+        whole.enemies[.puffball]?.split = nil
+        let without = Simulation(config: whole)
+        for name in ["Mix mit freier Wahl", "Mix mit Ruinen-Spezialisierungen"] {
+            let order = try order(name, in: strategies)
+            #expect(without.reserve(order) >= sim.reserve(order) + 0.01, "\(name)")
+        }
+    }
+
     @Test("Gleicher Seed, gleiche Befehle, gleicher Endzustand", arguments: MissionSixTests.files)
     func deterministic(file: String) throws {
         let (sim, strategies) = try setup(file)

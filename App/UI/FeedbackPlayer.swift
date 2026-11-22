@@ -45,6 +45,8 @@ enum FeedbackPlayer {
         // Der Schild des Bosses ist ein Wendepunkt (P3-4); Ruf und Fall nicht.
         case .bossShieldRaised: .heavy
         case .bossSummoned, .bossShieldDropped, .shieldAbsorbed: nil
+        // Heilen und Zerfallen betreffen Gegner, nicht den Spieler (D-175, D-176).
+        case .enemiesHealed, .enemySplit: nil
         // Banken zahlen alle paar Sekunden; das soll nicht in der Hand summen.
         case .bankPaid, .bankEmptied, .earlyCallBonus: nil
         case .towerFired, .enemyDamaged, .armorAbsorbed, .enemySlowed, .enemyKilled, .waveStarted, .enemySpawned: nil

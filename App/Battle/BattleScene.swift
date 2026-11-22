@@ -46,18 +46,30 @@ final class BattleScene: SKScene {
     /// Der Hinweis auf die Panzerung kommt einmal je Mission, auch über einen
     /// Neustart hinweg: Wer neu anfängt, hat ihn schon gelesen (P2-10).
     private var armorHintShown = false
+    private var healHintShown = false
     /// „Sporenfunke!“ springt beim ersten Funken jeder Mission auf (P2-8).
     private var sparkCalloutShown = false
     /// Was vom Einstieg gerade auf der Karte steht (Hand).
     private var shownGuide: BattleGuide.Shown = .none
     private var pendingBuilds: Set<Int> = []
     private(set) var layout: BoardLayout
+    /// Der Weg, wie er gezeichnet wird: mit Bögen an den Ecken (A-1). Die
+    /// Simulation rechnet weiter auf `model.sim.map.path`.
+    let pathView: PathView
+    /// Gezählt für Tests und den Zähler `fx.stats`: Bilder, in denen zwei Gegner
+    /// fast deckungsgleich standen (nur Debug-Bau).
+    private(set) var stackedFrames = 0
+    /// Wie lange jedes Paar schon deckungsgleich steht, Schlüssel aus beiden Kennungen.
+    private var stackedPairs: [Int: TimeInterval] = [:]
     private var field: CGFloat { layout.field }
     private var lastTime: TimeInterval?
     /// Ereignisse des letzten Bildes, für Tests.
     private(set) var lastEvents: [Event] = []
     #if DEBUG
     private var probe: FxProbe?
+    private var contactSheet: ContactSheetProbe?
+    /// Größte Abweichung des Bilds von der Regelposition in diesem Bild, in Feldern.
+    private(set) var frameDeviation: Double = 0
     #endif
 
     init(model: BattleModel) {
@@ -66,6 +78,7 @@ final class BattleScene: SKScene {
         let layout = BoardLayout(size: size, map: model.sim.map)
         self.layout = layout
         light = BattlefieldLight.color(missionID: model.sim.config.mission.id)
+        pathView = PathView(path: model.sim.map.path, radius: FxStyle.pathCornerRadius)
         let world = SKNode(), effects = SKNode()
         self.world = world
         effectLayer = effects
@@ -75,6 +88,7 @@ final class BattleScene: SKScene {
         backgroundColor = BattleStyle.background
         #if DEBUG
         probe = FxProbe.fromArguments()
+        contactSheet = ContactSheetProbe.fromArguments(mission: model.sim.config.mission.id)
         #endif
         addChild(world)
         for (layer, z) in [(ground, 0), (zoneLayer, 2), (shadeLayer, 3), (selectionLayer, 5), (towerLayer, 10), (enemyLayer, 20), (effectLayer, 30)] {
@@ -96,6 +110,8 @@ final class BattleScene: SKScene {
         frame(after: frameTime)
         #if DEBUG
         probe?.add(frameTime)
+        contactSheet?.add(frameTime, enemies: enemyNodes.count, deviation: frameDeviation,
+                          stacked: stackedFrames, stats: fx.stats)
         #endif
     }
 
@@ -378,25 +394,43 @@ final class BattleScene: SKScene {
         var before: [Int: Double] = [:]
         for enemy in model.previous.enemies { before[enemy.id] = enemy.distance }
         let t = model.interpolation
-        let path = model.sim.map.path
+        let still = fx.reduceMotion
         var liveEnemies: [Int: Bool] = [:]
         for enemy in state.enemies {
             liveEnemies[enemy.id] = true
             let node = enemyNodes[enemy.id] ?? makeEnemyNode(enemy)
             let appeared = pendingSpawns.remove(enemy.id) != nil
+            if appeared { node.appearedAt = fx.time }
             let from = before[enemy.id] ?? enemy.distance
             let distance = from + (enemy.distance - from) * t
-            let here = path.position(at: distance)
-            node.position = toScene(here)
+            // Bogen statt Knick und eigene Spur (A-1): nur das Bild weicht ab,
+            // höchstens um den Bogen und die Spurbreite.
+            let here = pathView.sample(at: distance)
+            if (here.curvature != 0) != node.inBend {
+                node.inBend.toggle()
+                if node.inBend { fx.noteBend() }
+            }
+            node.position = toScene(here.offset(by: node.lane))
             node.zPosition = 1 - node.position.y / max(size.height, 1)
-            // Blick in Laufrichtung, aus einem Stück Weg voraus: An senkrechten
-            // Stücken bleibt die letzte Richtung, statt zu flackern.
-            let ahead = path.position(at: distance + FxStyle.facingLookahead)
-            if abs(ahead.x - here.x) > FxStyle.facingThreshold { node.facing = ahead.x > here.x ? 1 : -1 }
+            // Blickrichtung aus der Tangente. Links oder rechts nur, wenn sie
+            // deutlich waagerecht zeigt: An senkrechten Stücken bleibt die
+            // letzte Seite, statt zu flackern.
+            if abs(here.dx) > FxStyle.facingThreshold { node.facing = here.dx > 0 ? 1 : -1 }
+            node.turn(to: FxMath.facing(dx: here.dx, dy: here.dy, sideAngle: FxStyle.sideAngle), dt: dt)
             let phase = FxMath.phase(forID: enemy.id)
             let gait = node.hasFrames ? FxStyle.framedGait(enemy.kind) : FxStyle.gait(enemy.kind)
-            node.apply(FxMath.pose(distance: distance, phase: phase, gait: gait), field: field)
+            // Krümmung positiv heißt im Uhrzeigersinn auf dem Bildschirm; die
+            // Figur neigt sich zur Innenseite, also gegen den Drehsinn von SpriteKit.
+            node.lean(towards: -here.curvature * FxStyle.bankLean(enemy.kind), dt: dt, still: still)
+            var pose = FxMath.pose(distance: distance, phase: phase, gait: gait)
+            let age = fx.time - node.appearedAt
+            if !still, age < FxStyle.startupLife {
+                // Anlaufen: zu Beginn vorgebeugt, als stoße sie sich ab.
+                pose.tilt -= FxStyle.startupLean * (1 - Ease.quadOut(age / FxStyle.startupLife))
+            }
+            node.apply(pose, field: field, bank: node.bank)
             node.walk(distance: distance, phase: phase)
+            footfalls(node, kind: enemy.kind, distance: distance, stride: gait.stride, phase: phase, still: still)
             node.show(enemy, dt: dt, stunned: (enemy.stunUntilTick ?? Int.min) > state.tick)
             if appeared {
                 fx.spawn(node)
@@ -411,6 +445,17 @@ final class BattleScene: SKScene {
                 }
             }
         }
+        #if DEBUG
+        countStacked(dt: dt)
+        frameDeviation = 0
+        let path = model.sim.map.path
+        for enemy in state.enemies {
+            guard let node = enemyNodes[enemy.id] else { continue }
+            let from = before[enemy.id] ?? enemy.distance
+            let rule = toScene(path.position(at: from + (enemy.distance - from) * t))
+            frameDeviation = max(frameDeviation, Double(hypot(node.position.x - rule.x, node.position.y - rule.y) / field))
+        }
+        #endif
         for (id, node) in enemyNodes where liveEnemies[id] == nil {
             node.removeFromParent()
             enemyNodes[id] = nil
@@ -421,9 +466,49 @@ final class BattleScene: SKScene {
         for tower in model.state.towers where towerNodes[tower.id] == nil { _ = makeTowerNode(tower) }
         for enemy in model.state.enemies where enemyNodes[enemy.id] == nil {
             let node = makeEnemyNode(enemy)
-            node.position = toScene(model.sim.map.path.position(at: enemy.distance))
+            node.position = toScene(pathView.position(at: enemy.distance, lane: node.lane))
         }
     }
+
+    /// Staub beim Aufsetzen (A-1): jeder n-te Schritt je Art, gezählt aus der
+    /// Strecke. Ein Neustart oder Sprung zurück zählt nicht.
+    private func footfalls(_ node: EnemyNode, kind: EnemyKind, distance: Double, stride: Double, phase: Double, still: Bool) {
+        defer { node.lastDistance = distance }
+        guard let last = node.lastDistance else { return }
+        let steps = FxMath.footfalls(from: last, to: distance, stride: stride, phase: phase)
+        guard steps > 0 else { return }
+        let every = FxStyle.dustEvery(kind)
+        let before = node.footsteps / every
+        node.footsteps += steps
+        if !still, node.footsteps / every > before { fx.footfall(node, size: FxStyle.dustSize(kind)) }
+    }
+
+    #if DEBUG
+    /// Zwei Gegner fast an derselben Stelle (Bruchteil eines Felds): Das soll
+    /// mit Spuren nicht mehr vorkommen. Zählt nur, liefert die Messung für
+    /// Tests, E2E-Zähler und Kontaktabzug.
+    private func countStacked(dt: TimeInterval) {
+        let nodes = enemyNodes.sorted { $0.key < $1.key }
+        let limit = FxStyle.stackedDistance * field
+        var together: [Int: TimeInterval] = [:]
+        var held = false
+        for i in nodes.indices {
+            for j in nodes.indices where j > i {
+                let a = nodes[i].value.position, b = nodes[j].value.position
+                guard hypot(a.x - b.x, a.y - b.y) < limit else { continue }
+                let pair = nodes[i].key * 1_000_000 + nodes[j].key
+                let time = (stackedPairs[pair] ?? 0) + dt
+                together[pair] = time
+                held = held || time >= FxStyle.stackedHold
+            }
+        }
+        stackedPairs = together
+        if held {
+            stackedFrames += 1
+            fx.noteStacked()
+        }
+    }
+    #endif
 
     private func makeTowerNode(_ tower: Tower) -> TowerNode {
         let node = TowerNode(tower: tower, field: field, light: light,
@@ -441,6 +526,7 @@ final class BattleScene: SKScene {
     private func makeEnemyNode(_ enemy: Enemy) -> EnemyNode {
         let stats = model.sim.config.enemies[enemy.kind]
         let node = EnemyNode(enemy: enemy, field: field, armored: (stats?.armor ?? 0) > 0, boss: stats?.boss != nil)
+        node.lane = FxMath.lane(forID: enemy.id) * FxStyle.laneWidth(enemy.kind)
         enemyLayer.addChild(node)
         enemyNodes[enemy.id] = node
         return node
@@ -533,6 +619,19 @@ final class BattleScene: SKScene {
         case .shieldAbsorbed(let id):
             // Wie die Panzerung: Funke und dumpfer Treffer, mit derselben Grenze je Gegner.
             if let node = enemyNodes[id], fx.armor(node) { audio?.play(.armored) }
+        case .enemiesHealed(let healerID, let healed, _):
+            // Klang nur, wenn auch der Ring spielt: dieselbe Grenze je Hexe.
+            guard let healer = enemyNodes[healerID] else { return }
+            let radius = model.sim.config.enemies[healer.kind]?.heal?.radius ?? 0
+            if fx.heal(healer, patients: healed.compactMap { enemyNodes[$0] }, radius: radius) { audio?.play(.healed) }
+            if !healHintShown {
+                healHintShown = true
+                fx.healHint(healer)
+            }
+        case .enemySplit(_, let into):
+            // Der Balg ist schon dem Director übergeben; die Wolke steht dort, wo der erste Sporling erscheint.
+            guard let first = model.state.enemies.first(where: { into.contains($0.id) }) else { return }
+            fx.split(at: toScene(model.sim.map.path.position(at: first.distance)))
         }
     }
 
@@ -562,6 +661,9 @@ final class BattleScene: SKScene {
         case .bossShieldDropped: return .bossShieldDown
         // Spielt `play` selbst, gedrosselt mit dem Funken.
         case .shieldAbsorbed: return nil
+        // Spielt `play` selbst, gedrosselt mit dem Ring.
+        case .enemiesHealed: return nil
+        case .enemySplit: return .split
         case .waveStarted(let index): return .waveStarted(index: index, count: model.sim.config.waves.count)
         case .missionEnded(let won): return .missionEnded(won: won)
         case .abilityCast:
