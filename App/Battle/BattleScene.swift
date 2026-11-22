@@ -77,7 +77,7 @@ final class BattleScene: SKScene {
     init(model: BattleModel) {
         self.model = model
         let size = CGSize(width: 844, height: 390)
-        let layout = BoardLayout(size: size, map: model.sim.map)
+        let layout = BoardLayout.battle(size: size, map: model.sim.map)
         self.layout = layout
         light = BattlefieldLight.color(missionID: model.sim.config.mission.id)
         pathView = PathView(path: model.sim.map.path, radius: FxStyle.pathCornerRadius)
@@ -167,7 +167,9 @@ final class BattleScene: SKScene {
     private func combo(at point: CGPoint) {
         guard !sparkCalloutShown else { return }
         sparkCalloutShown = true
-        fx.sparkCallout(at: point, sentence: controller?.guide.takeSparkSentence() == true, bounds: size)
+        // Nicht unter die Schilder der Kopfleiste (D-180).
+        fx.sparkCallout(at: point, sentence: controller?.guide.takeSparkSentence() == true,
+                        bounds: CGSize(width: size.width, height: max(0, size.height - BattleStyle.boardTop)))
     }
 
     private func clearPieces() {
@@ -364,7 +366,7 @@ final class BattleScene: SKScene {
     private func layoutMap() {
         guard size.width > 0, size.height > 0 else { return }
         let map = model.sim.map
-        layout = BoardLayout(size: size, map: map)
+        layout = BoardLayout.battle(size: size, map: map)
 
         ground.removeAllChildren()
         let painted = BattleSprites.ground(missionID: model.sim.config.mission.id, layout: layout)
