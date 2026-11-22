@@ -11,6 +11,34 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.44.0 – 17.11.2026 (A-2: Bauen und Tafeln)
+
+### Neu
+- **Vorschau vor dem Kauf** (D-155, Steffens Karte S33): Nach dem ersten Tippen auf
+  einen Turm steht er blass an seinem Platz, im Licht des Kampfplatzes. Beim
+  Aufwerten zeigt die Vorschau das Bild der nächsten Stufe, vor einer Spezialisierung
+  ihr eigenes Bild (A-5).
+- **Weg im Kreis** (D-156): Der Wegabschnitt in Reichweite leuchtet im gemalten Ring
+  (A-5). Gleiche Rechnung wie die Simulation.
+- **Bauplätze um den Finger** (D-157): voll an der gewählten Zelle, weich auslaufend.
+- **Wellenvorschau** (D-159): Zettel unter „Welle n" mit Gegnerbildern und Anzahl,
+  neue Arten mit Ausrufezeichen.
+- **Errichten statt Abwerfen**: Der Turm wächst aus dem Boden, ein Gerüst steht kurz
+  und fällt weg. Kein Bildschirmstoß mehr beim Bauen.
+- **Aufwerten** mit Lichtsäule und Strecken, **Spezialisieren** mit eigenem Auftritt
+  (Wirbel, Sinken, neue Gestalt).
+
+### Geändert
+- Die Infotafel meidet Weg und Festung und lässt Fähigkeitsknopf und Wellenzettel frei
+  (D-158); kleine Tafel 240 statt 214 pt breit.
+- Tafeltexte passen in voller Größe: „Nochmal tippen: aufwerten (75)", „100 Gold
+  fehlen dir vorerst.", kürzere Sätze für die Spezialisierungen.
+
+### Tests
+- App: `BuildAidsTests`, `TextFitTests`, neue Fälle in `HudLayoutTests`,
+  `BattleSceneTests`, `FxDirectorTests`. E2E: Wellenvorschau in `HUDE2ETests`,
+  Bank-Warnung in `BankE2ETests`.
+
 ## 0.43.0 – 18.11.2026 (Pilzbalg und Sporling als 3D-Figuren) · Bau 64
 
 - **Pilzbalg und Sporling** laufen jetzt als eigene 3D-Figuren statt als gemaltes

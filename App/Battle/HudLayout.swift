@@ -24,14 +24,30 @@ struct HudLayout: Equatable {
         var top: CGFloat = 0, left: CGFloat = 0, bottom: CGFloat = 0, right: CGFloat = 0
     }
 
+    /// Was Tafel und Bogen nicht verdecken sollen (A-2, D-158). Feste Ecken
+    /// sind hart wie Zelle und Knöpfe; Weg und Festung kosten Strafpunkte,
+    /// denn dort spielt sich die Mission ab (Review P4).
+    struct Avoid: Equatable {
+        /// Wegzellen in Ansichtskoordinaten.
+        var path: [CGRect] = []
+        /// Bild der Festung in Ansichtskoordinaten.
+        var fortress: CGRect?
+        /// Feste Bedienelemente auf der Karte (Fähigkeitsknopf, Wellenvorschau).
+        var reserved: [CGRect] = []
+        var pathPenalty: CGFloat = 0
+        var fortressPenalty: CGFloat = 0
+    }
+
     let board: BoardLayout
     let metrics: Metrics
+    let avoid: Avoid
     /// Bereich, in dem Knöpfe und Tafel ganz liegen müssen.
     let bounds: CGRect
 
-    init(board: BoardLayout, insets: Insets, metrics: Metrics) {
+    init(board: BoardLayout, insets: Insets, metrics: Metrics, avoid: Avoid = Avoid()) {
         self.board = board
         self.metrics = metrics
+        self.avoid = avoid
         let m = metrics.margin
         bounds = CGRect(x: insets.left + m, y: insets.top + m,
                         width: max(0, board.size.width - insets.left - insets.right - 2 * m),
@@ -68,40 +84,73 @@ struct HudLayout: Equatable {
     }
 
     /// Infotafel auf der Seite der Karte, die von der Zelle weg liegt, und
-    /// weder über der Zelle noch über einem Knopf.
-    /// `size` ist größer, wenn die Tafel Turmwerte trägt (D-130).
+    /// weder über der Zelle noch über einem Knopf oder einer festen Ecke.
+    /// Unter den freien Lagen gewinnt die, die am wenigsten Weg und keine
+    /// Festung verdeckt (D-158). `size` ist größer, wenn die Tafel Turmwerte trägt (D-130).
     func panel(for cell: Cell, avoiding buttons: [CGPoint], size: CGSize? = nil) -> CGRect {
         let size = size ?? metrics.panel
+        let spots = candidates(size, for: cell)
+        return place(size, for: cell, avoiding: buttons, spots: spots)
+            ?? CGRect(origin: spots[0], size: size)
+    }
+
+    /// Wie `panel`, aber nil, wenn die Tafel in dieser Größe nirgends frei
+    /// liegt. Die Tafel mit Turmwerten (D-130) weicht dann auf die flache Leiste aus.
+    func freePanel(for cell: Cell, avoiding buttons: [CGPoint], size: CGSize) -> CGRect? {
+        place(size, for: cell, avoiding: buttons, spots: candidates(size, for: cell))
+    }
+
+    /// Ist die Lage frei von Zelle, Knöpfen und festen Ecken?
+    func isFree(_ rect: CGRect, for cell: Cell, avoiding buttons: [CGPoint]) -> Bool {
+        let blocked = [cellRect(cell)] + buttons.map(buttonRect) + avoid.reserved
+        return !blocked.contains { $0.intersects(rect) }
+    }
+
+    /// Strafpunkte einer Lage: Wegzellen darunter und die Festung.
+    func penalty(of rect: CGRect) -> CGFloat {
+        // Eine bloß berührte Kante zählt nicht: Die Tafel liegt sonst neben
+        // dem Weg und gilt doch als darauf.
+        let inner = rect.insetBy(dx: 1, dy: 1)
+        let path = CGFloat(avoid.path.filter { $0.intersects(inner) }.count) * avoid.pathPenalty
+        let fortress = avoid.fortress.map { $0.intersects(inner) ? avoid.fortressPenalty : 0 } ?? 0
+        return path + fortress
+    }
+
+    /// Mögliche Lagen in der Reihenfolge, die bei gleicher Strafe gewinnt:
+    /// Ecken auf der Seite weg von der Zelle, dann Mitte oben und unten, dann
+    /// die Mitte links und rechts.
+    func candidates(_ size: CGSize, for cell: Cell) -> [CGPoint] {
         let left = [bounds.minX, bounds.maxX - size.width]
         // Die Mitte zuletzt: Die große Tafel mit Turmwerten (D-130) findet auf
         // dem iPhone SE bei vier Knöpfen in der Kartenmitte sonst keine freie Ecke.
         let xs = (cell.x >= board.columns / 2 ? left : left.reversed()) + [bounds.midX - size.width / 2]
         let ys = cell.y >= board.rows / 2 ? [bounds.minY, bounds.maxY - size.height]
                                           : [bounds.maxY - size.height, bounds.minY]
-        return place(size, for: cell, avoiding: buttons, xs: xs, ys: ys)
-            ?? CGRect(origin: CGPoint(x: xs[0], y: ys[0]), size: size)
-    }
-
-    /// Wie `panel`, aber nil, wenn die Tafel in dieser Größe nirgends frei
-    /// liegt. Die Tafel mit Turmwerten (D-130) weicht dann auf die flache Leiste aus.
-    func freePanel(for cell: Cell, avoiding buttons: [CGPoint], size: CGSize) -> CGRect? {
-        let left = [bounds.minX, bounds.maxX - size.width]
-        let xs = (cell.x >= board.columns / 2 ? left : left.reversed()) + [bounds.midX - size.width / 2]
-        let ys = cell.y >= board.rows / 2 ? [bounds.minY, bounds.maxY - size.height]
-                                          : [bounds.maxY - size.height, bounds.minY]
-        return place(size, for: cell, avoiding: buttons, xs: xs, ys: ys)
-    }
-
-    private func place(_ size: CGSize, for cell: Cell, avoiding buttons: [CGPoint],
-                       xs: [CGFloat], ys: [CGFloat]) -> CGRect? {
-        let blocked = [cellRect(cell)] + buttons.map(buttonRect)
-        for x in xs {
-            for y in ys {
-                let rect = CGRect(origin: CGPoint(x: x, y: y), size: size)
-                if !blocked.contains(where: { $0.intersects(rect) }) { return rect }
-            }
+        var spots = xs.flatMap { x in ys.map { CGPoint(x: x, y: $0) } }
+        spots += xs.prefix(2).map { CGPoint(x: $0, y: bounds.midY - size.height / 2) }
+        // Dicht neben Festung und festen Ecken: Auf dem iPhone SE ragen sie so
+        // weit in die Karte, dass die Ecken und Mitten auf ihnen lägen.
+        var edgesX: [CGFloat] = [], edgesY: [CGFloat] = []
+        for rect in avoid.reserved + [avoid.fortress].compactMap({ $0 }) {
+            edgesX += [rect.minX - size.width, rect.maxX]
+            edgesY += [rect.minY - size.height, rect.maxY]
         }
-        return nil
+        let fitsX = { (x: CGFloat) in x >= self.bounds.minX && x + size.width <= self.bounds.maxX }
+        let fitsY = { (y: CGFloat) in y >= self.bounds.minY && y + size.height <= self.bounds.maxY }
+        spots += edgesX.filter(fitsX).flatMap { x in ys.map { CGPoint(x: x, y: $0) } }
+        spots += edgesY.filter(fitsY).flatMap { y in xs.map { CGPoint(x: $0, y: y) } }
+        return spots
+    }
+
+    private func place(_ size: CGSize, for cell: Cell, avoiding buttons: [CGPoint], spots: [CGPoint]) -> CGRect? {
+        var best: (rect: CGRect, penalty: CGFloat)?
+        for spot in spots {
+            let rect = CGRect(origin: spot, size: size)
+            guard isFree(rect, for: cell, avoiding: buttons) else { continue }
+            let cost = penalty(of: rect)
+            if best.map({ cost < $0.penalty }) ?? true { best = (rect, cost) }
+        }
+        return best?.rect
     }
 
     /// Lage der Tafel mit Turmwerten: hoch mit vier Kacheln im Quadrat, wo
@@ -109,8 +158,14 @@ struct HudLayout: Equatable {
     /// dem iPhone SE fehlt der hohen Tafel bei vier Knöpfen in der
     /// Kartenmitte die Höhe; die Leiste passt dort überall (HudLayoutTests).
     func statPanel(for cell: Cell, avoiding buttons: [CGPoint], tall: CGSize, wide: CGSize) -> (rect: CGRect, wide: Bool) {
-        if let rect = freePanel(for: cell, avoiding: buttons, size: tall) { return (rect, false) }
-        return (panel(for: cell, avoiding: buttons, size: wide), true)
+        let high = freePanel(for: cell, avoiding: buttons, size: tall)
+        let flat = freePanel(for: cell, avoiding: buttons, size: wide)
+        // Die Leiste gewinnt nur, wenn die hohe Tafel auf der Festung läge und
+        // sie nicht (D-158): Vier Kacheln im Quadrat liest man schneller, ein
+        // paar Wegzellen mehr sind dafür in Ordnung.
+        let onFortress = { (rect: CGRect) in self.penalty(of: rect) >= self.avoid.fortressPenalty && self.avoid.fortressPenalty > 0 }
+        if let high, !onFortress(high) || flat.map(onFortress) ?? true { return (high, false) }
+        return (flat ?? panel(for: cell, avoiding: buttons, size: wide), true)
     }
 
     // MARK: Rechnung
@@ -141,7 +196,10 @@ struct HudLayout: Equatable {
         let cellRect = cellRect(cell)
         let gap = metrics.gap
         for (i, a) in points.enumerated() {
-            if buttonRect(a).insetBy(dx: -gap, dy: -gap).intersects(cellRect) { return false }
+            let rect = buttonRect(a).insetBy(dx: -gap, dy: -gap)
+            if rect.intersects(cellRect) { return false }
+            // Feste Ecken (Fähigkeitsknopf, Wellenvorschau) bleiben frei (D-158).
+            if avoid.reserved.contains(where: { $0.intersects(rect) }) { return false }
             for b in points[(i + 1)...] where hypot(a.x - b.x, a.y - b.y) < metrics.button + gap { return false }
         }
         return true
@@ -159,5 +217,51 @@ struct HudLayout: Equatable {
     private func fits(_ points: [CGPoint], cell: Cell) -> Bool {
         let inside = points.allSatisfy { bounds.insetBy(dx: -0.5, dy: -0.5).contains(buttonRect($0)) }
         return inside && clear(points, cell: cell)
+    }
+}
+
+@MainActor
+extension HudLayout.Avoid {
+    /// Was die Mission auf der Karte hat: Wegzellen, Festung und feste Ecken.
+    /// Dieselbe Rechnung für Ansicht und Tests, damit beide dieselbe Lage sehen.
+    init(board: BoardLayout, map: MissionMap, reserved: [CGRect] = []) {
+        var path: [CGRect] = []
+        for y in 0..<map.height {
+            for x in 0..<map.width {
+                let cell = Cell(x: x, y: y)
+                guard map.path.distance(from: cell.center) < BattleStyle.panelPathReach else { continue }
+                let origin = board.viewPoint(Point(x: Double(x), y: Double(y)))
+                path.append(CGRect(origin: origin, size: CGSize(width: board.field, height: board.field)))
+            }
+        }
+        // Wie `BattleScene.layoutMap`: Die Festung sitzt, wo der Weg die Karte
+        // verlässt, das Bild um `fortressOffset` versetzt, Fuß auf dem Anker.
+        let end = map.path.points[map.path.points.count - 1]
+        let gate = board.viewPoint(Point(x: min(end.x, Double(map.width)), y: end.y))
+        let side = BattleStyle.fortressSpriteSide * board.field
+        let foot = CGPoint(x: gate.x + BattleStyle.fortressOffset.x * board.field,
+                           y: gate.y + BattleStyle.fortressOffset.y * board.field)
+        let fortress = CGRect(x: foot.x - side / 2, y: foot.y - side * (1 - BattleStyle.fortressAnchorY),
+                              width: side, height: side)
+        self.init(path: path, fortress: fortress, reserved: reserved,
+                  pathPenalty: BattleStyle.panelPathPenalty, fortressPenalty: BattleStyle.panelFortressPenalty)
+    }
+}
+
+@MainActor
+extension HudLayout {
+    /// Fähigkeitsknopf unten rechts auf der Karte (D-033), wie `BattleView` ihn legt.
+    static func abilityRect(board size: CGSize, insets: Insets) -> CGRect {
+        let side = BattleStyle.tapTarget, m = BattleStyle.hudMargin
+        return CGRect(x: size.width - insets.right - m - side, y: size.height - insets.bottom - m - side,
+                      width: side, height: side)
+    }
+
+    /// Zettel der Wellenvorschau oben rechts unter „Welle n“ (D-159), wie
+    /// `BattleView` ihn legt: rechtsbündig mit dem Knopf, links von Tempo und Pause.
+    static func forecastRect(board size: CGSize, insets: Insets, entries: Int) -> CGRect {
+        let width = BattleStyle.forecastWidth(entries: entries)
+        let right = size.width - insets.right - BattleStyle.forecastTrailing
+        return CGRect(x: right - width, y: 0, width: width, height: BattleStyle.forecastHeight)
     }
 }

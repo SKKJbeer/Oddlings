@@ -159,7 +159,7 @@ Ab Mission 5a. Konzept: [p3-1-spezialisierungen-sumpfpfad](../konzepte/p3-1-spez
   Spezialisierung. Zurück nur durch Verkaufen (70 % von allem).
 - Ab Mission 6 (P3-3, D-079, Karte S15) stehen je Turm beide Spezialisierungen zur
   Wahl: zwei Sterne nebeneinander, je mit Anfangsbuchstabe und Preis. Der erste Tipp
-  zeigt die Vorschau und „Endgültig: <die andere> fällt weg“, der andere Stern wechselt
+  zeigt die Vorschau und „<die andere> entfällt endgültig“, der andere Stern wechselt
   nur die Vorschau, der zweite Tipp auf denselben kauft.
 
 ### Stufe 2 und Zielwahl, wie gebaut (P2-6, 0.18.0)

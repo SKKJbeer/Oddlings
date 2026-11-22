@@ -22,8 +22,8 @@ final class FxDirector {
         var dropped = 0
         /// Auszahlungen und leer gewordene Banken (P2-5).
         var payouts = 0, empties = 0
-        /// Aufgewertete Türme (P2-6).
-        var upgrades = 0
+        /// Aufgewertete Türme (P2-6); davon spezialisiert (A-2).
+        var upgrades = 0, specializations = 0
         /// Funken an der Panzerung und Hinweise auf sie (P2-10).
         var armorSparks = 0, armorHints = 0
         /// „Sporenfunke!“ über dem Ziel und davon die mit Satz; Hände des Einstiegs (P2-8).
@@ -42,7 +42,7 @@ final class FxDirector {
             "arrows=\(arrows) bolts=\(bolts) combos=\(combos) spores=\(spores) hits=\(hits) deaths=\(deaths) "
                 + "coins=\(coins) builds=\(builds) sells=\(sells) leaks=\(leaks) spawns=\(spawns) "
                 + "casts=\(casts) impacts=\(impacts) walls=\(walls) flinches=\(flinches) falls=\(falls) dropped=\(dropped)"
-                + " payouts=\(payouts) empties=\(empties) upgrades=\(upgrades)"
+                + " payouts=\(payouts) empties=\(empties) upgrades=\(upgrades) specializations=\(specializations)"
                 + " armorSparks=\(armorSparks) armorHints=\(armorHints)"
                 + " callouts=\(callouts) sentences=\(sentences) guides=\(guides) summons=\(summons)"
                 + " guards=\(guards) unguards=\(unguards) heals=\(heals) splits=\(splits) healHints=\(healHints)"
@@ -476,37 +476,83 @@ final class FxDirector {
 
     // MARK: Türme
 
-    /// Bau: Der Turm fällt auf seinen Platz, staucht beim Aufsetzen, federt
-    /// nach; Staubring und Staubwolken, das Bild zuckt.
+    /// Errichten (A-2, P3): Ein Erdfleck dunkelt auf, drei Balken stehen als
+    /// Gerüst, der Turm wächst von unten aus dem Boden, zwei Hammerschläge
+    /// sprühen Funken und Staub, beim letzten federt er kurz nach. Kein Sturz
+    /// und kein Wackeln des Bildes mehr: So liest es sich als gebaut, nicht
+    /// als abgeworfen (Review P3).
     func build(_ tower: TowerNode) {
         stats.builds += 1
-        let drop = FxStyle.buildDrop * field
-        let fall = 0.38
-        tower.lift.alpha = 0
-        tower.lift.position = CGPoint(x: 0, y: drop)
-        animate(tower.lift, key: "lift", duration: FxStyle.buildLife) { node, t in
-            if t < fall {
-                let s = Ease.quadIn(t / fall)
-                node.position = CGPoint(x: 0, y: drop * CGFloat(1 - s))
-                node.alpha = CGFloat(min(1, t / fall * 2))
-                node.xScale = CGFloat(0.85 + 0.15 * s)
-                node.yScale = CGFloat(1.15 - 0.15 * s)
-            } else {
-                let s = (t - fall) / (1 - fall)
-                let spring = 1 - Ease.elasticOut(s)
+        let base = tower.position
+        ring(at: CGPoint(x: base.x, y: base.y + field * 0.04), radius: 0.7, color: FxStyle.earthPatch,
+             duration: FxStyle.buildLife, flatten: 0.38)
+        guard !reduceMotion else {
+            tower.lift.alpha = 0
+            animate(tower.lift, key: "lift", duration: FxStyle.buildLife * 0.5) { node, t in
                 node.position = .zero
-                node.alpha = 1
-                node.xScale = CGFloat(1 + 0.22 * spring)
-                node.yScale = CGFloat(1 - 0.25 * spring)
+                node.setScale(1)
+                node.alpha = CGFloat(t)
+            }
+            return
+        }
+        let grow = FxStyle.buildGrowFrom...FxStyle.buildGrowUntil
+        tower.lift.alpha = 0
+        tower.lift.yScale = 0
+        animate(tower.lift, key: "lift", duration: FxStyle.buildLife) { node, t in
+            node.position = .zero
+            let g = (t - grow.lowerBound) / (grow.upperBound - grow.lowerBound)
+            node.alpha = CGFloat(min(1, max(0, g * 2.5)))
+            if t < grow.upperBound {
+                // Wächst aus dem Fuß: Der Anker des Bildes liegt auf dem Boden.
+                node.yScale = CGFloat(Ease.cubicOut(g))
+                node.xScale = CGFloat(0.92 + 0.08 * Ease.cubicOut(g))
+            } else {
+                let s = (t - grow.upperBound) / (1 - grow.upperBound)
+                let settle = CGFloat(sin(s * Double.pi) * (1 - s))
+                node.yScale = 1 + 0.06 * settle
+                node.xScale = 1 - 0.03 * settle
             }
         }
-        let base = tower.position
-        after(FxStyle.buildLife * fall) { [weak self] in
-            guard let self else { return }
-            self.ring(at: CGPoint(x: base.x, y: base.y + self.field * 0.05), radius: 0.9, color: FxStyle.dust,
-                      duration: 0.35, flatten: 0.38)
-            self.dust(at: base, count: FxStyle.dustPuffs, radius: 0.6, size: 0.5)
-            self.shake(FxStyle.shakeBuild)
+        scaffold(around: tower)
+        for at in FxStyle.buildHammerAt {
+            after(FxStyle.buildLife * at) { [weak self] in
+                guard let self else { return }
+                let top = CGPoint(x: base.x + self.field * CGFloat(self.spread(-0.2...0.2)),
+                                  y: base.y + self.field * CGFloat(0.35 + 0.4 * at))
+                self.sparks(at: top, count: FxStyle.hammerSparks, color: FxStyle.gold, speed: 2.2, size: 0.18)
+                self.dust(at: base, count: FxStyle.dustPuffs / 2, radius: 0.45, size: 0.4)
+            }
+        }
+    }
+
+    /// Drei Balken um den Fuß: hoch, solange der Turm wächst, dann fallen sie
+    /// zur Seite weg. Zwei stehen hinter dem Turm, einer davor.
+    private func scaffold(around tower: TowerNode) {
+        let height = FxStyle.scaffoldHeight * field, width = max(1.5, FxStyle.scaffoldWidth * field)
+        let offsets: [(x: CGFloat, z: CGFloat, lean: CGFloat)] = [(-1, -0.5, 0.08), (1, -0.5, -0.08), (0.15, 0.5, 0.02)]
+        for (index, spot) in offsets.enumerated() {
+            let beam = SKSpriteNode(color: FxStyle.scaffoldWood, size: CGSize(width: width, height: height))
+            beam.anchorPoint = CGPoint(x: 0.5, y: 0)
+            beam.position = CGPoint(x: spot.x * FxStyle.scaffoldSpread * field, y: -field * 0.12)
+            beam.zPosition = spot.z
+            beam.zRotation = spot.lean
+            beam.yScale = 0
+            beam.name = "build.scaffold"
+            tower.addChild(beam)
+            let side: CGFloat = spot.x < 0 ? 1 : -1
+            animate(beam, duration: FxStyle.buildLife, end: .remove) { node, t in
+                let rise = FxStyle.buildScaffoldUntil
+                if t < rise {
+                    node.yScale = CGFloat(Ease.backOut(t / rise))
+                    node.alpha = 1
+                } else if t < FxStyle.buildGrowUntil {
+                    node.yScale = 1
+                } else {
+                    let s = (t - FxStyle.buildGrowUntil) / (1 - FxStyle.buildGrowUntil)
+                    node.zRotation = spot.lean + side * CGFloat(Ease.quadIn(s)) * (0.9 + 0.2 * CGFloat(index))
+                    node.alpha = CGFloat(1 - s)
+                }
+            }
         }
     }
 
@@ -531,19 +577,80 @@ final class FxDirector {
         label("+\(refund)", at: CGPoint(x: top.x, y: top.y + field * 0.4), color: FxStyle.gold)
     }
 
-    /// Aufwerten: der Turm federt hoch, ein Ring in Gold und das Stufenschild darüber.
-    /// Das neue Bild setzt `TowerNode.show(level:specialization:)`; hier nur der Augenblick.
+    /// Aufwerten (A-2): Eine Lichtsäule in Turmfarbe steigt aus dem Fuß, der
+    /// Turm streckt sich, Funken. Das neue Bild setzt `TowerNode.show(level:specialization:)`,
+    /// im selben Bild, in dem die Säule am hellsten ist.
     func upgrade(_ tower: TowerNode) {
         stats.upgrades += 1
-        animate(tower.lift, key: "lift", duration: FxStyle.buildLife) { node, t in
-            let spring = 1 - Ease.elasticOut(t)
+        let color = BattleStyle.towerColor(tower.kind)
+        animate(tower.lift, key: "lift", duration: FxStyle.upgradeLife) { node, t in
+            let stretch = CGFloat(sin(min(1, t * 1.6) * Double.pi)) * FxStyle.upgradeStretch * CGFloat(1 - t)
             node.position = .zero
             node.alpha = 1
-            node.xScale = CGFloat(1 - 0.18 * spring)
-            node.yScale = CGFloat(1 + 0.28 * spring)
+            node.yScale = 1 + stretch
+            node.xScale = 1 - stretch * 0.4
         }
-        ring(at: tower.position, radius: 1.0, color: FxStyle.gold, duration: 0.45, flatten: 0.38)
+        pillar(at: tower.position, color: color, duration: FxStyle.upgradeLife)
+        ring(at: tower.position, radius: 0.9, color: FxStyle.gold, duration: FxStyle.upgradeLife, flatten: 0.38)
+        if !reduceMotion {
+            sparks(at: CGPoint(x: tower.position.x, y: tower.position.y + field * 0.7), count: FxStyle.hammerSparks * 2,
+                   color: color, speed: 2.6, size: 0.2)
+        }
         label(BattleTexts.levelTag(tower.level), at: CGPoint(x: tower.position.x, y: tower.position.y + field * 1.1), color: FxStyle.gold)
+    }
+
+    /// Spezialisieren (A-2): Ein Wirbel in Turmfarbe am Boden, der Turm sinkt
+    /// kurz hinein und kommt als neue Gestalt hoch, ein Ring läuft über den Boden.
+    func specialize(_ tower: TowerNode) {
+        stats.upgrades += 1
+        stats.specializations += 1
+        let color = BattleStyle.towerColor(tower.kind)
+        let base = tower.position
+        if reduceMotion {
+            pillar(at: base, color: color, duration: FxStyle.specializeLife)
+        } else {
+            animate(tower.lift, key: "lift", duration: FxStyle.specializeLife) { [field = self.field] node, t in
+                // Hinunter bis zur Hälfte, dann mit Schwung zurück.
+                let down = t < 0.45 ? Ease.quadIn(t / 0.45) : 1 - Ease.backOut((t - 0.45) / 0.55)
+                node.position = CGPoint(x: 0, y: -FxStyle.specializeSink * field * CGFloat(down))
+                node.alpha = CGFloat(1 - 0.5 * down)
+                node.yScale = CGFloat(1 - 0.3 * down)
+                node.xScale = 1
+            }
+            for index in 0..<FxStyle.swirlSparks {
+                guard let spark = sprite(.spark, essential: false) else { break }
+                tinted(spark, color, additive: true)
+                spark.size = CGSize(width: field * 0.22, height: field * 0.22 / FxTextures.aspect(.spark))
+                spark.zPosition = 4
+                let phase = Double(index) / Double(FxStyle.swirlSparks) * 2 * Double.pi
+                animate(spark, duration: FxStyle.specializeLife, end: .recycle) { [field = self.field] node, t in
+                    let angle = phase + t * 3 * Double.pi
+                    let radius = Double(field) * 0.75 * (1 - 0.6 * t)
+                    node.position = CGPoint(x: base.x + CGFloat(cos(angle) * radius),
+                                            y: base.y + CGFloat(sin(angle) * radius * 0.38) + field * CGFloat(t) * 0.9)
+                    node.zRotation = CGFloat(angle + Double.pi / 2)
+                    node.alpha = CGFloat(sin(t * Double.pi))
+                }
+            }
+        }
+        after(FxStyle.specializeLife * 0.45) { [weak self] in
+            guard let self else { return }
+            self.ring(at: base, radius: 1.3, color: color, duration: 0.4, flatten: 0.38, additive: true)
+            self.glowPoint(at: CGPoint(x: base.x, y: base.y + self.field * 0.5), color: color, size: 1.4, duration: 0.25)
+        }
+    }
+
+    /// Lichtsäule aus dem Fuß: ein gestrecktes Glühen, das aufsteigt und vergeht.
+    private func pillar(at base: CGPoint, color: SKColor, duration: Double) {
+        guard let glow = sprite(.glow, essential: true) else { return }
+        tinted(glow, color, additive: true)
+        glow.zPosition = 3
+        animate(glow, duration: duration, end: .recycle) { [field = self.field] node, t in
+            let h = FxStyle.pillarHeight * field * CGFloat(Ease.cubicOut(min(1, t * 2)))
+            (node as? SKSpriteNode)?.size = CGSize(width: FxStyle.pillarWidth * field * CGFloat(1 - 0.5 * t), height: max(1, h))
+            node.position = CGPoint(x: base.x, y: base.y + h / 2)
+            node.alpha = CGFloat(sin(t * Double.pi))
+        }
     }
 
     /// Zwergenbank zahlt: kurzes Nicken und die Summe in Gold. Keine Münzen,

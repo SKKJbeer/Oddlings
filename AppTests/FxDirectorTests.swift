@@ -133,17 +133,20 @@ final class FxDirectorTests: XCTestCase {
         XCTAssertNil(scene.fx.arrival(for: enemy.enemyID))
     }
 
-    /// Bau fällt von oben und landet genau auf der Zelle; Verkauf versinkt,
-    /// danach ist der Turm ganz weg. Die Szene hat dabei immer genau eine
-    /// Node je Turm im Zustand.
-    func testBuildDropsAndSellSinks() throws {
+    /// Bau wächst aus dem Boden, mit Gerüst, das danach verschwindet (A-2);
+    /// Verkauf versinkt, danach ist der Turm ganz weg. Die Szene hat dabei
+    /// immer genau eine Node je Turm im Zustand.
+    func testBuildRisesAndSellSinks() throws {
         let scene = scene(autoplay: false)
         let model = scene.model
         model.enqueue(.build(.watch, cellNearPath(model)))
         scene.frame(after: 1.0 / Double(config.simulation.ticksPerSecond))
         let tower = try XCTUnwrap(scene.towerNodes.values.first)
-        XCTAssertGreaterThan(tower.lift.position.y, 0, "startet oben")
+        XCTAssertLessThan(tower.lift.yScale, 0.5, "wächst aus dem Boden, fällt nicht")
+        XCTAssertEqual(tower.lift.position.y, 0, accuracy: 0.001, "steht auf der Zelle, kein Fall")
+        XCTAssertEqual(tower.children.filter { $0.name == "build.scaffold" }.count, 3, "Gerüst steht")
         run(scene, seconds: FxStyle.buildLife + 0.1)
+        XCTAssertTrue(tower.children.allSatisfy { $0.name != "build.scaffold" }, "Gerüst ist weg")
         XCTAssertEqual(tower.lift.position.y, 0, accuracy: 0.001)
         XCTAssertEqual(tower.lift.alpha, 1, accuracy: 0.001)
         XCTAssertEqual(tower.lift.yScale, 1, accuracy: 0.01)
@@ -159,6 +162,49 @@ final class FxDirectorTests: XCTestCase {
         XCTAssertNotNil(tower.parent, "versinkt noch")
         run(scene, seconds: FxStyle.sellLife + 0.1)
         XCTAssertNil(tower.parent)
+    }
+
+    /// Aufwerten und Spezialisieren haben je einen eigenen Auftritt (A-2, P3)
+    /// und enden sauber: Der Turm steht danach unverzerrt und voll sichtbar da.
+    func testUpgradeAndSpecializeEndCleanly() throws {
+        var special = try BalanceConfig.bundledMission(named: "mission-05a")
+        special.mission.startGold = 1_000
+        special.mission.firstWaveDelay = 600
+        let scene = BattleScene(model: BattleModel(config: special, seed: 1, autoplay: false))
+        scene.fx.reduceMotion = false
+        let model = scene.model
+        model.enqueue(.build(.watch, cellNearPath(model)))
+        run(scene, seconds: FxStyle.buildLife + 0.1)
+        let tower = try XCTUnwrap(scene.towerNodes.values.first)
+
+        model.enqueue(.upgrade(towerID: tower.towerID))
+        scene.frame(after: frameTime)
+        XCTAssertEqual(scene.fx.stats.upgrades, 1, scene.fx.stats.summary)
+        XCTAssertEqual(scene.fx.stats.specializations, 0, "Stufe II ist keine Spezialisierung")
+        var stretched = false
+        for _ in 0..<Int(FxStyle.upgradeLife / frameTime) {
+            scene.frame(after: frameTime)
+            if tower.lift.yScale > 1.02 { stretched = true }
+        }
+        XCTAssertTrue(stretched, "streckt sich beim Aufwerten")
+        run(scene, seconds: 0.2)
+        XCTAssertEqual(tower.lift.yScale, 1, accuracy: 0.001)
+        XCTAssertEqual(tower.lift.xScale, 1, accuracy: 0.001)
+
+        model.enqueue(.specialize(towerID: tower.towerID, .volley))
+        scene.frame(after: frameTime)
+        XCTAssertEqual(model.state.towers.first?.specialization, .volley)
+        XCTAssertEqual(scene.fx.stats.specializations, 1, scene.fx.stats.summary)
+        var sank = false
+        for _ in 0..<Int(FxStyle.specializeLife / frameTime) {
+            scene.frame(after: frameTime)
+            if tower.lift.position.y < -1 { sank = true }
+        }
+        XCTAssertTrue(sank, "sinkt kurz in den Boden")
+        run(scene, seconds: 0.2)
+        XCTAssertEqual(tower.lift.position.y, 0, accuracy: 0.001)
+        XCTAssertEqual(tower.lift.yScale, 1, accuracy: 0.001)
+        XCTAssertEqual(tower.lift.alpha, 1, accuracy: 0.001)
     }
 
     /// Gegner laufen: Sie heben ab, landen, stauchen und blicken in Laufrichtung.

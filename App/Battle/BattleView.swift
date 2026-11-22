@@ -70,6 +70,13 @@ struct BattleView: View {
                     .padding([.horizontal, .top], BattleStyle.hudMargin)
                 ZStack {
                     SpriteView(scene: scene, preferredFramesPerSecond: 60, options: [.ignoresSiblingOrder])
+                    // Wer als Nächstes kommt (A-2, D-159), hängt unter „Welle n“.
+                    // Solange der Pfeil des Einstiegs auf „Welle 1“ zeigt (P2-8), hat er den Platz.
+                    if controller.canCallNextWave, controller.guide.shown != .wave, let forecast = controller.forecast {
+                        WaveForecastTag(forecast: forecast)
+                            .padding(.trailing, safeArea.trailing + BattleStyle.forecastTrailing)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                    }
                     RingMenu(controller: controller, insets: boardInsets)
                     if let boss = controller.boss {
                         BossBar(status: boss)

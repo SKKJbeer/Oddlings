@@ -189,9 +189,31 @@ enum FxStyle {
 
     // MARK: Türme
 
-    static let buildLife: TimeInterval = 0.45
-    /// Fallhöhe beim Bau.
-    static let buildDrop: CGFloat = 1.1
+    /// Errichten statt Abwerfen (A-2, P3): Erdfleck, Gerüst aus drei Balken,
+    /// der Turm wächst aus dem Boden, zwei Hammerschläge. Kürzer als jeder
+    /// Schusstakt, denn der Turm ist in der Simulation schon da.
+    static let buildLife: TimeInterval = 0.55
+    /// Anteile der Bauzeit: Gerüst steht, Turm wächst, Hammerschläge.
+    static let buildScaffoldUntil = 0.25
+    static let buildGrowFrom = 0.12
+    static let buildGrowUntil = 0.82
+    static let buildHammerAt: [Double] = [0.36, 0.62]
+    /// Balken des Gerüsts in Feldern: Höhe, Breite, seitlicher Abstand.
+    static let scaffoldHeight: CGFloat = 1.0
+    static let scaffoldWidth: CGFloat = 0.07
+    static let scaffoldSpread: CGFloat = 0.36
+    static let scaffoldWood = SKColor(red: 0.47, green: 0.32, blue: 0.19, alpha: 1)
+    static let earthPatch = SKColor(red: 0.42, green: 0.30, blue: 0.18, alpha: 1)
+    static let hammerSparks = 5
+    /// Aufwerten: Lichtsäule, der Turm streckt sich (A-2).
+    static let upgradeLife: TimeInterval = 0.45
+    static let upgradeStretch: CGFloat = 0.16
+    static let pillarHeight: CGFloat = 2.4
+    static let pillarWidth: CGFloat = 0.7
+    /// Spezialisieren: Wirbel, der Turm sinkt hinein und kommt neu hoch (A-2).
+    static let specializeLife: TimeInterval = 0.7
+    static let specializeSink: CGFloat = 0.35
+    static let swirlSparks = 10
     static let sellLife: TimeInterval = 0.40
     static let dustPuffs = 8
     static let dust = SKColor(red: 0.86, green: 0.78, blue: 0.62, alpha: 1)
@@ -309,7 +331,6 @@ enum FxStyle {
     static let shakeAmplitude: Double = 0.18
     static let shakeDecay: Double = 2.2
     static let shakeLeak: Double = 0.55
-    static let shakeBuild: Double = 0.30
 
     // MARK: Leistung
 
