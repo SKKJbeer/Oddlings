@@ -23,6 +23,9 @@ from PIL import Image, ImageDraw
 # höchstens 1 % der Bilder. WalkSceneTests verlangt für Mission 1 keines.
 GRENZE_ABWEICHUNG = 0.40
 GRENZE_DECKUNG = 0.01
+# Verdeckt (D-184): Bilder, in denen ein Gegner unter einer Wolke über ihm steht.
+# Seit 0.45.0 liegen alle Wolken unter den Figuren; 2 % lässt Platz für Funken.
+GRENZE_VERDECKT = 0.02
 BREITE_BILD = 480
 RAND = 12
 # Bildschirmfotos kommen hochkant aus dem Simulator; die App steht quer
@@ -64,10 +67,14 @@ def bewerten(messung: dict) -> tuple[str, list[str]]:
         warnungen.append(f"Abweichung von der Regel {abweichung:.2f} Felder (Grenze {GRENZE_ABWEICHUNG})")
     if deckung > GRENZE_DECKUNG:
         warnungen.append(f"deckungsgleiche Gegner in {deckung:.1%} der Bilder (Grenze {GRENZE_DECKUNG:.0%})")
+    verdeckt = int(messung.get("occludedFrames", 0)) / bilder
+    if verdeckt > GRENZE_VERDECKT:
+        warnungen.append(f"Gegner unter Effekten in {verdeckt:.1%} der Bilder (Grenze {GRENZE_VERDECKT:.0%})")
     if int(messung.get("maxEnemies", 0)) > 0 and int(messung.get("bends", 0)) == 0:
         warnungen.append("kein Gegner lief durch einen Eckbogen")
     zeile = (f"Gegner bis {messung.get('maxEnemies', 0)} · Bögen {messung.get('bends', 0)} · "
-             f"Staub {messung.get('footfalls', 0)} · Abweichung {abweichung:.2f} · Deckung {deckung:.1%}")
+             f"Staub {messung.get('footfalls', 0)} · Abweichung {abweichung:.2f} · Deckung {deckung:.1%} · "
+             f"verdeckt {verdeckt:.1%} · gedämpft {messung.get('dampedClouds', 0)} · Gold gebündelt {messung.get('mergedGold', 0)}")
     return zeile, warnungen
 
 

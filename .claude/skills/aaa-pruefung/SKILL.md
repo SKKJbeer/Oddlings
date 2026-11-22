@@ -34,7 +34,7 @@ Grundsatz: **ansehen, nicht vermuten.** Ein Befund ohne Bild oder Zahl ist keine
 | Eine Malweise? | Kontur und Schärfe von Figur zu Figur; Vektorformen auf der Karte | keine `SKShapeNode` in der Welt |
 | Laufen | Blick in Laufrichtung auf senkrechten Stücken, Ecken, übereinanderliegende Gegner | Konzept A-1 |
 | Bauen | Vorschau vor dem Kauf, Raster, Auftritt, Tafel auf Weg oder Festung, abgeschnittener Text | Konzept A-2 |
-| Lesbarkeit | Gegner unter Effekten, Wellenvorschau, sichere Ränder | Säule 2 |
+| Lesbarkeit | Gegner unter Effekten (Kontaktabzug „verdeckt“, höchstens 2 % der Bilder), Wellenvorschau, sichere Ränder | Säule 2, D-181 bis D-184 |
 | Leveldesign | Frage, Moment, Bauinseln, mehr als ein Siegort, Wellenbogen | `aaa-leveldesign.md` |
 
 ## 3 Aufschreiben

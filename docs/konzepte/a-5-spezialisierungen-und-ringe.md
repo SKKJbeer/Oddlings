@@ -14,7 +14,7 @@ alles andere; keine Linien aus dem Entwicklerwerkzeug mehr neben den Türmen.
 
 | Drin | Nicht drin (folgt in A-5 Teil 2 nach A-4 oder in A-2) |
 |---|---|
-| Sechs Turmbilder `tower_watch_volley`, `tower_watch_falcon`, `tower_lightning_crown`, `tower_lightning_spark`, `tower_spore_moor`, `tower_spore_rot` samt Schatten (`turmboden.py`) | Kopfleiste im Material der Tafeln, Effektbudget, Türme zielen (G6, G9, R1) |
+| Sechs Turmbilder `tower_watch_volley`, `tower_watch_falcon`, `tower_lightning_crown`, `tower_lightning_spark`, `tower_spore_moor`, `tower_spore_rot` samt Schatten (`turmboden.py`) | Kopfleiste im Material der Tafeln, Effektbudget ([Teil 2](a-5-kopfleiste-und-effektbudget.md), 0.45.0), Türme zielen (G9, Teil 3) |
 | Schild „II“/„III“ am Turm entfällt | Auftritt beim Spezialisieren (A-2, „Wirbel, neue Gestalt“) |
 | Gemalter Ring für die gewählte Zelle und die Reichweite (`mark_ring`) | Lebensleisten, Bauplätze (Bauinseln kommen mit A-4) |
 | | Bilder im Kreismenü (A-2, „Turmbilder statt Symbole“); die Atlasnamen stehen bereit |

@@ -63,6 +63,13 @@ Die Ecken gelten **auf jedem Gerät gleich**. Sonst hätte ein Spieler mit groß
 Telefon mehr Bauplätze, und Balancetests wären geräteabhängig.
 Mission 1 verliert dadurch 8 von 114 Bauplätzen; der Weg berührt keine Ecke.
 
+**Stand 0.45.0 (D-180):** Die Kopfleiste ist kein Band mehr, sondern einzelne
+Holzschilder, die über dem gemalten oberen Rand der Karte schweben. Das Raster hält
+dort einen Rand (`BattleStyle.boardTop`) frei, liegt also wie unter dem früheren Band;
+die HUD-Ecken auf voller Kartenhöhe (D-030) bleiben bis zum Spieltest zurückgestellt.
+Leben, Gold und Welle stehen links mit gemalten Symbolen, „Welle rufen“ (goldenes
+Schild mit Horn), Tempo und Pause rechts ([Konzept A-5 Teil 2](../konzepte/a-5-kopfleiste-und-effektbudget.md)).
+
 Festungsleben steht zusätzlich als kleines Schild an der Festung selbst. Wer auf
 den Ausgang schaut, sieht dort, was ein Durchbruch kostet.
 

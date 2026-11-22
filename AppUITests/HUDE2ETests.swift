@@ -69,4 +69,24 @@ final class HUDE2ETests: XCTestCase {
         expectation(for: second, evaluatedWith: tag)
         waitForExpectations(timeout: 10)
     }
+
+    /// Kopfleiste als Schilder (A-5 Teil 2, D-180): Die Karte beginnt oben am
+    /// Bildschirm, die Schilder liegen auf ihr, und Bauen trifft weiter die Zelle.
+    @MainActor
+    func testBoardReachesUnderThePlaques() throws {
+        let e2e = try E2EApp(["--play", "--e2e-ohne-hinweise", "--e2e-erste-welle", E2EApp.wavesOnHold])
+        e2e.waitForBoard()
+        let board = e2e.board.frame
+        let window = e2e.app.windows.firstMatch.frame
+        XCTAssertEqual(board.minY, window.minY, accuracy: 1, "Karte reicht bis an den oberen Rand")
+        for id in ["hud.lives", "hud.gold", "hud.wave", "hud.pause", "hud.speed"] {
+            let element = e2e.app.descendants(matching: .any)[id]
+            XCTAssertTrue(element.waitForExistence(timeout: 5), id)
+            XCTAssertTrue(board.contains(CGPoint(x: element.frame.midX, y: element.frame.midY)), "\(id) liegt auf der Karte")
+            XCTAssertLessThanOrEqual(element.frame.maxY, board.minY + E2EApp.boardTop, "\(id) bleibt im Rand über dem Raster")
+        }
+        let cell = e2e.map.buildableCells[0]
+        e2e.build(.watch, at: cell)
+        XCTAssertEqual(e2e.gold, e2e.config.mission.startGold - e2e.cost(.watch), "Turm steht auf der gewählten Zelle")
+    }
 }

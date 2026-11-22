@@ -307,6 +307,10 @@ enum FxStyle {
     // MARK: Gold, Text, Banner
 
     static let coinsPerKill = 3
+    /// Gold bündeln (D-183): Eine Beute, die so kurz nach einer anderen und so
+    /// nah bei ihr fällt (Felder), zählt in deren Zahl und bringt eine Münze.
+    static let goldMergeWindow: TimeInterval = 0.4
+    static let goldMergeRadius: CGFloat = 1.2
     static let coinSize: CGFloat = 0.28
     static let coinLife: TimeInterval = 0.7
     static let gold = SKColor(red: 1.00, green: 0.84, blue: 0.25, alpha: 1)
@@ -324,6 +328,24 @@ enum FxStyle {
     ]
     static let rejectLife: TimeInterval = 0.3
     static let reject = SKColor(red: 1.00, green: 0.25, blue: 0.20, alpha: 1)
+
+    // MARK: Effektbudget (A-5 Teil 2, D-181 bis D-184)
+
+    /// Höchstens so viele große Wolken überlappen sich voll; jede weitere
+    /// spielt mit `cloudDampedShare` der Teilchen und `cloudDampedAlpha` der Deckkraft.
+    static let cloudsPerArea = 2
+    static let cloudDampedShare = 0.34
+    static let cloudDampedAlpha = 0.5
+    /// Radius einer Rauchwolke beim Zerplatzen, in Feldern.
+    static let smokeRadius: Double = 0.6
+    /// Wolken liegen in der Effektebene (z 30) so tief, dass sie über den
+    /// Türmen (z 10) und unter den Gegnern (z 20) gezeichnet werden (D-182).
+    static let groundCloudZ: CGFloat = -12
+    /// Was in der Effektebene über diesem Wert liegt, wird über den Gegnern gezeichnet.
+    static let enemyLayerGap: CGFloat = -10
+    /// Eine Wolke verdeckt einen Gegner ab dieser Größe (Felder) und Deckkraft (D-184).
+    static let occluderSide: CGFloat = 0.3
+    static let occluderAlpha: CGFloat = 0.35
 
     // MARK: Bildschirm
 

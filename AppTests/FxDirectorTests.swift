@@ -493,4 +493,111 @@ final class FxDirectorTests: XCTestCase {
         run(scene, seconds: 0.5)
         XCTAssertFalse(scene.fx.showsGuide)
     }
+
+    // MARK: Effektbudget (A-5 Teil 2, D-181 bis D-184)
+
+    private func sporeTower(_ scene: BattleScene, id: Int, at point: CGPoint) -> TowerNode {
+        let tower = TowerNode(tower: Tower(id: id, kind: .spore, cell: Cell(x: 0, y: 0), cooldownTicks: 0, spent: 1),
+                              field: scene.layout.field)
+        tower.position = point
+        scene.towerLayer.addChild(tower)
+        return tower
+    }
+
+    private func raider(_ scene: BattleScene, id: Int, at point: CGPoint) -> EnemyNode {
+        let node = EnemyNode(enemy: Enemy(id: id, kind: .raider, hp: 10, maxHP: 10, distance: 3), field: scene.layout.field)
+        node.position = point
+        scene.effectLayer.addChild(node)
+        return node
+    }
+
+    /// D-182: Sporenwolken liegen über den Türmen und unter den Gegnern.
+    func testSporeCloudsLieUnderTheEnemies() {
+        let scene = scene(autoplay: false)
+        let tower = sporeTower(scene, id: 1, at: CGPoint(x: 300, y: 150))
+        let enemy = raider(scene, id: 9, at: CGPoint(x: 300, y: 150))
+        scene.fx.spores(from: tower, range: 1.5)
+        scene.fx.advance(by: 0.05)
+        let puff = FxTextures.texture(.puff)
+        let clouds = scene.effectLayer.children.compactMap { $0 as? SKSpriteNode }.filter { $0.texture === puff }
+        XCTAssertFalse(clouds.isEmpty)
+        for cloud in clouds {
+            let z = scene.effectLayer.zPosition + cloud.zPosition
+            XCTAssertGreaterThan(z, scene.towerLayer.zPosition + 1, "über den Türmen")
+            XCTAssertLessThan(z, scene.enemyLayer.zPosition, "unter den Gegnern")
+        }
+        XCTAssertEqual(scene.fx.occludedEnemies([enemy]), 0)
+    }
+
+    /// D-181: Am Turmhaufen spielt der dritte Stoß gedämpft, ein ferner voll.
+    func testThirdSporeCloudOnAHeapIsDamped() {
+        let scene = scene(autoplay: false)
+        let field = scene.layout.field
+        let towers = (0..<3).map { sporeTower(scene, id: $0 + 1, at: CGPoint(x: 300 + CGFloat($0) * field, y: 150)) }
+        for tower in towers { scene.fx.spores(from: tower, range: 1.5) }
+        XCTAssertEqual(scene.fx.stats.damped, 1, scene.fx.stats.summary)
+        let far = sporeTower(scene, id: 9, at: CGPoint(x: 300 + 10 * field, y: 150))
+        scene.fx.spores(from: far, range: 1.5)
+        XCTAssertEqual(scene.fx.stats.damped, 1, "ferner Turm voll")
+        // Ist der Stoß vorbei, kommt der nächste wieder voll.
+        run(scene, seconds: 1.5)
+        scene.fx.spores(from: towers[0], range: 1.5)
+        XCTAssertEqual(scene.fx.stats.damped, 1)
+    }
+
+    /// D-183: Zwei Gegner fallen nah beieinander, eine Zahl mit der Summe.
+    func testNearbyDeathsShareOneGoldNumber() {
+        let scene = scene(autoplay: false)
+        let field = scene.layout.field
+        let first = raider(scene, id: 1, at: CGPoint(x: 300, y: 150))
+        let second = raider(scene, id: 2, at: CGPoint(x: 300 + 0.5 * field, y: 150))
+        scene.fx.death(first, reward: 4)
+        run(scene, seconds: 0.1)
+        scene.fx.death(second, reward: 5)
+        run(scene, seconds: FxStyle.deathLife)
+        XCTAssertEqual(scene.fx.stats.merged, 1, scene.fx.stats.summary)
+        XCTAssertEqual(goldTexts(scene), ["+9"])
+        XCTAssertEqual(scene.fx.stats.coins, FxStyle.coinsPerKill + 1, "eine Münze mehr statt drei")
+        run(scene, seconds: 2)
+        XCTAssertEqual(goldTexts(scene), [], "die Zahl endet")
+    }
+
+    func testDistantDeathsKeepTheirOwnNumbers() {
+        let scene = scene(autoplay: false)
+        let field = scene.layout.field
+        scene.fx.death(raider(scene, id: 1, at: CGPoint(x: 200, y: 150)), reward: 4)
+        scene.fx.death(raider(scene, id: 2, at: CGPoint(x: 200 + 5 * field, y: 150)), reward: 4)
+        run(scene, seconds: FxStyle.deathLife)
+        XCTAssertEqual(scene.fx.stats.merged, 0)
+        XCTAssertEqual(goldTexts(scene).sorted(), ["+4", "+4"])
+    }
+
+    /// Texte der Goldzahlen (vorderste Lage jeder Zahl mit Kontur).
+    private func goldTexts(_ scene: BattleScene) -> [String] {
+        scene.effectLayer.children.compactMap { node in
+            guard node.children.count > 1, let front = node.children.last as? SKLabelNode,
+                  let text = front.text, text.hasPrefix("+") else { return nil }
+            return text
+        }
+    }
+
+    /// Säule 2 (Review R1, D-184): Eine ganze Mission mit allen Effekten, und
+    /// in keinem Bild steht ein Gegner unter einer Wolke.
+    func testNoEnemyIsEverHiddenUnderACloud() {
+        let scene = scene(autoplay: true)
+        var frames = 0, hidden = 0, peak = 0
+        while !scene.model.state.isOver && frames < 200_000 {
+            scene.frame(after: frameTime)
+            frames += 1
+            if frames % 4 == 0 {
+                let enemies = scene.enemyLayer.children.compactMap { $0 as? EnemyNode }
+                let count = scene.fx.occludedEnemies(enemies)
+                if count > 0 { hidden += 1 }
+                peak = max(peak, count)
+            }
+        }
+        XCTAssertEqual(scene.model.state.outcome, .won)
+        XCTAssertEqual(hidden, 0, "Bilder mit verdecktem Gegner, höchstens \(peak) zugleich")
+        XCTAssertGreaterThan(scene.fx.stats.spores, 0)
+    }
 }

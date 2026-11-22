@@ -22,7 +22,7 @@ final class BattleScene: SKScene {
     /// stehen, damit Tippen und Lagerechnung unberührt sind.
     private let world: SKNode
     private let ground = SKNode()
-    private let towerLayer = SKNode()
+    let towerLayer = SKNode()
     /// Bauplätze (D-121): nur sichtbar, solange gebaut wird.
     private let zoneLayer = SKNode()
     private var zoneTiles: [Cell: SKSpriteNode] = [:]
@@ -35,7 +35,7 @@ final class BattleScene: SKScene {
     private let shadeLayer = SKNode()
     /// Licht des Kampfplatzes; Türme und Festung werden damit getönt.
     private let light: SKColor?
-    private let enemyLayer = SKNode()
+    let enemyLayer = SKNode()
     let effectLayer: SKNode
     private let fortress = SKShapeNode()
     private let fortressHit = SKShapeNode()
@@ -112,8 +112,11 @@ final class BattleScene: SKScene {
         frame(after: frameTime)
         #if DEBUG
         probe?.add(frameTime)
-        contactSheet?.add(frameTime, enemies: enemyNodes.count, deviation: frameDeviation,
-                          stacked: stackedFrames, stats: fx.stats)
+        if let contactSheet {
+            contactSheet.add(frameTime, enemies: enemyNodes.count, deviation: frameDeviation,
+                             stacked: stackedFrames, stats: fx.stats,
+                             occluded: fx.occludedEnemies(Array(enemyNodes.values)))
+        }
         #endif
     }
 

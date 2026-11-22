@@ -37,6 +37,9 @@ final class FxDirector {
         /// Laufen (A-1): Staub beim Aufsetzen, Figuren, die einen Eckbogen
         /// betreten, und Bilder mit zwei fast deckungsgleichen Gegnern.
         var footfalls = 0, bends = 0, stacked = 0
+        /// Effektbudget (A-5 Teil 2): gedämpft gespielte Wolken (D-181) und
+        /// Goldzahlen, die in eine laufende eingingen (D-183).
+        var damped = 0, merged = 0
 
         var summary: String {
             "arrows=\(arrows) bolts=\(bolts) combos=\(combos) spores=\(spores) hits=\(hits) deaths=\(deaths) "
@@ -46,7 +49,7 @@ final class FxDirector {
                 + " armorSparks=\(armorSparks) armorHints=\(armorHints)"
                 + " callouts=\(callouts) sentences=\(sentences) guides=\(guides) summons=\(summons)"
                 + " guards=\(guards) unguards=\(unguards) heals=\(heals) splits=\(splits) healHints=\(healHints)"
-                + " footfalls=\(footfalls) bends=\(bends) stacked=\(stacked)"
+                + " footfalls=\(footfalls) bends=\(bends) stacked=\(stacked) damped=\(damped) merged=\(merged)"
         }
     }
 
@@ -79,6 +82,17 @@ final class FxDirector {
     /// Wann der nächste Pfeil beim Gegner ankommt. Aufblitzen und Tod warten
     /// darauf, denn die Simulation trifft sofort.
     private var arrivals: [Int: Double] = [:]
+    /// Große Wolken je Bereich (D-181).
+    private(set) var budget = FxAreaBudget(limit: FxStyle.cloudsPerArea, dampedShare: FxStyle.cloudDampedShare,
+                                           dampedAlpha: FxStyle.cloudDampedAlpha)
+    /// Goldzahlen, die noch steigen und weitere Beute aufnehmen (D-183).
+    private struct GoldTag {
+        let node: SKNode
+        let position: CGPoint
+        var total: Int
+        let born: Double
+    }
+    private var goldTags: [GoldTag] = []
     /// Letzter sichtbarer Heilpuls je Hexe (`FxStyle.healGap`).
     private var lastHeal: [Int: Double] = [:]
     /// Meldet jeden Sporenfunken mit seinem Ort. Ob es der erste der Mission
@@ -143,6 +157,8 @@ final class FxDirector {
         // Was ohne Bewegung steht (das Bollwerk), geht mit.
         layer.removeAllChildren()
         arrivals = [:]
+        budget.reset()
+        goldTags = []
         trauma = 0
         world.position = .zero
     }
@@ -241,6 +257,7 @@ final class FxDirector {
         var made = 0
         for index in 0..<count {
             guard enemy.activeDust < FxStyle.dustPerEnemy, let puff = sprite(.puff, essential: false) else { break }
+            puff.zPosition = FxStyle.groundCloudZ
             made += 1
             enemy.activeDust += 1
             tinted(puff, FxStyle.dust)
@@ -448,8 +465,7 @@ final class FxDirector {
         after(delay + (falls ? FxStyle.deathFramesLife * 0.8 : FxStyle.deathLife * 0.55)) { [weak self] in
             guard let self else { return }
             self.burst(at: center, color: color)
-            self.coins(at: center, count: FxStyle.coinsPerKill)
-            self.label("+\(reward)", at: CGPoint(x: center.x, y: center.y + self.field * 0.4), color: FxStyle.gold)
+            self.gold(reward, at: center)
         }
     }
 
@@ -745,21 +761,23 @@ final class FxDirector {
 
     /// Sporenwölkchen platzen vom Ziel nach außen: Grün der Sporen im Licht des Blitzes.
     private func sporeBurst(at position: CGPoint) {
-        for index in 0..<FxStyle.comboPuffs {
+        let grant = cloud(at: position, radius: FxStyle.comboRing, life: 0.42)
+        let count = grant.count(FxStyle.comboPuffs)
+        for index in 0..<count {
             guard let puff = sprite(.puff, essential: false) else { return }
             tinted(puff, FxStyle.sporeColor, additive: true)
-            let angle = Double(index) / Double(FxStyle.comboPuffs) * 2 * Double.pi + spread(-0.3...0.3)
+            puff.zPosition = FxStyle.groundCloudZ
+            let angle = Double(index) / Double(count) * 2 * Double.pi + spread(-0.3...0.3)
             let reach = Double(field) * spread(0.45...0.7)
             let side = field * CGFloat(spread(0.28...0.38))
             puff.size = CGSize(width: side, height: side)
-            puff.zPosition = 4
             let life = spread(0.3...0.42)
             animate(puff, duration: life, end: .recycle) { node, t in
                 let s = Ease.cubicOut(t)
                 node.position = CGPoint(x: position.x + CGFloat(cos(angle) * reach * s),
                                         y: position.y + CGFloat(sin(angle) * reach * s))
                 node.setScale(CGFloat(0.5 + 0.9 * s))
-                node.alpha = CGFloat(0.9 * (1 - Ease.quadIn(t)))
+                node.alpha = CGFloat(0.9 * grant.alpha * (1 - Ease.quadIn(t)))
             }
         }
     }
@@ -887,10 +905,15 @@ final class FxDirector {
         let center = CGPoint(x: tower.position.x, y: tower.position.y + field * 0.15)
         ring(at: center, radius: range, color: FxStyle.sporeColor, duration: FxStyle.sporeLife, flatten: 1)
         let top = CGPoint(x: tower.position.x, y: tower.position.y + field * 0.75)
-        for index in 0..<FxStyle.sporePuffs {
+        // Am Turmhaufen höchstens zwei volle Wolken übereinander (D-181), und
+        // alle unter den Gegnern (D-182): Wer in der Wolke läuft, bleibt zu sehen.
+        let grant = cloud(at: center, radius: range, life: FxStyle.sporeLife)
+        let count = grant.count(FxStyle.sporePuffs)
+        for index in 0..<count {
             guard let puff = sprite(.puff, essential: false) else { break }
             tinted(puff, FxStyle.sporeColor)
-            let angle = Double(index) / Double(FxStyle.sporePuffs) * 2 * Double.pi + spread(-0.25...0.25)
+            puff.zPosition = FxStyle.groundCloudZ
+            let angle = Double(index) / Double(count) * 2 * Double.pi + spread(-0.25...0.25)
             let reach = range * spread(0.55...0.9) * Double(field)
             let rise = spread(0.1...0.4) * Double(field)
             let life = FxStyle.sporeLife * spread(0.9...1.3)
@@ -901,7 +924,7 @@ final class FxDirector {
                                         y: top.y + CGFloat(sin(angle) * reach * s * 0.55 + rise * s) - field * 0.3 * CGFloat(s))
                 node.setScale(CGFloat(0.5 + 0.8 * s))
                 (node as? SKSpriteNode)?.size = CGSize(width: size, height: size)
-                node.alpha = CGFloat(0.75 * (1 - Ease.quadIn(t)))
+                node.alpha = CGFloat(0.75 * grant.alpha * (1 - Ease.quadIn(t)))
             }
         }
     }
@@ -1185,6 +1208,7 @@ final class FxDirector {
         for index in 0..<count {
             guard let puff = sprite(.puff, essential: false) else { return }
             tinted(puff, FxStyle.dust)
+            puff.zPosition = FxStyle.groundCloudZ
             let angle = Double(index) / Double(max(count, 1)) * 2 * Double.pi + spread(-0.3...0.3)
             let reach = radius * Double(field) * spread(0.7...1.1)
             let side = field * CGFloat(size * spread(0.8...1.2))
@@ -1203,9 +1227,11 @@ final class FxDirector {
     /// Zerplatzen: Rauch steigt auf, Splitter in der Farbe des Gegners fliegen.
     private func burst(at position: CGPoint, color: SKColor) {
         glowPoint(at: position, color: .white, size: 1.1, duration: 0.14)
-        for _ in 0..<FxStyle.deathSmoke {
+        let grant = cloud(at: position, radius: FxStyle.smokeRadius, life: 0.6)
+        for _ in 0..<grant.count(FxStyle.deathSmoke) {
             guard let smoke = sprite(.puff, essential: false) else { break }
             tinted(smoke, SKColor(white: 0.92, alpha: 1))
+            smoke.zPosition = FxStyle.groundCloudZ
             let side = field * CGFloat(spread(0.35...0.6))
             smoke.size = CGSize(width: side, height: side)
             let drift = Vec(x: spread(-0.5...0.5), y: spread(0.3...0.8)) * Double(field)
@@ -1214,7 +1240,7 @@ final class FxDirector {
                 let s = Ease.cubicOut(t)
                 node.position = CGPoint(x: position.x + CGFloat(drift.x * s), y: position.y + CGFloat(drift.y * s))
                 node.setScale(CGFloat(0.6 + 0.9 * s))
-                node.alpha = CGFloat(0.85 * (1 - Ease.quadIn(t)))
+                node.alpha = CGFloat(0.85 * grant.alpha * (1 - Ease.quadIn(t)))
             }
         }
         for _ in 0..<FxStyle.deathChunks {
@@ -1234,6 +1260,63 @@ final class FxDirector {
                 node.alpha = CGFloat(t > 0.7 ? (1 - t) / 0.3 : 1)
             }
         }
+    }
+
+    // MARK: Effektbudget (A-5 Teil 2)
+
+    /// Meldet eine große Wolke beim Budget an (D-181); Ort in Szenenpunkten,
+    /// Radius in Feldern.
+    private func cloud(at position: CGPoint, radius: Double, life: Double) -> FxAreaBudget.Grant {
+        let unit = Double(max(field, 1))
+        let grant = budget.claim(x: Double(position.x) / unit, y: Double(position.y) / unit,
+                                 radius: radius, now: time, life: life)
+        if grant != .full { stats.damped += 1 }
+        return grant
+    }
+
+    /// Beute als Zahl und Münzen. Steigt in der Nähe noch eine Zahl, die eben
+    /// erst kam, zählt diese den Lohn dazu und springt neu auf (D-183): eine
+    /// lesbare Zahl statt eines Haufens, und nur eine Münze mehr statt drei.
+    private func gold(_ reward: Int, at center: CGPoint) {
+        let position = CGPoint(x: center.x, y: center.y + field * 0.4)
+        goldTags.removeAll { $0.node.parent == nil }
+        let reach = FxStyle.goldMergeRadius * field
+        if let index = goldTags.firstIndex(where: {
+            time - $0.born <= FxStyle.goldMergeWindow
+                && hypot($0.position.x - position.x, $0.position.y - position.y) <= reach
+        }) {
+            goldTags[index].total += reward
+            stats.merged += 1
+            let tag = goldTags[index]
+            setText(of: tag.node, to: "+\(tag.total)")
+            coins(at: center, count: 1)
+            rise(tag.node, from: tag.position, pop: 0.75)
+            return
+        }
+        coins(at: center, count: FxStyle.coinsPerKill)
+        let node = label("+\(reward)", at: position, color: FxStyle.gold)
+        goldTags.append(GoldTag(node: node, position: position, total: reward, born: time))
+    }
+
+    /// Text einer Zahl mit Kontur neu setzen: alle Lagen gleich.
+    private func setText(of node: SKNode, to text: String) {
+        for case let line as SKLabelNode in node.children { line.text = text }
+    }
+
+    /// Gegner, deren Körpermitte unter einer großen Wolke liegt, die über ihnen
+    /// gezeichnet wird (D-184). Für Tests und den Kontaktabzug.
+    func occludedEnemies(_ enemies: [EnemyNode]) -> Int {
+        // Nur Wolken (Sporen, Rauch, Staub): Ringe sind hohl, Funken und Blitze kurz und schmal.
+        let puff = FxTextures.texture(.puff)
+        let clouds = layer.children.compactMap { $0 as? SKSpriteNode }.filter { cloud in
+            cloud.texture === puff && cloud.zPosition > FxStyle.enemyLayerGap && cloud.alpha >= FxStyle.occluderAlpha
+                && min(cloud.frame.width, cloud.frame.height) >= FxStyle.occluderSide * field
+        }
+        guard !clouds.isEmpty else { return 0 }
+        return enemies.filter { enemy in
+            let body = CGPoint(x: enemy.position.x, y: enemy.position.y + enemy.height * 0.45)
+            return clouds.contains { $0.frame.insetBy(dx: $0.frame.width * 0.15, dy: $0.frame.height * 0.15).contains(body) }
+        }.count
     }
 
     /// Münzen springen heraus, drehen sich und fallen.
@@ -1260,16 +1343,24 @@ final class FxDirector {
     }
 
     /// Zahl oder Hinweis, springt auf und steigt.
-    private func label(_ text: String, at position: CGPoint, color: SKColor, wiggle: Bool = false) {
+    @discardableResult
+    private func label(_ text: String, at position: CGPoint, color: SKColor, wiggle: Bool = false) -> SKNode {
         let node = outlinedLabel(text, fontSize: field * 0.42, color: color)
         node.position = position
         node.setScale(0.3)
         node.alpha = 0
         node.zPosition = 8
         layer.addChild(node)
-        animate(node, duration: FxStyle.floatLife, end: .remove) { [field = self.field] node, t in
+        rise(node, from: position, wiggle: wiggle)
+        return node
+    }
+
+    /// Aufspringen und Steigen einer Zahl; erneut gerufen beginnt der Weg von vorn
+    /// (derselbe Schlüssel ersetzt die laufende Bewegung), ab `pop` statt klein.
+    private func rise(_ node: SKNode, from position: CGPoint, wiggle: Bool = false, pop start: Double = 0.3) {
+        animate(node, key: "rise", duration: FxStyle.floatLife, end: .remove) { [field = self.field] node, t in
             let pop = t < 0.25 ? Ease.backOut(t / 0.25) : 1
-            node.setScale(CGFloat(0.3 + 0.7 * pop))
+            node.setScale(CGFloat(start + (1 - start) * pop))
             let shiver = wiggle ? CGFloat(sin(t * 50) * (1 - t)) * field * 0.08 : 0
             node.position = CGPoint(x: position.x + shiver, y: position.y + field * 0.6 * CGFloat(Ease.cubicOut(t)))
             node.alpha = CGFloat(t > 0.65 ? (1 - t) / 0.35 : 1)
