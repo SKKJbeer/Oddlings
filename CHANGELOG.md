@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.44.0 – 17.11.2026 (A-2: Bauen und Tafeln)
+## 0.44.0 – 22.11.2026 (A-2: Bauen und Tafeln) · Bau 65
 
 ### Neu
 - **Vorschau vor dem Kauf** (D-155, Steffens Karte S33): Nach dem ersten Tippen auf
