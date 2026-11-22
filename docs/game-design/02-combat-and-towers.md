@@ -224,6 +224,9 @@ Falkenhorst, Steinregen. Der **Pilzbalg** zerfällt beim Tod in drei Sporlinge a
 und dahinter; sie tragen die Stärke seiner Welle. Bricht er durch, zerfällt er nicht.
 Antworten: Blitz und Salve über den Sporlingen, Sporenturm hinter dem Todesort. M7
 setzt nur eine Gabel voraus und stellt darum beide früh einzeln vor (D-177).
+Alle drei sind seit 0.43.0 eigene 3D-Figuren in drei Blickrichtungen; der Sporling ist
+deutlich kleiner als der Balg (0,65 gegen 0,8 Felder), damit man drei aus einem als
+„wenig, aber viele“ liest.
 
 ## Schaden
 

@@ -99,8 +99,12 @@ M7 mit 0,33 knapp unter der Dominanzgrenze 0,35; mehr Hexen in M7 schieben sie d
   Asset-Vertrag → `folge.py` mit Kontur), Folgen `walk`, `walkFront`, `walkBack` (je 8),
   `hit` (3), `die` (6). Abgestimmt mit dem Coordinator, damit A-3 sie nicht doppelt baut.
   Stand 0.42.0: Die Moorhexe ist fertig (eigener Knochen für den Stab). Für Pilzbalg und
-  Sporling war das freie TRELLIS-Kontingent aufgebraucht; sie haben bis dahin ein
-  gemaltes FLUX-Standbild im Atlas und laufen mit der Gangart aus `FxStyle`.
+  Sporling war das freie TRELLIS-Kontingent aufgebraucht; sie hatten in 0.42.0 ein
+  gemaltes FLUX-Standbild im Atlas und liefen mit der Gangart aus `FxStyle`.
+  Stand 0.43.0: Pilzbalg und Sporling sind 3D-Figuren aus ihren gemalten Vorlagen. Der
+  Pilzbalg watschelt (Becken kippt seitlich), beim Sporling ist der Hut nach hinten
+  gekippt, damit das Gesicht bei 30° Kamera frei bleibt. Ihre Größe auf dem Feld ist jetzt
+  gleich der Seite im Vertrag (Hexe 0,85, Balg 0,8, Sporling 0,65 Felder).
 - **Heilung**: grüner Puls um die Hexe, ein heller Funke über jedem Geheilten, Lebensleiste
   wächst sichtbar. **Zerfall**: Sporenwolke am Todesort, Sporlinge springen heraus.
 - **Ton**: Heilen und Zerfallen bekommen je einen Klang aus den vorhandenen CC0-Quellen
