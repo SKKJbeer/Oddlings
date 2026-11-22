@@ -50,7 +50,9 @@ final class FxDirectorTests: XCTestCase {
         XCTAssertGreaterThan(stats.spores, 0, stats.summary)
         XCTAssertGreaterThan(stats.hits, 0, stats.summary)
         XCTAssertGreaterThan(stats.deaths, 0, stats.summary)
-        XCTAssertEqual(stats.coins, stats.deaths * FxStyle.coinsPerKill, "jede Münze kam, keine entfiel: \(stats.summary)")
+        // Ein gebündelter Tod bringt eine Münze statt aller (D-183).
+        XCTAssertEqual(stats.coins, (stats.deaths - stats.merged) * FxStyle.coinsPerKill + stats.merged,
+                       "jede Münze kam, keine entfiel: \(stats.summary)")
         XCTAssertEqual(stats.builds, scene.model.state.towers.count, stats.summary)
         XCTAssertGreaterThan(stats.spawns, 0, stats.summary)
     }

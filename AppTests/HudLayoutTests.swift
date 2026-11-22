@@ -222,7 +222,7 @@ final class HudLayoutTests: XCTestCase {
     func testPenaltyMovesPanelOffTheFortress() throws {
         map = Simulation(config: try BalanceConfig.missionOne()).map
         let hud = layout(devices[2], avoiding: true)
-        let blind = HudLayout(board: hud.board, insets: .init(left: devices[2].side, bottom: devices[2].bottom,
+        let blind = HudLayout(board: hud.board, insets: .init(top: BattleStyle.boardTop, left: devices[2].side, bottom: devices[2].bottom,
                                                                right: devices[2].side),
                               metrics: BattleStyle.hudMetrics,
                               avoid: HudLayout.Avoid(path: hud.avoid.path, fortress: hud.avoid.fortress,

@@ -21,9 +21,10 @@ final class MissionE2ETests: XCTestCase {
         XCTAssertTrue(e2e.result.waitForNonExistence(timeout: 5), "Tafel verschwindet")
         // Sofort ablesen, nicht warten: Der Neustart setzt alles im selben Bild
         // zurück, und kurz darauf läuft die Mission wieder.
-        XCTAssertEqual(e2e.lives, e2e.config.mission.fortressLives, "Leben zurückgesetzt")
-        XCTAssertEqual(e2e.waveLabel, "Welle 0/\(e2e.config.waves.count)", "Welle zurückgesetzt")
-        XCTAssertEqual(e2e.gold, e2e.config.mission.startGold, "Gold zurückgesetzt")
+        let hud = try e2e.hudAtOnce()
+        XCTAssertEqual(hud.lives, e2e.config.mission.fortressLives, "Leben zurückgesetzt")
+        XCTAssertEqual(hud.wave, "Welle 0/\(e2e.config.waves.count)", "Welle zurückgesetzt")
+        XCTAssertEqual(hud.gold, e2e.config.mission.startGold, "Gold zurückgesetzt")
     }
 
     @MainActor

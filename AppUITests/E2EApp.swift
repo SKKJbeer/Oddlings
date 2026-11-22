@@ -164,6 +164,23 @@ struct E2EApp {
     }
 
     private func number(in element: XCUIElement) -> Int {
-        Int(element.label.split(separator: " ").first ?? "") ?? -1
+        number(in: element.label)
+    }
+
+    private func number(in label: String) -> Int {
+        Int(label.split(separator: " ").first ?? "") ?? -1
+    }
+
+    /// Leben, Gold und Welle aus einem einzigen Abzug der Oberfläche. Drei
+    /// Einzelabfragen brauchen im Zeitraffer so lange, dass zwischen der ersten
+    /// und der dritten schon die nächste Welle startet.
+    func hudAtOnce() throws -> (lives: Int, gold: Int, wave: String) {
+        var labels: [String: String] = [:]
+        func collect(_ node: XCUIElementSnapshot) {
+            if !node.identifier.isEmpty, labels[node.identifier] == nil { labels[node.identifier] = node.label }
+            node.children.forEach(collect)
+        }
+        collect(try app.snapshot())
+        return (number(in: labels["hud.lives"] ?? ""), number(in: labels["hud.gold"] ?? ""), labels["hud.wave"] ?? "")
     }
 }

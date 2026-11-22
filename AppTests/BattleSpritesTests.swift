@@ -78,15 +78,12 @@ final class BattleSpritesTests: XCTestCase {
     func testPaintedGroundCoversTheWholeScene() throws {
         let config = try BalanceConfig.missionOne()
         let map = BattleModel(config: config, seed: 1, autoplay: false).sim.map
-        // iPhone 16 Pro Max und SE quer, iPad Pro 13" und mini quer, je ganz und
-        // ohne die Kopfleiste darüber (60 pt): Die Karte bekommt nur, was unter
-        // der Leiste bleibt, und wird damit noch breiter als der Bildschirm.
-        // Im Probelauf vom 26.10.2026 blieben so links und rechts je 1,3 Zellen leer.
+        // iPhone 16 Pro Max und SE quer, iPad Pro 13" und mini quer. Seit D-180 bekommt
+        // die Szene den ganzen Bildschirm; die Größen ohne Kopfleiste (60 pt weniger)
+        // gibt es nicht mehr. Der Rand oben gehört dem Überstand, nicht dem Raster.
+        // Im Probelauf vom 26.10.2026 blieben ohne Überstand links und rechts je 1,3 Zellen leer.
         for size in [CGSize(width: 956, height: 440), CGSize(width: 667, height: 375),
-                     CGSize(width: 1376, height: 1032), CGSize(width: 1133, height: 744),
-                     CGSize(width: 956, height: 380), CGSize(width: 874, height: 342),
-                     CGSize(width: 667, height: 315), CGSize(width: 1376, height: 972)] {
-            // Mit dem Rand unter der Kopfleiste (D-180): Der gemalte Überstand muss auch ihn decken.
+                     CGSize(width: 1376, height: 1032), CGSize(width: 1133, height: 744)] {
             let layout = BoardLayout.battle(size: size, map: map)
             let ground = try XCTUnwrap(BattleSprites.ground(missionID: config.mission.id, layout: layout))
             XCTAssertLessThanOrEqual(ground.frame.minX, 0.5, "\(size)")
