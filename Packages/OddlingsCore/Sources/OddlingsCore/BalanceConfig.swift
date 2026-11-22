@@ -526,6 +526,9 @@ public enum EnemyKind: String, Codable, CaseIterable, CodingKeyRepresentable, Se
     case raider, runner, brute
     /// Boss von Region 1 (P3-4). Was er kann, steht in `EnemyConfig.boss`.
     case moorKing
+    /// Heiler und Teiler (D-143, A-6). Was sie können, steht in `EnemyConfig.heal`
+    /// und `.split`; der Name im Code gibt Bild, Ton und Text einen festen Schlüssel.
+    case witch, puffball, sporeling
 }
 
 /// Wen ein Turm mit Einzelziel zuerst nimmt (07, „Zielwahl“). Wählbar ab
@@ -621,10 +624,15 @@ public struct EnemyConfig: Codable, Equatable, Sendable {
     public var slowScale: Double? = nil
     /// Schild und Ruf eines Bosses (P3-4). Fehlt es, ist der Gegner kein Boss.
     public var boss: BossConfig? = nil
+    /// Heilt andere Gegner in der Nähe (Moorhexe, D-175). Fehlt es, heilt er nicht.
+    public var heal: HealConfig? = nil
+    /// Zerfällt beim Tod in kleinere Gegner (Pilzbalg, D-176).
+    public var split: SplitConfig? = nil
 
     public init(hp: Double, speed: Double, reward: Int, leakDamage: Int,
                 armor: Double? = nil, armorMinShare: Double? = nil,
-                slowScale: Double? = nil, boss: BossConfig? = nil) {
+                slowScale: Double? = nil, boss: BossConfig? = nil,
+                heal: HealConfig? = nil, split: SplitConfig? = nil) {
         self.hp = hp
         self.speed = speed
         self.reward = reward
@@ -633,6 +641,36 @@ public struct EnemyConfig: Codable, Equatable, Sendable {
         self.armorMinShare = armorMinShare
         self.slowScale = slowScale
         self.boss = boss
+        self.heal = heal
+        self.split = split
+    }
+}
+
+/// Heiler (D-175): alle `interval` Sekunden bekommt jeder andere lebende
+/// Gegner im Umkreis `radius` (Felder) `share` seines Höchstlebens zurück.
+public struct HealConfig: Codable, Equatable, Sendable {
+    public var radius: Double
+    public var interval: Double
+    public var share: Double
+
+    public init(radius: Double, interval: Double, share: Double) {
+        self.radius = radius
+        self.interval = interval
+        self.share = share
+    }
+}
+
+/// Teiler (D-176): stirbt der Gegner durch Schaden, erscheinen `count` der Art
+/// `into` an seiner Stelle, je `spread` Felder auseinander.
+public struct SplitConfig: Codable, Equatable, Sendable {
+    public var into: EnemyKind
+    public var count: Int
+    public var spread: Double
+
+    public init(into: EnemyKind, count: Int, spread: Double) {
+        self.into = into
+        self.count = count
+        self.spread = spread
     }
 }
 

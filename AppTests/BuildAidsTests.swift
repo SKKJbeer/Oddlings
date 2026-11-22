@@ -51,6 +51,14 @@ final class BuildAidsTests: XCTestCase {
         }
     }
 
+    /// Jede Gegnerart hat einen eigenen Namen auf dem Zettel, auch Heiler und Teiler.
+    func testEveryEnemyKindHasAForecastName() {
+        let names = EnemyKind.allCases.map { BattleTexts.enemy($0, count: 2) }
+        XCTAssertEqual(Set(names).count, EnemyKind.allCases.count, "\(names)")
+        XCTAssertEqual(BattleTexts.enemy(.witch, count: 1), "1 Moorhexe")
+        XCTAssertEqual(BattleTexts.enemy(.sporeling, count: 3), "3 Sporlinge")
+    }
+
     /// Der Knopf zeigt die nächste Welle: vor der ersten Welle Welle 1.
     func testControllerForecastsTheNextWave() throws {
         let config = try BalanceConfig.missionOne()

@@ -162,6 +162,8 @@ enum BattleTexts {
     }
     /// Beim ersten gepanzerten Gegner einer Mission (P2-10).
     static let armorHint = "Gepanzert: Steine schlagen durch"
+    /// Erste Heilung einer Mission (D-175): was sie tut und was hilft, in einem Satz.
+    static let healHint = "Heilt ihre Nachbarn: zuerst sie"
     /// Boss (P3-4). Der Satz zum Schild sagt, was jetzt zählt: die Gerufenen.
     static let bossName = "Moorkönig"
 
@@ -172,6 +174,9 @@ enum BattleTexts {
         case .runner: "\(count) Flitzer"
         case .brute: count == 1 ? "1 Panzerbestie" : "\(count) Panzerbestien"
         case .moorKing: count == 1 ? "der \(bossName)" : "\(count) Moorkönige"
+        case .witch: count == 1 ? "1 Moorhexe" : "\(count) Moorhexen"
+        case .puffball: count == 1 ? "1 Pilzbalg" : "\(count) Pilzbälge"
+        case .sporeling: count == 1 ? "1 Sporling" : "\(count) Sporlinge"
         }
     }
 

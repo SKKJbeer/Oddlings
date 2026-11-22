@@ -120,6 +120,6 @@ final class BossAppTests: XCTestCase {
         XCTAssertEqual(scene.fx.stats.unguards, 1)
         scene.fx.advance(by: FxStyle.shieldFramesLife + 0.1)
         XCTAssertFalse(node.holdsFrame, "nach dem Schild zurück zum Lauf")
-        XCTAssertTrue(body.texture === node.walkFrames[node.walkIndex])
+        XCTAssertTrue(body.texture === node.shownWalkFrames[node.walkIndex])
     }
 }

@@ -49,6 +49,8 @@ public struct ConfigIssue: Hashable, Sendable, CustomStringConvertible {
         case emptySpecialization       // Spezialisierung ohne jede Wirkung
         case strategyNeedsSpecialization // Bauweise spezialisiert, die Mission bietet es nicht an
         case bossSummonsBoss           // ein Boss darf keinen Boss rufen
+        case splitIntoInvalid          // Zerfall nur in eine Art der Mission, die selbst nicht zerfällt und kein Boss ist
+        case bossSplits                // ein Boss zerfällt nicht
         case tooManyBossesInWave       // höchstens ein Boss je Welle
         case noZones                   // `zones` vorhanden, aber leer: dann gäbe es keinen Bauplatz
         case zoneOutsideMap            // Rechteck ragt über den Kartenrand
@@ -94,6 +96,8 @@ public struct ConfigIssue: Hashable, Sendable, CustomStringConvertible {
         case .emptySpecialization: "\(field) braucht scale, targets, extraJumps, keepsDamageOnSlowed oder vulnerableFactor"
         case .strategyNeedsSpecialization: "\(field) spezialisiert, die Mission bietet es nicht an"
         case .bossSummonsBoss: "\(field) ruft einen Boss oder einen Gegner ohne Werte"
+        case .splitIntoInvalid: "\(field) zerfällt in einen Gegner ohne Werte, einen Boss oder einen, der selbst zerfällt"
+        case .bossSplits: "\(field) ist ein Boss und darf nicht zerfallen"
         case .tooManyBossesInWave: "\(field) hat mehr als einen Boss"
         case .noZones: "\(field) braucht mindestens eine Insel, sonst gibt es keinen Bauplatz"
         case .zoneOutsideMap: "\(field) ragt über den Rand der Karte"
@@ -265,6 +269,20 @@ extension BalanceConfig {
                 if enemies[boss.summon] == nil || enemies[boss.summon]?.boss != nil {
                     found.append(.init(field: "\(field).boss.summon", rule: .bossSummonsBoss))
                 }
+            }
+            if let heal = enemy.heal {
+                positive(heal.radius, "\(field).heal.radius")
+                positive(heal.interval, "\(field).heal.interval")
+                fraction(heal.share, "\(field).heal.share")
+            }
+            if let split = enemy.split {
+                positive(Double(split.count), "\(field).split.count")
+                nonNegative(split.spread, "\(field).split.spread")
+                let child = enemies[split.into]
+                if child == nil || child?.boss != nil || child?.split != nil {
+                    found.append(.init(field: "\(field).split.into", rule: .splitIntoInvalid))
+                }
+                if enemy.boss != nil { found.append(.init(field: "\(field).split", rule: .bossSplits)) }
             }
         }
         for (index, wave) in waves.enumerated() {

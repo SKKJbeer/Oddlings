@@ -56,6 +56,9 @@ enum BattleStyle {
         case .runner: SKColor(red: 0.95, green: 0.65, blue: 0.20, alpha: 1)
         case .brute: SKColor(red: 0.55, green: 0.25, blue: 0.55, alpha: 1)
         case .moorKing: SKColor(red: 0.25, green: 0.40, blue: 0.25, alpha: 1)
+        case .witch: SKColor(red: 0.40, green: 0.30, blue: 0.60, alpha: 1)
+        case .puffball: SKColor(red: 0.75, green: 0.60, blue: 0.40, alpha: 1)
+        case .sporeling: SKColor(red: 0.95, green: 0.82, blue: 0.40, alpha: 1)
         }
     }
 
@@ -85,6 +88,12 @@ enum BattleStyle {
         case .brute: 1.2
         // Der Boss soll sich wie ein Auftritt anfühlen (P3-4): deutlich größer als die Panzerbestie.
         case .moorKing: 2.3
+        // Seit 0.43.0 gleich der Seite im Asset-Vertrag, wie bei den anderen
+        // 3D-Figuren: Der Pilzbalg ist breit, nicht hoch, und wirkt mit 0,8 schon schwer.
+        case .witch: 0.85
+        case .puffball: 0.8
+        // Klein, damit man drei aus einem Balg sofort als „wenig, aber viele“ liest.
+        case .sporeling: 0.65
         }
     }
 

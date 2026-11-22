@@ -158,7 +158,7 @@
       "slowDuration": 1.5
     }
   },
-  "_enemies": "Die Panzerbestie trägt die Rüstung aus Mission 4; Flitzer laufen 2,6 Felder je Sekunde wie in Mission 2 und 3 (D-075). Moorkönig (P3-4, K7): Boss mit Rüstung, halber Verlangsamung und einem Schild bei halbem Leben, unter dem er Plünderer ruft; läuft er durch, ist die Mission verloren.",
+  "_enemies": "Die Panzerbestie trägt die Rüstung aus Mission 4; Flitzer laufen 2,6 Felder je Sekunde wie in Mission 2 und 3 (D-075). Moorkönig (P3-4, K7): Boss mit Rüstung, halber Verlangsamung und einem Schild bei halbem Leben, unter dem er Plünderer ruft; läuft er durch, ist die Mission verloren. Moorhexe und Pilzbalg (D-177) erscheinen früh einzeln, damit jeder beide kennt, egal welche Gabel er nahm; danach gemischt.",
   "enemies": {
     "raider": {
       "hp": 70,
@@ -196,6 +196,34 @@
         "summonCount": 8,
         "summonHPScale": 1.0
       }
+    },
+    "witch": {
+      "hp": 160,
+      "speed": 0.6,
+      "reward": 10,
+      "leakDamage": 2,
+      "heal": {
+        "radius": 1.0,
+        "interval": 2.0,
+        "share": 0.06
+      }
+    },
+    "puffball": {
+      "hp": 150,
+      "speed": 0.7,
+      "reward": 4,
+      "leakDamage": 2,
+      "split": {
+        "into": "sporeling",
+        "count": 3,
+        "spread": 0.35
+      }
+    },
+    "sporeling": {
+      "hp": 34,
+      "speed": 2.0,
+      "reward": 2,
+      "leakDamage": 1
     }
   },
   "waves": [
@@ -228,6 +256,18 @@
           "count": 4,
           "interval": 2.4,
           "delay": 5
+        },
+        {
+          "enemy": "witch",
+          "count": 1,
+          "interval": 2.0,
+          "delay": 6
+        },
+        {
+          "enemy": "puffball",
+          "count": 1,
+          "interval": 3.0,
+          "delay": 9
         }
       ]
     },
@@ -282,6 +322,12 @@
           "count": 5,
           "interval": 2.0,
           "delay": 9
+        },
+        {
+          "enemy": "witch",
+          "count": 1,
+          "interval": 2.0,
+          "delay": 10
         }
       ]
     },
@@ -298,6 +344,12 @@
           "count": 22,
           "interval": 0.45,
           "delay": 5
+        },
+        {
+          "enemy": "puffball",
+          "count": 2,
+          "interval": 1.8,
+          "delay": 3
         }
       ]
     },
@@ -336,6 +388,12 @@
           "count": 22,
           "interval": 0.4,
           "delay": 9
+        },
+        {
+          "enemy": "witch",
+          "count": 1,
+          "interval": 2.0,
+          "delay": 6
         }
       ]
     },
@@ -352,6 +410,12 @@
           "count": 30,
           "interval": 0.38,
           "delay": 6
+        },
+        {
+          "enemy": "puffball",
+          "count": 2,
+          "interval": 2.0,
+          "delay": 8
         }
       ]
     },

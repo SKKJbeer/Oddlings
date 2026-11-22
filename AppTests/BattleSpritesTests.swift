@@ -163,12 +163,16 @@ final class BattleSpritesTests: XCTestCase {
 
     /// FX 02/03, A-3: alle vier Gegner haben ihre Bildfolgen,
     /// gleich groß wie ihr Standbild; die anderen Gegner bleiben beim Standbild.
+    /// Seit 0.42.0 auch die Moorhexe, seit 0.43.0 Pilzbalg und Sporling.
     func testAnimatedEnemiesHaveFramesOthersKeepTheirPicture() throws {
         let counts: [EnemyKind: [EnemyMotion: Int]] = [
-            .raider: [.walk: 8, .hit: 3, .die: 6, .shield: 0, .summon: 0],
-            .runner: [.walk: 8, .hit: 3, .die: 6, .shield: 0, .summon: 0],
-            .brute: [.walk: 8, .hit: 3, .die: 6, .shield: 0, .summon: 0],
-            .moorKing: [.walk: 8, .hit: 3, .die: 8, .shield: 4, .summon: 5],
+            .raider: [.walk: 8, .hit: 3, .die: 6, .shield: 0, .summon: 0, .walkFront: 8, .walkBack: 8],
+            .runner: [.walk: 8, .hit: 3, .die: 6, .shield: 0, .summon: 0, .walkFront: 8, .walkBack: 8],
+            .brute: [.walk: 8, .hit: 3, .die: 6, .shield: 0, .summon: 0, .walkFront: 8, .walkBack: 8],
+            .moorKing: [.walk: 8, .hit: 3, .die: 8, .shield: 4, .summon: 5, .walkFront: 8, .walkBack: 8],
+            .witch: [.walk: 8, .hit: 3, .die: 6, .shield: 0, .summon: 0, .walkFront: 8, .walkBack: 8],
+            .puffball: [.walk: 8, .hit: 3, .die: 6, .shield: 0, .summon: 0, .walkFront: 8, .walkBack: 8],
+            .sporeling: [.walk: 8, .hit: 3, .die: 6, .shield: 0, .summon: 0, .walkFront: 8, .walkBack: 8],
         ]
         for (kind, expected) in counts.sorted(by: { $0.key.rawValue < $1.key.rawValue }) {
             let still = try XCTUnwrap(BattleSprites.texture(named: BattleSprites.enemyName(kind)))

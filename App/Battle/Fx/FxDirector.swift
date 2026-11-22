@@ -32,6 +32,11 @@ final class FxDirector {
         var summons = 0
         /// Schildhaltungen der Bildfolge (FX 03): gehoben, gesenkt.
         var guards = 0, unguards = 0
+        /// Heilpulse der Moorhexe, Zerfälle des Pilzbalgs, Hinweise auf die Heilung (D-175, D-176).
+        var heals = 0, splits = 0, healHints = 0
+        /// Laufen (A-1): Staub beim Aufsetzen, Figuren, die einen Eckbogen
+        /// betreten, und Bilder mit zwei fast deckungsgleichen Gegnern.
+        var footfalls = 0, bends = 0, stacked = 0
 
         var summary: String {
             "arrows=\(arrows) bolts=\(bolts) combos=\(combos) spores=\(spores) hits=\(hits) deaths=\(deaths) "
@@ -40,7 +45,8 @@ final class FxDirector {
                 + " payouts=\(payouts) empties=\(empties) upgrades=\(upgrades) specializations=\(specializations)"
                 + " armorSparks=\(armorSparks) armorHints=\(armorHints)"
                 + " callouts=\(callouts) sentences=\(sentences) guides=\(guides) summons=\(summons)"
-                + " guards=\(guards) unguards=\(unguards)"
+                + " guards=\(guards) unguards=\(unguards) heals=\(heals) splits=\(splits) healHints=\(healHints)"
+                + " footfalls=\(footfalls) bends=\(bends) stacked=\(stacked)"
         }
     }
 
@@ -73,6 +79,8 @@ final class FxDirector {
     /// Wann der nächste Pfeil beim Gegner ankommt. Aufblitzen und Tod warten
     /// darauf, denn die Simulation trifft sofort.
     private var arrivals: [Int: Double] = [:]
+    /// Letzter sichtbarer Heilpuls je Hexe (`FxStyle.healGap`).
+    private var lastHeal: [Int: Double] = [:]
     /// Meldet jeden Sporenfunken mit seinem Ort. Ob es der erste der Mission
     /// ist, weiß nur die Szene.
     var onCombo: ((CGPoint) -> Void)?
@@ -224,6 +232,39 @@ final class FxDirector {
         dust(at: enemy.position, count: 3, radius: 0.3, size: 0.35)
     }
 
+    /// Staub beim Aufsetzen (A-1): ein bis zwei kleine Wölkchen an den Füßen,
+    /// höchstens `FxStyle.dustPerEnemy` je Figur gleichzeitig. Zierde, fällt
+    /// bei voller Grenze als Erstes weg.
+    func footfall(_ enemy: EnemyNode, size: Double) {
+        guard !reduceMotion, enemy.activeDust < FxStyle.dustPerEnemy else { return }
+        let count = size > 0.25 ? 2 : 1
+        var made = 0
+        for index in 0..<count {
+            guard enemy.activeDust < FxStyle.dustPerEnemy, let puff = sprite(.puff, essential: false) else { break }
+            made += 1
+            enemy.activeDust += 1
+            tinted(puff, FxStyle.dust)
+            let side = field * CGFloat(size * spread(0.85...1.15))
+            puff.size = CGSize(width: side, height: side)
+            // Hinter der Figur, nach außen treibend: Staub bleibt zurück.
+            let away = -enemy.facing * (index == 0 ? 1 : -0.4)
+            let start = enemy.position
+            let reach = Double(field) * size * 0.9
+            animate(puff, duration: FxStyle.footDustLife, end: .recycle,
+                    onEnd: { [weak enemy] in enemy.map { $0.activeDust = max(0, $0.activeDust - 1) } }) { [field = self.field] node, t in
+                let s = Ease.cubicOut(t)
+                node.position = CGPoint(x: start.x + CGFloat(Double(away) * reach * s),
+                                        y: start.y + field * 0.12 * CGFloat(s))
+                node.setScale(CGFloat(0.5 + 0.8 * s))
+                node.alpha = FxStyle.footDustAlpha * CGFloat(1 - Ease.quadIn(t))
+            }
+        }
+        if made > 0 { stats.footfalls += 1 }
+    }
+
+    func noteBend() { stats.bends += 1 }
+    func noteStacked() { stats.stacked += 1 }
+
     /// Treffer: helles Aufblitzen, Rückstoß gegen die Laufrichtung, kurzes
     /// Stauchen, mit Bildfolge dazu das Zucken. Wartet auf einen fliegenden Pfeil.
     func hit(_ enemy: EnemyNode) {
@@ -312,6 +353,39 @@ final class FxDirector {
                 onEnd: { [weak boss] in boss?.release() }) { [weak boss] _, t in
             boss?.hold(frames[FxMath.onceFrame(t, frames: frames.count)])
         }
+    }
+
+    /// Die Moorhexe heilt (D-175): grüner Ring in der Reichweite der Regel um sie,
+    /// je Geheiltem ein Funke, der nach oben steigt. Gibt zurück, ob er gespielt
+    /// wurde, damit der Klang derselben Grenze folgt.
+    @discardableResult
+    func heal(_ healer: EnemyNode, patients: [EnemyNode], radius: Double) -> Bool {
+        guard time - (lastHeal[healer.enemyID] ?? -.infinity) >= FxStyle.healGap else { return false }
+        lastHeal[healer.enemyID] = time
+        stats.heals += 1
+        ring(at: healer.position, radius: radius, color: FxStyle.healColor, duration: FxStyle.healRingLife,
+             flatten: 0.45, additive: true)
+        for patient in patients {
+            sparks(at: CGPoint(x: patient.position.x, y: patient.position.y + patient.height * 0.6),
+                   count: FxStyle.healSparks, color: FxStyle.healColor, speed: 0.6, size: 0.18)
+        }
+        return true
+    }
+
+    /// Beim ersten Heilen einer Mission ein kurzer Hinweis über der Hexe, wie bei der Panzerung.
+    func healHint(_ healer: EnemyNode) {
+        stats.healHints += 1
+        hint(at: CGPoint(x: healer.position.x, y: healer.position.y + healer.height * 1.6), text: BattleTexts.healHint)
+    }
+
+    /// Der Pilzbalg platzt (D-176): Sporenwolke und Druckring am Todesort; die
+    /// Sporlinge erscheinen darin über `spawn`.
+    func split(at position: CGPoint) {
+        stats.splits += 1
+        ring(at: position, radius: 0.6, color: FxStyle.splitColor, duration: FxStyle.splitRingLife, flatten: 0.45)
+        sparks(at: CGPoint(x: position.x, y: position.y + field * 0.3), count: FxStyle.splitPuffs,
+               color: FxStyle.splitColor, speed: 1.2, size: 0.25)
+        dust(at: position, count: FxStyle.splitPuffs, radius: 0.5, size: 0.5)
     }
 
     /// Beim ersten gepanzerten Gegner einer Mission ein kurzer Hinweis über ihm.

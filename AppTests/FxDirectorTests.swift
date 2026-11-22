@@ -344,7 +344,7 @@ final class FxDirectorTests: XCTestCase {
         }
         XCTAssertEqual(seen, Set(0..<8), "alle Laufbilder")
         let body = try XCTUnwrap(raider.body as? SKSpriteNode)
-        XCTAssertTrue(body.texture === raider.walkFrames[raider.walkIndex] || raider.holdsFrame)
+        XCTAssertTrue(body.texture === raider.shownWalkFrames[raider.walkIndex] || raider.holdsFrame)
     }
 
     /// Steht die Simulation (Pause), bleibt auch das Laufbild stehen.

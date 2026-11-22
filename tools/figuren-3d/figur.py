@@ -57,8 +57,11 @@ bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 if len(netze) > 1:
     bpy.ops.object.join()
 koerper = bpy.context.view_layer.objects.active
-koerper.rotation_euler[2] = math.radians(rig.get("drehungZ", 0))
-bpy.ops.object.transform_apply(rotation=True)
+# Direkt am Netz drehen: rotation_euler plus transform_apply ließ das Netz im
+# bpy-Modul unverändert (gemessen am Pilzbalg, Schwerpunkt blieb gleich), und
+# drehungZ wirkte dadurch nie.
+koerper.data.transform(Matrix.Rotation(math.radians(rig.get("drehungZ", 0)), 4, 'Z'))
+koerper.data.update()
 
 # Höhe 1, Füße auf 0, Mitte über dem Ursprung: Gelenkpunkte in rig.json sind
 # Anteile dieser Box, damit dieselbe Datei für jede Modellgröße gilt.
