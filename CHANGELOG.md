@@ -97,7 +97,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Tests: `BattleSpritesTests` verlangt die Bildfolgen des Flitzers (8/3/6, gleich groß wie
   sein Standbild); `check_assets.py` über den Atlas grün.
 
-## 0.38.0 – 17.11.2026 (Kampfplatz Mission 1 als Diorama mit Bauinseln, A-4)
+## 0.38.0 – 17.11.2026 (Kampfplatz Mission 1 als Diorama mit Bauinseln, A-4) · Bau 59
 
 - **Bauinseln** (D-141): Mission 1 baut nur noch auf sechs gestalteten Inseln mit
   41 Feldern statt auf 114 freien Feldern. Neu in der Simulation: `map.zones` mit
