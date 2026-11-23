@@ -26,6 +26,8 @@ GRENZE_DECKUNG = 0.01
 # Verdeckt (D-184): Bilder, in denen ein Gegner unter einer Wolke über ihm steht.
 # Seit 0.45.0 liegen alle Wolken unter den Figuren; 2 % lässt Platz für Funken.
 GRENZE_VERDECKT = 0.02
+# Ein Schütze, der mit Ziel länger woanders hinsieht, wirkt abwesend (A-5 Teil 3, D-189).
+GRENZE_DANEBEN_S = 0.6
 BREITE_BILD = 480
 RAND = 12
 # Bildschirmfotos kommen hochkant aus dem Simulator; die App steht quer
@@ -70,11 +72,15 @@ def bewerten(messung: dict) -> tuple[str, list[str]]:
     verdeckt = int(messung.get("occludedFrames", 0)) / bilder
     if verdeckt > GRENZE_VERDECKT:
         warnungen.append(f"Gegner unter Effekten in {verdeckt:.1%} der Bilder (Grenze {GRENZE_VERDECKT:.0%})")
+    daneben = float(messung.get("longestOffTargetSeconds", 0))
+    if daneben > GRENZE_DANEBEN_S:
+        warnungen.append(f"Schütze sah {daneben:.2f} s am Ziel vorbei (Grenze {GRENZE_DANEBEN_S} s)")
     if int(messung.get("maxEnemies", 0)) > 0 and int(messung.get("bends", 0)) == 0:
         warnungen.append("kein Gegner lief durch einen Eckbogen")
     zeile = (f"Gegner bis {messung.get('maxEnemies', 0)} · Bögen {messung.get('bends', 0)} · "
              f"Staub {messung.get('footfalls', 0)} · Abweichung {abweichung:.2f} · Deckung {deckung:.1%} · "
-             f"verdeckt {verdeckt:.1%} · gedämpft {messung.get('dampedClouds', 0)} · Gold gebündelt {messung.get('mergedGold', 0)}")
+             f"verdeckt {verdeckt:.1%} · gedämpft {messung.get('dampedClouds', 0)} · Gold gebündelt {messung.get('mergedGold', 0)} · "
+             f"Schüsse {messung.get('shots', 0)} · daneben bis {daneben:.2f} s")
     return zeile, warnungen
 
 

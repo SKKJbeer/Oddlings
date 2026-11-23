@@ -41,6 +41,7 @@ zusätzlich im Projektchat. Kurzstand: [status.md](status.md), Pakete im Einzeln
 | S24 | Wie viel Statistik die Tafel am Turm zeigt (Entscheidungskarte seit 08.11.) | Thread „Aufwertungen mit Werten und Vergleich zeigen“, [Konzept](../konzepte/ui-02-turmwerte.md) | nichts, gebaut ist die Empfehlung (D-130, D-131) | Werte, Vergleich und Kampfbilanz |
 | S33 | Wo Moorhexe und Pilzbalg auftreten (Entscheidungskarte seit 17.11.) | Thread „Moorhexe und Pilzbalg einbauen“, [Konzept](../konzepte/a-6-heiler-und-teiler.md) | nichts, gebaut ist die Empfehlung (0.42.0, D-177) | Hexe in M6a, Balg in M6b, M7 stellt beide früh vor |
 | S11 | Blitz allein gewinnt Mission 2 und 3 beim ersten Spielen: wann beheben (Entscheidungskarte seit 03.11.) | Haupt-Thread, [Labor](../konzepte/p2-6b-balance-labor.md#erster-lauf-03112026-stufe-pr-164-läufe-etwa-25-sekunden) | nichts, gebaut ist die Empfehlung (P2-11, D-075) | Jetzt, als eigenes Paket |
+| – | Wer oben auf dem Wachturm steht und zielt (Entscheidungskarte seit 23.11.) | Thread „Türme beim Zielen lebendig zeigen“, [Konzept](../konzepte/a-5-tuerme-zielen.md) | nichts, gebaut ist die Empfehlung (D-185) | Zwergenschütze mit Armbrust für alle Völker |
 
 ## Als Nächstes
 

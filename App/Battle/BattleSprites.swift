@@ -572,6 +572,7 @@ final class TowerNode: SKNode {
         } else {
             bankBar = nil
         }
+        field_ = field
         super.init()
         name = art.name
         if let footing { shade.addChild(footing) }
@@ -591,6 +592,63 @@ final class TowerNode: SKNode {
             bankFill.position = CGPoint(x: -bankWidth / 2, y: 0)
             bankBar.addChild(bankFill)
             addChild(bankBar)
+        }
+        placeCrown()
+    }
+
+    // MARK: Krone (A-5 Teil 3, G9)
+
+    private let field_: CGFloat
+    /// Schützen auf der Plattform (nur Wachturm, D-185), in der Reihenfolge der
+    /// Ziele eines Schusses: Bei der Salve nimmt der erste das erste Ziel.
+    private(set) var shooters: [ShooterNode] = []
+    /// Ladung 0…1 aus der Simulation (D-187); steuert den Schein des Kristalls.
+    var charge: CGFloat = 1
+    /// Hub des Huts in Feldern (D-188), vom FxDirector beim Ausstoß gesetzt.
+    var capLift: CGFloat = 0 { didSet { if capLift != oldValue { applyCap() } } }
+    /// Zeit des letzten einziehenden Funkens (Effekt-Uhr).
+    var lastMote: Double = -.infinity
+
+    /// Schützen und Hutlinie nach dem gezeigten Bild; neu bei jedem Bildwechsel,
+    /// weil Salve und Falkenhorst ihre Plattform anders tragen.
+    private func placeCrown() {
+        let entry = TowerCrownTable.entry(for: pictureName)
+        let wanted = kind == .watch && ShooterNode.available ? entry.shooters : []
+        let previous = shooters.first?.facing
+        shooters.forEach { $0.removeFromParent() }
+        shooters = wanted.map { spot in
+            let shooter = ShooterNode(field: field_)
+            let side = BattleStyle.towerSpriteSide * field_
+            // Bild mit Anker (0,5 | 0,2): Anteil im Bild in Punkte um den Fuß.
+            shooter.position = CGPoint(x: (spot.x - 0.5) * side, y: (spot.y - 0.2) * side)
+            // Hinter der Turmspitze liegende Schützen zuerst, damit der vordere davor steht.
+            shooter.zPosition = 1 - spot.y
+            if let previous { shooter.restore(previous) }
+            return shooter
+        }
+        shooters.forEach { pulse.addChild($0) }
+        applyCap()
+    }
+
+    /// Ziele als Szenenpunkte (in Schussreihenfolge); leer = kein Gegner in Reichweite.
+    func aim(at goals: [CGPoint], dt: Double, still: Bool) {
+        for (index, shooter) in shooters.enumerated() {
+            // Hat die Salve nur ein Ziel, nehmen es beide.
+            let goal = goals.isEmpty ? nil : goals[min(index, goals.count - 1)]
+            let angle = goal.map { g -> Double in
+                let from = CGPoint(x: position.x + shooter.position.x, y: position.y + shooter.position.y)
+                return Double(atan2(g.y - from.y, g.x - from.x))
+            }
+            shooter.aim(at: angle, dt: dt, still: still)
+        }
+    }
+
+    private func applyCap() {
+        guard kind == .spore, let line = TowerCrownTable.entry(for: pictureName).capLine else { return }
+        let side = BattleStyle.towerSpriteSide * field_
+        let lift = side > 0 ? capLift / side : 0
+        for case let sprite as SKSpriteNode in art.children {
+            sprite.warpGeometry = lift == 0 ? nil : CapWarp.grid(capLine: line, band: FxStyle.capBand, lift: lift)
         }
     }
 
@@ -641,6 +699,7 @@ final class TowerNode: SKNode {
         if name != pictureName, let texture = BattleSprites.texture(named: name) {
             for case let sprite as SKSpriteNode in art.children { sprite.texture = texture }
             pictureName = name
+            placeCrown()
         }
         let shadowName = BattleSprites.shadowNameAvailable(kind, level: newLevel, specialization: newSpecialization)
         if let shadow, shadow.name != shadowName, let texture = BattleSprites.texture(named: shadowName) {
@@ -652,15 +711,22 @@ final class TowerNode: SKNode {
     @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) { fatalError("nicht benutzt") }
 
-    /// Ruhe: Atmen und Glühen aus der Effekt-Uhr. Phase aus der Kennung, damit
-    /// nicht alle Türme im Takt atmen.
+    /// Ruhe aus der Effekt-Uhr. Nur der Pilz atmet: Stein tut das nicht (G9).
+    /// Phase aus der Kennung, damit nicht alle Pilze im Takt atmen.
     func idle(time: Double, still: Bool) {
         let phase = FxMath.phase(forID: towerID) * 2 * Double.pi
         let wave = still ? 0 : CGFloat(sin(time * 2 * Double.pi / FxStyle.breathPeriod + phase))
-        art.yScale = 1 + FxStyle.breathAmount * wave
+        art.yScale = breathes ? 1 + FxStyle.breathAmount * wave : 1
         // Fundament und Schatten erscheinen mit dem Turm, nicht vor ihm.
         shade.alpha = lift.alpha
-        glow?.alpha = min(1, 0.35 + 0.12 * wave + flare)
-        glow?.setScale(1 + 0.6 * flare)
+        // Der Kristall lädt sichtbar (D-187); voll flimmert er ruhig, er wartet.
+        let full = charge >= 1
+        let level = FxStyle.chargeGlowEmpty + (FxStyle.chargeGlowFull - FxStyle.chargeGlowEmpty) * charge * charge
+        let flicker = full && !still ? FxStyle.chargeFlicker * wave : 0
+        glow?.alpha = min(1, level + flicker + flare)
+        glow?.setScale(0.7 + 0.3 * charge + 0.6 * flare)
     }
+
+    /// Ob der Turm atmet: nur der Sporenturm (lebt), nicht die Steintürme.
+    var breathes: Bool { kind == .spore }
 }

@@ -115,7 +115,7 @@ final class BattleScene: SKScene {
         if let contactSheet {
             contactSheet.add(frameTime, enemies: enemyNodes.count, deviation: frameDeviation,
                              stacked: stackedFrames, stats: fx.stats,
-                             occluded: fx.occludedEnemies(Array(enemyNodes.values)))
+                             occluded: fx.occludedEnemies(Array(enemyNodes.values)), offTarget: longestOffTarget)
         }
         #endif
     }
@@ -253,11 +253,35 @@ final class BattleScene: SKScene {
     }
 
     /// Für den E2E-Test (A-5): welche Bilder die Türme zeigen und wie die Auswahl
-    /// gezeichnet ist, z. B. `towers=tower_watch_volley selection=gemalt`.
+    /// gezeichnet ist, z. B. `towers=tower_watch_volley selection=gemalt`, dazu die
+    /// Schützen (A-5 Teil 3): Zahl, davon mit Ziel, davon zum Ziel blickend.
     var artSummary: String {
         let pictures = towerNodes.keys.sorted().compactMap { towerNodes[$0]?.pictureName }
-        return "towers=\(pictures.joined(separator: ",")) selection=\(selectionStyle)"
+        return "towers=\(pictures.joined(separator: ",")) selection=\(selectionStyle) \(aimSummary)"
     }
+
+    /// `schuetzen=2 zielen=1 treffen=1`: Schützen, davon mit Ziel, davon mit dem
+    /// Bild in Richtung ihres Ziels.
+    var aimSummary: String {
+        let shooters = towerNodes.keys.sorted().flatMap { towerNodes[$0]?.shooters ?? [] }
+        let aiming = shooters.filter { $0.goal != nil }
+        return "schuetzen=\(shooters.count) zielen=\(aiming.count) treffen=\(aiming.filter(\.onTarget).count)"
+    }
+
+    #if DEBUG
+    /// Wie lange ein Schütze schon mit Ziel woanders hinsieht (Turm-ID → Sekunden),
+    /// und die längste solche Zeit seit dem Start: Die Messung „Schütze blickt
+    /// aufs Ziel“ für Tests und Kontaktabzug (D-189).
+    private var offTarget: [Int: Double] = [:]
+    private(set) var longestOffTarget: Double = 0
+
+    private func noteAim(_ node: TowerNode, dt: Double) {
+        let wrong = node.shooters.contains { !$0.onTarget }
+        let held = wrong ? (offTarget[node.towerID] ?? 0) + dt : 0
+        offTarget[node.towerID] = held
+        longestOffTarget = max(longestOffTarget, held)
+    }
+    #endif
 
     /// Für Tests und den E2E-Zähler: was die Auswahl zeigt („gemalt“ oder „linien“).
     /// Der leuchtende Weg (A-2) und die Vorschau sind keine Auswahlmarke und zählen nicht.
@@ -539,6 +563,31 @@ final class BattleScene: SKScene {
         for (id, node) in enemyNodes where liveEnemies[id] == nil {
             node.removeFromParent()
             enemyNodes[id] = nil
+        }
+        aimTowers(state, dt: dt, still: still)
+    }
+
+    /// Türme zielen (A-5 Teil 3, G9): Schützen drehen sich zu den Zielen des
+    /// nächsten Schusses, der Kristall zeigt die Ladung. Beides fragt die
+    /// Simulation (`aim`, `charge`), damit Bild und Regel dieselbe Zielwahl haben.
+    /// Nach den Gegnern, damit die Schützen auf deren Platz in diesem Bild zielen.
+    private func aimTowers(_ state: GameState, dt: Double, still: Bool) {
+        for tower in state.towers {
+            guard let node = towerNodes[tower.id] else { continue }
+            switch tower.kind {
+            case .watch:
+                guard !node.shooters.isEmpty else { continue }
+                let goals = model.sim.aim(of: tower, in: state).compactMap { enemyNodes[$0]?.position }
+                node.aim(at: goals, dt: dt, still: still)
+                #if DEBUG
+                noteAim(node, dt: dt)
+                #endif
+            case .lightning:
+                node.charge = CGFloat(model.sim.charge(of: tower))
+                if Double(node.charge) >= FxStyle.chargeMotesFrom && node.charge < 1 { fx.chargeMote(node) }
+            case .spore, .bank:
+                continue
+            }
         }
     }
 

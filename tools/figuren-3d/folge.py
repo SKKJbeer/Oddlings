@@ -30,7 +30,7 @@ kontur_pt = vertrag.get("konturPunkte", 0)
 
 bilder = {}
 for pfad in sorted(glob.glob(os.path.join(ein, "*.png"))):
-    m = re.fullmatch(r"([a-z][A-Za-z]*)_(\d\d)\.png", os.path.basename(pfad))
+    m = re.fullmatch(r"([a-z][A-Za-z0-9]*)_(\d\d)\.png", os.path.basename(pfad))
     if m:
         bilder[(m.group(1), int(m.group(2)))] = Image.open(pfad).convert("RGBA")
 folgen = sorted({f for f, _ in bilder})
@@ -54,14 +54,19 @@ rechts, unten = max(b[2] for b in boxen), max(b[3] for b in boxen)
 # höher als von der Seite (das hintere Bein steht weiter in der Tiefe). Jede
 # Richtung stellt ihr erstes Bild auf den Anker; Treffer, Sturz und die Folgen
 # des Bosses gehören zur Seitenansicht.
-fuesse = {f: box(bilder[(f, 0)])[3] for f in folgen if f.startswith("walk")}
-fuss = fuesse["walk"]
+# BEZUG: Folgen, die je einen eigenen Fuß haben (Blickrichtungen). Gegner
+# laufen (`walk`, `walkFront`, `walkBack`); der Schütze auf dem Wachturm
+# (A-5 Teil 3) hat nur Schussfolgen `shoot0` bis `shoot7`, je eine Richtung.
+BEZUG = os.environ.get("BEZUG", "walk")
+fuesse = {f: box(bilder[(f, 0)])[3] for f in folgen if f.startswith(BEZUG)}
+GRUND = BEZUG if BEZUG in fuesse else sorted(fuesse)[0]
+fuss = fuesse[GRUND]
 
 
 def gruppe(folge):
-    return folge if folge in fuesse else "walk"
+    return folge if folge in fuesse else GRUND
 
-regel = vertrag["assets"][f"{figur}_walk"]
+regel = vertrag["assets"][f"{figur}_{GRUND}"]
 anker = regel["anker"]
 
 for faktor in (2, 3):
