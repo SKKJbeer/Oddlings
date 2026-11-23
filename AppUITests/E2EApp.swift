@@ -96,22 +96,22 @@ struct E2EApp {
         XCTAssertTrue(board.waitForExistence(timeout: 15), "Karte erscheint", file: file, line: line)
     }
 
-    /// Tippt die Mitte einer Zelle, mit derselben Rechnung wie BoardLayout:
-    /// Seitenverhältnis einpassen, mittig.
-    func tap(_ cell: Cell) {
-        let size = board.frame.size
-        let field = min(size.width / CGFloat(map.width), size.height / CGFloat(map.height))
-        let x = (size.width - field * CGFloat(map.width)) / 2 + (CGFloat(cell.x) + 0.5) * field
-        let y = (size.height - field * CGFloat(map.height)) / 2 + (CGFloat(cell.y) + 0.5) * field
-        board.coordinate(withNormalizedOffset: .zero).withOffset(CGVector(dx: x, dy: y)).tap()
-    }
+    /// Rand über dem Raster, unter den Schildern der Kopfleiste (D-180): wie
+    /// `BattleStyle.boardTop` (Leiste 40 plus zweimal Abstand 6). Die App-Tests
+    /// halten den Wert dort fest (`HudLayoutTests.testBoardTopMatchesTheE2ERuler`).
+    static let boardTop: CGFloat = 52
 
-    /// Tippt einen Feldpunkt, etwa eine Stelle am Weg (Steinregen).
+    /// Tippt die Mitte einer Zelle.
+    func tap(_ cell: Cell) { tap(Point(x: Double(cell.x) + 0.5, y: Double(cell.y) + 0.5)) }
+
+    /// Tippt einen Feldpunkt, etwa eine Stelle am Weg (Steinregen), mit derselben
+    /// Rechnung wie BoardLayout: oben der Rand, darunter Seitenverhältnis einpassen, mittig.
     func tap(_ point: Point) {
         let size = board.frame.size
-        let field = min(size.width / CGFloat(map.width), size.height / CGFloat(map.height))
+        let free = size.height - Self.boardTop
+        let field = min(size.width / CGFloat(map.width), free / CGFloat(map.height))
         let x = (size.width - field * CGFloat(map.width)) / 2 + CGFloat(point.x) * field
-        let y = (size.height - field * CGFloat(map.height)) / 2 + CGFloat(point.y) * field
+        let y = Self.boardTop + (free - field * CGFloat(map.height)) / 2 + CGFloat(point.y) * field
         board.coordinate(withNormalizedOffset: .zero).withOffset(CGVector(dx: x, dy: y)).tap()
     }
 
@@ -164,6 +164,23 @@ struct E2EApp {
     }
 
     private func number(in element: XCUIElement) -> Int {
-        Int(element.label.split(separator: " ").first ?? "") ?? -1
+        number(in: element.label)
+    }
+
+    private func number(in label: String) -> Int {
+        Int(label.split(separator: " ").first ?? "") ?? -1
+    }
+
+    /// Leben, Gold und Welle aus einem einzigen Abzug der Oberfläche. Drei
+    /// Einzelabfragen brauchen im Zeitraffer so lange, dass zwischen der ersten
+    /// und der dritten schon die nächste Welle startet.
+    func hudAtOnce() throws -> (lives: Int, gold: Int, wave: String) {
+        var labels: [String: String] = [:]
+        func collect(_ node: XCUIElementSnapshot) {
+            if !node.identifier.isEmpty, labels[node.identifier] == nil { labels[node.identifier] = node.label }
+            node.children.forEach(collect)
+        }
+        collect(try app.snapshot())
+        return (number(in: labels["hud.lives"] ?? ""), number(in: labels["hud.gold"] ?? ""), labels["hud.wave"] ?? "")
     }
 }

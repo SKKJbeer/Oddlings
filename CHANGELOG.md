@@ -11,6 +11,27 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.45.0 – 22.11.2026 (A-5 Teil 2: Kopfleiste und Effektbudget)
+
+### Neu
+- **Kopfleiste als Schilder** (D-180): Das grüne Band ist weg. Die Karte reicht bis an
+  den oberen Rand, darüber schweben einzelne Holzschilder im Material der Tafeln, mit
+  weichem Schatten und den gemalten Symbolen (Herz, Gold, Fahne, Pause, Horn). „Welle
+  rufen“ ist ein goldenes Schild mit Horn und ablaufendem Ring. Das Spielfeld liegt
+  genau wie vorher; kein Bauplatz rückt unter ein Schild.
+- **Effektbudget** (D-181): Am Turmhaufen überlappen sich höchstens zwei volle Wolken,
+  jede weitere spielt gedämpft.
+- **Wolken unter den Figuren** (D-182): Sporen, Rauch und Staub liegen unter den
+  Gegnern; wer in der Wolke läuft, bleibt zu sehen.
+- **Gold gebündelt** (D-183): Fallen mehrere Gegner dicht beieinander, steigt eine Zahl
+  mit der Summe („+9“) statt vieler kleiner, mit weniger Münzen.
+
+### Tests
+- App: `FxAreaBudgetTests` (neu), Budget, Wolkenebene, Goldbündel und „keine Gegner
+  unter Wolken über eine ganze Mission“ in `FxDirectorTests`, Rand der Kopfleiste in
+  `HudLayoutTests` und `BattleSpritesTests`. E2E: `HUDE2ETests.testBoardReachesUnderThePlaques`.
+- Kontaktabzug misst verdeckte Gegner, gedämpfte Wolken und gebündeltes Gold (D-184).
+
 ## 0.44.0 – 22.11.2026 (A-2: Bauen und Tafeln) · Bau 65
 
 ### Neu

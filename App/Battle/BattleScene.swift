@@ -22,7 +22,7 @@ final class BattleScene: SKScene {
     /// stehen, damit Tippen und Lagerechnung unberührt sind.
     private let world: SKNode
     private let ground = SKNode()
-    private let towerLayer = SKNode()
+    let towerLayer = SKNode()
     /// Bauplätze (D-121): nur sichtbar, solange gebaut wird.
     private let zoneLayer = SKNode()
     private var zoneTiles: [Cell: SKSpriteNode] = [:]
@@ -35,7 +35,7 @@ final class BattleScene: SKScene {
     private let shadeLayer = SKNode()
     /// Licht des Kampfplatzes; Türme und Festung werden damit getönt.
     private let light: SKColor?
-    private let enemyLayer = SKNode()
+    let enemyLayer = SKNode()
     let effectLayer: SKNode
     private let fortress = SKShapeNode()
     private let fortressHit = SKShapeNode()
@@ -77,7 +77,7 @@ final class BattleScene: SKScene {
     init(model: BattleModel) {
         self.model = model
         let size = CGSize(width: 844, height: 390)
-        let layout = BoardLayout(size: size, map: model.sim.map)
+        let layout = BoardLayout.battle(size: size, map: model.sim.map)
         self.layout = layout
         light = BattlefieldLight.color(missionID: model.sim.config.mission.id)
         pathView = PathView(path: model.sim.map.path, radius: FxStyle.pathCornerRadius)
@@ -112,8 +112,11 @@ final class BattleScene: SKScene {
         frame(after: frameTime)
         #if DEBUG
         probe?.add(frameTime)
-        contactSheet?.add(frameTime, enemies: enemyNodes.count, deviation: frameDeviation,
-                          stacked: stackedFrames, stats: fx.stats)
+        if let contactSheet {
+            contactSheet.add(frameTime, enemies: enemyNodes.count, deviation: frameDeviation,
+                             stacked: stackedFrames, stats: fx.stats,
+                             occluded: fx.occludedEnemies(Array(enemyNodes.values)))
+        }
         #endif
     }
 
@@ -167,7 +170,9 @@ final class BattleScene: SKScene {
     private func combo(at point: CGPoint) {
         guard !sparkCalloutShown else { return }
         sparkCalloutShown = true
-        fx.sparkCallout(at: point, sentence: controller?.guide.takeSparkSentence() == true, bounds: size)
+        // Nicht unter die Schilder der Kopfleiste (D-180).
+        fx.sparkCallout(at: point, sentence: controller?.guide.takeSparkSentence() == true,
+                        bounds: CGSize(width: size.width, height: max(0, size.height - BattleStyle.boardTop)))
     }
 
     private func clearPieces() {
@@ -364,7 +369,7 @@ final class BattleScene: SKScene {
     private func layoutMap() {
         guard size.width > 0, size.height > 0 else { return }
         let map = model.sim.map
-        layout = BoardLayout(size: size, map: map)
+        layout = BoardLayout.battle(size: size, map: map)
 
         ground.removeAllChildren()
         let painted = BattleSprites.ground(missionID: model.sim.config.mission.id, layout: layout)

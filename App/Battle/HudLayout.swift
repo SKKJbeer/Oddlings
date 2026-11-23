@@ -258,10 +258,11 @@ extension HudLayout {
     }
 
     /// Zettel der Wellenvorschau oben rechts unter „Welle n“ (D-159), wie
-    /// `BattleView` ihn legt: rechtsbündig mit dem Knopf, links von Tempo und Pause.
+    /// `BattleView` ihn legt: rechtsbündig mit dem Knopf, links von Tempo und Pause,
+    /// direkt unter dem Rand der Kopfleiste (`insets.top`, D-180).
     static func forecastRect(board size: CGSize, insets: Insets, entries: Int) -> CGRect {
         let width = BattleStyle.forecastWidth(entries: entries)
         let right = size.width - insets.right - BattleStyle.forecastTrailing
-        return CGRect(x: right - width, y: 0, width: width, height: BattleStyle.forecastHeight)
+        return CGRect(x: right - width, y: insets.top, width: width, height: BattleStyle.forecastHeight)
     }
 }

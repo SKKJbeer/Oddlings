@@ -12,7 +12,7 @@ struct RingMenu: View {
 
     var body: some View {
         GeometryReader { geometry in
-            let board = BoardLayout(size: geometry.size, map: controller.map)
+            let board = BoardLayout.battle(size: geometry.size, map: controller.map)
             // Was die Ansicht selbst meldet, gilt zusätzlich: Je nach Aufbau
             // kommt der sichere Bereich hier oder nur an der Wurzel an.
             let own = geometry.safeAreaInsets

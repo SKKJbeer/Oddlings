@@ -4,8 +4,9 @@ import SwiftUI
 
 /// Eine Mission, gespielt oder vom Mitspieler vorgeführt.
 ///
-/// Kopfleiste oben, darunter die Karte. Szene und Baumenü teilen sich genau
-/// einen Rahmen, damit `BoardLayout` in beiden dieselbe Zelle findet.
+/// Die Karte füllt den Bildschirm, die Kopfleiste schwebt als Schilder darüber
+/// (D-180). Szene und Baumenü teilen sich genau einen Rahmen, damit
+/// `BoardLayout.battle` in beiden dieselbe Zelle findet.
 struct BattleView: View {
     enum Mode { case play, watch }
 
@@ -65,43 +66,48 @@ struct BattleView: View {
     var body: some View {
         ZStack {
             Color(uiColor: BattleStyle.background).ignoresSafeArea()
-            VStack(spacing: BattleStyle.hudMargin) {
-                BattleTopBar(controller: controller, onClose: onClose)
-                    .padding([.horizontal, .top], BattleStyle.hudMargin)
-                ZStack {
-                    SpriteView(scene: scene, preferredFramesPerSecond: 60, options: [.ignoresSiblingOrder])
-                    // Wer als Nächstes kommt (A-2, D-159), hängt unter „Welle n“.
-                    // Solange der Pfeil des Einstiegs auf „Welle 1“ zeigt (P2-8), hat er den Platz.
-                    if controller.canCallNextWave, controller.guide.shown != .wave, let forecast = controller.forecast {
-                        WaveForecastTag(forecast: forecast)
-                            .padding(.trailing, safeArea.trailing + BattleStyle.forecastTrailing)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-                    }
-                    RingMenu(controller: controller, insets: boardInsets)
-                    if let boss = controller.boss {
-                        BossBar(status: boss)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                    }
-                    // Nach dem Ende gibt es nichts mehr zu werfen; die Ergebnistafel liegt darüber.
-                    if controller.hasAbility && !controller.isFinished {
-                        AbilityButton(controller: controller)
-                            .padding(.trailing, safeArea.trailing + BattleStyle.hudMargin)
-                            .padding(.bottom, safeArea.bottom + BattleStyle.hudMargin)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-                    }
-                    // Tafeln liegen auf der Karte, nicht über der Leiste: Pause
-                    // und Tempo bleiben dort bedienbar.
-                    BattleOverlay(controller: controller, onRestart: { scene.restart() }, onClose: onClose)
-                    #if DEBUG
-                    FxStatsOverlay(scene: scene)
-                    GuideStateOverlay(guide: controller.guide)
-                    #endif
+            // Die Karte reicht bis an jeden Rand (D-180). Oben hält `BoardLayout`
+            // den Rand `BattleStyle.boardTop` frei; dort liegt der gemalte Überstand
+            // des Kampfplatzes, und darüber schweben die Schilder der Kopfleiste.
+            ZStack {
+                SpriteView(scene: scene, preferredFramesPerSecond: 60, options: [.ignoresSiblingOrder])
+                // Wer als Nächstes kommt (A-2, D-159), hängt unter „Welle n“.
+                // Solange der Pfeil des Einstiegs auf „Welle 1“ zeigt (P2-8), hat er den Platz.
+                if controller.canCallNextWave, controller.guide.shown != .wave, let forecast = controller.forecast {
+                    WaveForecastTag(forecast: forecast)
+                        .padding(.top, BattleStyle.boardTop)
+                        .padding(.trailing, safeArea.trailing + BattleStyle.forecastTrailing)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
                 }
-                .ignoresSafeArea(edges: [.horizontal, .bottom])
-                .accessibilityElement(children: .contain)
-                .accessibilityIdentifier("battle.board")
-                .accessibilityHint(controller.guide.shown.name == "build" ? BattleTexts.guideBuild : "")
+                RingMenu(controller: controller, insets: boardInsets)
+                if let boss = controller.boss {
+                    BossBar(status: boss)
+                        .padding(.top, BattleStyle.boardTop)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                }
+                // Nach dem Ende gibt es nichts mehr zu werfen; die Ergebnistafel liegt darüber.
+                if controller.hasAbility && !controller.isFinished {
+                    AbilityButton(controller: controller)
+                        .padding(.trailing, safeArea.trailing + BattleStyle.hudMargin)
+                        .padding(.bottom, safeArea.bottom + BattleStyle.hudMargin)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+                }
+                #if DEBUG
+                FxStatsOverlay(scene: scene)
+                GuideStateOverlay(guide: controller.guide)
+                #endif
             }
+            .ignoresSafeArea()
+            .accessibilityElement(children: .contain)
+            .accessibilityIdentifier("battle.board")
+            .accessibilityHint(controller.guide.shown.name == "build" ? BattleTexts.guideBuild : "")
+            // Tafeln liegen unter der Leiste: Pause und Tempo bleiben bedienbar.
+            BattleOverlay(controller: controller, onRestart: { scene.restart() }, onClose: onClose)
+                .padding(.top, BattleStyle.boardTop)
+                .ignoresSafeArea(edges: [.horizontal, .bottom])
+            BattleTopBar(controller: controller, onClose: onClose)
+                .padding([.horizontal, .top], BattleStyle.hudMargin)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
         .onGeometryChange(for: EdgeInsets.self) { $0.safeAreaInsets } action: { safeArea = $0 }
         .statusBarHidden()
@@ -121,10 +127,11 @@ struct BattleView: View {
         }
     }
 
-    /// Die Karte reicht seitlich und unten unter Kamera und Home-Leiste; das
-    /// Kreismenü darf dort nicht liegen. Oben grenzt sie an die Kopfleiste.
+    /// Die Karte reicht unter Kamera, Home-Leiste und Kopfleiste; das
+    /// Kreismenü darf dort nicht liegen (D-180).
     private var boardInsets: HudLayout.Insets {
-        HudLayout.Insets(top: 0, left: safeArea.leading, bottom: safeArea.bottom, right: safeArea.trailing)
+        HudLayout.Insets(top: safeArea.top + BattleStyle.boardTop, left: safeArea.leading,
+                         bottom: safeArea.bottom, right: safeArea.trailing)
     }
 
     #if DEBUG

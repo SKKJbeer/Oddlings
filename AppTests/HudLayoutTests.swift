@@ -5,8 +5,8 @@ import XCTest
 
 /// Lage von Kreismenü und Infotafel (07-ui-ux.md, Abschnitt 4) auf den
 /// kleinsten und größten iPhones im Querformat, für jede Bauzelle von
-/// Mission 1. Die Kopfleiste liegt über der Karte (D-030 zurückgestellt), die
-/// Karte füllt den Rest bis an die Ränder; was die Ansicht nicht bedecken
+/// Mission 1. Die Karte füllt den Bildschirm, die Schilder der Kopfleiste
+/// schweben über ihrem oberen Rand (D-180); was die Ansicht nicht bedecken
 /// darf, steht in den Insets.
 @MainActor
 final class HudLayoutTests: XCTestCase {
@@ -27,10 +27,11 @@ final class HudLayoutTests: XCTestCase {
     private lazy var map: MissionMap = Simulation(config: try! BalanceConfig.missionOne()).map
 
     private func layout(_ device: Device, avoiding: Bool = false) -> HudLayout {
-        let bar = BattleStyle.hudHeight + 2 * BattleStyle.hudMargin
-        let size = CGSize(width: device.screen.width, height: device.screen.height - bar)
-        let board = BoardLayout(size: size, map: map)
-        let insets = HudLayout.Insets(left: device.side, bottom: device.bottom, right: device.side)
+        // Die Karte füllt den Bildschirm, oben hält sie den Rand der Kopfleiste
+        // frei (D-180); Bogen und Tafel bleiben darunter, wie in `BattleView`.
+        let size = device.screen
+        let board = BoardLayout.battle(size: size, map: map)
+        let insets = HudLayout.Insets(top: BattleStyle.boardTop, left: device.side, bottom: device.bottom, right: device.side)
         let avoid = avoiding ? HudLayout.Avoid(board: board, map: map, reserved: corners(size, insets)) : HudLayout.Avoid()
         return HudLayout(board: board, insets: insets, metrics: BattleStyle.hudMetrics, avoid: avoid)
     }
@@ -221,7 +222,7 @@ final class HudLayoutTests: XCTestCase {
     func testPenaltyMovesPanelOffTheFortress() throws {
         map = Simulation(config: try BalanceConfig.missionOne()).map
         let hud = layout(devices[2], avoiding: true)
-        let blind = HudLayout(board: hud.board, insets: .init(left: devices[2].side, bottom: devices[2].bottom,
+        let blind = HudLayout(board: hud.board, insets: .init(top: BattleStyle.boardTop, left: devices[2].side, bottom: devices[2].bottom,
                                                                right: devices[2].side),
                               metrics: BattleStyle.hudMetrics,
                               avoid: HudLayout.Avoid(path: hud.avoid.path, fortress: hud.avoid.fortress,
@@ -256,5 +257,45 @@ final class HudLayoutTests: XCTestCase {
         }
         // Gemessen 16.11.2026: 16 Fälle am Rand, in denen kein Bogen frei liegt.
         XCTAssertLessThan(Double(blocked) / Double(cases), 0.002)
+    }
+
+    /// D-180: Das Raster liegt mit dem Rand genau wie früher unter dem Band,
+    /// nur um den Rand verschoben. Kein Bauplatz rückt unter ein Schild.
+    func testBoardTopKeepsTheGridWhereTheBandLeftIt() {
+        for device in devices {
+            let full = BoardLayout.battle(size: device.screen, map: map)
+            let below = BoardLayout(size: CGSize(width: device.screen.width,
+                                                 height: device.screen.height - BattleStyle.boardTop), map: map)
+            XCTAssertEqual(full.field, below.field, accuracy: 0.001, device.name)
+            XCTAssertEqual(full.origin.x, below.origin.x, accuracy: 0.001, device.name)
+            XCTAssertEqual(full.origin.y, below.origin.y + BattleStyle.boardTop, accuracy: 0.001, device.name)
+            for cell in map.buildableCells {
+                XCTAssertGreaterThanOrEqual(full.viewPoint(Point(x: Double(cell.x), y: Double(cell.y))).y,
+                                            BattleStyle.boardTop - 0.001, "\(device.name) \(cell)")
+            }
+        }
+    }
+
+    /// Bogen und Tafel liegen nie im Rand der Schilder.
+    func testMenusStayBelowThePlaques() throws {
+        for config in try allMissions {
+            map = Simulation(config: config).map
+            for device in devices {
+                let hud = layout(device, avoiding: true)
+                for cell in map.buildableCells {
+                    let points = hud.ring(at: cell, count: 3)
+                    for rect in points.map(hud.buttonRect) {
+                        XCTAssertGreaterThanOrEqual(rect.minY, BattleStyle.boardTop, "\(config.mission.id) \(device.name) \(cell)")
+                    }
+                    let panel = hud.panel(for: cell, avoiding: points)
+                    XCTAssertGreaterThanOrEqual(panel.minY, BattleStyle.boardTop, "\(config.mission.id) \(device.name) \(cell)")
+                }
+            }
+        }
+    }
+
+    /// Der E2E-Helfer rechnet mit derselben Zahl (`E2EApp.boardTop`).
+    func testBoardTopMatchesTheE2ERuler() {
+        XCTAssertEqual(BattleStyle.boardTop, 52)
     }
 }

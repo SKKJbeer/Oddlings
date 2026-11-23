@@ -147,6 +147,17 @@ enum BattleStyle {
     /// Knapp unter der Tippgröße: Im Querformat zählt jeder Punkt Höhe für die Karte.
     static let hudHeight: CGFloat = 40
     static let hudMargin: CGFloat = 6
+    /// Rand über dem Raster, in dem die Schilder der Kopfleiste schweben (D-180).
+    /// Darunter liegt der gemalte Überstand des Kampfplatzes, kein Spielfeld.
+    static var boardTop: CGFloat { hudHeight + 2 * hudMargin }
+    /// Schilder der Kopfleiste (D-180): Höhe der Wertschilder, Seite des
+    /// aufgelegten Symbols, Abstand zwischen Schildern, weicher Schatten.
+    static let plaqueHeight: CGFloat = 34
+    static let plaqueIcon: CGFloat = 38
+    static let plaqueSpacing: CGFloat = 6
+    static let plaqueRadius: CGFloat = 12
+    static let plaqueShadowRadius: CGFloat = 5
+    static let plaqueShadowOpacity: Double = 0.35
     /// Bossleiste über der Karte (P3-4).
     static let bossBarWidth: CGFloat = 260
     static let bossBarHeight: CGFloat = 14

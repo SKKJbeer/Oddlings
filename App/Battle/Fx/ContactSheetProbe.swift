@@ -21,6 +21,10 @@ final class ContactSheetProbe {
     private(set) var frames = 0
     private(set) var maxEnemies = 0
     private(set) var maxDeviation: Double = 0
+    /// Bilder mit mindestens einem Gegner unter einer Wolke über ihm, und die
+    /// höchste Zahl solcher Gegner in einem Bild (D-184).
+    private(set) var occludedFrames = 0
+    private(set) var maxOccluded = 0
 
     init(mission: String) { self.mission = mission }
 
@@ -28,10 +32,13 @@ final class ContactSheetProbe {
         ProcessInfo.processInfo.arguments.contains(argument) ? ContactSheetProbe(mission: mission) : nil
     }
 
-    func add(_ frameTime: Double, enemies: Int, deviation: Double, stacked: Int, stats: FxDirector.Stats) {
+    func add(_ frameTime: Double, enemies: Int, deviation: Double, stacked: Int, stats: FxDirector.Stats,
+             occluded: Int = 0) {
         guard frameTime > 0 else { return }
         elapsed += frameTime
         frames += 1
+        if occluded > 0 { occludedFrames += 1 }
+        maxOccluded = max(maxOccluded, occluded)
         maxEnemies = max(maxEnemies, enemies)
         maxDeviation = max(maxDeviation, deviation)
         guard elapsed >= nextWrite else { return }
@@ -49,6 +56,10 @@ final class ContactSheetProbe {
             "maxDeviationFields": maxDeviation,
             "bends": stats.bends,
             "footfalls": stats.footfalls,
+            "occludedFrames": occludedFrames,
+            "maxOccluded": maxOccluded,
+            "dampedClouds": stats.damped,
+            "mergedGold": stats.merged,
         ]
         guard let data = try? JSONSerialization.data(withJSONObject: result, options: [.sortedKeys]),
               let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }

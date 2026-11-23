@@ -78,15 +78,13 @@ final class BattleSpritesTests: XCTestCase {
     func testPaintedGroundCoversTheWholeScene() throws {
         let config = try BalanceConfig.missionOne()
         let map = BattleModel(config: config, seed: 1, autoplay: false).sim.map
-        // iPhone 16 Pro Max und SE quer, iPad Pro 13" und mini quer, je ganz und
-        // ohne die Kopfleiste darüber (60 pt): Die Karte bekommt nur, was unter
-        // der Leiste bleibt, und wird damit noch breiter als der Bildschirm.
-        // Im Probelauf vom 26.10.2026 blieben so links und rechts je 1,3 Zellen leer.
+        // iPhone 16 Pro Max und SE quer, iPad Pro 13" und mini quer. Seit D-180 bekommt
+        // die Szene den ganzen Bildschirm; die Größen ohne Kopfleiste (60 pt weniger)
+        // gibt es nicht mehr. Der Rand oben gehört dem Überstand, nicht dem Raster.
+        // Im Probelauf vom 26.10.2026 blieben ohne Überstand links und rechts je 1,3 Zellen leer.
         for size in [CGSize(width: 956, height: 440), CGSize(width: 667, height: 375),
-                     CGSize(width: 1376, height: 1032), CGSize(width: 1133, height: 744),
-                     CGSize(width: 956, height: 380), CGSize(width: 874, height: 342),
-                     CGSize(width: 667, height: 315), CGSize(width: 1376, height: 972)] {
-            let layout = BoardLayout(size: size, map: map)
+                     CGSize(width: 1376, height: 1032), CGSize(width: 1133, height: 744)] {
+            let layout = BoardLayout.battle(size: size, map: map)
             let ground = try XCTUnwrap(BattleSprites.ground(missionID: config.mission.id, layout: layout))
             XCTAssertLessThanOrEqual(ground.frame.minX, 0.5, "\(size)")
             XCTAssertLessThanOrEqual(ground.frame.minY, 0.5, "\(size)")
@@ -121,7 +119,7 @@ final class BattleSpritesTests: XCTestCase {
         let fortress = try XCTUnwrap(scene.childNode(withName: "//\(BattleSprites.fortressName)"))
         let parent = try XCTUnwrap(fortress.parent)
         let frame = CGRect(origin: scene.convert(fortress.frame.origin, from: parent), size: fortress.frame.size)
-        let layout = BoardLayout(size: scene.size, map: scene.model.sim.map)
+        let layout = scene.layout
         for cell in scene.model.sim.map.buildableCells {
             XCTAssertFalse(frame.contains(layout.scenePoint(cell.center)), "\(cell)")
         }
@@ -154,7 +152,7 @@ final class BattleSpritesTests: XCTestCase {
             let fortress = try XCTUnwrap(scene.childNode(withName: "//\(BattleSprites.fortressName)"))
             let parent = try XCTUnwrap(fortress.parent)
             let frame = CGRect(origin: scene.convert(fortress.frame.origin, from: parent), size: fortress.frame.size)
-            let layout = BoardLayout(size: scene.size, map: scene.model.sim.map)
+            let layout = scene.layout
             for cell in scene.model.sim.map.buildableCells {
                 XCTAssertFalse(frame.contains(layout.scenePoint(cell.center)), "\(file) \(cell)")
             }

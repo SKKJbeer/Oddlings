@@ -14,13 +14,23 @@ struct BoardLayout: Equatable {
     let columns: Int
     let rows: Int
 
-    init(size: CGSize, map: MissionMap) {
+    /// `top`: Rand oben, in den das Raster nicht rechnet. Dort liegt der gemalte
+    /// Überstand des Kampfplatzes unter den Schildern der Kopfleiste (D-180).
+    init(size: CGSize, map: MissionMap, top: CGFloat = 0) {
         self.size = size
         columns = map.width
         rows = map.height
         let width = CGFloat(map.width), height = CGFloat(map.height)
-        field = max(0, min(size.width / width, size.height / height))
-        origin = CGPoint(x: (size.width - field * width) / 2, y: (size.height - field * height) / 2)
+        let free = max(0, size.height - top)
+        field = max(0, min(size.width / width, free / height))
+        origin = CGPoint(x: (size.width - field * width) / 2, y: top + (free - field * height) / 2)
+    }
+
+    /// Die Karte einer Mission: Szene, Kreismenü und Tests rechnen hiermit, damit
+    /// der Rand unter der Kopfleiste an genau einer Stelle steht.
+    @MainActor
+    static func battle(size: CGSize, map: MissionMap) -> BoardLayout {
+        BoardLayout(size: size, map: map, top: BattleStyle.boardTop)
     }
 
     func viewPoint(_ point: Point) -> CGPoint {
