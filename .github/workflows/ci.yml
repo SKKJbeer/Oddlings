@@ -218,6 +218,9 @@ jobs:
       # fünf Bilder an festen Zeiten, ein Clip von 4 s und die Messung der App.
       # Zum Ansehen im PR; Grenzen melden sich als Warnung, hart prüfen die App-Tests.
       - name: Kontaktabzug
+        # Sonst rund 6 Minuten. Eine eigene Grenze, damit ein hängender Schritt
+        # hier abbricht und sein Protokoll behält, statt den ganzen Lauf zu reißen.
+        timeout-minutes: 15
         run: |
           OUT=build/kontaktabzug
           mkdir -p "$OUT"
@@ -231,6 +234,7 @@ jobs:
             knoten=${paar%%:*}
             mappe="$OUT/$knoten"
             mkdir -p "$mappe"
+            echo "$(date +%T) $knoten"
             rm -f "$DATA"/Documents/kontaktabzug-*.json
             xcrun simctl terminate "$UDID" de.skkjbeer.oddlings 2>/dev/null || true
             xcrun simctl launch "$UDID" de.skkjbeer.oddlings --demo --e2e-knoten "$knoten" --e2e-zeitraffer 3 --kontaktabzug
@@ -240,7 +244,10 @@ jobs:
                 xcrun simctl io "$UDID" recordVideo --codec h264 --force "$mappe/clip.mp4" &
                 REC=$!
                 sleep 4
-                kill -INT "$REC"; wait "$REC" || true
+                kill -INT "$REC"
+                # Hängt die Aufnahme nach dem Stoppen, hält sie sonst den Lauf auf.
+                ( sleep 15; kill -9 "$REC" 2>/dev/null ) &
+                wait "$REC" || true
                 sleep 1
               else
                 sleep 5
