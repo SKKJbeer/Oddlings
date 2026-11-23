@@ -32,7 +32,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
   `HudLayoutTests` und `BattleSpritesTests`. E2E: `HUDE2ETests.testBoardReachesUnderThePlaques`.
 - Kontaktabzug misst verdeckte Gegner, gedämpfte Wolken und gebündeltes Gold (D-184).
 
-## 0.44.0 – 17.11.2026 (A-2: Bauen und Tafeln)
+## 0.44.0 – 22.11.2026 (A-2: Bauen und Tafeln) · Bau 65
 
 ### Neu
 - **Vorschau vor dem Kauf** (D-155, Steffens Karte S33): Nach dem ersten Tippen auf

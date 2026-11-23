@@ -77,7 +77,7 @@ mehrere Wege ab M6 (D-147), Veteran-Stufe (D-148). Gesamtbild:
 | # | Paket | Befunde | Abh. | Stand |
 |---|---|---|---|---|
 | A-1 | ~~**Laufen**: Kurven statt Knick, Spuren, drei Blickrichtungen, Gewicht (D-144); Kontaktabzug in der CI (D-145)~~ ([Konzept](../konzepte/a-1-laufen.md), D-150, D-151); Vorder- und Rückbilder kommen mit A-3 | B2–B5, R3 | – | ✓ 0.41.0 |
-| A-2 | **Bauen und Tafeln**: Turm-Vorschau vor dem Kauf, Errichten statt Abwerfen, Auftritt für Aufwerten und Spezialisieren, Tafel weicht Weg und Festung, Wellenvorschau | P1, P3–P5, R2 | – | im PR (0.44.0) |
+| A-2 | **Bauen und Tafeln**: Turm-Vorschau vor dem Kauf, Errichten statt Abwerfen, Auftritt für Aufwerten und Spezialisieren, Tafel weicht Weg und Festung, Wellenvorschau | P1, P3–P5, R2 | – | ✓ 0.44.0 (Bau 65) |
 | A-3 | **Figuren vollständig**: Flitzer und Panzerbestie in 3D (Paket 6), Konturpass, alle Gegner in drei Richtungen ([Konzept](../konzepte/a-3-figuren-vollstaendig.md)) | B1, G3 | – | Teil 1 ✓ 0.32.0 (Werkzeug, Plünderer, Moorkönig); Flitzer ✓ 0.39.0; Panzerbestie ✓ 0.40.0; Umstellung auf den Zielmaßstab offen |
 | A-4 | **Kampfplatz Mission 1 neu** in der Kamera der Türme, mit Bauinseln und Maßstab ([Konzept](../konzepte/a-4-diorama-mission-1.md), D-165 bis D-167) | G1, G2, G4, G8, L1, P2 | – | ausgeliefert 0.38.0 |
 | A-5 | **Eine Malweise in der Welt**: gemalte Auswahl und Ringe, Kopfleiste im Tafel-Material, sechs Spezialisierungsbilder, Türme zielen, Effektbudget | G5–G7, G9, R1 | A-4 | Teil 1 ausgeliefert (0.34.0): Spezialisierungsbilder, gemalte Ringe. Teil 2 im PR (0.45.0): Kopfleiste als Schilder, Effektbudget ([Konzept](../konzepte/a-5-kopfleiste-und-effektbudget.md)). Offen: Türme zielen (G9) als Teil 3 |
