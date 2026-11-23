@@ -74,8 +74,12 @@ final class BattleScene: SKScene {
     private(set) var frameDeviation: Double = 0
     #endif
 
-    init(model: BattleModel) {
+    /// Wer auf den Wachtürmen steht, nach dem Volk des Avatars (D-185).
+    let guardFigure: GuardFigure
+
+    init(model: BattleModel, guardFigure: GuardFigure = .dwarf) {
         self.model = model
+        self.guardFigure = guardFigure
         let size = CGSize(width: 844, height: 390)
         let layout = BoardLayout.battle(size: size, map: model.sim.map)
         self.layout = layout
@@ -260,12 +264,13 @@ final class BattleScene: SKScene {
         return "towers=\(pictures.joined(separator: ",")) selection=\(selectionStyle) \(aimSummary)"
     }
 
-    /// `schuetzen=2 zielen=1 treffen=1`: Schützen, davon mit Ziel, davon mit dem
-    /// Bild in Richtung ihres Ziels.
+    /// `schuetzen=2 zielen=1 treffen=1 elfen=0`: Schützen, davon mit Ziel, davon mit
+    /// dem Bild in Richtung ihres Ziels, davon Elfen (D-185).
     var aimSummary: String {
         let shooters = towerNodes.keys.sorted().flatMap { towerNodes[$0]?.shooters ?? [] }
         let aiming = shooters.filter { $0.goal != nil }
         return "schuetzen=\(shooters.count) zielen=\(aiming.count) treffen=\(aiming.filter(\.onTarget).count)"
+            + " elfen=\(shooters.filter { $0.figure == .elf }.count)"
     }
 
     #if DEBUG
@@ -641,7 +646,8 @@ final class BattleScene: SKScene {
 
     private func makeTowerNode(_ tower: Tower) -> TowerNode {
         let node = TowerNode(tower: tower, field: field, light: light,
-                             footing: BattleSprites.footingName(missionID: model.sim.config.mission.id))
+                             footing: BattleSprites.footingName(missionID: model.sim.config.mission.id),
+                             guardFigure: guardFigure)
         node.position = toScene(tower.cell.center)
         node.shade.position = node.position
         shadeLayer.addChild(node.shade)

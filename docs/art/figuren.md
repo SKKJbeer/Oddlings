@@ -14,9 +14,10 @@ man einfarbig erkennt), Farben, Bewegung in der Szene und was das Bild
 ### Wachturm `tower_watch`
 - **Rolle:** zuverlässiger Einzelschaden, der „Grundturm".
 - **Persönlichkeit:** solide, ein bisschen stolz auf sich.
-- **Silhouette:** runder Steinturm, Holzplattform, Armbrust, rote Fahne.
+- **Silhouette:** runder Steinturm, Holzplattform, Schütze nach dem Volk (Zwerg mit Armbrust, Elf mit Bogen), rote Fahne.
 - **Farben:** Grau, warmes Holz, Rot.
-- **Bewegung:** Fahne weht (leichtes Schwingen), Rückstoß beim Schuss.
+- **Bewegung:** Stein steht still (D-189). Der Schütze `tower_guard` dreht sich in acht
+  Richtungen zum Ziel und drückt ab (D-185, D-186); der Turm selbst staucht nicht.
 - **Nicht:** Kanonen, Feuer, Leuchtfarben (die gehören Blitz und Sporen).
 
 ### Blitzturm `tower_lightning`

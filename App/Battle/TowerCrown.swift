@@ -1,3 +1,4 @@
+import OddlingsCore
 import SpriteKit
 
 /// Was am Turmbild lebt (A-5 Teil 3, G9, D-185 bis D-188): wo die Schützen auf
@@ -104,16 +105,34 @@ struct GuardFacing: Equatable {
     }
 }
 
+/// Wer auf dem Wachturm steht (D-185): Der Schütze folgt dem Volk des Avatars,
+/// Zwerg mit Armbrust oder Elf mit Bogen. Beide haben dieselbe Bewegung und
+/// denselben Vertrag, nur andere Bilder.
+enum GuardFigure: String, CaseIterable, Sendable {
+    case dwarf = "tower_guard"
+    case elf = "tower_guardElf"
+
+    init(race: Race?) { self = race == .elves ? .elf : .dwarf }
+
+    /// Fehlen die Bilder eines Volks, steht der Zwerg da statt eines leeren Turms.
+    @MainActor var available: GuardFigure? {
+        if ShooterNode.complete(self) { return self }
+        return self != .dwarf && ShooterNode.complete(.dwarf) ? .dwarf : nil
+    }
+}
+
 /// Der Schütze auf dem Wachturm (D-185): eigene 3D-Figur, acht Richtungen, je
-/// eine Schussfolge `tower_guard_shoot<r>_NN`. Bild 00 ist der Anschlag, in dem
+/// eine Schussfolge `<figur>_shoot<r>_NN`. Bild 00 ist der Anschlag, in dem
 /// er wartet und zielt; 01 bis zum Ende Abdrücken, Rückstoß, Spannen.
 @MainActor
 final class ShooterNode: SKSpriteNode {
     static let shootName = "tower_guard_shoot"
 
-    static func frameName(sector: Int, frame: Int) -> String {
-        "\(shootName)\(sector)_" + String(format: "%02d", frame)
+    static func frameName(_ figure: GuardFigure = .dwarf, sector: Int, frame: Int) -> String {
+        "\(figure.rawValue)_shoot\(sector)_" + String(format: "%02d", frame)
     }
+
+    let figure: GuardFigure
 
     private(set) var facing = GuardFacing()
     /// Ziel im Moment, für Tests und die Messung „Schütze blickt aufs Ziel“.
@@ -121,14 +140,18 @@ final class ShooterNode: SKSpriteNode {
     /// Index im Schuss (nil = im Anschlag); gesetzt vom FxDirector.
     var shotFrame: Int? { didSet { if shotFrame != oldValue { showFrame() } } }
 
-    /// Alle Bilder da? Fehlt eines, bleibt der Turm ohne Schützen (Rückfall).
-    static var available: Bool {
-        (0..<GuardFacing.sectors).allSatisfy { BattleSprites.texture(named: frameName(sector: $0, frame: 0)) != nil }
+    /// Irgendein Schütze da? Fehlen alle Bilder, bleibt der Turm leer (Rückfall).
+    static var available: Bool { GuardFigure.dwarf.available != nil }
+
+    /// Alle acht Richtungen einer Figur da?
+    static func complete(_ figure: GuardFigure) -> Bool {
+        (0..<GuardFacing.sectors).allSatisfy { BattleSprites.texture(named: frameName(figure, sector: $0, frame: 0)) != nil }
     }
 
-    init(field: CGFloat) {
+    init(field: CGFloat, figure: GuardFigure = .dwarf) {
+        self.figure = figure
         let side = BattleStyle.guardSpriteSide * field
-        super.init(texture: BattleSprites.texture(named: Self.frameName(sector: GuardFacing().sector, frame: 0)),
+        super.init(texture: BattleSprites.texture(named: Self.frameName(figure, sector: GuardFacing().sector, frame: 0)),
                    color: .white, size: CGSize(width: side, height: side))
         anchorPoint = CGPoint(x: 0.5, y: BattleStyle.guardAnchorY)
         name = Self.shootName
@@ -168,18 +191,20 @@ final class ShooterNode: SKSpriteNode {
     private(set) var shownName = ""
 
     private func showFrame() {
-        let name = Self.frameName(sector: facing.sector, frame: shotFrame ?? 0)
+        let name = Self.frameName(figure, sector: facing.sector, frame: shotFrame ?? 0)
         guard name != shownName, let texture = BattleSprites.texture(named: name) else { return }
         self.texture = texture
         shownName = name
     }
 
-    /// Bilder der Schussfolge nach dem Anschlag (ohne Bild 00), einmal gezählt.
-    static let shotLength: Int = {
+    /// Bilder der Schussfolge nach dem Anschlag (ohne Bild 00), je Figur einmal gezählt.
+    var shotLength: Int { Self.shotLengths[figure] ?? 0 }
+
+    private static let shotLengths: [GuardFigure: Int] = Dictionary(uniqueKeysWithValues: GuardFigure.allCases.map { figure in
         var count = 1
-        while count < 20, BattleSprites.texture(named: frameName(sector: 0, frame: count)) != nil { count += 1 }
-        return count - 1
-    }()
+        while count < 20, BattleSprites.texture(named: frameName(figure, sector: 0, frame: count)) != nil { count += 1 }
+        return (figure, count - 1)
+    })
 }
 
 /// Verzerrungsgitter, das den Hut eines Sporenturms anhebt (D-188): unter dem

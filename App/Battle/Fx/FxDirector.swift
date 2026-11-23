@@ -1139,7 +1139,7 @@ final class FxDirector {
     /// zurück in den Anschlag. Bei „weniger Bewegung“ bleibt er im Anschlag.
     private func shoot(_ shooter: ShooterNode) {
         guard !reduceMotion else { return }
-        let frames = ShooterNode.shotLength
+        let frames = shooter.shotLength
         guard frames > 0 else { return }
         stats.shots += 1
         animate(shooter, key: "shot", duration: FxStyle.guardShotFrame * Double(frames)) { node, t in

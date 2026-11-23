@@ -10,9 +10,10 @@ final class TowerAimTests: XCTestCase {
     private let field: CGFloat = 40
     private let frameTime = 1.0 / 60
 
-    private func tower(_ kind: TowerKind, level: Int = 1, specialization: Specialization? = nil) -> TowerNode {
+    private func tower(_ kind: TowerKind, level: Int = 1, specialization: Specialization? = nil,
+                       figure: GuardFigure = .dwarf) -> TowerNode {
         TowerNode(tower: Tower(id: 1, kind: kind, cell: Cell(x: 0, y: 0), cooldownTicks: 0, spent: 1,
-                               level: level, specialization: specialization), field: field)
+                               level: level, specialization: specialization), field: field, guardFigure: figure)
     }
 
     // MARK: Blickrichtung (rein)
@@ -79,6 +80,20 @@ final class TowerAimTests: XCTestCase {
         node.aim(at: [CGPoint(x: -100, y: 0)], dt: 1, still: true)
         node.show(level: 3, specialization: .volley)
         XCTAssertEqual(node.shooters.map(\.facing.sector), [4, 4])
+    }
+
+    /// Der Schütze folgt dem Volk (D-185): Elfen bekommen den Bogenschützen,
+    /// Zwerge und ein Spiel ohne Avatar den Zwerg.
+    func testShooterFollowsTheRace() throws {
+        XCTAssertEqual(GuardFigure(race: .elves), .elf)
+        XCTAssertEqual(GuardFigure(race: .dwarves), .dwarf)
+        XCTAssertEqual(GuardFigure(race: nil), .dwarf)
+        XCTAssertEqual(ShooterNode.frameName(.elf, sector: 3, frame: 2), "tower_guardElf_shoot3_02")
+        try XCTSkipUnless(ShooterNode.complete(.elf), "Elfenbilder fehlen im Atlas")
+        let node = tower(.watch, level: 3, specialization: .volley, figure: .elf)
+        XCTAssertEqual(node.shooters.map(\.figure), [.elf, .elf])
+        XCTAssertTrue(node.shooters.allSatisfy { $0.shownName.hasPrefix("tower_guardElf_shoot") })
+        XCTAssertGreaterThan(node.shooters[0].shotLength, 0)
     }
 
     /// Salve: jeder Schütze nimmt sein eigenes Ziel; mit einem Ziel beide dasselbe.

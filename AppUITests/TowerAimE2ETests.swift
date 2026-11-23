@@ -10,7 +10,19 @@ final class TowerAimE2ETests: XCTestCase {
 
     @MainActor
     func testWatchTowerShooterFacesItsTarget() throws {
-        let e2e = try E2EApp(["--play", "--e2e-zeitraffer", E2EApp.readableFastForward, "--e2e-fx"])
+        try shooterFacesItsTarget(elves: false)
+    }
+
+    /// Bei Elfen steht der Bogenschütze auf dem Turm (D-185). Kurz: nur bauen und zählen.
+    @MainActor
+    func testElvenShooterStandsOnTheTower() throws {
+        try shooterFacesItsTarget(elves: true)
+    }
+
+    @MainActor
+    private func shooterFacesItsTarget(elves: Bool) throws {
+        let e2e = try E2EApp(["--play", "--e2e-zeitraffer", E2EApp.readableFastForward, "--e2e-fx"]
+                             + (elves ? ["--e2e-elfen"] : []))
         e2e.waitForBoard()
         // Der Bauplatz am nächsten zum Wegeingang: Die ersten Gegner kommen früh vorbei.
         let entry = e2e.map.path.position(at: 1)
@@ -21,6 +33,9 @@ final class TowerAimE2ETests: XCTestCase {
         let art = e2e.app.staticTexts["scene.art"]
         XCTAssertTrue(art.waitForExistence(timeout: 10), "Bildzähler da")
         XCTAssertEqual(Self.parse(art.label)["schuetzen"], 1, art.label)
+        XCTAssertEqual(Self.parse(art.label)["elfen"], elves ? 1 : 0, art.label)
+        // Zielen und Verkaufen prüft der Zwerg; der iPhone-Job hat wenig Zeit übrig.
+        if elves { return }
 
         // Warten, bis er ein Ziel hat und darauf blickt, und bis er geschossen hat.
         let stats = e2e.app.staticTexts["fx.stats"]

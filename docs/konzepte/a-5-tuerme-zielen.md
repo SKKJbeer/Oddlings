@@ -62,14 +62,22 @@ Event towerFired ── FxDirector.arrow/bolt/spores ─ Krone.fire() (Abdrücke
 ## Wachturm: Schütze (D-185, D-186)
 
 - **Figur**: eigene 3D-Figur nach der Kette von A-3 (FLUX-Vorlage, TRELLIS, `figur.py` mit
-  der Vertragskamera, `folge.py` mit Konturpass). Name `tower_guard`.
-- **Bildfolgen**: `tower_guard_aim_<r>` (Ruhe im Anschlag, 1 Bild) und
-  `tower_guard_shoot_<r>` (4 Bilder: Abdrücken, Rückstoß, Spannen, Anschlag) für acht
+  der Vertragskamera, `folge.py` mit Konturpass). Der Schütze folgt dem Volk des Avatars
+  (Steffens Wahl auf der Entscheidungskarte, 23.11.2026): Zwerg mit Armbrust `tower_guard`
+  bei Zwergen und ohne Avatar, Elf mit Bogen `tower_guardElf` bei Elfen. Beide mit
+  derselben Bewegung und demselben Vertrag; fehlen die Elfenbilder, steht der Zwerg da
+  (`GuardFigure.available`). Die Szene bekommt das Volk von `BattleView`, im E2E-Test
+  über `--e2e-elfen`.
+- **Bildfolgen**: `tower_guard_shoot<r>_00` bis `_04` für acht Richtungen. Bild 00 ist
+  der Anschlag, in dem er wartet und zielt; 01 bis 04 Abdrücken, Rückstoß, Spannen und
+  zurück. Eine Folge je Richtung statt einer eigenen Ruhefolge, weil `folge.py` jede Folge
+  auf denselben Fuß stellt und Anschlag und Schuss so nie gegeneinander springen.
   Richtungen `r = 0…7` (0 = rechts, gegen den Uhrzeigersinn in 45°, wie die Sonne im
   Vertrag). Gedreht wird die **Figur** vor fester Kamera und Sonne (D-160), nicht
   gespiegelt: Das Licht kommt dann in jeder Richtung von derselben Seite.
-- **Richtung**: Winkel vom Schützen zum Ziel auf dem **Boden** (Szene in Bodenmaß
-  zurückgerechnet, die Tiefe ist um 1/sin 40° gestreckt). Die Figur dreht höchstens
+- **Richtung**: Winkel vom Schützen zum Ziel in der Szene. Die Szene ist in der Tiefe
+  schon so gestreckt, dass eine Bodenzelle quadratisch ist; der Szenenwinkel ist also der
+  Winkel auf dem Boden. Die Figur dreht höchstens
   `FxStyle.guardTurnRate` je Sekunde (ein Schütze reißt nicht herum) und wechselt das Bild
   mit einer Spanne von 10° (Hysterese), damit sie an der Grenze zweier Richtungen nicht
   flackert. Ohne Ziel bleibt sie stehen, wo sie zuletzt hinsah.
@@ -129,11 +137,11 @@ Zeichnen. Der Probelauf in der CI misst weiter die Bildrate (FX-Probe).
 | Ebene | Test |
 |---|---|
 | Simulation | `aim` liefert genau die Ziele des nächsten Schusses (nach einem Schritt mit `towerFired` verglichen), über alle Zielwahlen und die Salve; `charge` ist 0 nach dem Schuss und 1 bereit; beide ändern den Zustand nicht (Prüfsumme gleich) |
-| App | `TowerNodeAimTests`: Richtung aus dem Winkel (acht Sektoren, Tiefe gestreckt), Hysterese, Drehtempo; Salve hat zwei Schützen mit getrennten Zielen; Stein staucht nicht; Hut hebt sich und setzt auf; Ladung steuert den Schein |
-| App, Szene | über eine ganze Mission 1: in jedem Bild mit Ziel blickt jeder Schütze nach höchstens 0,4 s in den Sektor seines Ziels |
-| Bilder | `art-check`: alle 8 × 5 Schützenbilder vorhanden, Größe und Anker nach Vertrag, Herkunft in `ENTSTEHUNG.md`, keine Armbrust mehr in den Wachturmbildern (Name ohne Eintrag `armbrust`) |
+| App | `TowerAimTests`: Richtung aus dem Winkel (acht Sektoren, Tiefe gestreckt), Hysterese, Drehtempo; Salve hat zwei Schützen mit getrennten Zielen; Stein staucht nicht; Hut hebt sich und setzt auf; Ladung steuert den Schein |
+| App, Szene | über eine ganze Mission 1: kein Schütze mit Ziel sieht länger als 0,6 s woanders hin (`longestOffTarget`), es fallen Schüsse; mit „Weniger Bewegung“ keine Schussbilder und die Richtung stimmt sofort |
+| Bilder | `art-check`: alle 8 × 5 Schützenbilder vorhanden mit gleichem Vertrag je Richtung, Größe und Anker, Herkunft in `ENTSTEHUNG.md`; jeder Wachturm hat Schützen in `turmkronen.json`, deren Fuß auf deckendem Bild steht (Salve zwei); jede Hutlinie trennt schmalen Stiel und breiten Hut |
 | E2E | `TowerAimE2ETests`: Wachturm bauen, Welle rufen, warten, bis die Szene „zielt=1“ meldet und der Schütze in die Richtung des Ziels blickt; nach dem Verkaufen ist kein Schütze mehr da |
-| Kontaktabzug | Messung `schuetzenDaneben`: Bilder, in denen ein Schütze mit Ziel länger als 0,5 s woanders hinsieht; Warnung ab 1 % |
+| Kontaktabzug | Felder `shots` und `longestOffTargetSeconds` je Mission; Warnung, wenn ein Schütze länger als 0,6 s danebensieht (`GRENZE_DANEBEN_S`). 0,6 s statt der zuerst geplanten 0,4 s: Bei 7 rad/s braucht eine halbe Drehung 0,45 s, dazu kommt die Hysterese |
 
 ## Risiken
 

@@ -541,8 +541,10 @@ final class TowerNode: SKNode {
     private let bankWidth: CGFloat
     private(set) var bankEmpty = false
 
-    init(tower: Tower, field: CGFloat, light: SKColor? = nil, footing footingName: String? = nil) {
+    init(tower: Tower, field: CGFloat, light: SKColor? = nil, footing footingName: String? = nil,
+         guardFigure: GuardFigure = .dwarf) {
         towerID = tower.id
+        self.guardFigure = guardFigure
         kind = tower.kind
         self.light = light
         art = BattleSprites.tower(tower.kind, field: field)
@@ -599,6 +601,8 @@ final class TowerNode: SKNode {
     // MARK: Krone (A-5 Teil 3, G9)
 
     private let field_: CGFloat
+    /// Wer auf dem Wachturm steht, nach dem Volk des Avatars (D-185).
+    let guardFigure: GuardFigure
     /// Schützen auf der Plattform (nur Wachturm, D-185), in der Reihenfolge der
     /// Ziele eines Schusses: Bei der Salve nimmt der erste das erste Ziel.
     private(set) var shooters: [ShooterNode] = []
@@ -613,11 +617,12 @@ final class TowerNode: SKNode {
     /// weil Salve und Falkenhorst ihre Plattform anders tragen.
     private func placeCrown() {
         let entry = TowerCrownTable.entry(for: pictureName)
-        let wanted = kind == .watch && ShooterNode.available ? entry.shooters : []
+        let figure = kind == .watch ? guardFigure.available : nil
+        let wanted = figure == nil ? [] : entry.shooters
         let previous = shooters.first?.facing
         shooters.forEach { $0.removeFromParent() }
         shooters = wanted.map { spot in
-            let shooter = ShooterNode(field: field_)
+            let shooter = ShooterNode(field: field_, figure: figure ?? .dwarf)
             let side = BattleStyle.towerSpriteSide * field_
             // Bild mit Anker (0,5 | 0,2): Anteil im Bild in Punkte um den Fuß.
             shooter.position = CGPoint(x: (spot.x - 0.5) * side, y: (spot.y - 0.2) * side)
