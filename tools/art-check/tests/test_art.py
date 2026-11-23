@@ -578,9 +578,13 @@ class TuermeInDerWelt(unittest.TestCase):
     def test_schuetze_hat_acht_gleiche_richtungen(self):
         # Die Szene wechselt beim Drehen das Bild; andere Größe oder Länge ließe ihn springen.
         assets = json.load(open(os.path.join(WURZEL, "art/asset-vertrag.json")))["assets"]
-        # Zwerg und Elf (der Schütze folgt dem Volk) mit demselben Vertrag.
-        richtungen = [assets.get(f"{figur}_shoot{r}") for figur in ("tower_guard", "tower_guardElf") for r in range(8)]
-        self.assertTrue(all(richtungen), "tower_guard(Elf)_shoot0 bis 7 im Vertrag")
+        # Der Schütze folgt dem Volk: jede Figur (Zwerg `tower_guard`, Elf `tower_guardElf`)
+        # mit allen acht Richtungen und demselben Vertrag; der Zwerg ist Pflicht (Rückfall).
+        import re
+        figuren = {m.group(1) for k in assets if (m := re.fullmatch(r"(tower_guard\w*)_shoot\d", k))}
+        self.assertIn("tower_guard", figuren)
+        richtungen = [assets.get(f"{figur}_shoot{r}") for figur in sorted(figuren) for r in range(8)]
+        self.assertTrue(all(richtungen), f"{sorted(figuren)}: shoot0 bis 7 im Vertrag")
         self.assertEqual(len({json.dumps(r, sort_keys=True) for r in richtungen}), 1)
 
     def test_schatten_faellt_nach_rechts_unten(self):

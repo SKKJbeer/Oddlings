@@ -1,9 +1,9 @@
 {
   "_zweck": "Was am Turmbild lebt (A-5 Teil 3, D-185, D-188): Fußpunkte der Schützen auf der Plattform und Unterkante des Pilzhuts, je als Anteil des Turmbilds (x von links, y von unten). Hängt am gemalten Bild; tools/art-check prüft die Einträge gegen den Atlas.",
-  "tower_watch": {"schuetzen": [[0.5, 0.79]]},
-  "tower_watch_2": {"schuetzen": [[0.52, 0.79]]},
-  "tower_watch_volley": {"schuetzen": [[0.39, 0.75], [0.61, 0.75]]},
-  "tower_watch_falcon": {"schuetzen": [[0.52, 0.83]]},
+  "tower_watch": {"schuetzen": [[0.47, 0.77]]},
+  "tower_watch_2": {"schuetzen": [[0.5, 0.74]]},
+  "tower_watch_volley": {"schuetzen": [[0.37, 0.68], [0.63, 0.68]]},
+  "tower_watch_falcon": {"schuetzen": [[0.5, 0.74]]},
   "tower_spore": {"hutLinie": 0.66},
   "tower_spore_2": {"hutLinie": 0.66},
   "tower_spore_moor": {"hutLinie": 0.66},

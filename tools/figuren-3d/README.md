@@ -37,3 +37,9 @@ Konturpass (`konturpass.py`, Breite `konturPunkte`) um jedes Bild. Darum
 
 Blender (`bpy`) steht unter GPL und ist nur Werkzeug; gerenderte Bilder sind
 davon nicht berührt. Es wird nicht in die App gebaut.
+
+Für A-5 Teil 3 (Schütze auf dem Wachturm): Folgennamen dürfen Ziffern tragen
+(`shoot0` bis `shoot7`, eine Folge je Richtung), und `BEZUG=shoot folge.py …` stellt
+den Fuß nach der Folge `shoot` statt `walk`. Ein Teil des Modells, das quer liegt
+(die Armbrust), dreht sich über `ruhe` an eigenen, starren Knochen mit gemeinsamem
+Drehpunkt in die gewünschte Lage.
