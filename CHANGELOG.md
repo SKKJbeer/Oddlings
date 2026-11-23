@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.45.0 – 22.11.2026 (A-5 Teil 2: Kopfleiste und Effektbudget)
+## 0.45.0 – 23.11.2026 (A-5 Teil 2: Kopfleiste und Effektbudget) · Bau 66
 
 ### Neu
 - **Kopfleiste als Schilder** (D-180): Das grüne Band ist weg. Die Karte reicht bis an
