@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
-"""Turmsockel und Torburg einzeln in der Vertragskamera (Grafik 11, D-190, D-191).
+"""Bauten einzeln in der Vertragskamera, heute die Torburg (Grafik 11, D-191).
 
-$HOME/bpy/bin/python -I bauten.py <sockel|torburg> <ausgabe.png> [samples=48] [px=512]
+$HOME/bpy/bin/python -I bauten.py torburg <ausgabe.png> [samples=48] [px=512]
+
+Der Turmsockel (D-190) ist mit D-196 entfallen; seine Perspektive passte nicht zu
+den gemalten Türmen.
 
 Gleiche Kamera und Sonne wie das Diorama (art/asset-vertrag.json): orthografisch,
 `kamera.hoehe` Grad über dem Boden, ohne Gierwinkel, Sonne `sonne.azimut`/`sonne.hoehe`.
@@ -23,7 +26,7 @@ SAMPLES = int(sys.argv[3]) if len(sys.argv) > 3 else 48
 PX = int(sys.argv[4]) if len(sys.argv) > 4 else 512
 V = json.load(open(os.path.join(WURZEL, "art/asset-vertrag.json")))
 EL = math.radians(V["kamera"]["hoehe"])
-NAME = {"sockel": "tower_plinth", "torburg": "fortress"}[art]
+NAME = {"torburg": "fortress"}[art]
 SEITE, ANKER = V["assets"][NAME]["seiteZellen"], V["assets"][NAME]["anker"]
 rnd = random.Random(5)
 
@@ -131,30 +134,6 @@ def buschel(ort, s, saat):
         h.data.materials.append(GRAS[(saat + k) % 3])
 
 
-def sockel():
-    """Runde Platte aus Feldsteinen, 1,1 Zellen breit, 0,1 hoch: breiter als jeder Turmfuß,
-    mit sichtbarer Vorderkante. Kiesel und Gras am Fuß, damit die Platte nicht auf dem
-    Boden klebt wie ein Untersetzer."""
-    r, h = 0.55, 0.1
-    seite = stein("sockelseite", (128, 122, 112), fugen=(52, 46, 40), skala=9.0)
-    oben = stein("sockeloben", (150, 142, 128), fugen=(70, 62, 52), skala=5.5)
-    zylinder(Vector((0, 0, 0)), r, h, seite, ecken=40, fase=0.025)
-    platte = zylinder(Vector((0, 0, h - 0.004)), r - 0.035, 0.012, oben, ecken=40)
-    # Glatt schattiert wölbte sich die Platte wie eine Kuppel.
-    for poly in platte.data.polygons:
-        poly.use_smooth = False
-    kiesel = stein("kiesel", (140, 134, 122), skala=3)
-    for k in range(16):
-        a = k / 16 * 2 * math.pi + rnd.uniform(-0.15, 0.15)
-        d = r + rnd.uniform(0.0, 0.05)
-        s = rnd.uniform(0.025, 0.05)
-        klumpen(Vector((math.cos(a) * d, math.sin(a) * d, s * 0.4)), (s, s * 0.85, s * 0.6), kiesel, 0.02, k)
-    for k in range(9):
-        a = rnd.uniform(0, 2 * math.pi)
-        d = r + rnd.uniform(0.01, 0.06)
-        buschel(Vector((math.cos(a) * d, math.sin(a) * d, 0)), rnd.uniform(0.8, 1.3), k)
-
-
 def torburg():
     """Torburg (D-191): Torhaus mit zwei runden Türmen, Tor zum ankommenden Weg.
     Gedreht um `festung.gier` aus dem Vertrag, damit man Tor und Seite sieht. Der Fuß
@@ -214,7 +193,7 @@ def torburg():
     leer.rotation_euler = (0, 0, math.radians(f["gier"]))
 
 
-{"sockel": sockel, "torburg": torburg}[art]()
+{"torburg": torburg}[art]()
 
 # --- Schattenfänger, Licht, Kamera --------------------------------------------------------
 bpy.ops.mesh.primitive_plane_add(size=40)

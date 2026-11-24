@@ -3,8 +3,8 @@ import SpriteKit
 import XCTest
 @testable import Oddlings
 
-/// Türme in der Welt (D-120, D-121): Licht des Ortes, Schatten, Fundament, und
-/// Bauplätze nur beim Bauen.
+/// Türme in der Welt (D-120, D-121, D-196, D-202): Licht des Ortes, Schatten,
+/// Boden vor dem Fuß, und Bauplätze nur beim Bauen.
 @MainActor
 final class TowerGroundingTests: XCTestCase {
     private let watch = Tower(id: 1, kind: .watch, cell: Cell(x: 0, y: 0), cooldownTicks: 0, spent: 1)
@@ -22,12 +22,11 @@ final class TowerGroundingTests: XCTestCase {
         XCTAssertEqual(b, 0, accuracy: 0.001)
     }
 
-    /// Jede Mission der Kampagne hat ihr Licht und ihr Fundament im Bündel.
-    func testEveryCampaignMissionHasLightAndFooting() throws {
+    /// Jede Mission der Kampagne hat ihr Licht im Bündel.
+    func testEveryCampaignMissionHasLight() throws {
         for id in ["mission-01", "mission-02", "mission-03", "mission-04", "mission-05a", "mission-05b",
                    "mission-06a", "mission-06b", "mission-07"] {
             XCTAssertNotNil(BattlefieldLight.color(missionID: id), id)
-            XCTAssertNotNil(BattleSprites.texture(named: BattleSprites.footingName(missionID: id)), id)
         }
     }
 
@@ -44,31 +43,33 @@ final class TowerGroundingTests: XCTestCase {
         XCTAssertEqual(plain.art.children.compactMap { $0 as? SKSpriteNode }.first?.colorBlendFactor, 0)
     }
 
-    func testTowerStandsOnFootingWithShadow() throws {
-        let node = TowerNode(tower: watch, field: 40, footing: BattleSprites.footingName(missionID: "mission-01"))
+    /// D-196: Der Turm steht auf dem Boden, unter ihm liegt nur sein Schatten
+    /// (mit dem Kontaktdunkel darin), kein Sockel und kein Fundament.
+    func testTowerStandsOnTheGroundWithItsShadow() throws {
+        let node = TowerNode(tower: watch, field: 40)
         let shadow = try XCTUnwrap(node.shadow)
         XCTAssertEqual(shadow.name, "tower_watch_shadow")
         XCTAssertEqual(shadow.size.width, BattleStyle.towerShadowSide * 40, accuracy: 0.01)
-        XCTAssertEqual(node.footing?.name, "footing_mission01")
-        // Fundament unter dem Schatten, beides nicht am Turm selbst: Sonst fiele
-        // der Schatten über den Nachbarturm.
-        XCTAssertLessThan(try XCTUnwrap(node.footing).zPosition, shadow.zPosition)
+        XCTAssertEqual(shadow.position, .zero, "Anker des Bildes in der Mitte des Schattens")
+        XCTAssertEqual(node.stand.position, .zero)
+        XCTAssertEqual(node.shade.children.count, 1)
+        // Der Schatten liegt nicht am Turm selbst: Sonst fiele er über den Nachbarturm.
         XCTAssertNil(node.shade.parent)
         XCTAssertFalse(node.children.contains(node.shade))
     }
 
-    /// Fundament und Schatten erscheinen mit dem Bau, nicht vorher.
+    /// Der Schatten erscheint mit dem Bau, nicht vorher.
     func testShadeFollowsTheBuildDrop() {
-        let node = TowerNode(tower: watch, field: 40, footing: "footing_mission01")
+        let node = TowerNode(tower: watch, field: 40)
         node.lift.alpha = 0.25
         node.idle(time: 0, still: true)
         XCTAssertEqual(node.shade.alpha, 0.25, accuracy: 0.001)
     }
 
-    /// Beim Verkauf gehen Fundament und Schatten mit dem Turm, ausgeblendet.
+    /// Beim Verkauf geht der Schatten mit dem Turm, ausgeblendet.
     func testSellTakesTheShadeAlong() throws {
         let scene = BattleScene(model: BattleModel(config: try BalanceConfig.missionOne(), seed: 1, autoplay: false))
-        let node = TowerNode(tower: watch, field: scene.layout.field, footing: "footing_mission01")
+        let node = TowerNode(tower: watch, field: scene.layout.field)
         let layer = SKNode()
         layer.addChild(node.shade)
         scene.effectLayer.addChild(node)
@@ -99,6 +100,64 @@ final class TowerGroundingTests: XCTestCase {
         XCTAssertEqual(node.shadow?.name, "tower_watch_falcon_shadow")
     }
 
+    /// D-202: Vor dem Fuß liegt der Boden des Kampfplatzes, ausgeschnitten mit einer
+    /// Halmkante, samt Schatten. Er steht im Turm (`stand`), aber nicht in `lift`, damit
+    /// der Turm beim Errichten aus dem Boden wächst.
+    func testTowerStandsInTheGrass() throws {
+        let groundTexture = try XCTUnwrap(BattleSprites.texture(named: BattleSprites.groundName(missionID: "mission-01")))
+        let world = SKNode()
+        let ground = SKSpriteNode(texture: groundTexture)
+        ground.anchorPoint = .zero
+        ground.size = CGSize(width: 800, height: 400)
+        ground.position = CGPoint(x: -100, y: -50)
+        world.addChild(ground)
+        let layer = SKNode()
+        world.addChild(layer)
+        let node = TowerNode(tower: watch, field: 40)
+        node.position = CGPoint(x: 300, y: 150)
+        layer.addChild(node)
+        node.plant(in: ground)
+
+        let grass = try XCTUnwrap(node.grass)
+        XCTAssertTrue(grass.parent === node.stand)
+        XCTAssertFalse(node.lift.children.contains(grass))
+        XCTAssertGreaterThan(grass.zPosition, 1, "über Bild und Schützen")
+        XCTAssertEqual(grass.maskNode?.name, "tower_watch_grass")
+        let piece = try XCTUnwrap(grass.children.first as? SKSpriteNode)
+        let side = BattleStyle.towerSpriteSide * 40
+        // Ausschnitt genau unter dem Quadrat des Turmbilds: linke untere Ecke
+        // (300 - 0,5·side, 150 - 0,2·side) im Boden, der bei (-100, -50) beginnt.
+        let rect = try XCTUnwrap(piece.texture?.textureRect())
+        XCTAssertEqual(rect.minX, (300 - 0.5 * side + 100) / 800, accuracy: 0.001)
+        XCTAssertEqual(rect.minY, (150 - 0.2 * side + 50) / 400, accuracy: 0.001)
+        XCTAssertEqual(rect.width, side / 800, accuracy: 0.001)
+        // Der Schatten liegt auch im Ausschnitt, sonst risse das Gras ihn auf.
+        let shadowCopy = try XCTUnwrap(grass.children.last as? SKSpriteNode)
+        XCTAssertEqual(shadowCopy.size, node.shadow?.size)
+        XCTAssertGreaterThan(shadowCopy.zPosition, piece.zPosition)
+
+        // Beim Errichten erscheint der Schatten im Gras mit dem Turm.
+        node.lift.alpha = 0.3
+        node.idle(time: 0, still: true)
+        XCTAssertEqual(shadowCopy.alpha, 0.3, accuracy: 0.001)
+
+        // Aufwerten wechselt die Maske mit dem Bild.
+        node.show(level: 2, specialization: nil)
+        XCTAssertEqual(grass.maskNode?.name, "tower_watch_2_grass")
+        node.show(level: 3, specialization: .volley)
+        XCTAssertEqual(grass.maskNode?.name, "tower_watch_volley_grass")
+    }
+
+    /// Jedes Turmbild hat seine Grasmaske im Katalog (turmlicht.py).
+    func testEveryTowerPictureHasGrass() {
+        for kind in [TowerKind.watch, .lightning, .spore, .bank] {
+            for level in 1...2 {
+                let name = BattleSprites.towerNameAvailable(kind, level: level, specialization: nil)
+                XCTAssertNotNil(BattleSprites.texture(named: BattleSprites.grassName(ofPicture: name)), name)
+            }
+        }
+    }
+
     func testSceneTintsAndShadesBuiltTowers() throws {
         let config = try BalanceConfig.missionOne()
         let model = BattleModel(config: config, seed: 1, autoplay: true)
@@ -107,10 +166,11 @@ final class TowerGroundingTests: XCTestCase {
         let node = try XCTUnwrap(scene.towerNodes.values.first)
         XCTAssertNotNil(node.shade.parent, "Schattenebene")
         XCTAssertEqual(node.shade.position, node.position)
-        // Seit Grafik 11 (D-190) trägt der Steinsockel den Turm statt des Fundaments.
-        XCTAssertEqual(node.plinth?.name, BattleSprites.plinthName)
-        XCTAssertNil(node.footing)
+        // Seit D-196 ohne Sockel und Fundament: nur der Schatten am Boden.
+        XCTAssertEqual(node.shade.children.count, 1)
+        XCTAssertEqual(node.stand.position, .zero)
         XCTAssertEqual(node.light, BattlefieldLight.color(missionID: "mission-01"))
+        XCTAssertNotNil(node.grass, "Boden vor dem Fuß (D-202)")
         scene.restart()
         XCTAssertNil(node.shade.parent)
     }

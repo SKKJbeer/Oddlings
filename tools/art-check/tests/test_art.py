@@ -500,8 +500,8 @@ class Kampfplatzbild(unittest.TestCase):
 
 
 class TuermeInDerWelt(unittest.TestCase):
-    """D-120: Jeder Turm hat einen Schatten, jeder Kampfplatz Licht und Fundament,
-    und das Licht ist dasselbe, mit dem der Boden gemalt wurde."""
+    """D-120, D-196: Jeder Turm hat einen Schatten, der am Grundriss sitzt, jeder
+    Kampfplatz Licht, und das Licht ist dasselbe, mit dem der Boden gemalt wurde."""
 
     ATLAS = os.path.join(WURZEL, "App/Assets.xcassets/Battle.spriteatlas")
     KARTEN = os.path.join(WURZEL, "App/Assets.xcassets/Maps")
@@ -516,18 +516,21 @@ class TuermeInDerWelt(unittest.TestCase):
 
     def test_jeder_turm_hat_einen_schatten(self):
         import re
-        # Sockel und Kontakt (Grafik 11) liegen unter dem Turm, sie werfen keinen eigenen Schatten.
-        tuerme = [e[:-9] for e in os.listdir(self.ATLAS) if re.fullmatch(r"tower_[a-z]+(_\d)?\.imageset", e)
-                  and e not in ("tower_plinth.imageset", "tower_contact.imageset")]
+        tuerme = [e[:-9] for e in os.listdir(self.ATLAS) if re.fullmatch(r"tower_[a-z]+(_\d)?\.imageset", e)]
         self.assertGreater(len(tuerme), 3)
         for t in tuerme:
             self.assertTrue(os.path.isdir(os.path.join(self.ATLAS, f"{t}_shadow.imageset")), t)
 
-    def test_jeder_kampfplatz_hat_licht_und_fundament(self):
+    def test_jeder_kampfplatz_hat_licht(self):
         licht = json.load(open(os.path.join(WURZEL, "App/Battle/kampfplatzlicht.json")))
         for m in self.missionen():
             self.assertIn(f"mission-{m}", licht, m)
-            self.assertTrue(os.path.isdir(os.path.join(self.ATLAS, f"footing_mission{m}.imageset")), m)
+
+    def test_kein_sockel_und_kein_fundament_mehr(self):
+        # D-196: Sie lagen um den vordersten Punkt des Fußes statt um den Grundriss
+        # und zeigten dem Turm einen Boden in anderer Perspektive.
+        for e in os.listdir(self.ATLAS):
+            self.assertFalse(e.startswith(("footing_", "tower_plinth", "tower_contact")), e)
 
     def test_licht_ist_das_licht_des_bodens(self):
         # Steht der Wert nicht in der Entstehung des Bodens, wurde einer der beiden
@@ -545,7 +548,7 @@ class TuermeInDerWelt(unittest.TestCase):
     def turmbilder(self, art):
         import re
         return [e[:-9] for e in sorted(os.listdir(self.ATLAS))
-                if re.fullmatch(rf"tower_{art}(_[a-z0-9]+)?\.imageset", e) and "_shadow" not in e]
+                if re.fullmatch(rf"tower_{art}(_[a-z0-9]+)?\.imageset", e) and not e.endswith(("_shadow.imageset", "_grass.imageset"))]
 
     def test_jeder_wachturm_hat_schuetzen_auf_der_plattform(self):
         # A-5 Teil 3 (D-185): Ohne Eintrag stünde der Wachturm leer da, die
@@ -600,21 +603,29 @@ class TuermeInDerWelt(unittest.TestCase):
                 for x in range(0, w, 2):
                     v = a.getpixel((x, y))
                     summe += v; sx += v * x; sy += v * y
-            self.assertGreater(sx / summe, w / 2, name)
-            self.assertGreater(sy / summe, h / 2, name)
-            self.assertEqual(a.getpixel((w // 2, h // 2)) > 100, True, f"{name}: kein Kontaktschatten am Fuß")
+            # Seit D-196 sitzt das Kontaktdunkel hinter dem Anker (Bildmitte), um die
+            # Mitte des Grundrisses; der Schwerpunkt liegt trotzdem rechts und nicht
+            # weit darüber.
+            z = json.load(open(os.path.join(WURZEL, "art/asset-vertrag.json")))["punkteJeZelle"] * 3
+            self.assertGreater(sx / summe, w / 2 + 0.05 * z, name)
+            self.assertGreater(sy / summe, h / 2 - 0.2 * z, name)
 
-    def test_fundament_ist_erde_vom_weg(self):
-        # Die Farbe kommt aus dem gemalten Weg: warm (rot über blau), heller als das Gras.
-        for m in self.missionen():
-            b = self.bild(f"footing_mission{m}")
-            deckend = [p for p in b.getdata() if p[3] > 180]
-            self.assertGreater(len(deckend), 100, m)
-            r = sum(p[0] for p in deckend) / len(deckend)
-            g = sum(p[1] for p in deckend) / len(deckend)
-            bl = sum(p[2] for p in deckend) / len(deckend)
-            self.assertGreater(r, bl + 20, m)
-            self.assertGreater(r, g - 10, m)
+    def test_dunkel_sitzt_unter_dem_turm_nicht_davor(self):
+        # D-196: Der Anker (Bildmitte) ist der vorderste Punkt des Grundrisses. Das
+        # Kontaktdunkel gehört dahinter, unter den Turm; vor dem Fuß links der Mitte,
+        # wo der Schlagschatten (45° nach rechts unten) nicht hinreicht, liegt Gras. Ein dunkles Band dort ließe
+        # den Turm über seinem Schatten schweben (bis 0.47.0 so).
+        z = json.load(open(os.path.join(WURZEL, "art/asset-vertrag.json")))["punkteJeZelle"] * 3
+        tuerme = [e[:-9] for e in os.listdir(self.ATLAS) if e.endswith("_shadow.imageset")
+                  and e.startswith("tower_")]
+        self.assertGreater(len(tuerme), 10)
+        for name in tuerme:
+            a = self.bild(name).getchannel("A")
+            w, h = a.size
+            self.assertGreater(a.getpixel((w // 2, round(h / 2 - 0.1 * z))), 150, f"{name}: kein Dunkel unter dem Fuß")
+            for dx in (0.22, 0.28):
+                vorn = a.getpixel((round(w / 2 - dx * z), round(h / 2 + 0.12 * z)))
+                self.assertLess(vorn, 60, f"{name}: Dunkel vor dem Fuß ({vorn})")
 
     def test_skript_rechnet_gleich(self):
         # Gleiche Eingabe, gleiches Bild: Der Atlas ist aus dem Skript entstanden.
@@ -623,12 +634,83 @@ class TuermeInDerWelt(unittest.TestCase):
                 shutil.copytree(os.path.join(WURZEL, teil), os.path.join(t, teil))
             subprocess.run([sys.executable, os.path.join(WURZEL, ".claude/skills/spielgrafik/scripts/turmboden.py"), t],
                            check=True, capture_output=True)
-            for name in ("tower_watch_shadow", "footing_mission05a", "tower_contact"):
+            for name in ("tower_watch_shadow", "tower_spore_rot_shadow", "tower_lightning_2_shadow"):
                 for f in (2, 3):
                     rel = f"App/Assets.xcassets/Battle.spriteatlas/{name}.imageset/{name}@{f}x.png"
                     alt = Image.open(os.path.join(WURZEL, rel)).convert("RGBA")
                     neu = Image.open(os.path.join(t, rel)).convert("RGBA")
                     self.assertEqual(list(alt.getdata()), list(neu.getdata()), rel)
+
+
+class TuermeImLicht(unittest.TestCase):
+    """D-200 bis D-203: gemalte Türme im Licht der 3D-Welt (turmlicht.py)."""
+
+    ATLAS = os.path.join(WURZEL, "App/Assets.xcassets/Battle.spriteatlas")
+    QUELLE = os.path.join(WURZEL, "art/tuerme-in-der-welt/quelle")
+
+    def namen(self):
+        return sorted(d[:-4] for d in os.listdir(self.QUELLE) if d.endswith(".png"))
+
+    def atlas(self, name):
+        return Image.open(os.path.join(self.ATLAS, f"{name}.imageset", f"{name}@3x.png")).convert("RGBA")
+
+    def quelle(self, name):
+        return Image.open(os.path.join(self.QUELLE, f"{name}.png")).convert("RGBA")
+
+    def test_jedes_turmbild_hat_quelle_und_grasmaske(self):
+        import re
+        bilder = sorted(e[:-9] for e in os.listdir(self.ATLAS)
+                        if re.fullmatch(r"tower_(watch|lightning|spore|bank)(_[a-z0-9]+)?\.imageset", e)
+                        and not e.endswith(("_shadow.imageset", "_grass.imageset")))
+        self.assertEqual(bilder, self.namen())
+        for name in bilder:
+            self.assertTrue(os.path.isdir(os.path.join(self.ATLAS, f"{name}_grass.imageset")), name)
+
+    def test_umriss_bleibt_pixelgenau(self):
+        # Kronen und Schützen (D-185) sitzen auf Punkten im Bild; das Licht darf nichts verschieben.
+        for name in self.namen():
+            self.assertEqual(self.atlas(name).getchannel("A").tobytes(), self.quelle(name).getchannel("A").tobytes(), name)
+
+    def test_schattenseite_rechts_lichtseite_links(self):
+        # Sonne von oben links hinten (Vertrag): rechts dunkler als die Malerei, links nicht.
+        for name in self.namen():
+            neu, alt = self.atlas(name), self.quelle(name)
+            w, h = neu.size
+            def mittel(bild, x0, x1):
+                box = (x0, 0, x1, int(h * 0.75))
+                hell = ImageStat.Stat(bild.convert("L").crop(box), mask=bild.getchannel("A").crop(box).point(lambda v: 255 if v > 200 else 0))
+                return hell.mean[0]
+            rechts = mittel(neu, w // 2, w) / mittel(alt, w // 2, w)
+            links = mittel(neu, 0, w // 2) / mittel(alt, 0, w // 2)
+            self.assertLess(rechts, 0.92, name)
+            self.assertGreater(links, rechts + 0.08, name)
+
+    def skript(self, modul):
+        # Die Skripte lesen die Wurzel beim Laden aus sys.argv.
+        import importlib
+        sys.path.insert(0, os.path.join(WURZEL, ".claude/skills/spielgrafik/scripts"))
+        alt = sys.argv
+        sys.argv = ["x", WURZEL]
+        try:
+            return importlib.import_module(modul)
+        finally:
+            sys.argv = alt
+
+    def test_gras_deckt_die_fusslinie_und_nur_sie(self):
+        turmboden = self.skript("turmboden")
+        for name in self.namen():
+            maske = self.atlas(f"{name}_grass").getchannel("A")
+            mx, unten, ha, hb = turmboden.fuss(self.quelle(name))
+            self.assertGreater(maske.getpixel((round(mx), round(unten))), 200, f"{name}: Fußlinie vorn frei")
+            # Über der halben Turmhöhe liegt kein Gras.
+            self.assertIsNone(maske.crop((0, 0, maske.width, maske.height // 2)).getbbox(), name)
+            # Hinter dem Grundriss (Mitte) bleibt der Fuß sichtbar.
+            self.assertLess(maske.getpixel((round(mx), round(unten - 2 * hb))), 60, name)
+
+    def test_skript_rechnet_gleich(self):
+        turmlicht = self.skript("turmlicht")
+        neu = turmlicht.licht(self.quelle("tower_spore"))
+        self.assertEqual(neu.tobytes(), self.atlas("tower_spore").tobytes())
 
 
 class Diorama(unittest.TestCase):
@@ -730,8 +812,8 @@ class Diorama(unittest.TestCase):
 
 
 class KampfplatzInDerWelt(unittest.TestCase):
-    """Grafik 11 (D-190 bis D-195): Sockel und Kontakt im Atlas, Torburg mit denselben
-    Werten in Werkzeug und App, Weg bis ins Tor, Mauern frei von Weg und Inseln."""
+    """Grafik 11 (D-191 bis D-195): Torburg mit denselben Werten in Werkzeug und App,
+    Weg bis ins Tor, Mauern frei von Weg und Inseln."""
 
     ATLAS = os.path.join(WURZEL, "App/Assets.xcassets/Battle.spriteatlas")
     MISSION = Diorama.MISSION
@@ -755,30 +837,11 @@ class KampfplatzInDerWelt(unittest.TestCase):
         stil = open(os.path.join(WURZEL, "App/Battle/BattleStyle.swift"), encoding="utf-8").read()
         self.assertIn(f"fortressSpriteSide: CGFloat = {a['fortress']['seiteZellen']}", stil)
         self.assertIn(f"fortressAnchorY: CGFloat = {a['fortress']['anker']}", stil)
-        self.assertIn(f"plinthSide: CGFloat = {a['tower_plinth']['seiteZellen']}", swift)
-        self.assertIn(f"contactSide: CGFloat = {a['tower_contact']['seiteZellen']}", swift)
 
-    def test_sockel_und_kontakt_liegen_im_atlas(self):
+    def test_torburg_liegt_im_atlas(self):
         # Die Herkunft prüft check_assets für jedes Bild im Atlas.
-        for name in ("tower_plinth", "tower_contact", "fortress", "fortress_shadow"):
+        for name in ("fortress", "fortress_shadow"):
             self.assertTrue(os.path.isdir(os.path.join(self.ATLAS, f"{name}.imageset")), name)
-
-    def test_kontakt_ist_in_der_mitte_am_dunkelsten(self):
-        a = self.bild("tower_contact").getchannel("A")
-        w, h = a.size
-        mitte = a.getpixel((w // 2, h // 2))
-        self.assertGreater(mitte, 120)
-        self.assertLess(a.getpixel((w // 2 + int(w * 0.3), h // 2)), mitte // 3)
-        self.assertEqual(a.getpixel((2, 2)), 0)
-
-    def test_sockel_steht_um_die_mitte(self):
-        # Anker 0,5: Die Platte liegt um die Bildmitte, oben Luft für nichts Hohes.
-        a = self.bild("tower_plinth").getchannel("A")
-        w, h = a.size
-        self.assertGreater(a.getpixel((w // 2, h // 2)), 200)
-        x0, y0, x1, y1 = a.getbbox()
-        self.assertLess(abs((x0 + x1) / 2 - w / 2), w * 0.06)
-        self.assertLess(y1 - y0, h * 0.75, "flache Platte, kein Turm")
 
     def plan(self, t):
         sys.path.insert(0, os.path.join(WURZEL, "tools/kampfplatz-3d"))

@@ -11,6 +11,42 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.49.0 – 24.11.2026 (Türme stehen im Licht der Welt und im Gras) · Bau folgt
+
+### Geändert
+- **Türme haben eine Schattenseite** (D-200): Die gemalten Türme waren von vorn gleichmäßig
+  hell, Bäume, Inseln und Torburg aus 3D haben eine Licht- und eine Schattenseite. Jetzt
+  rechnet `turmlicht.py` jedes Turmbild aus seiner unveränderten Malerei
+  (`art/tuerme-in-der-welt/quelle/`): links bis 20 % heller, rechts bis 34 % dunkler, am Fuß
+  Umgebungsdunkel. Der Umriss bleibt Pixel für Pixel gleich, Schützen und Kronen sitzen wie
+  in 0.48.0.
+- **Schatten wie die Bäume** (D-201): dunkler und schärfer am Fuß (72 % statt 62 % Deckung,
+  Weichheit halbiert), damit Turmschatten und Baumschatten aus derselben Sonne kommen.
+- **Der Turm steht im Gras, nicht darauf** (D-202): Vor dem Fuß liegt der gemalte Boden des
+  Kampfplatzes mit einer Kante aus Halmen über der Fußlinie (`tower_<name>_grass` als Maske).
+  Ursachen und Bilder im
+  [Nachtrag zum Konzept](docs/konzepte/grafik-11-kampfplatz-in-der-welt.md#nachtrag-2-0490-licht-und-gras-d-200-bis-d-203).
+- **Sockel, Kontaktbild und Fundament entfallen** (D-196, hebt D-190 und D-193 auf). Der
+  Sockel war in einer anderen Kamera gerechnet und breiter als jeder Turmfuß; das Dunkel saß
+  vor dem Turm statt unter ihm. Ursachen und Bilder im
+  [Nachtrag zum Konzept](docs/konzepte/grafik-11-kampfplatz-in-der-welt.md#nachtrag-0490-der-sockel-war-der-falsche-weg-d-196).
+- **Der Schatten wächst aus dem gemalten Fuß**: `turmboden.py` misst den Grundriss in jedem
+  Turmbild und setzt Kontaktdunkel und Schlagschatten in seine Mitte, am Fuß dunkel und
+  scharf, zur Spitze heller und weich, 45° wie die Torburg. Bauvorschau und gebauter Turm
+  stehen gleich.
+
+### Tests
+- art-check: kein Sockel und kein Fundament mehr im Atlas, Dunkel unter dem Turm statt
+  davor, Schatten nach unten rechts, jeder Kampfplatz hat Licht.
+- App: `TowerGroundingTests` (nur der Schatten in der Schattenebene, Turm nicht angehoben),
+  `WorldGroundingTests.testPreviewStandsOnTheGround`.
+- art-check `TuermeImLicht` (D-203): jedes Turmbild hat Quelle und Grasmaske, Umriss
+  pixelgenau wie die Quelle, rechts dunkler als links, Gras deckt die Fußlinie und nur sie,
+  das Skript rechnet bei gleicher Eingabe gleich.
+- App: `TowerGroundingTests.testTowerStandsInTheGrass` (Gras in `stand`, Ausschnitt des
+  Kampfplatzbodens unter dem Fuß, Maske folgt Aufwerten und Spezialisieren),
+  `testEveryTowerPictureHasGrass`.
+
 ## 0.48.0 – 24.11.2026 (A-5 Teil 3: Türme zielen)
 
 ### Neu
@@ -42,7 +78,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - art-check: acht gleiche Schützenrichtungen, Schützen stehen auf dem Turm, Hutlinie
   trennt Hut und Stiel.
 
-## 0.47.0 – 24.11.2026 (Grafik 11: Kampfplatz in der Welt) · Bau folgt
+## 0.47.0 – 24.11.2026 (Grafik 11: Kampfplatz in der Welt) · Bau 67
 
 ### Neu
 - **Review „Kampfplatz in der Welt“** mit zehn Befunden aus dem Simulatorbild, markierten

@@ -334,17 +334,6 @@ final class BattleScene: SKScene {
             sprite.color = light ?? .white
             sprite.colorBlendFactor = light == nil ? 0 : 1
         }
-        // Auf dem Sockel wie der echte Turm (Grafik 11, D-190); beim Neubau liegt
-        // der Sockel blass mit, beim Spezialisieren steht er schon.
-        if let plinth = BattleSprites.groundDecal(named: BattleSprites.plinthName, side: BattleStyle.plinthSide * field) {
-            for case let sprite as SKSpriteNode in ghost.children { sprite.position.y += BattleStyle.plinthLift * field }
-            if case .cell = selection {
-                plinth.zPosition = -1
-                plinth.color = light ?? .white
-                plinth.colorBlendFactor = light == nil ? 0 : 1
-                ghost.addChild(plinth)
-            }
-        }
         ghost.alpha = BattleStyle.previewAlpha
         ghost.position = toScene(cell.center)
         // Knapp vor dem Turm derselben Zelle, sonst in der Reihe nach Höhe.
@@ -668,16 +657,16 @@ final class BattleScene: SKScene {
     #endif
 
     private func makeTowerNode(_ tower: Tower) -> TowerNode {
-        let node = TowerNode(tower: tower, field: field, light: light,
-                             footing: BattleSprites.footingName(missionID: model.sim.config.mission.id),
-                             plinth: BattleSprites.plinthName,
-                             guardFigure: guardFigure)
+        let node = TowerNode(tower: tower, field: field, light: light, guardFigure: guardFigure)
         node.position = toScene(tower.cell.center)
         node.shade.position = node.position
         shadeLayer.addChild(node.shade)
         // Weiter unten heißt weiter vorn; bleibt innerhalb der eigenen Ebene.
         node.zPosition = 1 - node.position.y / max(size.height, 1)
         towerLayer.addChild(node)
+        if let painted = ground.childNode(withName: BattleSprites.groundName(missionID: model.sim.config.mission.id)) as? SKSpriteNode {
+            node.plant(in: painted)
+        }
         towerNodes[tower.id] = node
         return node
     }

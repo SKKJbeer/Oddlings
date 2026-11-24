@@ -11,6 +11,7 @@ Keine Spielgrafik, nicht im Atlas.
 | `d-boss-gaensemarsch.jpg` | dasselbe Artefakt, `oberflaeche/p3-4-moorkoenig.png` |
 | `welt/a-mission-1-markiert.jpg` | Review Grafik 11 ([Konzept](../../docs/konzepte/grafik-11-kampfplatz-in-der-welt.md)): CI-Artefakt `simulator-probe` 14815769940 (23.11.2026, main, 0.45.0), `mission-1.png`, markiert mit Nunito ExtraBold |
 | `welt/b-erdung-nah.jpg` | dasselbe Bild, Ausschnitte Turmfuß und Festung, vergrößert |
+| `welt/d-sockel-vorher-nachher.jpg`, `welt/e-fuss-nah.jpg` | aus den Atlasbildern zusammengesetzt (Boden, Türme, Schatten wie in der Szene, ohne Torburg), oben Stand 0.47.0 aus git mit Sockel, unten 0.49.0 (D-196) |
 | `welt/c-vorher-nachher.jpg` | aus den Atlasbildern zusammengesetzt (Boden, Türme, Sockel, Torburg wie in der Szene), links Stand 0.45.0 aus git, rechts 0.47.0 |
 | `e-blickwinkel.jpg` | Vorschau Bosslichtung aus Grafik 09 (Projektordner `grafik/kampfplatz-bosslichtung-m7.jpg`), Ausschnitt |
 

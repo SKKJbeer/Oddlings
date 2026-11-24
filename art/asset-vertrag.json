@@ -591,40 +591,56 @@
       "seiteZellen": 2.4,
       "alpha": true
     },
-    "footing_mission01": {
-      "seiteZellen": 1.2,
+    "tower_bank_grass": {
+      "seiteZellen": 1.9,
       "alpha": true
     },
-    "footing_mission02": {
-      "seiteZellen": 1.2,
+    "tower_lightning_grass": {
+      "seiteZellen": 1.9,
       "alpha": true
     },
-    "footing_mission03": {
-      "seiteZellen": 1.2,
+    "tower_lightning_2_grass": {
+      "seiteZellen": 1.9,
       "alpha": true
     },
-    "footing_mission04": {
-      "seiteZellen": 1.2,
+    "tower_lightning_crown_grass": {
+      "seiteZellen": 1.9,
       "alpha": true
     },
-    "footing_mission05a": {
-      "seiteZellen": 1.2,
+    "tower_lightning_spark_grass": {
+      "seiteZellen": 1.9,
       "alpha": true
     },
-    "footing_mission05b": {
-      "seiteZellen": 1.2,
+    "tower_spore_grass": {
+      "seiteZellen": 1.9,
       "alpha": true
     },
-    "footing_mission06a": {
-      "seiteZellen": 1.2,
+    "tower_spore_2_grass": {
+      "seiteZellen": 1.9,
       "alpha": true
     },
-    "footing_mission06b": {
-      "seiteZellen": 1.2,
+    "tower_spore_moor_grass": {
+      "seiteZellen": 1.9,
       "alpha": true
     },
-    "footing_mission07": {
-      "seiteZellen": 1.2,
+    "tower_spore_rot_grass": {
+      "seiteZellen": 1.9,
+      "alpha": true
+    },
+    "tower_watch_grass": {
+      "seiteZellen": 1.9,
+      "alpha": true
+    },
+    "tower_watch_2_grass": {
+      "seiteZellen": 1.9,
+      "alpha": true
+    },
+    "tower_watch_falcon_grass": {
+      "seiteZellen": 1.9,
+      "alpha": true
+    },
+    "tower_watch_volley_grass": {
+      "seiteZellen": 1.9,
       "alpha": true
     },
     "mark_ring": {
@@ -782,14 +798,6 @@
     },
     "tower_spore_rot_shadow": {
       "seiteZellen": 2.4,
-      "alpha": true
-    },
-    "tower_plinth": {
-      "seiteZellen": 1.5,
-      "alpha": true
-    },
-    "tower_contact": {
-      "seiteZellen": 1.4,
       "alpha": true
     },
     "fortress_shadow": {

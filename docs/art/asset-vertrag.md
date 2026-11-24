@@ -31,11 +31,10 @@ Sie folgen den IDs der Simulation.
 | `map_mission01_ground` … `map_mission04_ground`, `map_mission05a_ground`, `map_mission05b_ground`, `map_mission06a_ground`, `map_mission06b_ground`, `map_mission07_ground` | Boden der ganzen Karte je Mission (Name aus der Missionskennung), Weg eingemalt; Geometrie je Bild in `art/asset-vertrag.json` unter `mission` ([Grafik 06](../konzepte/grafik-06-kampfplaetze-m2-m4.md), [Grafik 07](../konzepte/grafik-07-kampfplaetze-m5.md), [Grafik 08](../konzepte/grafik-08-kampfplaetze-m6.md), [Grafik 09](../konzepte/grafik-09-bosslichtung-m7.md)) |
 | `buildzone_tile` | Markierung einer bebaubaren Zelle, Overlay (heute von der Szene gezeichnet, nur beim Bauen sichtbar, D-121) |
 | `tower_guard_shoot<r>_NN`, `tower_guardElf_shoot<r>_NN` | Schütze auf dem Wachturm (A-5 Teil 3, D-185), Zwerg mit Armbrust bzw. Elf mit Bogen nach dem Volk des Avatars; fehlen die Elfenbilder, steht der Zwerg da: acht Richtungen `r = 0…7` (0 = rechts, gegen den Uhrzeigersinn je 45°, die Figur gedreht vor fester Kamera und Sonne), je fünf Bilder; 00 ist der Anschlag, 01 bis 04 der Schuss. Quadrat 0,62 Zellen, Fuß bei 0,1, alle Richtungen mit gleichem Vertrag. Wo er auf dem Turmbild steht und wo der Pilzhut ansetzt, steht in `App/Battle/turmkronen.json` |
-| `tower_<name>_shadow` | Schatten je Turmbild, Quadrat 2,4 Zellen, Fuß in der Mitte, gerechnet von `turmboden.py` (D-120) |
-| `footing_<mission>` | Fundament unter jedem Turm, Quadrat 1,2 Zellen, Fuß in der Mitte, Erde aus dem Weg der Karte (D-120); nur noch Rückfall, wenn `tower_plinth` fehlt |
-| `tower_plinth` | Steinsockel unter jedem Turm, Quadrat 1,5 Zellen, Mitte der Platte in der Bildmitte; aus `tools/kampfplatz-3d/bauten.py sockel`, übermalt (Grafik 11, D-190) |
+| `tower_<name>_shadow` | Schatten je Turmbild, Quadrat 2,4 Zellen, Anker des Turmbildes in der Mitte, gerechnet von `turmboden.py` (D-120). Seit D-196 misst das Skript den Grundriss im Turmbild: Kontaktdunkel und Wurzel des Schlagschattens sitzen in der Grundrissmitte, eine halbe Tiefe hinter dem Anker, nicht davor |
+| `tower_<name>` (Licht) | Seit D-200 nicht mehr direkt gemalt: `turmlicht.py` rechnet es aus `art/tuerme-in-der-welt/quelle/<name>.png` (Schattenseite rechts, Fußdunkel). Neue oder geänderte Turmmalerei kommt in die Quelle, nie direkt in den Atlas |
+| `tower_<name>_grass` | Maske für den Boden vor dem Fuß (D-202), 1,9 Zellen wie das Turmbild, weiß mit Alpha, ohne Anker. Die Szene legt darin den gemalten Kampfplatzboden über die Fußlinie |
 | `fortress_shadow` | Schlagschatten der Torburg, gleiches Quadrat und gleicher Anker wie `fortress`, liegt unter ihm; aus dem Schattenfänger von `bauten.py` (`bau_freistellen.py`, D-191) |
-| `tower_contact` | Kontaktdunkel unter dem Fuß, Quadrat 1,4 Zellen, nur Alpha (Mitte 72 %), gerechnet von `turmboden.py` (D-193) |
 | `fx_glow`, `fx_spark`, `fx_ring`, `fx_puff`, `fx_coin`, `fx_arrow`, `fx_bolt`, `fx_confetti`, `fx_star`, `fx_stone`, `fx_wall`, `fx_hand` | Effekte, siehe „Effekte“ unten |
 | `icon_slowed` | Zustandssymbol über dem Gegner (E3) |
 | `mark_ring` | gemalter Streifen 1536 × 96 px (@3x), oben Außenkante, waagerecht kachelbar; die Szene wickelt ihn um Auswahl und Reichweite (`GroundMarks`, D-171) |
@@ -61,7 +60,8 @@ Sie folgen den IDs der Simulation.
   auf Höhe des Ankers. Maße in `art/asset-vertrag.json`, `atlas.py` setzt sie,
   die CI prüft Größe und Fußhöhe.
 - **Türme:** Seite 1,9 Zellen, Anker (0.5, 0.2). Fußpunkt = Zellmitte; sichtbar
-  ist der Turm etwa 1,5 Zellen hoch, der Sockel etwa eine Zelle breit.
+  ist der Turm etwa 1,5 Zellen hoch, sein Fuß 0,6 bis 1 Zelle breit. Der Anker ist der
+  vorderste Punkt des Grundrisses; dessen Mitte liegt eine halbe Tiefe dahinter (D-196).
 - **Festung:** Seite 2,4 Zellen, Anker (0.5, 0.15), am Wegende, um 0,3 Seiten
   nach innen gerückt, damit sie ganz im Bild steht.
 - **Gegner:** Blick nach rechts, für Lauf nach links `xScale = -1`.

@@ -76,10 +76,11 @@ enum BattleStyle {
     /// Mündung der Armbrust: Anteil der Bildbreite vor der Figur und der Bildhöhe über dem Fuß.
     static let guardMuzzleReach: CGFloat = 0.28
     static let guardMuzzleHeight: CGFloat = 0.42
-    /// Schatten und Fundament (D-120), Quadrate mit dem Fuß in der Mitte;
-    /// dieselben Seiten wie in art/asset-vertrag.json.
+    /// Boden vor dem Fuß über dem Turm (D-202): über Bild und Schützen, unter der Bankleiste.
+    static let grassZ: CGFloat = 1.5
+    /// Schatten (D-120, D-196), Quadrat mit dem Anker des Turmbildes in der Mitte;
+    /// dieselbe Seite wie in art/asset-vertrag.json.
     static let towerShadowSide: CGFloat = 2.4
-    static let footingSide: CGFloat = 1.2
     /// Die Torburg (Grafik 11, D-191) steht im Rand hinter dem Wegende, nicht im
     /// Feld; wo genau, rechnet `FortressPlacement`.
     static let fortressAnchorY: CGFloat = 0.34
