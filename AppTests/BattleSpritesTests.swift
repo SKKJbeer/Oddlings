@@ -113,16 +113,31 @@ final class BattleSpritesTests: XCTestCase {
     }
 
     /// Die Festung steht im Rand neben dem Feld und verdeckt keine Bauzelle.
+    /// Gemessen am Bild selbst, nicht an seinem Rahmen: Seit Grafik 11 hat die
+    /// Torburg einen durchsichtigen Rand (Rahmen 4 Zellen, Bau etwa 2,4), und ihr
+    /// Rahmen reicht über die letzte Spalte, das Bild nicht.
     func testFortressCoversNoBuildCell() throws {
         let config = try BalanceConfig.missionOne()
         let scene = BattleScene(model: BattleModel(config: config, seed: 1, autoplay: false))
-        let fortress = try XCTUnwrap(scene.childNode(withName: "//\(BattleSprites.fortressName)"))
-        let parent = try XCTUnwrap(fortress.parent)
-        let frame = CGRect(origin: scene.convert(fortress.frame.origin, from: parent), size: fortress.frame.size)
-        let layout = scene.layout
+        let fortress = try XCTUnwrap(scene.childNode(withName: "//\(BattleSprites.fortressName)") as? SKSpriteNode)
+        let picture = try OpaqueProbe(fortress)
         for cell in scene.model.sim.map.buildableCells {
-            XCTAssertFalse(frame.contains(layout.scenePoint(cell.center)), "\(cell)")
+            XCTAssertFalse(picture.isOpaque(atScene: scene.layout.scenePoint(cell.center), in: scene), "\(cell)")
         }
+    }
+
+    /// Prüft am Probenbild, ob die Prüfung überhaupt Deckung sieht: Der Fuß der
+    /// Torburg ist deckend, die Rahmenecke nicht. Sonst bliebe der Test oben
+    /// grün, auch wenn er nichts misst.
+    func testOpaqueProbeSeesTheFortress() throws {
+        let config = try BalanceConfig.missionOne()
+        let scene = BattleScene(model: BattleModel(config: config, seed: 1, autoplay: false))
+        let fortress = try XCTUnwrap(scene.childNode(withName: "//\(BattleSprites.fortressName)") as? SKSpriteNode)
+        let parent = try XCTUnwrap(fortress.parent)
+        let picture = try OpaqueProbe(fortress)
+        XCTAssertTrue(picture.isOpaque(atScene: scene.convert(fortress.position, from: parent), in: scene))
+        let corner = CGPoint(x: fortress.frame.minX + 1, y: fortress.frame.maxY - 1)
+        XCTAssertFalse(picture.isOpaque(atScene: scene.convert(corner, from: parent), in: scene))
     }
 
     /// Mit gemaltem Boden entfällt die gezeichnete Weglinie, sonst läge sie
@@ -149,12 +164,10 @@ final class BattleSpritesTests: XCTestCase {
             XCTAssertNotNil(BattleSprites.texture(named: name), name)
             let scene = BattleScene(model: BattleModel(config: config, seed: 1, autoplay: false))
             XCTAssertNotNil(scene.childNode(withName: "//\(name)"), name)
-            let fortress = try XCTUnwrap(scene.childNode(withName: "//\(BattleSprites.fortressName)"))
-            let parent = try XCTUnwrap(fortress.parent)
-            let frame = CGRect(origin: scene.convert(fortress.frame.origin, from: parent), size: fortress.frame.size)
-            let layout = scene.layout
+            let fortress = try XCTUnwrap(scene.childNode(withName: "//\(BattleSprites.fortressName)") as? SKSpriteNode)
+            let picture = try OpaqueProbe(fortress)
             for cell in scene.model.sim.map.buildableCells {
-                XCTAssertFalse(frame.contains(layout.scenePoint(cell.center)), "\(file) \(cell)")
+                XCTAssertFalse(picture.isOpaque(atScene: scene.layout.scenePoint(cell.center), in: scene), "\(file) \(cell)")
             }
         }
     }
@@ -200,5 +213,39 @@ final class BattleSpritesTests: XCTestCase {
         enemy.slow = nil
         node.show(enemy, dt: 0.1)
         XCTAssertFalse(node.isSlowed)
+    }
+}
+
+/// Liest die Deckung eines Bildes an einem Punkt der Szene, über seinen Rahmen
+/// (ohne Drehung) auf das Pixel der Textur abgebildet.
+@MainActor
+private struct OpaqueProbe {
+    let node: SKSpriteNode
+    let image: CGImage
+
+    init(_ node: SKSpriteNode) throws {
+        self.node = node
+        image = try XCTUnwrap(node.texture?.cgImage())
+    }
+
+    func isOpaque(atScene point: CGPoint, in scene: SKScene) -> Bool {
+        guard let parent = node.parent else { return false }
+        let local = scene.convert(point, to: parent)
+        let frame = node.frame
+        guard frame.contains(local) else { return false }
+        let u = (local.x - frame.minX) / frame.width
+        let v = (frame.maxY - local.y) / frame.height
+        let x = min(image.width - 1, Int(u * CGFloat(image.width)))
+        let y = min(image.height - 1, Int(v * CGFloat(image.height)))
+        var pixel = [UInt8](repeating: 0, count: 4)
+        let drawn = pixel.withUnsafeMutableBytes { bytes -> Bool in
+            guard let context = CGContext(data: bytes.baseAddress, width: 1, height: 1, bitsPerComponent: 8, bytesPerRow: 4,
+                                          space: CGColorSpaceCreateDeviceRGB(),
+                                          bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { return false }
+            // Bildzeile y von oben liegt im Kontext (Ursprung unten) bei height - 1 - y.
+            context.draw(image, in: CGRect(x: -x, y: -(image.height - 1 - y), width: image.width, height: image.height))
+            return true
+        }
+        return drawn && pixel[3] > 128
     }
 }
