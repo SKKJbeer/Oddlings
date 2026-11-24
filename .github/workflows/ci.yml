@@ -73,8 +73,9 @@ jobs:
 
   iphone:
     runs-on: macos-15
-    # 40 bis 0.29.1; der Kontaktabzug (A-1) braucht rund 6 Minuten dazu.
-    timeout-minutes: 50
+    # 40 bis 0.29.1; der Kontaktabzug (A-1) braucht 6 bis 12 Minuten dazu, die
+    # App-Tests seit A-2 rund 25. Mit 0.45.0 lief der Job 48 von 50 Minuten.
+    timeout-minutes: 60
     concurrency:
       group: iphone-${{ github.event.pull_request.head.ref || github.ref_name }}
       cancel-in-progress: true

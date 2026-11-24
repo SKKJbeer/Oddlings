@@ -516,7 +516,9 @@ class TuermeInDerWelt(unittest.TestCase):
 
     def test_jeder_turm_hat_einen_schatten(self):
         import re
-        tuerme = [e[:-9] for e in os.listdir(self.ATLAS) if re.fullmatch(r"tower_[a-z]+(_\d)?\.imageset", e)]
+        # Sockel und Kontakt (Grafik 11) liegen unter dem Turm, sie werfen keinen eigenen Schatten.
+        tuerme = [e[:-9] for e in os.listdir(self.ATLAS) if re.fullmatch(r"tower_[a-z]+(_\d)?\.imageset", e)
+                  and e not in ("tower_plinth.imageset", "tower_contact.imageset")]
         self.assertGreater(len(tuerme), 3)
         for t in tuerme:
             self.assertTrue(os.path.isdir(os.path.join(self.ATLAS, f"{t}_shadow.imageset")), t)
@@ -621,7 +623,7 @@ class TuermeInDerWelt(unittest.TestCase):
                 shutil.copytree(os.path.join(WURZEL, teil), os.path.join(t, teil))
             subprocess.run([sys.executable, os.path.join(WURZEL, ".claude/skills/spielgrafik/scripts/turmboden.py"), t],
                            check=True, capture_output=True)
-            for name in ("tower_watch_shadow", "footing_mission05a"):
+            for name in ("tower_watch_shadow", "footing_mission05a", "tower_contact"):
                 for f in (2, 3):
                     rel = f"App/Assets.xcassets/Battle.spriteatlas/{name}.imageset/{name}@{f}x.png"
                     alt = Image.open(os.path.join(WURZEL, rel)).convert("RGBA")
@@ -670,8 +672,11 @@ class Diorama(unittest.TestCase):
             arten = {d["art"] for d in p["dinge"]}
             self.assertTrue({"baum", "busch", "fels", "kantenstein", "hoehle"} <= arten, arten)
             for d in p["dinge"]:
-                if d["art"] in ("kantenstein", "hoehle"):
-                    continue  # Kante der Insel, Höhle am Eingang (Gegner kommen heraus)
+                if d["art"] in ("kantenstein", "hoehle", "halme"):
+                    # Kante der Insel, Höhle am Eingang (Gegner kommen heraus), Grasbüschel
+                    # am Wegrand (Grafik 11, D-194): flacher als ein Fuß, verdecken nichts.
+                    self.assertLess(d.get("h", 0), 0.2, d) if d["art"] == "halme" else None
+                    continue
                 x0, y0, x1, y1 = modul.bildflaeche(d, kos)
                 # Die Spitze ragt um h·cos nach oben; dort darf keine Inselzelle liegen …
                 for cx, cy in inseln:
@@ -705,20 +710,102 @@ class Diorama(unittest.TestCase):
                     self.assertEqual(px(insel, rx + 0.5, ry + 0.5), 255, z["id"])
                     self.assertEqual(px(insel, rx - 0.3, ry + rh / 2), 0, z["id"])
 
-    def test_bild_zeigt_die_inseln_als_erde(self):
-        # Das ausgelieferte Bild: Inselmitten sind Erde (warm), nicht Gras.
+    def test_bild_zeigt_die_inseln_als_grashuegel(self):
+        # Grafik 11 (D-192): Inselmitten sind Gras, an der Vorderkante liegt die
+        # Trockenmauer als dunkler, grauer Streifen. Vorher (A-4) waren es Erdflächen.
         bild = Image.open(os.path.join(WURZEL, "App/Assets.xcassets/Maps/map_mission01_ground.imageset/"
                                        "map_mission01_ground@3x.jpg")).convert("RGB")
         karte = json.load(open(self.MISSION))["map"]
         z = bild.width / (karte["width"] + 8)
         for zone in karte["zones"]:
             for rx, ry, rb, rh in zone["rects"]:
-                for y in range(ry, ry + rh):
-                    for x in range(rx, rx + rb):
-                        box = (int((x + 4.3) * z), int((y + 2.3) * z), int((x + 4.7) * z), int((y + 2.7) * z))
-                        r, g, b = ImageStat.Stat(bild.crop(box)).mean
-                        self.assertGreater(r, g - 4, (zone["id"], x, y))
-                        self.assertGreater(r, b + 15, (zone["id"], x, y))
+                cx, cy = rx + rb / 2 + 4, ry + rh / 2 + 2
+                r, g, b = ImageStat.Stat(bild.crop((int((cx - 0.3) * z), int((cy - 0.3) * z),
+                                                    int((cx + 0.3) * z), int((cy + 0.3) * z)))).mean
+                self.assertLess(b, 0.5 * g, (zone["id"], "Mitte ist Gras"))
+                kante = ImageStat.Stat(bild.crop((int((rx + 4.3) * z), int((ry + rh + 2 - 0.02) * z),
+                                                  int((rx + rb + 3.7) * z), int((ry + rh + 2 + 0.12) * z)))).mean
+                self.assertLess(sum(kante), 0.5 * (r + g + b), (zone["id"], "Mauer an der Vorderkante"))
+                self.assertLess(max(kante) - min(kante), 30, (zone["id"], "Mauer ist grau"))
+
+
+class KampfplatzInDerWelt(unittest.TestCase):
+    """Grafik 11 (D-190 bis D-195): Sockel und Kontakt im Atlas, Torburg mit denselben
+    Werten in Werkzeug und App, Weg bis ins Tor, Mauern frei von Weg und Inseln."""
+
+    ATLAS = os.path.join(WURZEL, "App/Assets.xcassets/Battle.spriteatlas")
+    MISSION = Diorama.MISSION
+    ORT = Diorama.ORT
+
+    def vertrag(self):
+        return json.load(open(os.path.join(WURZEL, "art/asset-vertrag.json")))
+
+    def bild(self, name):
+        return Image.open(os.path.join(self.ATLAS, f"{name}.imageset", f"{name}@3x.png")).convert("RGBA")
+
+    def test_festungswerte_gleich_in_app_und_vertrag(self):
+        import re
+        f = self.vertrag()["festung"]
+        swift = open(os.path.join(WURZEL, "App/Battle/WorldGrounding.swift"), encoding="utf-8").read()
+        for schluessel, name in (("tor", "gateInset"), ("torAbstand", "gateDistance"), ("gier", "yaw")):
+            wert = re.search(rf"static let {name} = (-?[\d.]+)", swift)
+            self.assertIsNotNone(wert, name)
+            self.assertAlmostEqual(float(wert.group(1)), f[schluessel], msg=name)
+        a = self.vertrag()["assets"]
+        stil = open(os.path.join(WURZEL, "App/Battle/BattleStyle.swift"), encoding="utf-8").read()
+        self.assertIn(f"fortressSpriteSide: CGFloat = {a['fortress']['seiteZellen']}", stil)
+        self.assertIn(f"fortressAnchorY: CGFloat = {a['fortress']['anker']}", stil)
+        self.assertIn(f"plinthSide: CGFloat = {a['tower_plinth']['seiteZellen']}", swift)
+        self.assertIn(f"contactSide: CGFloat = {a['tower_contact']['seiteZellen']}", swift)
+
+    def test_sockel_und_kontakt_liegen_im_atlas(self):
+        # Die Herkunft prüft check_assets für jedes Bild im Atlas.
+        for name in ("tower_plinth", "tower_contact", "fortress", "fortress_shadow"):
+            self.assertTrue(os.path.isdir(os.path.join(self.ATLAS, f"{name}.imageset")), name)
+
+    def test_kontakt_ist_in_der_mitte_am_dunkelsten(self):
+        a = self.bild("tower_contact").getchannel("A")
+        w, h = a.size
+        mitte = a.getpixel((w // 2, h // 2))
+        self.assertGreater(mitte, 120)
+        self.assertLess(a.getpixel((w // 2 + int(w * 0.3), h // 2)), mitte // 3)
+        self.assertEqual(a.getpixel((2, 2)), 0)
+
+    def test_sockel_steht_um_die_mitte(self):
+        # Anker 0,5: Die Platte liegt um die Bildmitte, oben Luft für nichts Hohes.
+        a = self.bild("tower_plinth").getchannel("A")
+        w, h = a.size
+        self.assertGreater(a.getpixel((w // 2, h // 2)), 200)
+        x0, y0, x1, y1 = a.getbbox()
+        self.assertLess(abs((x0 + x1) / 2 - w / 2), w * 0.06)
+        self.assertLess(y1 - y0, h * 0.75, "flache Platte, kein Turm")
+
+    def plan(self, t):
+        sys.path.insert(0, os.path.join(WURZEL, "tools/kampfplatz-3d"))
+        import plan  # noqa: E402
+        return plan, plan.plane(self.MISSION, self.ORT, t, 24)
+
+    def test_weg_endet_im_tor(self):
+        with tempfile.TemporaryDirectory() as t:
+            modul, p = self.plan(t)
+            karte = json.load(open(self.MISSION))["map"]
+            lage = modul.festungslage(karte)
+            self.assertAlmostEqual(math.dist(p["weglinie"][-1], lage["tor"]), 0, places=3)
+            f = self.vertrag()["festung"]
+            self.assertAlmostEqual(math.dist(lage["tor"], lage["fuss"]), f["torAbstand"], places=6)
+
+    def test_mauern_beruehren_weder_weg_noch_insel(self):
+        with tempfile.TemporaryDirectory() as t:
+            modul, p = self.plan(t)
+            karte = json.load(open(self.MISSION))["map"]
+            inseln = modul.inselzellen(karte)
+            for mauer in p["mauern"]:
+                for (ax, ay), (bx, by) in zip(mauer, mauer[1:]):
+                    for k in range(11):
+                        x, y = ax + (bx - ax) * k / 10, ay + (by - ay) * k / 10
+                        self.assertGreater(modul.wegabstand(p["weglinie"], x, y), 0.5, (x, y))
+                        for cx, cy in inseln:
+                            self.assertFalse(cx - 0.3 < x < cx + 1.3 and cy - 0.3 < y < cy + 1.3, (x, y, cx, cy))
 
 
 if __name__ == "__main__":

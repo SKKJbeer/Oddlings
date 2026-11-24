@@ -1,4 +1,4 @@
-# Zwergenschütze auf dem Wachturm: 3D-Figur (0.46.0)
+# Zwergenschütze auf dem Wachturm: 3D-Figur (0.48.0)
 
 Entstanden am 23.11.2026 für A-5 Teil 3 „Türme zielen“ (D-185, D-186,
 [Konzept](../../../docs/konzepte/a-5-tuerme-zielen.md)), nach der Kette von A-3. Er steht

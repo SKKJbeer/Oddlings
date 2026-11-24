@@ -121,6 +121,9 @@ struct E2EApp {
         let button = build(kind)
         XCTAssertTrue(button.waitForExistence(timeout: 5), "Baumenü öffnet", file: file, line: line)
         button.tap()
+        // Erst die Vorschau abwarten (D-155): Kam der zweite Tipp, bevor die
+        // Tafel stand, zählte er im Simulator manchmal noch als erster.
+        XCTAssertTrue(app.staticTexts["panel.title"].waitForExistence(timeout: 5), "Vorschau erscheint", file: file, line: line)
         button.tap()
         XCTAssertTrue(button.waitForNonExistence(timeout: 5), "Menü schließt nach dem Bau", file: file, line: line)
     }

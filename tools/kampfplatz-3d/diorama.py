@@ -123,15 +123,37 @@ boden.data.materials.append(bildmaterial("boden", "boden.png"))
 hi = plan["inselhoehe"]
 dy = -hi * math.cos(EL) / math.sin(EL)
 oben = bildmaterial("insel", "insel.png", dy=dy)
-seite = bildmaterial("inselrand", "insel.png", dy=dy, dunkel=0.62)
+# Stirnseite aus Erde (Grafik 11, D-192): Der Hügel zeigt, dass er Höhe hat.
+seite = farbmaterial("inselrand", F.get("inselrand", (96, 74, 52)), streuung=0.25)
+ECKE = plan.get("inselecke", 0.18)
+
+
+def rundrechteck(x, y, b, h, r, n=8):
+    r = min(r, b / 2, h / 2)
+    pkt = []
+    for cx, cy, a0 in ((x + b - r, y + r, -90), (x + b - r, y + h - r, 0), (x + r, y + h - r, 90), (x + r, y + r, 180)):
+        for k in range(n + 1):
+            a = math.radians(a0 + k * 90 / n)
+            pkt.append((cx + r * math.cos(a), cy + r * math.sin(a)))
+    return pkt
+
+
 for z in plan["inseln"]:
     for rx, ry, rb, rh in z["rects"]:
-        bpy.ops.mesh.primitive_cube_add(size=1)
-        ob = bpy.context.object
-        ob.scale = (rb - 0.06, (rh - 0.06) * K, hi * 2)
-        ob.location = welt(rx + rb / 2, ry + rh / 2) + Vector((0, dy, 0))
-        bpy.ops.object.transform_apply(scale=True)
-        bev = ob.modifiers.new("kante", "BEVEL"); bev.width = 0.12; bev.segments = 3
+        # Gerundeter Grundriss, um die Höhe nach unten gezogen; Oberseite deckt die Zellen.
+        bm = bmesh.new()
+        unten = [bm.verts.new(welt(px, py, -hi) + Vector((0, dy, 0)))
+                 for px, py in rundrechteck(rx + 0.03, ry + 0.03, rb - 0.06, rh - 0.06, ECKE)]
+        flaeche = bm.faces.new(unten)
+        ex = bmesh.ops.extrude_face_region(bm, geom=[flaeche])
+        hoch = [e for e in ex["geom"] if isinstance(e, bmesh.types.BMVert)]
+        bmesh.ops.translate(bm, verts=hoch, vec=Vector((0, 0, 2 * hi)))
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        me = bpy.data.meshes.new("insel")
+        bm.to_mesh(me); bm.free()
+        ob = bpy.data.objects.new("insel", me)
+        sc.collection.objects.link(ob)
+        bev = ob.modifiers.new("kante", "BEVEL"); bev.width = 0.05; bev.segments = 3
         ob.data.materials.append(oben); ob.data.materials.append(seite)
         for p in ob.data.polygons:
             p.material_index = 0 if p.normal.z > 0.9 else 1
@@ -163,7 +185,7 @@ def zylinder(ort, r, h, material):
 stamm = farbmaterial("stamm", F["stamm"])
 for i, d in enumerate(plan["dinge"]):
     # Kantensteine sitzen auf der Inselkante und rücken mit ihr nach vorn.
-    p = welt(d["x"], d["y"]) + (Vector((0, dy, hi * 0.5)) if d.get("insel") else Vector())
+    p = welt(d["x"], d["y"]) + (Vector((0, dy, hi * 0.5 + d.get("lage", 0) * 0.08)) if d.get("insel") else Vector())
     art, r, h = d["art"], d["r"], d["h"]
     if art == "baum":
         zylinder(p, h * 0.07, h * 0.45, stamm)
@@ -194,6 +216,15 @@ for i, d in enumerate(plan["dinge"]):
         for k in range(6):
             off = Vector((rnd.uniform(-r, r), rnd.uniform(-r, r) * 0.8, h * 0.5))
             klumpen(p + off, (0.035, 0.035, 0.03), mat("blumen", d["farbe"] + k), 1, 0.0, i * 7 + k)
+    elif art == "halme":
+        # Grasbüschel am Wegrand (Grafik 11, W8): bricht die harte Kante zwischen Weg und Wiese.
+        for k in range(6):
+            a = rnd.uniform(0, 2 * math.pi)
+            bpy.ops.mesh.primitive_cone_add(vertices=5, radius1=0.02, depth=h * rnd.uniform(0.7, 1.2),
+                                            location=p + Vector((math.cos(a) * 0.04, math.sin(a) * 0.04, h * 0.45)))
+            halm = bpy.context.object
+            halm.rotation_euler = (rnd.uniform(-0.5, 0.5), rnd.uniform(-0.5, 0.5), 0)
+            halm.data.materials.append(mat("farn", d["farbe"] + k))
     elif art == "hoehle":
         # Felsbuckel mit dunklem Maul nach rechts: Die Gegner kommen heraus.
         fels = farbmaterial("hoehle", F["hoehle"], streuung=0.25)
@@ -202,6 +233,49 @@ for i, d in enumerate(plan["dinge"]):
         maul = farbmaterial("maul", (18, 14, 12), streuung=0.0)
         m = klumpen(p + Vector((0.45, -0.15, 0.3)), (0.12, 0.42, 0.36), maul, 2, 0.04, 950)
         m.rotation_euler = (0, 0, 0.25)
+
+# --- Mauerzüge der Torburg (Grafik 11, D-191) -------------------------------------------
+# Von den Türmen der Torburg in den Wald: Die Burg riegelt das Tal ab. Die Torburg selbst
+# ist ein eigenes Bild obenauf (bauten.py), damit Durchbrüche an ihr spielen können.
+mauerstein = farbmaterial("mauer", F.get("mauer", (118, 116, 112)), streuung=0.22)
+MAUER_H, MAUER_D = 0.6, 0.42
+dach = farbmaterial("mauerdach", F.get("dach", (70, 92, 112)), streuung=0.12)
+for linie in plan.get("mauern", []):
+    # Turm am Ende jedes Mauerstücks: das Stück endet im Wald, nicht im Nichts.
+    ende = welt(*linie[-1])
+    zylinder(ende, 0.36, 1.05, mauerstein)
+    bpy.ops.mesh.primitive_cone_add(vertices=20, radius1=0.44, depth=0.6, location=ende + Vector((0, 0, 1.35)))
+    spitze = bpy.context.object
+    bpy.ops.object.shade_smooth()
+    spitze.data.materials.append(dach)
+    for (ax, ay), (bx, by) in zip(linie, linie[1:]):
+        a, b = welt(ax, ay), welt(bx, by)
+        lang = (b - a).length
+        if lang < 1e-4:
+            continue
+        mitte = (a + b) / 2
+        winkel = math.atan2(b.y - a.y, b.x - a.x)
+        bpy.ops.mesh.primitive_cube_add(size=1, location=mitte + Vector((0, 0, MAUER_H / 2)))
+        ob = bpy.context.object
+        ob.scale = (lang + MAUER_D * 0.5, MAUER_D, MAUER_H)
+        ob.rotation_euler = (0, 0, winkel)
+        bpy.ops.object.transform_apply(scale=True)
+        ob.modifiers.new("fase", "BEVEL").width = 0.02
+        ob.data.materials.append(mauerstein)
+        # Zinnen nur an der Außenkante (zum Wald): Über die ganze Breite lasen sie sich
+        # von oben wie Leitersprossen.
+        quer = Vector((-(b - a).y, (b - a).x, 0)).normalized()
+        if quer.x < 0:
+            quer = -quer
+        n = max(1, int(lang / 0.28))
+        for k in range(n):
+            t = (k + 0.5) / n
+            q = a + (b - a) * t + quer * (MAUER_D * 0.36)
+            bpy.ops.mesh.primitive_cube_add(size=1, location=q + Vector((0, 0, MAUER_H + 0.06)))
+            z = bpy.context.object
+            z.scale = (0.15, 0.1, 0.14)
+            z.rotation_euler = (0, 0, winkel)
+            z.data.materials.append(mauerstein)
 
 # --- Licht und Kamera --------------------------------------------------------------------
 az, alt = math.radians(plan["sonne"]["azimut"]), math.radians(plan["sonne"]["hoehe"])

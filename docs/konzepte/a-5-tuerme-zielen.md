@@ -1,6 +1,6 @@
 # Konzept A-5 Teil 3: Türme zielen
 
-Status: **in Arbeit (0.46.0)** · Plan [AAA-Schnitt](aaa-review.md#plan), Paket A-5 ·
+Status: **in Arbeit (0.48.0)** · Plan [AAA-Schnitt](aaa-review.md#plan), Paket A-5 ·
 Maßnahme G9 aus [aaa-bewegung-und-bauen.md](aaa-bewegung-und-bauen.md#a-5-eine-malweise-in-der-welt)
 Befund: G9 („Türme sind tot“) · Entscheidungen: [D-185 bis D-189](../decisions/decision-log.md)
 Vorgänger: [A-5 Teil 1](a-5-spezialisierungen-und-ringe.md) (0.34.0), [A-5 Teil 2](a-5-kopfleiste-und-effektbudget.md) (0.45.0),

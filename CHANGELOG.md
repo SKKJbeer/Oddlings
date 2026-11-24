@@ -11,7 +11,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
-## 0.46.0 – 23.11.2026 (A-5 Teil 3: Türme zielen)
+## 0.48.0 – 24.11.2026 (A-5 Teil 3: Türme zielen)
 
 ### Neu
 - **Schütze auf dem Wachturm** (D-185, D-186): Auf der Plattform steht ein Schütze nach
@@ -42,7 +42,40 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - art-check: acht gleiche Schützenrichtungen, Schützen stehen auf dem Turm, Hutlinie
   trennt Hut und Stiel.
 
-## 0.45.0 – 22.11.2026 (A-5 Teil 2: Kopfleiste und Effektbudget)
+## 0.47.0 – 24.11.2026 (Grafik 11: Kampfplatz in der Welt) · Bau folgt
+
+### Neu
+- **Review „Kampfplatz in der Welt“** mit zehn Befunden aus dem Simulatorbild, markierten
+  Vorher-Bildern und Ursachen ([Konzept](docs/konzepte/grafik-11-kampfplatz-in-der-welt.md)).
+- **Türme stehen auf Steinsockeln** (D-190): runde Steinplatte aus der Vertragskamera, der
+  Turm steht um ihre Höhe höher; das unsichtbare Fundament aus Wegerde entfällt. Die
+  Bauvorschau steht ebenso auf dem Sockel, damit beim Bezahlen nichts springt.
+- **Kontaktdunkel unter dem Fuß** (D-193): eng und dunkel genau unter jedem Turm, getrennt
+  vom Schlagschatten. Der Turm schwebt nicht mehr.
+- **Torburg am Wegende** (D-191): die Festung ist neu in der Kamera von Türmen und Lichtung
+  gebaut, schräg gestellt mit dem Tor zum ankommenden Weg, auf Zielmaßstab. Der Weg endet
+  im Tor, Mauerstücke mit Ecktürmen laufen in den Wald, vor dem Tor liegt Pflaster.
+  Durchbrüche laufen ins Tor.
+- **Bauinseln als Grashügel mit Trockenmauer** (D-192): gerundet, höher, mit sichtbarer
+  Stirnseite statt leerer Erdflächen.
+- **Kein Lichthof, weicher Wegrand** (D-194): Die Festung steht im selben Nachmittagslicht
+  wie alles; Grasbüschel säumen den Weg.
+
+### Werkzeug
+- `tools/kampfplatz-3d/bauten.py` rendert Sockel und Torburg mit Alpha in Vertragskamera
+  und -sonne; `plan.py` legt Torburg, Mauern, Vorplatz und Grashügel aus `festung` im
+  Asset-Vertrag; `turmboden.py` rechnet `tower_contact`.
+
+### Tests
+- App: `WorldGroundingTests` (neu): Sockel und Kontakt im Katalog, Turm auf dem Sockel,
+  Kontakt unter dem Fuß, Rückfall aufs Fundament, Licht auf dem Sockel, Lage der Torburg,
+  Festungsknoten im Tor, Vorschau auf dem Sockel, gebauter Turm in der Szene.
+  `TowerGroundingTests` erwartet den Sockel statt des Fundaments.
+- art-check: `KampfplatzInDerWelt` (neu): Festungswerte gleich in Vertrag und App, Sockel
+  und Kontakt im Atlas, Kontakt in der Mitte am dunkelsten, Sockel flach um die Mitte, Weg
+  endet im Tor, Mauern frei von Weg und Inseln.
+
+## 0.45.0 – 23.11.2026 (A-5 Teil 2: Kopfleiste und Effektbudget) · Bau 66
 
 ### Neu
 - **Kopfleiste als Schilder** (D-180): Das grüne Band ist weg. Die Karte reicht bis an

@@ -702,7 +702,7 @@ final class FxDirector {
                 origin = CGPoint(x: tower.position.x, y: tower.position.y + FxStyle.muzzleHeight * field)
             } else {
                 let muzzle = tower.shooters[min(index, tower.shooters.count - 1)].muzzle
-                origin = CGPoint(x: tower.position.x + muzzle.x, y: tower.position.y + muzzle.y)
+                origin = CGPoint(x: tower.position.x + muzzle.x, y: tower.position.y + tower.stand.position.y + muzzle.y)
             }
             guard let sprite = sprite(.arrow, essential: true) else { continue }
             stats.arrows += 1

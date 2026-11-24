@@ -234,13 +234,11 @@ extension HudLayout.Avoid {
                 path.append(CGRect(origin: origin, size: CGSize(width: board.field, height: board.field)))
             }
         }
-        // Wie `BattleScene.layoutMap`: Die Festung sitzt, wo der Weg die Karte
-        // verlässt, das Bild um `fortressOffset` versetzt, Fuß auf dem Anker.
+        // Wie `BattleScene.layoutMap`: Die Torburg steht am Wegende, wo
+        // `FortressPlacement` sie hinstellt, Fuß auf dem Anker.
         let end = map.path.points[map.path.points.count - 1]
-        let gate = board.viewPoint(Point(x: min(end.x, Double(map.width)), y: end.y))
+        let foot = board.viewPoint(FortressPlacement.foot(pathEnd: end, mapWidth: map.width))
         let side = BattleStyle.fortressSpriteSide * board.field
-        let foot = CGPoint(x: gate.x + BattleStyle.fortressOffset.x * board.field,
-                           y: gate.y + BattleStyle.fortressOffset.y * board.field)
         let fortress = CGRect(x: foot.x - side / 2, y: foot.y - side * (1 - BattleStyle.fortressAnchorY),
                               width: side, height: side)
         self.init(path: path, fortress: fortress, reserved: reserved,
