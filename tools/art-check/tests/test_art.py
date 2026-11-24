@@ -539,6 +539,56 @@ class TuermeInDerWelt(unittest.TestCase):
             if mission.startswith("mission-"):
                 self.assertIn(",".join(map(str, rgb)), quelle, mission)
 
+    def kronen(self):
+        return json.load(open(os.path.join(WURZEL, "App/Battle/turmkronen.json")))
+
+    def turmbilder(self, art):
+        import re
+        return [e[:-9] for e in sorted(os.listdir(self.ATLAS))
+                if re.fullmatch(rf"tower_{art}(_[a-z0-9]+)?\.imageset", e) and "_shadow" not in e]
+
+    def test_jeder_wachturm_hat_schuetzen_auf_der_plattform(self):
+        # A-5 Teil 3 (D-185): Ohne Eintrag stünde der Wachturm leer da, die
+        # Armbrust ist aus dem Bild gemalt. Der Fuß muss auf Stein oder Holz stehen.
+        kronen = self.kronen()
+        bilder = self.turmbilder("watch")
+        self.assertGreaterEqual(len(bilder), 4)
+        for name in bilder:
+            punkte = kronen.get(name, {}).get("schuetzen", [])
+            self.assertTrue(punkte, f"{name}: keine Schützen in turmkronen.json")
+            a = self.bild(name).getchannel("A")
+            for u, v in punkte:
+                x, y = round(u * (a.width - 1)), round((1 - v) * (a.height - 1))
+                self.assertGreater(a.getpixel((x, y)), 200, f"{name}: Schütze bei ({u}, {v}) steht in der Luft")
+        self.assertEqual(len(kronen["tower_watch_volley"]["schuetzen"]), 2, "Salve: zwei Schützen")
+
+    def test_jeder_sporenturm_hat_eine_hutlinie_im_bild(self):
+        # D-188: Die Linie trennt Stiel und Hut; darüber verschiebt das Gitter.
+        # Unter ihr ist der Stiel schmaler als der Hut darüber.
+        kronen = self.kronen()
+        for name in self.turmbilder("spore"):
+            linie = kronen.get(name, {}).get("hutLinie")
+            self.assertIsNotNone(linie, f"{name}: keine hutLinie")
+            a = self.bild(name).getchannel("A")
+
+            def breite(v):
+                y = round((1 - v) * (a.height - 1))
+                xs = [x for x in range(a.width) if a.getpixel((x, y)) > 200]
+                return (max(xs) - min(xs)) if xs else 0
+            self.assertGreater(breite(linie + 0.08), 1.3 * breite(linie - 0.08), f"{name}: Linie {linie} trennt nicht Hut und Stiel")
+
+    def test_schuetze_hat_acht_gleiche_richtungen(self):
+        # Die Szene wechselt beim Drehen das Bild; andere Größe oder Länge ließe ihn springen.
+        assets = json.load(open(os.path.join(WURZEL, "art/asset-vertrag.json")))["assets"]
+        # Der Schütze folgt dem Volk: jede Figur (Zwerg `tower_guard`, Elf `tower_guardElf`)
+        # mit allen acht Richtungen und demselben Vertrag; der Zwerg ist Pflicht (Rückfall).
+        import re
+        figuren = {m.group(1) for k in assets if (m := re.fullmatch(r"(tower_guard\w*)_shoot\d", k))}
+        self.assertIn("tower_guard", figuren)
+        richtungen = [assets.get(f"{figur}_shoot{r}") for figur in sorted(figuren) for r in range(8)]
+        self.assertTrue(all(richtungen), f"{sorted(figuren)}: shoot0 bis 7 im Vertrag")
+        self.assertEqual(len({json.dumps(r, sort_keys=True) for r in richtungen}), 1)
+
     def test_schatten_faellt_nach_rechts_unten(self):
         # Licht von oben links (art-direction.md): Der Schwerpunkt des Schattens
         # liegt rechts unterhalb des Fußes, der in der Bildmitte sitzt.

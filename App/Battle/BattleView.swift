@@ -26,8 +26,9 @@ struct BattleView: View {
     var onSuspend: ((UInt64, GameState) -> Void)?
 
     /// `intro`: Diese Mission zeigt die stillen Zeichen des Einstiegs (P2-8).
+    /// `race`: Volk des Avatars; bestimmt, wer auf dem Wachturm steht (D-185).
     init(mission config: BalanceConfig, mode: Mode, resume: AppFlow.ResumePlan? = nil, intro: Bool = false,
-         onClose: @escaping () -> Void, onSuspend: ((UInt64, GameState) -> Void)? = nil,
+         race: Race? = nil, onClose: @escaping () -> Void, onSuspend: ((UInt64, GameState) -> Void)? = nil,
          onFinish: ((Outcome, Int) -> String?)? = nil) {
         self.onClose = onClose
         self.onSuspend = onSuspend
@@ -54,13 +55,22 @@ struct BattleView: View {
         #endif
         let controller = BattleController(model: model, interactive: mode == .play, intro: intro)
         if let resume { controller.startPaused(notice: resume.notice) }
-        let scene = BattleScene(model: model)
+        let scene = BattleScene(model: model, guardFigure: GuardFigure(race: Self.testElves ? .elves : race))
         scene.controller = controller
         let audio = AudioDirector.shared
         scene.audio = audio
         if mode == .play { controller.sounds = { audio.play($0) } }
         _scene = State(initialValue: scene)
         _controller = State(initialValue: controller)
+    }
+
+    /// E2E: Elfenschütze ohne Avatar (A-5 Teil 3).
+    private static var testElves: Bool {
+        #if DEBUG
+        ProcessInfo.processInfo.arguments.contains("--e2e-elfen")
+        #else
+        false
+        #endif
     }
 
     var body: some View {

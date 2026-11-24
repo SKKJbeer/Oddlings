@@ -1,0 +1,192 @@
+{
+  "_zweck": "Skelett des Zwergenschützen auf dem Wachturm (A-5 Teil 3, D-185; TRELLIS-Modell aus vorlage.png, Seed 1). Punkte als Anteile der Modellbox, Blick nach -y. Die Armbrust liegt in der Vorlage quer vor dem Bauch; zwei starre Knochen mit gemeinsamem Drehpunkt in ihrer Mitte drehen sie in der Ruhe nach vorn, damit Gesicht und Waffe aufs Ziel zeigen. Richtung r (0 = rechts, gegen den Uhrzeigersinn je 45°) heißt blick = 45·r + 90",
+  "blick": 90,
+  "bildHoehe": 1.4,
+  "licht": {
+    "haupt": 5.0,
+    "fuell": 3.0,
+    "welt": 1.0,
+    "rand": 3.0
+  },
+  "knochen": {
+    "becken": {
+      "von": [
+        0,
+        0,
+        0.2
+      ],
+      "bis": [
+        0,
+        0,
+        0.32
+      ]
+    },
+    "rumpf": {
+      "von": [
+        0,
+        0,
+        0.32
+      ],
+      "bis": [
+        0,
+        0,
+        0.68
+      ],
+      "eltern": "becken"
+    },
+    "kopf": {
+      "von": [
+        0,
+        0,
+        0.68
+      ],
+      "bis": [
+        0,
+        0,
+        1.0
+      ],
+      "eltern": "rumpf"
+    },
+    "bein_l": {
+      "von": [
+        -0.15,
+        0,
+        0.24
+      ],
+      "bis": [
+        -0.18,
+        0,
+        0.02
+      ],
+      "eltern": "becken"
+    },
+    "bein_r": {
+      "von": [
+        0.15,
+        0,
+        0.24
+      ],
+      "bis": [
+        0.18,
+        0,
+        0.02
+      ],
+      "eltern": "becken"
+    },
+    "arm_l": {
+      "von": [
+        -0.33,
+        0,
+        0.6
+      ],
+      "bis": [
+        -0.25,
+        -0.3,
+        0.45
+      ],
+      "eltern": "rumpf"
+    },
+    "arm_r": {
+      "von": [
+        0.33,
+        0,
+        0.6
+      ],
+      "bis": [
+        0.3,
+        -0.3,
+        0.52
+      ],
+      "eltern": "rumpf"
+    },
+    "armbrust": {
+      "von": [
+        0,
+        -0.3,
+        0.45
+      ],
+      "bis": [
+        0.45,
+        -0.25,
+        0.6
+      ],
+      "eltern": "rumpf"
+    },
+    "armbrust_b": {
+      "von": [
+        0,
+        -0.3,
+        0.45
+      ],
+      "bis": [
+        -0.45,
+        -0.35,
+        0.3
+      ],
+      "eltern": "rumpf"
+    }
+  },
+  "folgen": {
+    "shoot0": {
+      "bilder": 5,
+      "bogen": {
+        "rumpf": [
+          "x",
+          -20
+        ],
+        "kopf": [
+          "x",
+          -10
+        ]
+      }
+    }
+  },
+  "requisiten": [],
+  "kameraHoehe": 40,
+  "stil": {
+    "saettigung": 1.5,
+    "helligkeit": 1.4,
+    "eigenlicht": 0.35,
+    "kontur": 0.008
+  },
+  "ansichten": {
+    "shoot1": {
+      "folge": "shoot0",
+      "blick": 135
+    },
+    "shoot2": {
+      "folge": "shoot0",
+      "blick": 180
+    },
+    "shoot3": {
+      "folge": "shoot0",
+      "blick": 225
+    },
+    "shoot4": {
+      "folge": "shoot0",
+      "blick": 270
+    },
+    "shoot5": {
+      "folge": "shoot0",
+      "blick": 315
+    },
+    "shoot6": {
+      "folge": "shoot0",
+      "blick": 0
+    },
+    "shoot7": {
+      "folge": "shoot0",
+      "blick": 45
+    }
+  },
+  "ruhe": {
+    "armbrust": [
+      "z",
+      -90
+    ],
+    "armbrust_b": [
+      "z",
+      -90
+    ]
+  }
+}

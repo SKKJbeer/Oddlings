@@ -97,7 +97,7 @@ struct StartView: View {
         case .battle(let node):
             if let mission = flow.battleMission(for: node) {
                 BattleView(mission: mission, mode: .play, resume: flow.resume?.node == node ? flow.resume : nil,
-                           intro: flow.showsIntro(for: node),
+                           intro: flow.showsIntro(for: node), race: flow.race,
                            onClose: { flow.leaveBattle() },
                            onSuspend: { seed, state in flow.suspend(node, seed: seed, state: state) }) { outcome, lives in
                     flow.finish(node, outcome: outcome, livesLeft: lives)
@@ -111,7 +111,7 @@ struct StartView: View {
             }
         case .watch:
             if let mission = flow.mission(for: watchNode) {
-                BattleView(mission: mission, mode: .watch, onClose: { flow.showMenu() })
+                BattleView(mission: mission, mode: .watch, race: flow.race, onClose: { flow.showMenu() })
             }
         case .spike:
             SpikeView()

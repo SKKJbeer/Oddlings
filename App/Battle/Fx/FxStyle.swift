@@ -221,6 +221,26 @@ enum FxStyle {
     static let recoilLife: TimeInterval = 0.18
     static let breathPeriod: TimeInterval = 2.6
     static let breathAmount: CGFloat = 0.012
+    /// Zielen (A-5 Teil 3): Drehtempo des Schützen (Bogenmaß je Sekunde) und
+    /// Spanne über die Sektorgrenze, bevor das Bild wechselt.
+    static let guardTurnRate: Double = 7.0
+    static let guardHysteresis: Double = 10 * Double.pi / 180
+    /// Dauer eines Bilds der Schussfolge.
+    static let guardShotFrame: TimeInterval = 0.06
+    /// Ladung des Blitzkristalls (D-187): Schein leer und voll, Flimmern bei
+    /// voller Ladung, ab welcher Ladung Funken einziehen und wie oft.
+    static let chargeGlowEmpty: CGFloat = 0.08
+    static let chargeGlowFull: CGFloat = 0.85
+    static let chargeFlicker: CGFloat = 0.08
+    static let chargeMotesFrom: Double = 0.7
+    static let chargeMoteInterval: Double = 0.12
+    static let chargeMoteLife: Double = 0.3
+    static let chargeMoteReach: CGFloat = 0.6
+    /// Hut des Sporenturms (D-188): Hub in Feldern, Dauer, Breite des Bandes, in
+    /// dem sich der Stiel dehnt (Anteil der Bildhöhe).
+    static let capLift: CGFloat = 0.12
+    static let capLife: TimeInterval = 0.5
+    static let capBand: CGFloat = 0.12
     /// Höhe des Kristalls über dem Fußpunkt beim Blitzturm, aus dem Bild gemessen.
     static let crystalHeight: CGFloat = 1.18
     static let crystalGlow = SKColor(red: 0.45, green: 0.70, blue: 1.00, alpha: 1)

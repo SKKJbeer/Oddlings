@@ -11,6 +11,37 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.48.0 – 24.11.2026 (A-5 Teil 3: Türme zielen)
+
+### Neu
+- **Schütze auf dem Wachturm** (D-185, D-186): Auf der Plattform steht ein Schütze nach
+  dem Volk des Avatars, bei Zwergen ein Zwerg mit Armbrust, bei Elfen ein Elf mit Bogen,
+  je eine eigene 3D-Figur in acht Blickrichtungen aus der gemeinsamen Kamera. Er
+  dreht sich zum Gegner, den der Turm als Nächstes trifft (dieselbe Zielwahl wie die
+  Simulation, `Simulation.aim`), drückt beim Schuss sichtbar ab, und der Pfeil fliegt von
+  seiner Armbrust. Die Salve hat zwei Schützen mit je eigenem Ziel, der Falkenhorst einen.
+  Die gemalte Armbrust ist aus den vier Wachturmbildern verschwunden.
+- **Kristall lädt** (D-187): Der Schein über dem Blitzturm wächst mit der Ladung bis
+  zum nächsten Sprung (`Simulation.charge`), kurz davor ziehen Funken zum Kristall.
+- **Hut hebt sich** (D-188): Beim Ausstoß hebt der Sporenturm seinen Hut über ein
+  Verzerrungsgitter und setzt federnd wieder auf.
+- **Stein atmet nicht** (D-189): Wachturm, Blitzturm und Bank stehen still; nur der Pilz
+  atmet. Kein Turm staucht mehr beim Schuss.
+- Mit „Weniger Bewegung“ springt der Schütze sofort in die richtige Richtung, ohne
+  Schussbilder und ohne Hut.
+
+### Tests
+- Simulation: `AimTests` (neu), Ziel gleich Schussziel über alle Zielwahlen und die Salve,
+  Ladung, Abfragen ändern den Zustand nicht.
+- App: `TowerAimTests` (neu), Blickrichtung mit Drehtempo und Hysterese, Schützen je
+  Gestalt, Salve mit zwei Zielen, Schein und Hut, über ganz Mission 1 sieht kein Schütze
+  länger als 0,6 s daneben.
+- E2E: `TowerAimE2ETests` (neu), Wachturm bauen, Schütze blickt aufs Ziel und schießt,
+  verkauft ist er weg; bei Elfen steht der Bogenschütze da.
+- Kontaktabzug: Schüsse und längste Zeit daneben je Mission, Warnung ab 0,6 s.
+- art-check: acht gleiche Schützenrichtungen, Schützen stehen auf dem Turm, Hutlinie
+  trennt Hut und Stiel.
+
 ## 0.47.0 – 24.11.2026 (Grafik 11: Kampfplatz in der Welt) · Bau folgt
 
 ### Neu

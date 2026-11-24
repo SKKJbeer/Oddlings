@@ -69,6 +69,13 @@ enum BattleStyle {
     /// (art/asset-vertrag.json; die CI prüft die Bilder dagegen).
     static let towerSpriteSide: CGFloat = 1.9
     static let fortressSpriteSide: CGFloat = 4.0
+    /// Schütze auf dem Wachturm (A-5 Teil 3, D-185): Quadrat wie die Gegnerbilder,
+    /// Figur rund 0,5 Felder hoch (art/asset-vertrag.json, `tower_guard_*`).
+    static let guardSpriteSide: CGFloat = 0.62
+    static let guardAnchorY: CGFloat = 0.1
+    /// Mündung der Armbrust: Anteil der Bildbreite vor der Figur und der Bildhöhe über dem Fuß.
+    static let guardMuzzleReach: CGFloat = 0.28
+    static let guardMuzzleHeight: CGFloat = 0.42
     /// Schatten und Fundament (D-120), Quadrate mit dem Fuß in der Mitte;
     /// dieselben Seiten wie in art/asset-vertrag.json.
     static let towerShadowSide: CGFloat = 2.4

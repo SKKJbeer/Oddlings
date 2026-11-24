@@ -652,6 +652,102 @@
       "seiteZellen": 2.4,
       "alpha": true
     },
+    "tower_guard_shoot0": {
+      "folge": 5,
+      "seiteZellen": 0.62,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "tower_guard_shoot1": {
+      "folge": 5,
+      "seiteZellen": 0.62,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "tower_guard_shoot2": {
+      "folge": 5,
+      "seiteZellen": 0.62,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "tower_guard_shoot3": {
+      "folge": 5,
+      "seiteZellen": 0.62,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "tower_guard_shoot4": {
+      "folge": 5,
+      "seiteZellen": 0.62,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "tower_guard_shoot5": {
+      "folge": 5,
+      "seiteZellen": 0.62,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "tower_guard_shoot6": {
+      "folge": 5,
+      "seiteZellen": 0.62,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "tower_guard_shoot7": {
+      "folge": 5,
+      "seiteZellen": 0.62,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "tower_guardElf_shoot0": {
+      "folge": 5,
+      "seiteZellen": 0.62,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "tower_guardElf_shoot1": {
+      "folge": 5,
+      "seiteZellen": 0.62,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "tower_guardElf_shoot2": {
+      "folge": 5,
+      "seiteZellen": 0.62,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "tower_guardElf_shoot3": {
+      "folge": 5,
+      "seiteZellen": 0.62,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "tower_guardElf_shoot4": {
+      "folge": 5,
+      "seiteZellen": 0.62,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "tower_guardElf_shoot5": {
+      "folge": 5,
+      "seiteZellen": 0.62,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "tower_guardElf_shoot6": {
+      "folge": 5,
+      "seiteZellen": 0.62,
+      "anker": 0.1,
+      "alpha": true
+    },
+    "tower_guardElf_shoot7": {
+      "folge": 5,
+      "seiteZellen": 0.62,
+      "anker": 0.1,
+      "alpha": true
+    },
     "tower_lightning_crown": {
       "seiteZellen": 1.9,
       "anker": 0.2,
