@@ -1,6 +1,7 @@
 import OddlingsCore
 import SpriteKit
 import XCTest
+import UIKit
 @testable import Oddlings
 
 /// Effekte an Ereignissen (D-050): Jedes Ereignis spielt seinen Effekt,
@@ -574,13 +575,48 @@ final class FxDirectorTests: XCTestCase {
         XCTAssertEqual(goldTexts(scene).sorted(), ["+4", "+4"])
     }
 
-    /// Texte der Goldzahlen (vorderste Lage jeder Zahl mit Kontur).
+    /// Texte der Goldzahlen.
     private func goldTexts(_ scene: BattleScene) -> [String] {
         scene.effectLayer.children.compactMap { node in
-            guard node.children.count > 1, let front = node.children.last as? SKLabelNode,
-                  let text = front.text, text.hasPrefix("+") else { return nil }
-            return text
+            guard let label = node as? OutlinedText, label.text.hasPrefix("+") else { return nil }
+            return label.text
         }
+    }
+
+    /// U1 (D-211): Das Wellenschild ist ein einziges Bild. Beim Einblenden darf
+    /// keine dunkle Lage durch die helle Schrift scheinen.
+    func testWaveBannerFadesAsOneImage() throws {
+        let scene = scene(autoplay: false)
+        scene.fx.banner("Welle 3 von 10", size: scene.size)
+        run(scene, seconds: FxStyle.bannerIn / 3)
+        let banner = try XCTUnwrap(scene.effectLayer.childNode(withName: "banner") as? OutlinedText)
+        XCTAssertTrue(banner.children.isEmpty, "keine gestapelten Kopien")
+        XCTAssertLessThan(banner.alpha, 1, "Probe mitten im Einblenden")
+        XCTAssertNotNil(banner.texture)
+        // Die Mitte eines Buchstabens ist hell, nicht Konturbraun.
+        let image = OutlinedText.draw("I", font: UIFont(name: BattleStyle.font, size: 40) ?? .boldSystemFont(ofSize: 40), fill: .white).image
+        let center = try XCTUnwrap(pixel(image, atFraction: CGPoint(x: 0.5, y: 0.45)))
+        XCTAssertGreaterThan(center, 0.8, "Füllung weiß, Helligkeit \(center)")
+    }
+
+    func testGoldNumberChangesTextInPlace() throws {
+        let label = OutlinedText(text: "+4", fontSize: 20, color: FxStyle.gold)
+        let narrow = label.size.width
+        label.setText("+128")
+        XCTAssertEqual(label.text, "+128")
+        XCTAssertGreaterThan(label.size.width, narrow)
+    }
+
+    /// Helligkeit eines Bildpunkts (0 bis 1) an einer Stelle in Bruchteilen der Größe.
+    private func pixel(_ image: UIImage, atFraction point: CGPoint) -> CGFloat? {
+        guard let cg = image.cgImage else { return nil }
+        let x = Int(CGFloat(cg.width) * point.x), y = Int(CGFloat(cg.height) * point.y)
+        var rgba = [UInt8](repeating: 0, count: 4)
+        guard let context = CGContext(data: &rgba, width: 1, height: 1, bitsPerComponent: 8, bytesPerRow: 4,
+                                      space: CGColorSpaceCreateDeviceRGB(),
+                                      bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { return nil }
+        context.draw(cg, in: CGRect(x: -x, y: y - cg.height + 1, width: cg.width, height: cg.height))
+        return (CGFloat(rgba[0]) + CGFloat(rgba[1]) + CGFloat(rgba[2])) / (3 * 255)
     }
 
     /// Säule 2 (Review R1, D-184): Eine ganze Mission mit allen Effekten, und

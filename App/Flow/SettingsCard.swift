@@ -6,6 +6,9 @@ import SwiftUI
 /// auf dem kleinsten iPhone ganz zu sehen ist.
 struct SettingsCard: View {
     var onClose: () -> Void
+    /// Leistungsprobe aus WP-01 (D-214): ein Werkzeug, kein Spielinhalt, deshalb
+    /// hier statt gleichrangig neben „Spielen“. Bleibt, bis S4 gemessen ist.
+    var onSpike: () -> Void = {}
     @State private var vibration = AppSettings.vibration()
     @State private var guide = AppSettings.guide()
     @State private var sound = AppSettings.soundVolume()
@@ -48,10 +51,16 @@ struct SettingsCard: View {
                 }
                 .tint(UITheme.goldFace)
                 .frame(minHeight: 44)
-                Text(MenuTexts.offline)
-                    .font(UITheme.body(14))
-                    .foregroundStyle(UITheme.parchment)
-                    .fixedSize(horizontal: false, vertical: true)
+                HStack(alignment: .center, spacing: 12) {
+                    Text(MenuTexts.offline)
+                        .font(UITheme.body(14))
+                        .foregroundStyle(UITheme.parchment)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Spacer(minLength: 0)
+                    Button(action: onSpike) { Text(BattleTexts.spike) }
+                        .buttonStyle(ChunkyButtonStyle(kind: .wood, height: 36, fontSize: 14))
+                        .accessibilityIdentifier("settings.spike")
+                }
                 Button(action: onClose) { Text(MenuTexts.done).frame(maxWidth: .infinity) }
                     .buttonStyle(ChunkyButtonStyle(kind: .gold, height: 52, fontSize: 22))
                     .accessibilityIdentifier("settings.done")

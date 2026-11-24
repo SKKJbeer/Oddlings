@@ -12,6 +12,14 @@ enum CampaignStyle {
     static let mapImage = "map_region01"
     static let panelWidth: CGFloat = 280
     static let margin: CGFloat = 12
+    /// Füllung um die eingepasste Karte (D-213): Unschärfe, Abdunkeln, weiche Kante.
+    static let fillBlur: CGFloat = 14
+    static let fillShade: Double = 0.35
+    static let edgeFeather: CGFloat = 10
+    /// Tafel rechts (U3): so knapp, dass sie auf dem iPhone SE quer ganz passt.
+    static let panelPadding: CGFloat = 14
+    static let panelSpacing: CGFloat = 7
+    static let startHeight: CGFloat = 54
 
     static let forestDeep = Color(red: 0.07, green: 0.14, blue: 0.10)
     static let forest = Color(red: 0.16, green: 0.30, blue: 0.19)

@@ -1349,9 +1349,9 @@ final class FxDirector {
         goldTags.append(GoldTag(node: node, position: position, total: reward, born: time))
     }
 
-    /// Text einer Zahl mit Kontur neu setzen: alle Lagen gleich.
+    /// Text einer Zahl mit Kontur neu setzen (zeichnet das Bild neu).
     private func setText(of node: SKNode, to text: String) {
-        for case let line as SKLabelNode in node.children { line.text = text }
+        (node as? OutlinedText)?.setText(text)
     }
 
     /// Gegner, deren Körpermitte unter einer großen Wolke liegt, die über ihnen
@@ -1419,27 +1419,9 @@ final class FxDirector {
     }
 
     /// Schrift mit dunkler Kontur, wie die gemalten Figuren: lesbar auf jedem Boden.
-    private func outlinedLabel(_ text: String, fontSize: CGFloat, color: SKColor) -> SKNode {
-        let node = SKNode()
-        let offsets: [CGPoint] = [CGPoint(x: -1, y: -1), CGPoint(x: 1, y: -1), CGPoint(x: -1, y: 1),
-                                  CGPoint(x: 1, y: 1), CGPoint(x: 0, y: -1.6)]
-        let width = max(1.2, fontSize * 0.07)
-        for offset in offsets {
-            let back = SKLabelNode(text: text)
-            back.fontName = BattleStyle.font
-            back.fontSize = fontSize
-            back.fontColor = SKColor(red: 0x22 / 255, green: 0x16 / 255, blue: 0x0F / 255, alpha: 1)
-            back.verticalAlignmentMode = .center
-            back.position = CGPoint(x: offset.x * width, y: offset.y * width)
-            node.addChild(back)
-        }
-        let front = SKLabelNode(text: text)
-        front.fontName = BattleStyle.font
-        front.fontSize = fontSize
-        front.fontColor = color
-        front.verticalAlignmentMode = .center
-        node.addChild(front)
-        return node
+    /// Ein Bild statt gestapelter Kopien, damit Ausblenden die Kontur nicht durchscheinen lässt (D-211).
+    private func outlinedLabel(_ text: String, fontSize: CGFloat, color: SKColor) -> OutlinedText {
+        OutlinedText(text: text, fontSize: fontSize, color: color)
     }
 }
 

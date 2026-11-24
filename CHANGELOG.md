@@ -11,6 +11,35 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.50.0 – 24.11.2026 (Review 2, Teil 1: Oberfläche)
+
+### Neu
+- **Review 2, Gesamtstand** ([Konzept](docs/konzepte/aaa-review-2-gesamtstand.md),
+  [Bild](art/review/f-stand-region-1.jpg)): alle neun Missionen und 23 Oberflächenbilder
+  gegen Mission 1 geprüft, 14 Befunde (K1 bis K7, U1 bis U7), Plan R2-1 bis R2-4.
+  Grundsatzfrage S38 (D-210) an Steffen: wie weit „gleicher Stand“ für M2 bis M7 geht.
+
+### Geändert
+- **Wellenschild und schwebende Zahlen bleiben weiß** (U1, D-211): Schatten, Kontur und
+  Füllung sind ein Bild (`OutlinedText`, CoreText) statt fünf dunkler Kopien unter der
+  Schrift. Vorher schienen die Kopien beim Ein- und Ausblenden durch, „Welle 3 von 10“
+  wurde braun. Die Kontur umläuft die Buchstaben jetzt gleichmäßig mit runden Ecken.
+- **Weltkarte füllt den Schirm** (U2, D-213): Um die eingepasste Karte liegt dasselbe Bild
+  weich und abgedunkelt statt leeres Dunkelgrün, die Kante läuft weich hinein.
+- **Missionstafel passt ganz** (U3, D-213): Sterne neben der Art, knappere Abstände,
+  Avatar-Abzeichen ohne eigene Überschrift. Auf niedrigen Schirmen fällt zuerst die Zeile
+  zum Volk weg, nie Titel, Stand und „Starten“. Vorher war oben die Art angeschnitten und
+  die Fähigkeit endete mit „…“.
+- **„Leistungsprobe“ steht in den Einstellungen** (U5, D-214) statt im Hauptmenü neben
+  „Spielen“.
+
+### Tests
+- App: `FxDirectorTests` (Wellenschild ist ein Bild ohne Kinder, Füllung hell; Goldzahl
+  zeichnet neu), `CampaignPanelTests` (neu: Tafel passt für jede Mission auf 393 pt, die
+  knappe Fassung auf 375 pt).
+- E2E: `GuideE2ETests` (Leistungsprobe nur in den Einstellungen, Tafel passt),
+  `AvatarE2ETests` (Art der Mission liegt ganz im Bild).
+
 ## 0.48.0 – 24.11.2026 (A-5 Teil 3: Türme zielen)
 
 ### Neu

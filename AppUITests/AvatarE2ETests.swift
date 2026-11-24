@@ -274,7 +274,7 @@ final class AvatarE2ETests: XCTestCase {
                     e2e.app.buttons["setup.name.suggest"], e2e.setupConfirm], in: e2e)
         e2e.setupConfirm.tap()
         XCTAssertTrue(e2e.mapStart.waitForExistence(timeout: 5))
-        assertFits([e2e.app.staticTexts["map.panel.title"], e2e.mapAvatar, e2e.app.staticTexts["map.race.detail"],
+        assertFits([e2e.app.staticTexts["map.panel.kind"], e2e.app.staticTexts["map.panel.title"], e2e.mapAvatar, e2e.app.staticTexts["map.race.detail"],
                     e2e.app.staticTexts["map.panel.status"], e2e.mapStart], in: e2e)
     }
 
