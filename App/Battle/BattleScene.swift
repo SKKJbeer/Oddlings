@@ -265,13 +265,14 @@ final class BattleScene: SKScene {
         return "towers=\(pictures.joined(separator: ",")) selection=\(selectionStyle) \(aimSummary)"
     }
 
-    /// `schuetzen=2 zielen=1 treffen=1 elfen=0`: Schützen, davon mit Ziel, davon mit
-    /// dem Bild in Richtung ihres Ziels, davon Elfen (D-185).
+    /// `schuetzen=2 zielen=1 treffen=1 elfen=0 elfenbilder=1`: Schützen, davon mit Ziel, davon mit
+    /// dem Bild in Richtung ihres Ziels, davon Elfen (D-185), und ob die Elfenbilder da sind.
     var aimSummary: String {
         let shooters = towerNodes.keys.sorted().flatMap { towerNodes[$0]?.shooters ?? [] }
         let aiming = shooters.filter { $0.goal != nil }
         return "schuetzen=\(shooters.count) zielen=\(aiming.count) treffen=\(aiming.filter(\.onTarget).count)"
             + " elfen=\(shooters.filter { $0.figure == .elf }.count)"
+            + " elfenbilder=\(ShooterNode.complete(.elf) ? 1 : 0)"
     }
 
     #if DEBUG

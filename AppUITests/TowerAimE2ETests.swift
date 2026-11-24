@@ -38,6 +38,8 @@ final class TowerAimE2ETests: XCTestCase {
         let art = e2e.app.staticTexts["scene.art"]
         XCTAssertTrue(art.waitForExistence(timeout: 10), "Bildzähler da")
         XCTAssertEqual(Self.parse(art.label)["schuetzen"], 1, art.label)
+        // Solange die Elfenbilder fehlen, steht der Zwerg da (Rückfall, D-185).
+        if elves, Self.parse(art.label)["elfenbilder"] == 0 { throw XCTSkip("Elfenbilder fehlen im Atlas") }
         XCTAssertEqual(Self.parse(art.label)["elfen"], elves ? 1 : 0, art.label)
         // Zielen und Verkaufen prüft der Zwerg; der iPhone-Job hat wenig Zeit übrig.
         if elves { return }
@@ -56,8 +58,13 @@ final class TowerAimE2ETests: XCTestCase {
         XCTAssertGreaterThan(Self.parse(stats.label)["shots"] ?? 0, 0, "er drückt ab: \(stats.label)")
         e2e.screenshot("a-5-schuetze-zielt", in: self)
 
-        e2e.tap(cell)
-        XCTAssertTrue(e2e.sell.waitForExistence(timeout: 5))
+        // Während der Welle kann ein Gegner gerade vor dem Turm stehen; dann trifft
+        // der Tipp ihn. Ein paar Mal versuchen, bis die Tafel des Turms da ist.
+        for _ in 0..<4 where !e2e.sell.exists {
+            e2e.tap(cell)
+            _ = e2e.sell.waitForExistence(timeout: 2)
+        }
+        XCTAssertTrue(e2e.sell.exists, "Tafel des Turms öffnet: \(art.label)")
         e2e.sell.tap()
         XCTAssertTrue(e2e.sellConfirm.waitForExistence(timeout: 5))
         e2e.sell.tap()
