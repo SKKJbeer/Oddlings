@@ -16,8 +16,9 @@ man einfarbig erkennt), Farben, Bewegung in der Szene und was das Bild
 - **Persönlichkeit:** solide, ein bisschen stolz auf sich.
 - **Silhouette:** runder Steinturm, Holzplattform, Schütze nach dem Volk (Zwerg mit Armbrust, Elf mit Bogen), rote Fahne.
 - **Farben:** Grau, warmes Holz, Rot.
-- **Bewegung:** Stein steht still (D-189). Der Schütze `tower_guard` dreht sich in acht
-  Richtungen zum Ziel und drückt ab (D-185, D-186); der Turm selbst staucht nicht.
+- **Bewegung:** Stein steht still (D-189). Der Schütze (`tower_guard` bzw. `tower_guardElf`) dreht sich in acht
+  Richtungen zum Ziel und drückt ab (D-185, D-186); der Elf steht dabei seitlich wie ein
+  Bogenschütze, der Pfeil zeigt in die Blickrichtung. Der Turm selbst staucht nicht.
 - **Nicht:** Kanonen, Feuer, Leuchtfarben (die gehören Blitz und Sporen).
 
 ### Blitzturm `tower_lightning`
