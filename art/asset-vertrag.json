@@ -591,42 +591,6 @@
       "seiteZellen": 2.4,
       "alpha": true
     },
-    "footing_mission01": {
-      "seiteZellen": 1.2,
-      "alpha": true
-    },
-    "footing_mission02": {
-      "seiteZellen": 1.2,
-      "alpha": true
-    },
-    "footing_mission03": {
-      "seiteZellen": 1.2,
-      "alpha": true
-    },
-    "footing_mission04": {
-      "seiteZellen": 1.2,
-      "alpha": true
-    },
-    "footing_mission05a": {
-      "seiteZellen": 1.2,
-      "alpha": true
-    },
-    "footing_mission05b": {
-      "seiteZellen": 1.2,
-      "alpha": true
-    },
-    "footing_mission06a": {
-      "seiteZellen": 1.2,
-      "alpha": true
-    },
-    "footing_mission06b": {
-      "seiteZellen": 1.2,
-      "alpha": true
-    },
-    "footing_mission07": {
-      "seiteZellen": 1.2,
-      "alpha": true
-    },
     "mark_ring": {
       "pixel": [
         1536,
@@ -686,14 +650,6 @@
     },
     "tower_spore_rot_shadow": {
       "seiteZellen": 2.4,
-      "alpha": true
-    },
-    "tower_plinth": {
-      "seiteZellen": 1.5,
-      "alpha": true
-    },
-    "tower_contact": {
-      "seiteZellen": 1.4,
       "alpha": true
     },
     "fortress_shadow": {

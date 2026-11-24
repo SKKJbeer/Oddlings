@@ -42,7 +42,7 @@ nach links. Spiegeln ist billiger als neu rechnen. Ein freier Kartenentwurf
 (Bild-zu-Bild mit Stärke 0,7) wich vom Weg ab und wirkte flach; verworfen,
 die Karte entsteht aus Texturen, siehe [karten/ENTSTEHUNG.md](../karten/ENTSTEHUNG.md).
 
-## Schatten und Fundament der Türme (D-120, 0.29.1)
+## Schatten der Türme (D-120, 0.29.1; seit 0.49.0 am Grundriss, D-196)
 
 Gerechnet, nicht gemalt: `.claude/skills/spielgrafik/scripts/turmboden.py`, kein
 Modell, fester Seed je Name. Konzept: [Türme in der Welt](../../docs/konzepte/grafik-10-tuerme-in-der-welt.md).
@@ -51,15 +51,17 @@ Modell, fester Seed je Name. Konzept: [Türme in der Welt](../../docs/konzepte/g
   `tower_lightning_2_shadow`, `tower_spore_shadow`, `tower_spore_2_shadow`,
   `tower_bank_shadow`, seit A-5 auch `tower_watch_volley_shadow`, `tower_watch_falcon_shadow`,
   `tower_lightning_crown_shadow`, `tower_lightning_spark_shadow`, `tower_spore_moor_shadow`,
-  `tower_spore_rot_shadow`: aus dem Umriss des jeweiligen Turmbildes, oberhalb des
-  Fußes gespiegelt, auf 42 % gestaucht und nach rechts geschert (Licht von oben
-  links), weich gezeichnet, dazu eine Kontaktellipse am Fuß. Neuer Turm oder neue
-  Stufe: Skript erneut laufen lassen.
-- Fundament `footing_mission01`, `footing_mission02`, `footing_mission03`,
-  `footing_mission04`, `footing_mission05a`, `footing_mission05b`,
-  `footing_mission06a`, `footing_mission06b`, `footing_mission07`: ein unregelmäßiger
-  Fleck aus dem gemalten Weg der jeweiligen Karte (Mitte des längsten waagerechten
-  Wegstücks), weicher Rand. Neuer Kampfplatz: Skript erneut laufen lassen.
+  `tower_spore_rot_shadow`: aus dem Umriss des jeweiligen Turmbildes. Seit 0.49.0 misst
+  das Skript zuerst den Grundriss im Bild (halbe Breite, halbe Tiefe aus der Krümmung der
+  Fußlinie). Der Umriss über der Grundrissmitte wird nach unten geklappt, auf 42 %
+  gestaucht und um 45° nach rechts geschert (wie der Schatten der Torburg aus Blender),
+  am Fuß scharf und mit 62 % Deckung, zur Spitze weich mit 40 % (Kontakthärtung). Dazu
+  ein Kontaktdunkel in Größe des Grundrisses (× 1,12, 85 %), um dessen Mitte: Vom Turm
+  verdeckt bis auf einen Saum an der Fußlinie. Bis 0.47.0 saßen Ellipse und Schatten am
+  Anker, dem vordersten Punkt; das dunkle Band davor ließ den Turm schweben. Neuer Turm
+  oder neue Stufe: Skript erneut laufen lassen.
+- Fundament `footing_<mission>` (0.29.1 bis 0.45.0): Fleck Erde aus dem Weg der Karte;
+  mit D-196 entfernt.
 
 ## Pilzbalg und Sporling, gemalte Vorlagen (0.42.0, seit 0.43.0 Vorlage der 3D-Figuren)
 
@@ -87,7 +89,7 @@ Standbilder im Atlas; seit 0.43.0 sind sie die Vorlagen der 3D-Figuren
   dem Hut. Gleiche Kappe wie der Pilzbalg, damit man sieht, woher er kommt.
 
 
-## Grafik 11: Torburg, Sockel, Kontakt (24.11.2026, 0.47.0)
+## Grafik 11: Torburg (24.11.2026, 0.47.0; Sockel und Kontakt bis 0.47.0)
 
 Konzept: [Grafik 11](../../docs/konzepte/grafik-11-kampfplatz-in-der-welt.md), D-190, D-191,
 D-193. Nicht mehr frei gemalt, sondern zuerst in Blender gebaut
@@ -95,11 +97,11 @@ D-193. Nicht mehr frei gemalt, sondern zuerst in Blender gebaut
 aus dem Vertrag), dann mit FLUX.1-schnell Bild-zu-Bild übermalt (512 × 512, 4 Schritte,
 euler, cfg 1,0) und mit `bau_freistellen.py` freigestellt: Form und Schatten aus Blender,
 Farbe aus FLUX. In den Atlas mit `atlas.py … rahmen` (nur skaliert, nicht zugeschnitten).
-Quellen in `bauten/` (`*-blender.png` Render, `*-rohbild.png` übermalt).
+Quellen in `bauten/` (`*-blender.png` Render, `*-rohbild.png` übermalt). Sockel
+(`tower_plinth`, Seed 3) und Kontakt (`tower_contact`) gab es nur in 0.47.0; mit D-196
+sind sie entfernt, ihre Quellen bleiben in `bauten/` als Beleg.
 
 | Name | Prompt | Einstellungen |
 |---|---|---|
 | `fortress` | hand-painted mobile strategy game building asset, a small grey stone dwarf fortress gatehouse with two round towers with blue slate cone roofs and red flags, battlements, an arched wooden gate with two burning torches and a red banner above it, stone base with grass tufts, seen from above at a 40 degree angle, stylized 3D, warm afternoon light from the top left, rich painterly textures, high detail, plain flat light grey background, no text, no characters | **Seed 8**, Stärke 0,5; Rahmen 4,0 Zellen, Anker 0,34 = Mitte des Grundrisses. Erster Rahmen (3,6/0,2) schnitt die Sockelecke ab, neu gerendert; Seed 3 nicht fertig (Speicher) |
 | `fortress_shadow` | – | Schattenfänger desselben Renders, schwarz mit 80 % der Deckung, am Bildrand ausgeblendet, nur der am Bau hängende Teil |
-| `tower_plinth` | hand-painted mobile strategy game asset, a low round raised platform of fitted grey flagstones with a stone rim, small pebbles and green grass tufts around its base, seen from above at a 40 degree angle, stylized 3D, warm afternoon light from the top left, rich painterly textures, plain flat light grey background, no text | **Seed 3**, Stärke 0,45; Platte 1,1 Zellen Ø, 0,1 hoch, Rahmen 1,5 |
-| `tower_contact` | – | gerechnet von `turmboden.py` (`kontaktdunkel`): radial (1 − d)^1,6, Ellipse 0,86 × 0,34, Deckung 72 % |

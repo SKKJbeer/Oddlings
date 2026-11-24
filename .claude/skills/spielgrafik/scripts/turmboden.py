@@ -1,46 +1,41 @@
 #!/usr/bin/env python3
-"""Schatten und Fundament der Türme (D-120), gerechnet statt gemalt.
+"""Schatten der Türme (D-120, D-196), gerechnet statt gemalt.
 
 turmboden.py [wurzel=.]
 
-Legt in den Sprite-Atlas:
-- `tower_<name>_shadow` je Turmbild: Kontaktschatten am Fuß und Schlagschatten
-  nach unten rechts (Licht von oben links, art-direction.md). Aus dem Umriss des
-  Turmbildes selbst, also passt er zu jeder Stufe und jedem neuen Turm.
-- `footing_<mission>` je gemaltem Kampfplatz: ein Fleck festgetretene Erde, aus
-  dem gemalten Weg derselben Karte geschnitten. So hat das Fundament immer die
-  Farbe und den Pinselstrich des Ortes.
+Legt in den Sprite-Atlas je Turmbild `tower_<name>_shadow`: Kontaktdunkel am Fuß und
+Schlagschatten nach unten rechts (Licht von oben links, wie die Torburg aus Blender).
 
-Beide sind Quadrate mit dem Fuß in der Mitte (Szene: anchorPoint 0,5/0,5). Kein
-Modell, kein Zufall außer einem festen Seed je Name: gleiche Eingabe, gleiches Bild.
-Werte (Längen in Zellen) stehen oben, damit Bild und Konzept dieselben nennen.
+Der Fuß wird aus dem Turmbild selbst gemessen (`fuss`): Der Anker des Bildes ist der
+vorderste Punkt des Grundrisses, die Mitte des Grundrisses liegt eine halbe Tiefe
+dahinter. Kontaktdunkel und Wurzel des Schlagschattens sitzen in dieser Mitte, nicht
+am Anker. Saßen sie am Anker (bis 0.47.0), lag ein dunkles Band vor dem Turm, und ein
+Ding über seinem eigenen Schatten schwebt (D-196).
+
+Quadrat mit dem Anker in der Mitte (Szene: anchorPoint 0,5/0,5). Kein Modell, kein
+Zufall: gleiche Eingabe, gleiches Bild. Werte (Längen in Zellen) stehen oben.
 """
-import json, math, os, random, re, sys
+import json, os, re, sys
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
 wurzel = sys.argv[1] if len(sys.argv) > 1 else "."
 vertrag = json.load(open(os.path.join(wurzel, "art/asset-vertrag.json")))
 PT = vertrag["punkteJeZelle"]
 ATLAS = os.path.join(wurzel, vertrag["atlas"])
-KARTEN = os.path.join(wurzel, "App/Assets.xcassets/Maps")
-BALANCE = os.path.join(wurzel, "Packages/OddlingsCore/Sources/OddlingsCore/Resources/Balance")
 
 SCHATTEN_SEITE = 2.4      # Zellen, Quadrat
 SCHATTEN_LAENGE = 0.42    # Schlagschatten: Anteil der Turmhöhe
-SCHATTEN_SCHERUNG = 1.0   # nach rechts je Länge nach unten
-SCHATTEN_DECKUNG = 0.45
-SCHATTEN_WEICH = 0.03     # Unschärfe in Zellen
-KONTAKT = (0.95, 0.36)    # Ellipse am Fuß in Zellen
-KONTAKT_DECKUNG = 0.67
+SCHATTEN_SCHERUNG = 1.0   # nach rechts je Länge nach unten (45°, wie die Torburg)
+SCHATTEN_DECKUNG_FUSS = 0.62  # Kontakthärtung: am Fuß dunkel und scharf ...
+SCHATTEN_DECKUNG = 0.40       # ... zur Spitze heller ...
+SCHATTEN_WEICH = 0.06         # ... und weicher (Unschärfe in Zellen)
+SCHATTEN_SCHARF = 0.008
+KONTAKT_DECKUNG = 0.85    # Dunkel unter dem Grundriss, sichtbar nur als Saum
+KONTAKT_UEBERSTAND = 1.12  # Grundriss mal diesem Wert
+KONTAKT_SAUM = 0.02       # Zellen, die das Dunkel in der Tiefe übersteht
+KONTAKT_WEICH = 0.05
 SCHATTEN_FARBE = (18, 24, 18)
-FUNDAMENT_SEITE = 1.2
-FUNDAMENT = (1.05, 0.58)  # Fleck in Zellen
-FUNDAMENT_DECKUNG = 0.85
-KONTAKTDUNKEL_SEITE = 1.4  # Grafik 11 (D-193): enges Dunkel genau unter dem Fuß, Quadrat
-KONTAKTDUNKEL = (0.86, 0.34)  # Ellipse in Zellen, etwas schmaler als ein Sockel
-KONTAKTDUNKEL_DECKUNG = 0.72
-RAND = 2                  # Rand der Karte um das Feld in Zellen (BattleStyle.groundMargin)
-RAND_BREITE = 4
+FUSS_BAND = 0.12          # untere Bildhöhe, in der der Grundriss gesucht wird
 
 
 def ablegen(bild3, name, zellen):
@@ -56,96 +51,67 @@ def ablegen(bild3, name, zellen):
     print(f"✓ {name}")
 
 
+def fuss(turm):
+    """Grundriss im Turmbild: Mitte x, unterste Zeile, halbe Breite, halbe Tiefe (Pixel).
+
+    Unterste Zeile ist der Anker. Die Tiefe kommt aus der Krümmung der Fußlinie: An
+    den äußeren Spalten liegt der tiefste Punkt auf halber Tiefe des Grundrisses."""
+    alpha = turm.getchannel("A")
+    w, h = turm.size
+    px = alpha.load()
+    tief = {}
+    for x in range(w):
+        for y in range(h - 1, -1, -1):
+            if px[x, y] > 128:
+                tief[x] = y
+                break
+    unten = max(tief.values())
+    band = [x for x, y in tief.items() if y > unten - FUSS_BAND * h]
+    x0, x1 = min(band), max(band)
+    rand = [tief[x] for x in band if x < x0 + 0.06 * (x1 - x0) or x > x1 - 0.06 * (x1 - x0)]
+    return (x0 + x1) / 2, unten, (x1 - x0) / 2, unten - sum(rand) / len(rand)
+
+
 def schatten(name):
     regel = vertrag["assets"][name]
     turm = Image.open(os.path.join(ATLAS, f"{name}.imageset", f"{name}@3x.png")).convert("RGBA")
     z = PT * 3  # Pixel je Zelle bei @3x
-    fuss = round(turm.height * (1 - regel["anker"]))
-    umriss = turm.getchannel("A").crop((0, 0, turm.width, fuss)).transpose(Image.FLIP_TOP_BOTTOM)
-    hoehe = max(1, round(fuss * SCHATTEN_LAENGE))
-    umriss = umriss.resize((turm.width, hoehe), Image.LANCZOS)
+    mx, _, ha, hb = fuss(turm)
+    anker = round(turm.height * (1 - regel["anker"]))
+    wurzel = anker - hb  # Grundrissmitte im Turmbild
     seite = round(SCHATTEN_SEITE * z)
     mitte = seite // 2
+    oben = round(mitte - hb)  # Grundrissmitte in der Schattenfläche
+    # Schlagschatten: Umriss über der Grundrissmitte, nach unten geklappt, gestaucht
+    # und geschert. Sein Anfang liegt unter dem Turm und tritt an dessen Fuß hervor.
+    umriss = turm.getchannel("A").crop((0, 0, turm.width, round(wurzel))).transpose(Image.FLIP_TOP_BOTTOM)
+    hoehe = max(1, round(wurzel * SCHATTEN_LAENGE))
+    umriss = umriss.resize((turm.width, hoehe), Image.LANCZOS)
     maske = Image.new("L", (seite, seite), 0)
-    maske.paste(umriss, (mitte - turm.width // 2, mitte))
-    # Scherung um die Fußlinie: je tiefer, desto weiter rechts.
-    maske = maske.transform(maske.size, Image.AFFINE, (1, -SCHATTEN_SCHERUNG, SCHATTEN_SCHERUNG * mitte, 0, 1, 0))
-    maske = maske.filter(ImageFilter.GaussianBlur(SCHATTEN_WEICH * z)).point(lambda v: round(v * SCHATTEN_DECKUNG))
+    maske.paste(umriss, (mitte - turm.width // 2, oben))
+    maske = maske.transform(maske.size, Image.AFFINE, (1, -SCHATTEN_SCHERUNG, SCHATTEN_SCHERUNG * oben, 0, 1, 0))
+    # Kontakthärtung: am Fuß scharf und dunkel, zur Spitze weich und heller.
+    weg = Image.frombytes("L", (seite, seite), bytes(
+        max(0, min(255, round(255 * (y - oben) / (hoehe + 1)))) for y in range(seite) for _ in range(seite)))
+    maske = Image.composite(maske.filter(ImageFilter.GaussianBlur(SCHATTEN_WEICH * z)),
+                            maske.filter(ImageFilter.GaussianBlur(SCHATTEN_SCHARF * z)), weg)
+    deckung = weg.point(lambda v: round(255 * (SCHATTEN_DECKUNG_FUSS
+                                               - (SCHATTEN_DECKUNG_FUSS - SCHATTEN_DECKUNG) * v / 255)))
+    maske = ImageChops.multiply(maske, deckung)
+    # Kontaktdunkel: Grundriss etwas größer, um seine Mitte. Vom Turm verdeckt bis auf
+    # einen Saum, der die Fußlinie mit dem Boden verbindet.
     kontakt = Image.new("L", (seite, seite), 0)
-    kb, kh = KONTAKT[0] * z, KONTAKT[1] * z
-    ImageDraw.Draw(kontakt).ellipse((mitte - kb / 2, mitte - kh / 2, mitte + kb / 2, mitte + kh / 2),
-                                    fill=round(255 * KONTAKT_DECKUNG))
-    kontakt = kontakt.filter(ImageFilter.GaussianBlur(0.05 * z))
-    alpha = ImageChops.lighter(maske, kontakt)
+    kx = mitte + (mx - turm.width / 2)
+    ka, kb = ha * KONTAKT_UEBERSTAND, hb * KONTAKT_UEBERSTAND + KONTAKT_SAUM * z
+    ImageDraw.Draw(kontakt).ellipse((kx - ka, oben - kb, kx + ka, oben + kb), fill=round(255 * KONTAKT_DECKUNG))
+    kontakt = kontakt.filter(ImageFilter.GaussianBlur(KONTAKT_WEICH * z))
     bild = Image.new("RGBA", (seite, seite), SCHATTEN_FARBE + (0,))
-    bild.putalpha(alpha)
+    bild.putalpha(ImageChops.lighter(maske, kontakt))
     ablegen(bild, f"{name}_shadow", SCHATTEN_SEITE)
-
-
-def kontaktdunkel():
-    """`tower_contact` (Grafik 11, D-193): Ambient Occlusion am Fuß. Dunkel in der Mitte,
-    zum Rand quadratisch abfallend, ohne harte Kante. Es sagt „steht“; der Schlagschatten
-    sagt nur, woher das Licht kommt."""
-    z = PT * 3
-    seite = round(KONTAKTDUNKEL_SEITE * z)
-    kb, kh = KONTAKTDUNKEL[0] * z / 2, KONTAKTDUNKEL[1] * z / 2
-    alpha = Image.new("L", (seite, seite), 0)
-    px = alpha.load()
-    m = seite / 2
-    for y in range(seite):
-        for x in range(seite):
-            d = ((x + 0.5 - m) / kb) ** 2 + ((y + 0.5 - m) / kh) ** 2
-            if d < 1:
-                px[x, y] = round(255 * KONTAKTDUNKEL_DECKUNG * (1 - d) ** 1.6)
-    bild = Image.new("RGBA", (seite, seite), SCHATTEN_FARBE + (0,))
-    bild.putalpha(alpha.filter(ImageFilter.GaussianBlur(0.02 * z)))
-    ablegen(bild, "tower_contact", KONTAKTDUNKEL_SEITE)
-
-
-def fleck(b, h, seed):
-    maske = Image.new("L", (b, h), 0)
-    zufall = random.Random(seed)
-    punkte = []
-    for i in range(24):
-        t = 2 * math.pi * i / 24
-        k = 1 + zufall.uniform(-0.16, 0.08)
-        punkte.append((b / 2 + math.cos(t) * b * 0.44 * k, h / 2 + math.sin(t) * h * 0.44 * k))
-    ImageDraw.Draw(maske).polygon(punkte, fill=255)
-    return maske
-
-
-def fundament(boden_name):
-    m = re.fullmatch(r"map_mission(\w+)_ground", boden_name)
-    mission = m.group(1)
-    datei = "mvp-mission-01.json" if mission == "01" else f"mission-{mission}.json"
-    weg = json.load(open(os.path.join(BALANCE, datei)))["map"]["path"]
-    boden = Image.open(os.path.join(KARTEN, f"{boden_name}.imageset", f"{boden_name}@3x.jpg")).convert("RGB")
-    zb = boden.width / (json.load(open(os.path.join(BALANCE, datei)))["map"]["width"] + 2 * RAND_BREITE)
-    # Erde aus der Mitte des längsten waagerechten Wegstücks: Quer zum Weg läge
-    # der Fleck halb im Gras.
-    stuecke = [(a, b) for a, b in zip(weg, weg[1:]) if a[1] == b[1]]
-    a, b = max(stuecke, key=lambda s: abs(s[1][0] - s[0][0]))
-    mx, my = ((a[0] + b[0]) / 2 + RAND_BREITE) * zb, (a[1] + RAND) * zb
-    fb, fh = round(FUNDAMENT[0] * zb), round(FUNDAMENT[1] * zb)
-    erde = boden.crop((round(mx - fb / 2), round(my - fh / 2), round(mx - fb / 2) + fb, round(my - fh / 2) + fh))
-    maske = fleck(fb, fh, sum(map(ord, boden_name))).filter(ImageFilter.GaussianBlur(0.06 * zb))
-    erde = erde.convert("RGBA")
-    erde.putalpha(maske.point(lambda v: round(v * FUNDAMENT_DECKUNG)))
-    z = PT * 3
-    seite = round(FUNDAMENT_SEITE * z)
-    erde = erde.resize((round(fb * z / zb), round(fh * z / zb)), Image.LANCZOS)
-    bild = Image.new("RGBA", (seite, seite), (0, 0, 0, 0))
-    bild.alpha_composite(erde, ((seite - erde.width) // 2, (seite - erde.height) // 2))
-    ablegen(bild, f"footing_mission{mission}", FUNDAMENT_SEITE)
 
 
 if __name__ == "__main__":
     for eintrag in sorted(os.listdir(ATLAS)):
         name = eintrag[: -len(".imageset")]
-        if (re.fullmatch(r"tower_[a-z]+(_(\d|[a-z]+))?", name) and not name.endswith("_shadow")
-                and name not in ("tower_plinth", "tower_contact")):
+        if re.fullmatch(r"tower_[a-z]+(_(\d|[a-z]+))?", name) and not name.endswith("_shadow"):
             schatten(name)
-    kontaktdunkel()
-    for eintrag in sorted(os.listdir(KARTEN)):
-        if re.fullmatch(r"map_mission\w+_ground\.imageset", eintrag):
-            fundament(eintrag[: -len(".imageset")])

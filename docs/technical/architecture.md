@@ -260,7 +260,7 @@ Welle), ändern aber keine Regel. Liste und Zweck:
 ## 6a. Grafik und Werkzeuge
 
 Bilder entstehen außerhalb der App und werden fertig eingecheckt:
-Skill `spielgrafik` (FLUX lokal, Freistellen, Atlas, Karte, Kampfplatz, Turmschatten und Fundament mit `turmboden.py`) für
+Skill `spielgrafik` (FLUX lokal, Freistellen, Atlas, Karte, Kampfplatz, Turmschatten am Grundriss mit `turmboden.py`) für
 Gemälde, `tools/figuren-3d` (FX 02) für Bildfolgen aus 3D: `trellis.py` (Modell), `figur.py` (Skelett, Comic-Look, Render), `folge.py` (Atlas). `BattleSprites.frames` lädt eine Folge bis zum ersten fehlenden Bild. Jede
 Bildgruppe hat eine `ENTSTEHUNG.md` mit Herkunft; `tools/art-check` prüft Namen,
 Maße und Anker in der CI. Kein Werkzeug davon landet in der App.

@@ -63,10 +63,6 @@ enum BattleSprites {
         let names = towerNames(kind, level: level, specialization: specialization).map { $0 + "_shadow" }
         return names.first { texture(named: $0) != nil } ?? shadowName(kind, level: 1)
     }
-    /// Fleck festgetretene Erde unter jedem Turm, aus dem Weg dieser Karte.
-    static func footingName(missionID: String) -> String {
-        "footing_\(missionID.replacingOccurrences(of: "-", with: ""))"
-    }
 
     /// Schatten oder Fundament, Fuß in der Mitte; nil ohne Bild im Katalog.
     static func groundDecal(named name: String, side: CGFloat) -> SKSpriteNode? {
@@ -541,43 +537,27 @@ final class TowerNode: SKNode {
     /// Zwergenbank (P2-5): Balken „ausgezahlt von Obergrenze“ am Fuß. Nur bei
     /// der Bank vorhanden; leer wird sie grau, damit man sie verkauft.
     let bankBar: SKSpriteNode?
-    /// Was am Boden liegt (D-120): Fundament und Schatten. Die Szene legt es in
+    /// Was am Boden liegt (D-120, D-196): der Schatten mit dem Kontaktdunkel am
+    /// Fuß, beide aus dem Turmbild gemessen. Die Szene legt ihn in
     /// eine eigene Ebene unter alle Türme, damit kein Schatten über einen
     /// Nachbarturm fällt; es folgt dem Auftritt über `idle`.
     let shade = SKNode()
-    let footing: SKSpriteNode?
     let shadow: SKSpriteNode?
-    /// Steinsockel (Grafik 11, D-190); ersetzt das Fundament, wenn das Bild im
-    /// Katalog liegt. Der Turm steht dann um `raise` höher, auf der Platte.
-    let plinth: SKSpriteNode?
-    /// Kontaktdunkel genau unter dem Fuß (D-193), auf dem Sockel oder dem Boden.
-    let contact: SKSpriteNode?
-    /// Trägt Turm und alles an ihm um die Sockelhöhe nach oben; `lift` darunter
-    /// bleibt frei für Auftritte (A-2).
+    /// Trägt Turm und alles an ihm; `lift` darunter bleibt frei für Auftritte (A-2).
+    /// Seit D-196 ohne Sockel auf dem Boden.
     let stand = SKNode()
-    let raise: CGFloat
     /// Licht des Kampfplatzes; nil = ungetönt (Tests, Kampfplatz ohne Eintrag).
     let light: SKColor?
     private let bankFill = SKSpriteNode()
     private let bankWidth: CGFloat
     private(set) var bankEmpty = false
 
-    init(tower: Tower, field: CGFloat, light: SKColor? = nil, footing footingName: String? = nil,
-         plinth plinthName: String? = nil) {
+    init(tower: Tower, field: CGFloat, light: SKColor? = nil) {
         towerID = tower.id
         kind = tower.kind
         self.light = light
         art = BattleSprites.tower(tower.kind, field: field)
         pictureName = BattleSprites.towerName(tower.kind)
-        let plinthSprite = plinthName.flatMap { BattleSprites.groundDecal(named: $0, side: BattleStyle.plinthSide * field) }
-        plinth = plinthSprite
-        raise = plinthSprite == nil ? 0 : BattleStyle.plinthLift * field
-        // Mit Sockel trägt die Platte den Turm; das Fundament aus Wegerde läge
-        // unsichtbar darunter und zeigte nur seine Kratzer (W4).
-        footing = plinthSprite == nil
-            ? footingName.flatMap { BattleSprites.groundDecal(named: $0, side: BattleStyle.footingSide * field) }
-            : nil
-        contact = BattleSprites.groundDecal(named: BattleSprites.contactName, side: BattleStyle.contactSide * field)
         shadow = BattleSprites.groundDecal(named: BattleSprites.shadowNameAvailable(tower.kind, level: tower.level,
                                                                                        specialization: tower.specialization),
                                            side: BattleStyle.towerShadowSide * field)
@@ -604,25 +584,11 @@ final class TowerNode: SKNode {
         }
         super.init()
         name = art.name
-        if let footing { shade.addChild(footing) }
-        if let plinth {
-            if let light {
-                plinth.color = light
-                plinth.colorBlendFactor = 1
-            }
-            shade.addChild(plinth)
-        }
         if let shadow {
             shadow.zPosition = 1
             shade.addChild(shadow)
         }
-        if let contact {
-            contact.zPosition = 2
-            contact.position = CGPoint(x: 0, y: raise)
-            shade.addChild(contact)
-        }
         tint(empty: false)
-        stand.position = CGPoint(x: 0, y: raise)
         addChild(stand)
         stand.addChild(lift)
         lift.addChild(pulse)

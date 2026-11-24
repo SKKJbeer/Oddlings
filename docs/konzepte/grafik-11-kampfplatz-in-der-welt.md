@@ -154,9 +154,53 @@ Keine neue Eingabe von außen. Neue Bilder liegen im Bündel, Herkunft in
 
 | Nr. | Was | Stand |
 |---|---|---|
-| D-190 | Turmfuß: Steinsockel unter jedem Turm | ENTSCHIEDEN (Steffen, 24.11.2026, Karte S35) |
+| D-190 | Turmfuß: Steinsockel unter jedem Turm | ENTSCHIEDEN (Steffen, 24.11.2026, Karte S35), aufgehoben durch D-196 |
 | D-191 | Festung als Torburg im Diorama, Tor zum Weg, Mauern in den Wald | ENTSCHIEDEN (Steffen, 24.11.2026, Karte S36) |
 | D-192 | Bauinseln als Grashügel mit Trockenmauer | ENTSCHIEDEN (Steffen, 24.11.2026, Karte S37) |
-| D-193 | Kontaktdunkel unter allem Gebauten, getrennt vom Schlagschatten | gilt (Claude, Darstellung) |
+| D-193 | Kontaktdunkel unter allem Gebauten, getrennt vom Schlagschatten | aufgehoben durch D-196 |
 | D-194 | Kein Lichthof um die Festung, Weg endet im Tor, Wegrand ohne harte Linie | gilt (Claude, Darstellung) |
 | D-195 | Erdung wird geprüft (art-check und App-Tests oben) | gilt (Claude, Prüfung) |
+| D-196 | Sockel, Kontaktbild und Fundament entfallen, der Schatten wächst aus dem gemalten Fuß (Nachtrag unten) | ENTSCHIEDEN (Steffen, 24.11.2026), hebt D-190 und D-193 auf |
+
+## Nachtrag 0.49.0: Der Sockel war der falsche Weg (D-196)
+
+Steffen am Gerät, 24.11.2026: „mit dem sockel sieht es noch schlimmer aus“. Das Spielbild
+genau angesehen, Ursachen statt Symptome:
+
+1. **Zwei Kameras in einem Bild.** Die gemalten Türme haben eine Fußellipse mit dem
+   Verhältnis Tiefe zu Breite von 0,45 bis 0,5. Der Sockel kam aus der Vertragskamera von
+   `bauten.py` und hatte 0,77. Er wirkte von oben gesehen, der Turm von schräg vorn: Der
+   Turm stand nicht auf ihm, sondern vor ihm.
+2. **Zu breit.** 1,5 Felder Sockel unter Türmen, deren Fuß 0,6 bis 1,1 Felder breit ist,
+   machen aus jedem Turm ein Ding auf einem Teller.
+3. **Dunkel vor dem Turm.** Der Anker eines Turmbilds ist der vorderste Punkt seines
+   Grundrisses. Kontaktdunkel und Schlagschatten saßen dort, also eine halbe Grundrisstiefe
+   vor der Mitte. Das dunkle Band vor dem Fuß ist genau das Zeichen, an dem das Auge ein
+   schwebendes Ding erkennt.
+4. **Der Schatten fing neben dem Turm an**, nicht unter ihm, und war überall gleich weich.
+
+Marktführer erden ihre Türme ohne Teller: Der Fuß ist mitgemalt, darunter liegt ein enger,
+dunkler Saum, und der Schatten tritt aus dem Fuß hervor, hart am Ansatz, weich zur Spitze.
+Das ist kein Kopieren eines Spiels, sondern wie Licht auf Boden fällt.
+
+**Lösung:** Sockel, Kontaktbild und Fundament sind entfernt. `turmboden.py` misst in jedem
+Turmbild den Grundriss (Mitte, halbe Breite, halbe Tiefe aus der Krümmung der Fußlinie)
+und rechnet daraus je Turm ein Schattenbild: Kontaktdunkel 12 % größer als der Grundriss
+um seine Mitte, vom Turm verdeckt bis auf einen Saum; Schlagschatten aus dem umgeklappten
+Umriss, 45° nach unten rechts wie die Torburg, am Fuß 62 % Deckung und scharf, zur Spitze
+40 % und weich. Ein Knoten weniger je Turm, kein Anheben, die Bauvorschau steht wie der
+gebaute Turm.
+
+**Vorher (0.47.0, oben) und nachher (0.49.0, unten):**
+
+![Vorher und nachher](../../art/review/welt/d-sockel-vorher-nachher.jpg)
+
+![Fuß aus der Nähe](../../art/review/welt/e-fuss-nah.jpg)
+
+**Tests:** art-check `test_kein_sockel_und_kein_fundament_mehr`, `test_dunkel_sitzt_unter_dem_turm_nicht_davor`
+(Dunkel in der Grundrissmitte, frei vor dem Fuß, Schatten nach unten rechts),
+`test_jeder_kampfplatz_hat_licht`; App `TowerGroundingTests` (Schatten als einziges Kind der
+Schattenebene, Turm nicht angehoben), `WorldGroundingTests.testPreviewStandsOnTheGround`.
+
+Langfristig sauberer wäre, die Türme wie die Gegner (A-3) in der gemeinsamen 3D-Kamera zu
+rechnen; dann kommen Fuß und Schatten aus derselben Szene. Das ist ein eigenes Paket.

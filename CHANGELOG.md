@@ -11,6 +11,24 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - Ein Eintrag, der nichts an der App ändert (nur Dokumente), hebt die Version
   nicht und löst keinen Bau aus. Dort steht „Dokumente, kein Bau“ (D-023).
 
+## 0.49.0 – 24.11.2026 (Türme stehen ohne Sockel auf dem Boden) · Bau folgt
+
+### Geändert
+- **Sockel, Kontaktbild und Fundament entfallen** (D-196, hebt D-190 und D-193 auf). Der
+  Sockel war in einer anderen Kamera gerechnet und breiter als jeder Turmfuß; das Dunkel saß
+  vor dem Turm statt unter ihm. Ursachen und Bilder im
+  [Nachtrag zum Konzept](docs/konzepte/grafik-11-kampfplatz-in-der-welt.md#nachtrag-0490-der-sockel-war-der-falsche-weg-d-196).
+- **Der Schatten wächst aus dem gemalten Fuß**: `turmboden.py` misst den Grundriss in jedem
+  Turmbild und setzt Kontaktdunkel und Schlagschatten in seine Mitte, am Fuß dunkel und
+  scharf, zur Spitze heller und weich, 45° wie die Torburg. Bauvorschau und gebauter Turm
+  stehen gleich.
+
+### Tests
+- art-check: kein Sockel und kein Fundament mehr im Atlas, Dunkel unter dem Turm statt
+  davor, Schatten nach unten rechts, jeder Kampfplatz hat Licht.
+- App: `TowerGroundingTests` (nur der Schatten in der Schattenebene, Turm nicht angehoben),
+  `WorldGroundingTests.testPreviewStandsOnTheGround`.
+
 ## 0.47.0 – 24.11.2026 (Grafik 11: Kampfplatz in der Welt) · Bau folgt
 
 ### Neu

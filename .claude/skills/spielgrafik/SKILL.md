@@ -57,8 +57,8 @@ description: Hochwertige Spielgrafik (App-Symbole, Figuren, Store-Bilder, Hinter
   den Malstil, und der Weg bleibt liegen. Kleine Figuren, die FLUX trotz „no
   characters" hineinmalt, mit `retusche.py` entfernen.
 - **Türme in der Welt (Grafik 10, D-120):** Nach jedem neuen Kampfplatz, Turm oder
-  Turmbild `turmboden.py` laufen lassen: schreibt `tower_*_shadow` und `footing_<mission>`
-  in den Atlas. Den Lichtton (`LICHT`) des neuen Kampfplatzes zusätzlich in
+  Turmbild `turmboden.py` laufen lassen: schreibt `tower_*_shadow` in den Atlas, mit
+  Kontaktdunkel und Schattenwurzel am gemessenen Grundriss, nicht am Anker (D-196). Den Lichtton (`LICHT`) des neuen Kampfplatzes zusätzlich in
   `App/Battle/kampfplatzlicht.json` eintragen; die art-check-Tests verlangen beides.
 - **Weitere Missionen (Grafik 06):** `DEKO=<ordner> LICHT=r,g,b kampfplatz.py …` setzt
   Deko (`deko*.png`, aus einem Teileblatt) in den Waldrand und schreibt `<aus>-ebene.png`.

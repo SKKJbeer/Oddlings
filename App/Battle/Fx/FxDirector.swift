@@ -583,7 +583,7 @@ final class FxDirector {
             node.alpha = 1 - s
         }
         animate(tower, key: "remove", duration: FxStyle.sellLife, end: .remove) { _, _ in }
-        // Fundament und Schatten liegen in der Schattenebene der Szene (D-120) und gehen mit.
+        // Der Schatten liegt in der Schattenebene der Szene (D-120) und gehen mit.
         animate(tower.shade, key: "remove", duration: FxStyle.sellLife, end: .remove) { node, t in
             node.alpha = CGFloat(1 - t)
         }

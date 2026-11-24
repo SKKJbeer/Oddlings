@@ -69,10 +69,9 @@ enum BattleStyle {
     /// (art/asset-vertrag.json; die CI prüft die Bilder dagegen).
     static let towerSpriteSide: CGFloat = 1.9
     static let fortressSpriteSide: CGFloat = 4.0
-    /// Schatten und Fundament (D-120), Quadrate mit dem Fuß in der Mitte;
-    /// dieselben Seiten wie in art/asset-vertrag.json.
+    /// Schatten (D-120, D-196), Quadrat mit dem Anker des Turmbildes in der Mitte;
+    /// dieselbe Seite wie in art/asset-vertrag.json.
     static let towerShadowSide: CGFloat = 2.4
-    static let footingSide: CGFloat = 1.2
     /// Die Torburg (Grafik 11, D-191) steht im Rand hinter dem Wegende, nicht im
     /// Feld; wo genau, rechnet `FortressPlacement`.
     static let fortressAnchorY: CGFloat = 0.34
