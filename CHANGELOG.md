@@ -29,7 +29,7 @@ Jede Auslieferung auf `main` bekommt hier einen Eintrag, neueste oben.
 - App: `TowerGroundingTests` (nur der Schatten in der Schattenebene, Turm nicht angehoben),
   `WorldGroundingTests.testPreviewStandsOnTheGround`.
 
-## 0.47.0 – 24.11.2026 (Grafik 11: Kampfplatz in der Welt) · Bau folgt
+## 0.47.0 – 24.11.2026 (Grafik 11: Kampfplatz in der Welt) · Bau 67
 
 ### Neu
 - **Review „Kampfplatz in der Welt“** mit zehn Befunden aus dem Simulatorbild, markierten
