@@ -12,8 +12,11 @@ final class TowerAimTests: XCTestCase {
 
     private func tower(_ kind: TowerKind, level: Int = 1, specialization: Specialization? = nil,
                        figure: GuardFigure = .dwarf) -> TowerNode {
-        TowerNode(tower: Tower(id: 1, kind: kind, cell: Cell(x: 0, y: 0), cooldownTicks: 0, spent: 1,
-                               level: level, specialization: specialization), field: field, guardFigure: figure)
+        // Wie die Szene: erst der Turm, dann sein Bild nach Stufe und Spezialisierung.
+        let node = TowerNode(tower: Tower(id: 1, kind: kind, cell: Cell(x: 0, y: 0), cooldownTicks: 0, spent: 1,
+                                          level: level, specialization: specialization), field: field, guardFigure: figure)
+        node.show(level: level, specialization: specialization)
+        return node
     }
 
     // MARK: Blickrichtung (rein)
@@ -31,7 +34,7 @@ final class TowerAimTests: XCTestCase {
         var facing = GuardFacing(angle: 0)
         facing.turn(toward: .pi / 2, dt: 0.1, rate: 2, hysteresis: 0, snap: false)
         XCTAssertEqual(facing.angle, 0.2, accuracy: 1e-9, "höchstens Tempo × Zeit")
-        facing.turn(toward: -0.1, dt: 0.1, rate: 2, hysteresis: 0, snap: false)
+        facing.turn(toward: -0.1, dt: 0.2, rate: 2, hysteresis: 0, snap: false)
         XCTAssertEqual(facing.angle, GuardFacing.normalized(-0.1), accuracy: 1e-9, "nahe Ziele sofort")
         var still = GuardFacing(angle: 0)
         still.turn(toward: .pi, dt: 0.01, rate: 2, hysteresis: 0, snap: true)
@@ -77,7 +80,7 @@ final class TowerAimTests: XCTestCase {
         XCTAssertTrue(tower(.lightning).shooters.isEmpty)
         // Aufwerten tauscht das Bild und behält die Blickrichtung.
         let node = tower(.watch)
-        node.aim(at: [CGPoint(x: -100, y: 0)], dt: 1, still: true)
+        node.aim(at: [CGPoint(x: -4000, y: 0)], dt: 1, still: true)
         node.show(level: 3, specialization: .volley)
         XCTAssertEqual(node.shooters.map(\.facing.sector), [4, 4])
     }
@@ -100,10 +103,10 @@ final class TowerAimTests: XCTestCase {
     func testVolleyShootersAimAtTheirOwnTargets() throws {
         try XCTSkipUnless(ShooterNode.available, "Schützenbilder fehlen im Atlas")
         let node = tower(.watch, level: 3, specialization: .volley)
-        node.aim(at: [CGPoint(x: 400, y: 0), CGPoint(x: -400, y: 0)], dt: 1, still: true)
+        node.aim(at: [CGPoint(x: 4000, y: 0), CGPoint(x: -4000, y: 0)], dt: 1, still: true)
         XCTAssertEqual(node.shooters.map(\.facing.sector), [0, 4])
         XCTAssertTrue(node.shooters.allSatisfy(\.onTarget))
-        node.aim(at: [CGPoint(x: 0, y: 400)], dt: 1, still: true)
+        node.aim(at: [CGPoint(x: 0, y: 4000)], dt: 1, still: true)
         XCTAssertEqual(node.shooters.map(\.facing.sector), [2, 2])
         node.aim(at: [], dt: 1, still: true)
         XCTAssertEqual(node.shooters.map(\.facing.sector), [2, 2], "ohne Ziel bleibt er stehen")

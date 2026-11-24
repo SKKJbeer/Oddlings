@@ -610,7 +610,8 @@ final class BattleScene: SKScene {
                 #endif
             case .lightning:
                 node.charge = CGFloat(model.sim.charge(of: tower))
-                if Double(node.charge) >= FxStyle.chargeMotesFrom && node.charge < 1 { fx.chargeMote(node) }
+                // Nach dem Ende lädt nichts mehr: sonst zögen ewig Funken ein.
+                if !state.isOver, Double(node.charge) >= FxStyle.chargeMotesFrom, node.charge < 1 { fx.chargeMote(node) }
             case .spore, .bank:
                 continue
             }
