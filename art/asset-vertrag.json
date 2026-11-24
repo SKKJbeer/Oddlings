@@ -63,8 +63,9 @@
       "alpha": true
     },
     "fortress": {
-      "seiteZellen": 2.4,
-      "anker": 0.15,
+      "seiteZellen": 4.0,
+      "anker": 0.34,
+      "grundriss": true,
       "alpha": true
     },
     "enemy_raider": {
@@ -686,6 +687,24 @@
     "tower_spore_rot_shadow": {
       "seiteZellen": 2.4,
       "alpha": true
+    },
+    "tower_plinth": {
+      "seiteZellen": 1.5,
+      "alpha": true
+    },
+    "tower_contact": {
+      "seiteZellen": 1.4,
+      "alpha": true
+    },
+    "fortress_shadow": {
+      "seiteZellen": 4.0,
+      "alpha": true
     }
+  },
+  "_festung": "Torburg (Grafik 11, D-191): Tor = Wegende am Kartenrand + tor Zellen nach rechts; Fuss = Tor minus torAbstand entlang der Blickrichtung des Tores. gier = Drehung um die Hochachse in Grad (0 = Tor zum Betrachter, negativ = Tor nach links unten). App (BattleStyle.fortress*) und tools/kampfplatz-3d lesen dieselben Werte, art-check haelt sie gleich.",
+  "festung": {
+    "tor": 0.4,
+    "torAbstand": 0.5,
+    "gier": -45
   }
 }

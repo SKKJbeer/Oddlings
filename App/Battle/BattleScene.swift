@@ -37,7 +37,8 @@ final class BattleScene: SKScene {
     private let light: SKColor?
     let enemyLayer = SKNode()
     let effectLayer: SKNode
-    private let fortress = SKShapeNode()
+    /// Torburg; intern lesbar für die Lageprüfung (Grafik 11).
+    let fortress = SKShapeNode()
     private let fortressHit = SKShapeNode()
     private var fortressRest = CGPoint.zero
     private let selectionLayer = SKNode()
@@ -303,6 +304,17 @@ final class BattleScene: SKScene {
             sprite.color = light ?? .white
             sprite.colorBlendFactor = light == nil ? 0 : 1
         }
+        // Auf dem Sockel wie der echte Turm (Grafik 11, D-190); beim Neubau liegt
+        // der Sockel blass mit, beim Spezialisieren steht er schon.
+        if let plinth = BattleSprites.groundDecal(named: BattleSprites.plinthName, side: BattleStyle.plinthSide * field) {
+            for case let sprite as SKSpriteNode in ghost.children { sprite.position.y += BattleStyle.plinthLift * field }
+            if case .cell = selection {
+                plinth.zPosition = -1
+                plinth.color = light ?? .white
+                plinth.colorBlendFactor = light == nil ? 0 : 1
+                ghost.addChild(plinth)
+            }
+        }
         ghost.alpha = BattleStyle.previewAlpha
         ghost.position = toScene(cell.center)
         // Knapp vor dem Turm derselben Zelle, sonst in der Reihe nach Höhe.
@@ -402,11 +414,14 @@ final class BattleScene: SKScene {
             ground.addChild(pathNode)
         }
 
-        // Die Festung sitzt, wo der Weg die Karte verlässt.
+        // Die Torburg steht am Wegende, das Tor zum Weg (Grafik 11, D-191). Der
+        // Knoten sitzt im Tor, dorthin laufen Durchbrüche; das Bild steht auf seinem Fuß.
         let end = map.path.points[map.path.points.count - 1]
-        let gate = Point(x: min(end.x, Double(map.width)), y: end.y)
-        fortress.path = CGPath(roundedRect: CGRect(x: (BattleStyle.fortressOffset.x - 0.6) * field, y: -field * 0.9,
-                                                   width: field * 1.2, height: field * 1.8),
+        let gate = FortressPlacement.gate(pathEnd: end, mapWidth: map.width)
+        let footPoint = FortressPlacement.foot(pathEnd: end, mapWidth: map.width)
+        let foot = CGPoint(x: (footPoint.x - gate.x) * field, y: -(footPoint.y - gate.y) * field)
+        fortress.path = CGPath(roundedRect: CGRect(x: foot.x - field * 0.8, y: foot.y - field * 0.3,
+                                                   width: field * 1.6, height: field * 2.0),
                                cornerWidth: field * 0.2, cornerHeight: field * 0.2, transform: nil)
         fortress.removeAllChildren()
         if let picture = BattleSprites.fortress(field: field) {
@@ -414,12 +429,18 @@ final class BattleScene: SKScene {
             // für das Aufblitzen bei einem Durchbruch.
             fortress.fillColor = .clear
             fortress.strokeColor = .clear
-            picture.position = CGPoint(x: BattleStyle.fortressOffset.x * field, y: -BattleStyle.fortressOffset.y * field)
+            picture.position = foot
             if let light {
                 picture.color = light
                 picture.colorBlendFactor = 1
             }
             fortress.addChild(picture)
+            // Schatten aus derselben Sonne, unter dem Bild wie bei den Türmen (D-120, D-191).
+            if let shadow = BattleSprites.fortressShadow(field: field) {
+                shadow.position = foot
+                shadow.zPosition = -1
+                fortress.addChild(shadow)
+            }
         } else {
             fortress.fillColor = BattleStyle.fortress
             fortress.strokeColor = .black
@@ -592,7 +613,8 @@ final class BattleScene: SKScene {
 
     private func makeTowerNode(_ tower: Tower) -> TowerNode {
         let node = TowerNode(tower: tower, field: field, light: light,
-                             footing: BattleSprites.footingName(missionID: model.sim.config.mission.id))
+                             footing: BattleSprites.footingName(missionID: model.sim.config.mission.id),
+                             plinth: BattleSprites.plinthName)
         node.position = toScene(tower.cell.center)
         node.shade.position = node.position
         shadeLayer.addChild(node.shade)

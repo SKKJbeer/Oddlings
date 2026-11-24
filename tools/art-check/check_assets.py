@@ -145,7 +145,12 @@ def pruefe(wurzel):
                     # In einer Folge nur im ersten Bild: Beim Laufen hebt ein Fuß ab,
                     # beim Sturz liegt die Figur; gleicher Maßstab kommt aus folge.py.
                     box = bild.getchannel("A").point(lambda v: 255 if v > 24 else 0).getbbox()
-                    if box:
+                    if regel.get("grundriss"):
+                        # Bau mit Grundriss (Torburg, Grafik 11): Der Anker ist die Mitte des
+                        # Grundrisses, nicht die unterste Zeile; dort muss der Bau stehen.
+                        if bild.getchannel("A").getpixel((bild.width // 2, round(bild.height * (1 - regel["anker"])))) < 200:
+                            fehler.append(f"{name}@{f}x: am Anker {regel['anker']} steht kein Bau")
+                    elif box:
                         fuss = (bild.height - box[3]) / bild.height
                         if abs(fuss - regel["anker"]) > 0.03:
                             fehler.append(f"{name}@{f}x: Fuss bei {fuss:.2f}, Vertrag {regel['anker']}")

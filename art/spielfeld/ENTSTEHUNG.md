@@ -32,7 +32,7 @@ single isolated full body character centered in frame, side three-quarter view f
 | `tower_watch` | a sturdy round watchtower of warm grey stone with a wooden archer platform on top, a mounted crossbow and a red pennant flag | – |
 | `tower_lightning` | a slender round stone tower with copper rings, crowned by a large floating glowing blue crystal with crackling electric sparks | Funken oberhalb des Kupferrings (Bildzeilen 0–199) von Orange (Farbton 0,02–0,18, s > 0,25, v > 0,5) auf Blau 0,53 gedreht: Blitz ist in der Farbwelt blau |
 | `tower_spore` | a giant mushroom tower with a big purple cap covered in glowing green spots, a chubby cream stem with a small round wooden door, puffs of glowing green spores rising | – |
-| `fortress` | a mighty dwarven-built stone fortress with a massive arched wooden gate, thick crenellated walls of warm grey stone, two round corner towers with pointed dark blue slate roofs, red and gold banners, glowing warm torches beside the gate, moss and ivy on the stones | **Seed 31** (Grafik 05, 26.10.2026; Seed 32 verworfen: Fass und Fackelständer als Fremdkörper). Vorher Seed 11 mit flachem Torhaus |
+| `fortress` (bis 0.45.0) | a mighty dwarven-built stone fortress with a massive arched wooden gate, thick crenellated walls of warm grey stone, two round corner towers with pointed dark blue slate roofs, red and gold banners, glowing warm torches beside the gate, moss and ivy on the stones | **Seed 31** (Grafik 05, 26.10.2026; Seed 32 verworfen: Fass und Fackelständer als Fremdkörper). Vorher Seed 11 mit flachem Torhaus |
 | `enemy_raider` | a small mischievous goblin raider with green skin and a brown leather hood, carrying a loot sack over the shoulder and a wooden club | gespiegelt: trotz „facing right" nach links gemalt |
 | `enemy_runner` | a small skinny fast imp with orange skin, long pointy ears and a flowing red scarf, sprinting and leaning forward | gespiegelt |
 | `enemy_brute` | a hulking armored beast, a bulky boar-like creature with tusks, curved horns and riveted iron armor plates | gespiegelt |
@@ -85,3 +85,21 @@ Standbilder im Atlas; seit 0.43.0 sind sie die Vorlagen der 3D-Figuren
   with two black dot eyes under the cap", dann derselbe Stilteil wie beim Pilzbalg.
   Seed 11 verworfen: langer dünner Stiel, Arme vor dem Bauch, das Gesicht sitzt klein auf
   dem Hut. Gleiche Kappe wie der Pilzbalg, damit man sieht, woher er kommt.
+
+
+## Grafik 11: Torburg, Sockel, Kontakt (24.11.2026, 0.47.0)
+
+Konzept: [Grafik 11](../../docs/konzepte/grafik-11-kampfplatz-in-der-welt.md), D-190, D-191,
+D-193. Nicht mehr frei gemalt, sondern zuerst in Blender gebaut
+(`tools/kampfplatz-3d/bauten.py`, Vertragskamera 40°, Sonne 135°/45°, Rahmen und Anker
+aus dem Vertrag), dann mit FLUX.1-schnell Bild-zu-Bild übermalt (512 × 512, 4 Schritte,
+euler, cfg 1,0) und mit `bau_freistellen.py` freigestellt: Form und Schatten aus Blender,
+Farbe aus FLUX. In den Atlas mit `atlas.py … rahmen` (nur skaliert, nicht zugeschnitten).
+Quellen in `bauten/` (`*-blender.png` Render, `*-rohbild.png` übermalt).
+
+| Name | Prompt | Einstellungen |
+|---|---|---|
+| `fortress` | hand-painted mobile strategy game building asset, a small grey stone dwarf fortress gatehouse with two round towers with blue slate cone roofs and red flags, battlements, an arched wooden gate with two burning torches and a red banner above it, stone base with grass tufts, seen from above at a 40 degree angle, stylized 3D, warm afternoon light from the top left, rich painterly textures, high detail, plain flat light grey background, no text, no characters | **Seed 8**, Stärke 0,5; Rahmen 4,0 Zellen, Anker 0,34 = Mitte des Grundrisses. Erster Rahmen (3,6/0,2) schnitt die Sockelecke ab, neu gerendert; Seed 3 nicht fertig (Speicher) |
+| `fortress_shadow` | – | Schattenfänger desselben Renders, schwarz mit 80 % der Deckung, am Bildrand ausgeblendet, nur der am Bau hängende Teil |
+| `tower_plinth` | hand-painted mobile strategy game asset, a low round raised platform of fitted grey flagstones with a stone rim, small pebbles and green grass tufts around its base, seen from above at a 40 degree angle, stylized 3D, warm afternoon light from the top left, rich painterly textures, plain flat light grey background, no text | **Seed 3**, Stärke 0,45; Platte 1,1 Zellen Ø, 0,1 hoch, Rahmen 1,5 |
+| `tower_contact` | – | gerechnet von `turmboden.py` (`kontaktdunkel`): radial (1 − d)^1,6, Ellipse 0,86 × 0,34, Deckung 72 % |

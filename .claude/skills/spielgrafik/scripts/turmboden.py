@@ -36,6 +36,9 @@ SCHATTEN_FARBE = (18, 24, 18)
 FUNDAMENT_SEITE = 1.2
 FUNDAMENT = (1.05, 0.58)  # Fleck in Zellen
 FUNDAMENT_DECKUNG = 0.85
+KONTAKTDUNKEL_SEITE = 1.4  # Grafik 11 (D-193): enges Dunkel genau unter dem Fuß, Quadrat
+KONTAKTDUNKEL = (0.86, 0.34)  # Ellipse in Zellen, etwas schmaler als ein Sockel
+KONTAKTDUNKEL_DECKUNG = 0.72
 RAND = 2                  # Rand der Karte um das Feld in Zellen (BattleStyle.groundMargin)
 RAND_BREITE = 4
 
@@ -79,6 +82,26 @@ def schatten(name):
     ablegen(bild, f"{name}_shadow", SCHATTEN_SEITE)
 
 
+def kontaktdunkel():
+    """`tower_contact` (Grafik 11, D-193): Ambient Occlusion am Fuß. Dunkel in der Mitte,
+    zum Rand quadratisch abfallend, ohne harte Kante. Es sagt „steht“; der Schlagschatten
+    sagt nur, woher das Licht kommt."""
+    z = PT * 3
+    seite = round(KONTAKTDUNKEL_SEITE * z)
+    kb, kh = KONTAKTDUNKEL[0] * z / 2, KONTAKTDUNKEL[1] * z / 2
+    alpha = Image.new("L", (seite, seite), 0)
+    px = alpha.load()
+    m = seite / 2
+    for y in range(seite):
+        for x in range(seite):
+            d = ((x + 0.5 - m) / kb) ** 2 + ((y + 0.5 - m) / kh) ** 2
+            if d < 1:
+                px[x, y] = round(255 * KONTAKTDUNKEL_DECKUNG * (1 - d) ** 1.6)
+    bild = Image.new("RGBA", (seite, seite), SCHATTEN_FARBE + (0,))
+    bild.putalpha(alpha.filter(ImageFilter.GaussianBlur(0.02 * z)))
+    ablegen(bild, "tower_contact", KONTAKTDUNKEL_SEITE)
+
+
 def fleck(b, h, seed):
     maske = Image.new("L", (b, h), 0)
     zufall = random.Random(seed)
@@ -119,8 +142,10 @@ def fundament(boden_name):
 if __name__ == "__main__":
     for eintrag in sorted(os.listdir(ATLAS)):
         name = eintrag[: -len(".imageset")]
-        if re.fullmatch(r"tower_[a-z]+(_(\d|[a-z]+))?", name) and not name.endswith("_shadow"):
+        if (re.fullmatch(r"tower_[a-z]+(_(\d|[a-z]+))?", name) and not name.endswith("_shadow")
+                and name not in ("tower_plinth", "tower_contact")):
             schatten(name)
+    kontaktdunkel()
     for eintrag in sorted(os.listdir(KARTEN)):
         if re.fullmatch(r"map_mission\w+_ground\.imageset", eintrag):
             fundament(eintrag[: -len(".imageset")])
