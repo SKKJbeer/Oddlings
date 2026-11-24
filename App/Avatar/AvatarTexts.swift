@@ -8,7 +8,6 @@ enum AvatarTexts {
     static let name = "Name"
     static let suggest = "Anderer Name"
     static let confirm = "Los geht's"
-    static let yourAvatar = "Dein Avatar"
 
     static func badge(_ avatar: Avatar, rank: Int) -> String {
         "\(avatar.name), \(CampaignTexts.race(avatar.race)), \(self.rank(rank))"

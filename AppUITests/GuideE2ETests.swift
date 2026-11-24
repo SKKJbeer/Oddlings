@@ -56,6 +56,21 @@ final class GuideE2ETests: XCTestCase {
         XCTAssertEqual(toggle.value as? String, "1", "neu an")
         XCTAssertTrue(e2e.app.buttons["settings.done"].isHittable, "Tafel passt ganz auf den Schirm")
     }
+
+    /// D-214: Die Leistungsprobe ist ein Werkzeug und steht in den
+    /// Einstellungen, nicht neben „Spielen“.
+    @MainActor
+    func testSpikeLivesInSettingsNotInTheMenu() throws {
+        let e2e = try E2EApp()
+        let button = e2e.app.buttons["menu.settings"]
+        XCTAssertTrue(button.waitForExistence(timeout: 15))
+        XCTAssertFalse(e2e.app.buttons["menu.spike"].exists, "kein Entwicklerknopf im Hauptmenü")
+        button.tap()
+        let spike = e2e.app.buttons["settings.spike"]
+        XCTAssertTrue(spike.waitForExistence(timeout: 5))
+        XCTAssertTrue(spike.isHittable, "Knopf liegt ganz auf der Tafel")
+        XCTAssertTrue(e2e.app.buttons["settings.done"].isHittable, "Tafel passt weiter ganz auf den Schirm")
+    }
 }
 
 /// Die Wartezeit des Einstiegs. Steht in `BattleStyle` der App, die der

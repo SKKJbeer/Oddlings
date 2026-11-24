@@ -12,7 +12,6 @@ struct MainMenuView: View {
     var onContinue: () -> Void = {}
     var onPlay: () -> Void
     var onWatch: () -> Void
-    var onSpike: () -> Void
     var onSettings: () -> Void = {}
     /// Avatarschild oben links neben den Einstellungen (R-5); fehlt vor dem Aufbau.
     var avatar: Avatar?
@@ -105,10 +104,6 @@ struct MainMenuView: View {
             Button(action: onWatch) { Text(BattleTexts.watch).frame(maxWidth: .infinity) }
                 .buttonStyle(ChunkyButtonStyle(kind: .wood, height: 48, fontSize: 18))
                 .accessibilityIdentifier("menu.watch")
-            // Bleibt, bis WP-01 auf dem iPhone gemessen ist.
-            Button(action: onSpike) { Text(BattleTexts.spike).frame(maxWidth: .infinity) }
-                .buttonStyle(ChunkyButtonStyle(kind: .wood, height: 44, fontSize: 15))
-                .accessibilityIdentifier("menu.spike")
         }
     }
 }

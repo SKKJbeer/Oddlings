@@ -83,11 +83,16 @@ struct StartView: View {
                     flow.mission(for: node.id).map { MenuTexts.waves($0.waves.count) }
                 },
                 onContinue: { if let node = flow.continueNode { flow.start(node.id) } },
-                onPlay: { flow.showMap() }, onWatch: { flow.showWatch() }, onSpike: { flow.showSpike() },
+                onPlay: { flow.showMap() }, onWatch: { flow.showWatch() },
                 onSettings: { showsSettings = true },
                 avatar: flow.avatar, rank: flow.rank, news: flow.avatarNews,
                 onAvatar: { flow.openAvatar() })
-            .overlay { if showsSettings { SettingsCard { showsSettings = false } } }
+            .overlay {
+                if showsSettings {
+                    SettingsCard(onClose: { showsSettings = false },
+                                 onSpike: { showsSettings = false; flow.showSpike() })
+                }
+            }
         case .setup:
             AvatarSetupView(flow: flow)
         case .map:

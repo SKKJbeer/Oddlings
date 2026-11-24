@@ -65,9 +65,28 @@ private struct MapBackdrop: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             if UIImage(named: CampaignStyle.mapImage) != nil {
+                // Review 2, U2 (D-213): Die Karte ist eingepasst, damit kein Knoten
+                // fehlt. Was ringsum frei bleibt, füllt dasselbe Bild, vergrößert,
+                // weich und abgedunkelt; die Kanten der eingepassten Karte laufen
+                // weich hinein. So steht man im Wald statt vor einem Bild im Dunkel.
+                GeometryReader { proxy in
+                    Image(CampaignStyle.mapImage)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: proxy.size.width, height: proxy.size.height)
+                        .blur(radius: CampaignStyle.fillBlur)
+                        .overlay(Color.black.opacity(CampaignStyle.fillShade))
+                        .clipped()
+                }
+                .ignoresSafeArea()
                 Image(CampaignStyle.mapImage)
                     .resizable()
                     .frame(width: rect.width, height: rect.height)
+                    .mask(
+                        Rectangle()
+                            .padding(CampaignStyle.edgeFeather)
+                            .blur(radius: CampaignStyle.edgeFeather / 2)
+                    )
                     .offset(x: rect.minX, y: rect.minY)
             } else {
                 Canvas { context, _ in drawForest(in: &context) }
@@ -312,63 +331,88 @@ struct StarRow: View {
 // MARK: - Missionstafel
 
 /// Der Avatar über „Starten" (R-5): wer spielt und was sein Volk tut. Keine
-/// Wahl mehr; das Volk ist seit dem Aufbau gesetzt (D-063).
+/// Wahl mehr; das Volk ist seit dem Aufbau gesetzt (D-063). Das Abzeichen nennt
+/// sich selbst, eine eigene Überschrift kostete eine Zeile, die fehlte (U3).
 private struct AvatarSummary: View {
     let avatar: Avatar
     let flow: AppFlow
+    var detail = true
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(AvatarTexts.yourAvatar.uppercased())
-                .font(UITheme.bodyHeavy(12))
-                .tracking(1.5)
-                .foregroundStyle(CampaignStyle.gold)
+        VStack(alignment: .leading, spacing: 4) {
             Button { flow.openAvatar() } label: {
-                AvatarBadge(avatar: avatar, rank: flow.rank, size: 40, news: flow.avatarNews)
+                AvatarBadge(avatar: avatar, rank: flow.rank, size: 36, news: flow.avatarNews)
             }
             .buttonStyle(.plain)
             .accessibilityIdentifier("map.avatar")
-            Text(CampaignTexts.raceDetail(avatar.race))
-                .font(UITheme.body(13))
-                .foregroundStyle(CampaignStyle.parchment)
-                .lineLimit(2)
-                .minimumScaleFactor(0.8)
-                .accessibilityIdentifier("map.race.detail")
+            if detail {
+                Text(CampaignTexts.raceDetail(avatar.race))
+                    .font(UITheme.body(13))
+                    .foregroundStyle(CampaignStyle.parchment)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier("map.race.detail")
+            }
         }
     }
 }
 
-private struct MissionPanel: View {
+/// Missionstafel rechts. Auf niedrigen Schirmen fällt zuerst die Zeile zum
+/// Volk weg, dann die Neuheit, nie Titel, Stand und „Starten" (U3, D-213):
+/// Vorher lief die Tafel über, oben war die Art angeschnitten und die Zeile zum
+/// Volk endete mit „…“.
+struct MissionPanel: View {
     let flow: AppFlow
 
     var body: some View {
+        ViewThatFits(in: .vertical) {
+            content(race: true, novelty: true)
+            content(race: false, novelty: true)
+            content(race: false, novelty: false)
+        }
+        .padding(.horizontal, 18)
+        .padding(.vertical, CampaignStyle.panelPadding)
+        .frame(maxHeight: .infinity, alignment: .top)
+        .background(
+            LinearGradient(colors: [UITheme.woodFace, UITheme.wood], startPoint: .top, endPoint: .bottom)
+                .overlay(alignment: .leading) { Rectangle().fill(UITheme.outline).frame(width: UITheme.line) }
+                .ignoresSafeArea()
+        )
+        .safeAreaPadding(.trailing)
+    }
+
+    /// Inhalt ohne Rahmen; die Tests messen seine Höhe je Fassung.
+    func content(race: Bool, novelty showNovelty: Bool) -> some View {
         let node = flow.campaign.node(flow.selectedNode) ?? flow.campaign.nodes[0]
         let state = flow.state(of: node)
-        VStack(alignment: .leading, spacing: 10) {
-            Text(CampaignTexts.kind(node.kind).uppercased())
-                .font(UITheme.bodyHeavy(12))
-                .tracking(1.5)
-                .foregroundStyle(CampaignStyle.gold)
+        return VStack(alignment: .leading, spacing: CampaignStyle.panelSpacing) {
+            HStack(alignment: .center) {
+                Text(CampaignTexts.kind(node.kind).uppercased())
+                    .font(UITheme.bodyHeavy(12))
+                    .tracking(1.5)
+                    .foregroundStyle(CampaignStyle.gold)
+                    .accessibilityIdentifier("map.panel.kind")
+                Spacer(minLength: 6)
+                StarRow(count: flow.progress.stars(for: node.id), size: 16)
+            }
             Text(CampaignTexts.name(node.id))
-                .font(UITheme.display(30))
+                .font(UITheme.display(28))
                 .foregroundStyle(UITheme.cream)
                 .shadow(color: UITheme.outline, radius: 0, x: 0, y: 3)
                 .minimumScaleFactor(0.7)
                 .lineLimit(1)
                 .accessibilityIdentifier("map.panel.title")
-            StarRow(count: flow.progress.stars(for: node.id), size: 18)
             Text(CampaignTexts.lesson(node.id))
-                .font(UITheme.body(15))
+                .font(UITheme.body(14))
                 .foregroundStyle(CampaignStyle.parchment)
                 .fixedSize(horizontal: false, vertical: true)
-            if let novelty = CampaignTexts.novelty(node.novelty) {
+            if showNovelty, let novelty = CampaignTexts.novelty(node.novelty) {
                 Label(novelty, systemImage: "sparkles")
                     .font(UITheme.bodyHeavy(14))
                     .foregroundStyle(CampaignStyle.gold)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            Spacer(minLength: 4)
-            if let avatar = flow.avatar { AvatarSummary(avatar: avatar, flow: flow) }
+            Spacer(minLength: 2)
+            if let avatar = flow.avatar { AvatarSummary(avatar: avatar, flow: flow, detail: race) }
             Text(CampaignTexts.status(state, totalStars: flow.progress.totalStars))
                 .font(UITheme.body(14))
                 .foregroundStyle(state.isPlayable ? CampaignStyle.parchment : Color.white.opacity(0.6))
@@ -379,18 +423,9 @@ private struct MissionPanel: View {
                       systemImage: "play.fill")
                     .frame(maxWidth: .infinity)
             }
-            .buttonStyle(ChunkyButtonStyle(kind: .gold, height: 60, fontSize: 26))
+            .buttonStyle(ChunkyButtonStyle(kind: .gold, height: CampaignStyle.startHeight, fontSize: 24))
             .disabled(!state.isPlayable)
             .accessibilityIdentifier("map.start")
         }
-        .padding(.horizontal, 18)
-        .padding(.vertical, 20)
-        .frame(maxHeight: .infinity, alignment: .top)
-        .background(
-            LinearGradient(colors: [UITheme.woodFace, UITheme.wood], startPoint: .top, endPoint: .bottom)
-                .overlay(alignment: .leading) { Rectangle().fill(UITheme.outline).frame(width: UITheme.line) }
-                .ignoresSafeArea()
-        )
-        .safeAreaPadding(.trailing)
     }
 }
