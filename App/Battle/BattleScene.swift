@@ -664,6 +664,9 @@ final class BattleScene: SKScene {
         // Weiter unten heißt weiter vorn; bleibt innerhalb der eigenen Ebene.
         node.zPosition = 1 - node.position.y / max(size.height, 1)
         towerLayer.addChild(node)
+        if let painted = ground.childNode(withName: BattleSprites.groundName(missionID: model.sim.config.mission.id)) as? SKSpriteNode {
+            node.plant(in: painted)
+        }
         towerNodes[tower.id] = node
         return node
     }

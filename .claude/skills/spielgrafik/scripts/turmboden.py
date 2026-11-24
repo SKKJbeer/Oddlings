@@ -26,9 +26,9 @@ ATLAS = os.path.join(wurzel, vertrag["atlas"])
 SCHATTEN_SEITE = 2.4      # Zellen, Quadrat
 SCHATTEN_LAENGE = 0.42    # Schlagschatten: Anteil der Turmhöhe
 SCHATTEN_SCHERUNG = 1.0   # nach rechts je Länge nach unten (45°, wie die Torburg)
-SCHATTEN_DECKUNG_FUSS = 0.62  # Kontakthärtung: am Fuß dunkel und scharf ...
-SCHATTEN_DECKUNG = 0.40       # ... zur Spitze heller ...
-SCHATTEN_WEICH = 0.06         # ... und weicher (Unschärfe in Zellen)
+SCHATTEN_DECKUNG_FUSS = 0.72  # Kontakthärtung: am Fuß dunkel und scharf wie die Baumschatten ...
+SCHATTEN_DECKUNG = 0.52       # ... zur Spitze heller ...
+SCHATTEN_WEICH = 0.035        # ... und weicher (Unschärfe in Zellen; D-201)
 SCHATTEN_SCHARF = 0.008
 KONTAKT_DECKUNG = 0.85    # Dunkel unter dem Grundriss, sichtbar nur als Saum
 KONTAKT_UEBERSTAND = 1.12  # Grundriss mal diesem Wert
@@ -113,5 +113,5 @@ def schatten(name):
 if __name__ == "__main__":
     for eintrag in sorted(os.listdir(ATLAS)):
         name = eintrag[: -len(".imageset")]
-        if re.fullmatch(r"tower_[a-z]+(_(\d|[a-z]+))?", name) and not name.endswith("_shadow"):
+        if re.fullmatch(r"tower_[a-z]+(_(\d|[a-z]+))?", name) and not name.endswith(("_shadow", "_grass")) and name in vertrag["assets"] and "anker" in vertrag["assets"][name]:
             schatten(name)

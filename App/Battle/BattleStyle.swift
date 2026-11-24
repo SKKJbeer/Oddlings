@@ -76,6 +76,8 @@ enum BattleStyle {
     /// Mündung der Armbrust: Anteil der Bildbreite vor der Figur und der Bildhöhe über dem Fuß.
     static let guardMuzzleReach: CGFloat = 0.28
     static let guardMuzzleHeight: CGFloat = 0.42
+    /// Boden vor dem Fuß über dem Turm (D-202): über Bild und Schützen, unter der Bankleiste.
+    static let grassZ: CGFloat = 1.5
     /// Schatten (D-120, D-196), Quadrat mit dem Anker des Turmbildes in der Mitte;
     /// dieselbe Seite wie in art/asset-vertrag.json.
     static let towerShadowSide: CGFloat = 2.4

@@ -161,6 +161,10 @@ Keine neue Eingabe von außen. Neue Bilder liegen im Bündel, Herkunft in
 | D-194 | Kein Lichthof um die Festung, Weg endet im Tor, Wegrand ohne harte Linie | gilt (Claude, Darstellung) |
 | D-195 | Erdung wird geprüft (art-check und App-Tests oben) | gilt (Claude, Prüfung) |
 | D-196 | Sockel, Kontaktbild und Fundament entfallen, der Schatten wächst aus dem gemalten Fuß (Nachtrag unten) | ENTSCHIEDEN (Steffen, 24.11.2026), hebt D-190 und D-193 auf |
+| D-200 | Türme ins Licht der 3D-Welt gerechnet: Schattenseite und Fußdunkel aus der unveränderten Malerei (Nachtrag 2) | gilt (Claude, Darstellung) |
+| D-201 | Turmschatten so dunkel und scharf wie die Baumschatten | gilt (Claude, Darstellung) |
+| D-202 | Gras des Kampfplatzes vor dem Fuß | gilt (Claude, Darstellung) |
+| D-203 | Licht und Gras werden geprüft | gilt (Claude, Prüfung) |
 
 ## Nachtrag 0.49.0: Der Sockel war der falsche Weg (D-196)
 
@@ -204,3 +208,55 @@ Schattenebene, Turm nicht angehoben), `WorldGroundingTests.testPreviewStandsOnTh
 
 Langfristig sauberer wäre, die Türme wie die Gegner (A-3) in der gemeinsamen 3D-Kamera zu
 rechnen; dann kommen Fuß und Schatten aus derselben Szene. Das ist ein eigenes Paket.
+
+## Nachtrag 2 (0.49.0): Licht und Gras (D-200 bis D-203)
+
+Steffen, 24.11.2026: „es sieht immernoch so aus dass es schwebt und nicht in der welt
+richtig integriert ist. finde eine aaa lösung“. Das Simulatorbild von Mission 1 mit Bau 68
+Bildpunkt für Bildpunkt neben Bäume und Torburg gelegt. Der Sockel war nur ein Teil. Drei
+Dinge verraten den aufgeklebten Turm:
+
+1. **Kein Licht.** Bäume, Inseln und Torburg sind in 3D gerechnet, mit der Sonne von oben
+   links hinten (Vertrag `sonne`): links hell, rechts im Schatten. Die Türme sind gemalt und
+   von vorn gleichmäßig ausgeleuchtet. Zwei Lichtquellen in einem Bild liest das Auge als
+   zwei Ebenen.
+2. **Zu schwacher Schatten.** Die Baumschatten sind satt und scharfkantig, die Turmschatten
+   blass und weich. Ein blasser Schatten heißt „weit weg vom Boden“.
+3. **Die Fußlinie.** Der Turm endet in einer sauberen Kante, die auf dem Gras liegt. In der
+   Welt verdeckt der Boden immer ein wenig vom Fuß: Halme, Erde, Moos.
+
+Der Umriss ist es nicht: Die Turmkontur ist so dünn wie die der Gegner.
+
+**Lösung, ohne die Malerei aufzugeben:**
+
+- **Licht-Angleich (D-200).** Die Malerei bleibt unverändert die Quelle
+  (`art/tuerme-in-der-welt/quelle/`). `turmlicht.py` nähert den Turm je Zeile als Zylinder
+  (Mitte und Breite aus dem Umriss, über neun Zeilen geglättet) und rechnet die Seiten zum
+  Licht: links bis 20 % heller, rechts ab der Mitte bis 34 % dunkler, dazu ein Fußdunkel
+  (42 % am Grundriss, ausgeblendet bis 22 % der Bildhöhe). Der Umriss bleibt Pixel für
+  Pixel gleich, also gelten die Kronen- und Schützentabellen aus 0.48.0 weiter.
+- **Schatten wie die Bäume (D-201).** Deckung am Fuß 72 %, zur Spitze 52 %, halb so weich.
+- **Gras vor dem Fuß (D-202).** `turmlicht.py` schreibt je Turmbild eine Maske
+  `tower_<name>_grass`: den vorderen Bogen des Grundrisses, 12 % breiter, mit einer Kante aus
+  Halmen (vorn lang, an den Seiten kurz). Die Szene setzt darin den Ausschnitt des gemalten
+  Kampfplatzbodens samt Schatten über die Fußlinie (`TowerNode.plant(in:)`, ein
+  `SKCropNode` in `stand`). Beim Errichten wächst der Turm also aus dem Gras heraus.
+
+Erwogen und verworfen: die Türme wie die Gegner mit TRELLIS in 3D zu rechnen. Das Modell
+verlor die Malerei, die Textur kam dunkel und matschig zurück, und mit freigestelltem
+Eingang entstand eine Wand hinter dem Turm. Die gerechnete Beleuchtung über der Malerei
+bringt dieselbe Lichtrichtung ohne diesen Verlust.
+
+**Vorher (Bau 67), erster Versuch 0.49.0 und jetzt:**
+
+![Vorher, erster Versuch, jetzt](../../art/review/welt/f-licht-vorher-nachher.jpg)
+
+![Fuß aus der Nähe](../../art/review/welt/g-licht-nah.jpg)
+
+**Tests (D-203):** art-check `TuermeImLicht`; App
+`TowerGroundingTests.testTowerStandsInTheGrass`, `testEveryTowerPictureHasGrass`.
+
+**Muster für alles Gemalte, das in der 3D-Welt steht** (Skill `spielgrafik`, Abschnitt
+„Gemaltes in die 3D-Welt setzen“): Licht aus dem Vertrag aufs Bild rechnen, Schatten so
+dunkel wie die der 3D-Teile, Boden vor die Fußlinie legen, Umriss nie anfassen.
+

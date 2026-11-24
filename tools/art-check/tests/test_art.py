@@ -548,7 +548,7 @@ class TuermeInDerWelt(unittest.TestCase):
     def turmbilder(self, art):
         import re
         return [e[:-9] for e in sorted(os.listdir(self.ATLAS))
-                if re.fullmatch(rf"tower_{art}(_[a-z0-9]+)?\.imageset", e) and "_shadow" not in e]
+                if re.fullmatch(rf"tower_{art}(_[a-z0-9]+)?\.imageset", e) and not e.endswith(("_shadow.imageset", "_grass.imageset"))]
 
     def test_jeder_wachturm_hat_schuetzen_auf_der_plattform(self):
         # A-5 Teil 3 (D-185): Ohne Eintrag stünde der Wachturm leer da, die
@@ -640,6 +640,77 @@ class TuermeInDerWelt(unittest.TestCase):
                     alt = Image.open(os.path.join(WURZEL, rel)).convert("RGBA")
                     neu = Image.open(os.path.join(t, rel)).convert("RGBA")
                     self.assertEqual(list(alt.getdata()), list(neu.getdata()), rel)
+
+
+class TuermeImLicht(unittest.TestCase):
+    """D-200 bis D-203: gemalte Türme im Licht der 3D-Welt (turmlicht.py)."""
+
+    ATLAS = os.path.join(WURZEL, "App/Assets.xcassets/Battle.spriteatlas")
+    QUELLE = os.path.join(WURZEL, "art/tuerme-in-der-welt/quelle")
+
+    def namen(self):
+        return sorted(d[:-4] for d in os.listdir(self.QUELLE) if d.endswith(".png"))
+
+    def atlas(self, name):
+        return Image.open(os.path.join(self.ATLAS, f"{name}.imageset", f"{name}@3x.png")).convert("RGBA")
+
+    def quelle(self, name):
+        return Image.open(os.path.join(self.QUELLE, f"{name}.png")).convert("RGBA")
+
+    def test_jedes_turmbild_hat_quelle_und_grasmaske(self):
+        import re
+        bilder = sorted(e[:-9] for e in os.listdir(self.ATLAS)
+                        if re.fullmatch(r"tower_(watch|lightning|spore|bank)(_[a-z0-9]+)?\.imageset", e)
+                        and not e.endswith(("_shadow.imageset", "_grass.imageset")))
+        self.assertEqual(bilder, self.namen())
+        for name in bilder:
+            self.assertTrue(os.path.isdir(os.path.join(self.ATLAS, f"{name}_grass.imageset")), name)
+
+    def test_umriss_bleibt_pixelgenau(self):
+        # Kronen und Schützen (D-185) sitzen auf Punkten im Bild; das Licht darf nichts verschieben.
+        for name in self.namen():
+            self.assertEqual(self.atlas(name).getchannel("A").tobytes(), self.quelle(name).getchannel("A").tobytes(), name)
+
+    def test_schattenseite_rechts_lichtseite_links(self):
+        # Sonne von oben links hinten (Vertrag): rechts dunkler als die Malerei, links nicht.
+        for name in self.namen():
+            neu, alt = self.atlas(name), self.quelle(name)
+            w, h = neu.size
+            def mittel(bild, x0, x1):
+                box = (x0, 0, x1, int(h * 0.75))
+                hell = ImageStat.Stat(bild.convert("L").crop(box), mask=bild.getchannel("A").crop(box).point(lambda v: 255 if v > 200 else 0))
+                return hell.mean[0]
+            rechts = mittel(neu, w // 2, w) / mittel(alt, w // 2, w)
+            links = mittel(neu, 0, w // 2) / mittel(alt, 0, w // 2)
+            self.assertLess(rechts, 0.92, name)
+            self.assertGreater(links, rechts + 0.08, name)
+
+    def skript(self, modul):
+        # Die Skripte lesen die Wurzel beim Laden aus sys.argv.
+        import importlib
+        sys.path.insert(0, os.path.join(WURZEL, ".claude/skills/spielgrafik/scripts"))
+        alt = sys.argv
+        sys.argv = ["x", WURZEL]
+        try:
+            return importlib.import_module(modul)
+        finally:
+            sys.argv = alt
+
+    def test_gras_deckt_die_fusslinie_und_nur_sie(self):
+        turmboden = self.skript("turmboden")
+        for name in self.namen():
+            maske = self.atlas(f"{name}_grass").getchannel("A")
+            mx, unten, ha, hb = turmboden.fuss(self.quelle(name))
+            self.assertGreater(maske.getpixel((round(mx), round(unten))), 200, f"{name}: Fußlinie vorn frei")
+            # Über der halben Turmhöhe liegt kein Gras.
+            self.assertIsNone(maske.crop((0, 0, maske.width, maske.height // 2)).getbbox(), name)
+            # Hinter dem Grundriss (Mitte) bleibt der Fuß sichtbar.
+            self.assertLess(maske.getpixel((round(mx), round(unten - 2 * hb))), 60, name)
+
+    def test_skript_rechnet_gleich(self):
+        turmlicht = self.skript("turmlicht")
+        neu = turmlicht.licht(self.quelle("tower_spore"))
+        self.assertEqual(neu.tobytes(), self.atlas("tower_spore").tobytes())
 
 
 class Diorama(unittest.TestCase):

@@ -64,6 +64,9 @@ enum BattleSprites {
         return names.first { texture(named: $0) != nil } ?? shadowName(kind, level: 1)
     }
 
+    /// Maske für den Boden vor dem Fuß (D-202), gleiche Lage wie das Turmbild.
+    static func grassName(ofPicture picture: String) -> String { picture + "_grass" }
+
     /// Schatten oder Fundament, Fuß in der Mitte; nil ohne Bild im Katalog.
     static func groundDecal(named name: String, side: CGFloat) -> SKSpriteNode? {
         guard let texture = texture(named: name) else { return nil }
@@ -548,6 +551,14 @@ final class TowerNode: SKNode {
     let stand = SKNode()
     /// Licht des Kampfplatzes; nil = ungetönt (Tests, Kampfplatz ohne Eintrag).
     let light: SKColor?
+    /// Boden des Kampfplatzes vor dem Fuß (D-202): ein Ausschnitt des gemalten
+    /// Bodens samt Schatten, ausgeschnitten mit einer Halmkante. Er liegt über dem
+    /// Turm, also steht der Turm im Gras statt darauf. In `stand`, nicht in `lift`:
+    /// Beim Errichten wächst der Turm aus dem Boden, der Boden bleibt liegen.
+    private(set) var grass: SKCropNode?
+    private let grassMask = SKSpriteNode()
+    private let grassGround = SKSpriteNode()
+    private let grassShadow = SKSpriteNode()
     private let bankFill = SKSpriteNode()
     private let bankWidth: CGFloat
     private(set) var bankEmpty = false
@@ -605,6 +616,47 @@ final class TowerNode: SKNode {
             addChild(bankBar)
         }
         placeCrown()
+    }
+
+    // MARK: Im Boden (D-202)
+
+    /// Legt den Boden aus `ground` vor den Fuß. Erst aufrufen, wenn der Turm an
+    /// seinem Platz steht; ohne Grasmaske im Katalog bleibt alles wie vorher.
+    func plant(in ground: SKSpriteNode) {
+        guard let groundTexture = ground.texture, let parent, let groundParent = ground.parent,
+              ground.size.width > 0, ground.size.height > 0,
+              let mask = BattleSprites.texture(named: BattleSprites.grassName(ofPicture: pictureName)) else { return }
+        let side = BattleStyle.towerSpriteSide * field_
+        let size = CGSize(width: side, height: side)
+        let anchor = CGPoint(x: 0.5, y: 0.2)
+        // Ausschnitt des Bodens, der genau unter dem Quadrat des Turmbilds liegt.
+        let foot = groundParent.convert(position, from: parent)
+        let corner = CGPoint(x: foot.x - anchor.x * side - ground.position.x + ground.anchorPoint.x * ground.size.width,
+                             y: foot.y - anchor.y * side - ground.position.y + ground.anchorPoint.y * ground.size.height)
+        let rect = CGRect(x: corner.x / ground.size.width, y: corner.y / ground.size.height,
+                          width: side / ground.size.width, height: side / ground.size.height)
+        grassGround.texture = SKTexture(rect: rect, in: groundTexture)
+        grassGround.size = size
+        grassGround.anchorPoint = anchor
+        grassGround.zPosition = 0
+        grassShadow.texture = shadow?.texture
+        grassShadow.size = shadow?.size ?? .zero
+        grassShadow.isHidden = shadow == nil
+        grassShadow.zPosition = 1
+        grassMask.texture = mask
+        grassMask.name = BattleSprites.grassName(ofPicture: pictureName)
+        grassMask.size = size
+        grassMask.anchorPoint = anchor
+        let crop = grass ?? SKCropNode()
+        if grass == nil {
+            crop.name = "grass"
+            crop.maskNode = grassMask
+            crop.addChild(grassGround)
+            crop.addChild(grassShadow)
+            crop.zPosition = BattleStyle.grassZ
+            stand.addChild(crop)
+            grass = crop
+        }
     }
 
     // MARK: Krone (A-5 Teil 3, G9)
@@ -720,6 +772,14 @@ final class TowerNode: SKNode {
             shadow.texture = texture
             shadow.name = shadowName
         }
+        if grass != nil {
+            let maskName = BattleSprites.grassName(ofPicture: pictureName)
+            if let mask = BattleSprites.texture(named: maskName) {
+                grassMask.texture = mask
+                grassMask.name = maskName
+            }
+            grassShadow.texture = shadow?.texture
+        }
     }
 
     @available(*, unavailable)
@@ -733,6 +793,7 @@ final class TowerNode: SKNode {
         art.yScale = breathes ? 1 + FxStyle.breathAmount * wave : 1
         // Fundament und Schatten erscheinen mit dem Turm, nicht vor ihm.
         shade.alpha = lift.alpha
+        grassShadow.alpha = lift.alpha
         // Der Kristall lädt sichtbar (D-187); voll flimmert er ruhig, er wartet.
         let full = charge >= 1
         let level = FxStyle.chargeGlowEmpty + (FxStyle.chargeGlowFull - FxStyle.chargeGlowEmpty) * charge * charge

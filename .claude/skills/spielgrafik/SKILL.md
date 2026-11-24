@@ -57,9 +57,26 @@ description: Hochwertige Spielgrafik (App-Symbole, Figuren, Store-Bilder, Hinter
   den Malstil, und der Weg bleibt liegen. Kleine Figuren, die FLUX trotz „no
   characters" hineinmalt, mit `retusche.py` entfernen.
 - **Türme in der Welt (Grafik 10, D-120):** Nach jedem neuen Kampfplatz, Turm oder
-  Turmbild `turmboden.py` laufen lassen: schreibt `tower_*_shadow` in den Atlas, mit
+  Turmbild `turmboden.py` laufen lassen: schreibt `tower_*_shadow` in den Atlas (vorher `turmlicht.py`, siehe unten), mit
   Kontaktdunkel und Schattenwurzel am gemessenen Grundriss, nicht am Anker (D-196). Den Lichtton (`LICHT`) des neuen Kampfplatzes zusätzlich in
   `App/Battle/kampfplatzlicht.json` eintragen; die art-check-Tests verlangen beides.
+- **Gemaltes in die 3D-Welt setzen (D-200 bis D-202, das Muster gegen „schwebt“):** Steht
+  etwas Gemaltes neben gerechneten 3D-Teilen (Bäume, Torburg, Inseln), wirkt es aufgeklebt,
+  solange es kein Licht aus der Vertragssonne hat, sein Schatten blasser ist als der der
+  3D-Teile und seine Fußlinie sauber auf dem Boden liegt. Ein Sockel oder Teller löst das
+  nicht (D-196). Ablauf:
+  1. Malerei unverändert nach `art/<bereich>/quelle/` legen; sie ist die Quelle, der Atlas
+     wird daraus gerechnet. Neue Malerei immer dorthin, nie direkt in den Atlas.
+  2. `turmlicht.py` (Muster für andere Dinge: kopieren, Werte oben anpassen): Schattenseite
+     als Zylinder je Zeile (links zur Sonne heller, rechts dunkler), Fußdunkel, Alpha
+     unverändert; dazu die Maske `<name>_grass` mit Halmkante vor dem Grundriss.
+  3. `turmboden.py`: Schatten aus dem gemessenen Grundriss, Deckung wie die Baumschatten.
+  4. In der Szene den Boden vor dem Fuß zeigen: `SKCropNode` mit Ausschnitt aus dem
+     gemalten Kampfplatzboden plus Schattenkopie, maskiert mit `<name>_grass`, über dem
+     Bild (Muster `TowerNode.plant(in:)`).
+  5. Am echten Simulatorbild vergleichen (Bäume und Torburg im selben Ausschnitt), dann
+     art-check. Prüfen: Umriss pixelgleich, rechte Hälfte dunkler, Gras nur an der Fußlinie.
+  Nicht wiederholen: Türme mit TRELLIS in 3D rechnen (Textur dunkel, Malerei verloren).
 - **Weitere Missionen (Grafik 06):** `DEKO=<ordner> LICHT=r,g,b kampfplatz.py …` setzt
   Deko (`deko*.png`, aus einem Teileblatt) in den Waldrand und schreibt `<aus>-ebene.png`.
   Nach Übermalen und Hochrechnen `ebene.py` (Höhle und Deko wieder obenauf: Das Übermalen

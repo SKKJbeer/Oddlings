@@ -30,6 +30,7 @@ Grundsatz: **ansehen, nicht vermuten.** Ein Befund ohne Bild oder Zahl ist keine
 |---|---|---|
 | Eine Kamera? | Weg, Bäume, Türme, Figuren, Festung im selben Bild vergleichen | alles aus dem Blickwinkel im Asset-Vertrag |
 | Ein Licht? | Schattenrichtung, Farbton von Turm und Boden | Lichtton aus `kampfplatzlicht.json` |
+| Steht es oder schwebt es? | Gemaltes neben 3D-Teilen: hat es eine Schattenseite wie die Bäume, ist sein Schatten so dunkel wie deren, verdeckt Boden die Fußlinie? | Muster „Gemaltes in die 3D-Welt setzen“ im Skill `spielgrafik` (D-200 bis D-202); kein Sockel (D-196) |
 | Ein Maßstab? | Höhen in Feldern aus `BattleStyle` | Festung > Boss > Turm > Panzerbestie > Plünderer > Flitzer |
 | Eine Malweise? | Kontur und Schärfe von Figur zu Figur; Vektorformen auf der Karte | keine `SKShapeNode` in der Welt |
 | Laufen | Blick in Laufrichtung auf senkrechten Stücken, Ecken, übereinanderliegende Gegner | Konzept A-1 |
