@@ -24,9 +24,10 @@ final class TowerAimE2ETests: XCTestCase {
         let e2e = try E2EApp(["--play", "--e2e-zeitraffer", E2EApp.readableFastForward, "--e2e-fx"]
                              + (elves ? ["--e2e-elfen"] : []))
         e2e.waitForBoard()
-        // Der Bauplatz am nächsten zum Wegeingang: Die ersten Gegner kommen früh vorbei.
-        let entry = e2e.map.path.position(at: 1)
-        let cell = try XCTUnwrap(e2e.map.buildableCells.min { $0.center.distance(to: entry) < $1.center.distance(to: entry) })
+        // Derselbe Bauplatz wie in den übrigen Bautests: Am Rand des Felds liegen seit
+        // Grafik 11 Schilder und Torburg über manchen Plätzen, dort trifft das Tippen nicht.
+        // Alle Bauinseln von Mission 1 liegen am Weg, der Schütze bekommt dort ein Ziel.
+        let cell = try XCTUnwrap(e2e.map.buildableCells.first)
         e2e.build(.watch, at: cell)
         e2e.waitFor(e2e.gold, toBe: e2e.config.mission.startGold - e2e.cost(.watch), "gebaut")
 
