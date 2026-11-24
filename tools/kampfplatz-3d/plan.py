@@ -26,12 +26,39 @@ WEGBREITE = 0.95      # Zellen, wie kampfplatz.py: Weg der gemalten Karten
 ECKE = 0.45           # Halbmesser der Wegecken; A-1 lässt die Figuren auf demselben Bogen laufen
 WEG_FREI = 0.62       # so weit vom Weg darf nichts Hohes ins Bild ragen (halbe Breite + Luft)
 INSEL_FREI = 0.08     # Luft um eine Insel für Dinge mit Höhe
+INSEL_ECKE = 0.32     # Halbmesser der gerundeten Inselecken (Grafik 11, D-192)
 HOEHLE_X = -0.95      # Mitte der Höhle am Wegeingang, wie kampfplatz.py
+TURM_ABSTAND = 0.825  # Turmmitte der Torburg von ihrem Fuß, quer zum Tor (bauten.py)
+MAUER_FREI = 0.55     # so weit von der Mauerlinie bleibt der Wald weg
 
 
 def lade_vertrag():
     v = json.load(open(os.path.join(WURZEL, "art/asset-vertrag.json")))
     return v["kamera"], v["sonne"]
+
+
+def festungslage(karte):
+    """Tor, Fuß und Mauerzüge der Torburg (Grafik 11, D-191) aus dem Wegende, mit den
+    Werten `festung` aus dem Vertrag; die App rechnet dasselbe (`FortressPlacement`).
+    Zellen, y nach unten. Das Tor zeigt um `gier` gedreht von (0, 1) weg."""
+    f = json.load(open(os.path.join(WURZEL, "art/asset-vertrag.json")))["festung"]
+    W, H = karte["width"], karte["height"]
+    ex, ey = karte["path"][-1]
+    tor = (min(ex, W) + f["tor"], ey)
+    g = math.radians(f["gier"])
+    blick = (math.sin(g), math.cos(g))
+    fuss = (tor[0] - blick[0] * f["torAbstand"], tor[1] - blick[1] * f["torAbstand"])
+    # Türme an den Enden der Torseite; die Mauern laufen von dort in den Wald.
+    quer = (math.cos(g), -math.sin(g))
+    links = (fuss[0] - quer[0] * TURM_ABSTAND, fuss[1] - quer[1] * TURM_ABSTAND)
+    rechts = (fuss[0] + quer[0] * TURM_ABSTAND, fuss[1] + quer[1] * TURM_ABSTAND)
+    oben = links[1] < rechts[1]
+    a, b = (links, rechts) if oben else (rechts, links)
+    # Kurze Mauerstücke mit je einem Turm am Ende, halb im Wald: lange Linien durch den
+    # Wald lasen sich im ersten Render wie Gleise.
+    nord = [a, (a[0] + 0.7, a[1] - 1.0), (a[0] + 1.0, a[1] - 2.4)]
+    sued = [b, (b[0] + 0.12, b[1] + 1.2), (b[0] + 0.2, b[1] + 2.3)]
+    return {"tor": tor, "fuss": fuss, "blick": blick, "mauern": [nord, sued]}
 
 
 def wegabstand(pfad, x, y):
@@ -59,6 +86,26 @@ def gerundet(punkte, ecke=ECKE):
                         (1 - t) ** 2 * p0[1] + 2 * (1 - t) * t * b[1] + t * t * p1[1]))
     aus.append(punkte[-1])
     return aus
+
+
+def rundrechteck(x, y, b, h, r, schritt):
+    """Punkte im Abstand `schritt` auf dem Rand eines Rechtecks mit gerundeten Ecken."""
+    r = min(r, b / 2, h / 2)
+    teile = []
+    for cx, cy, a0 in ((x + b - r, y + r, -90), (x + b - r, y + h - r, 0), (x + r, y + h - r, 90), (x + r, y + r, 180)):
+        for k in range(9):
+            a = math.radians(a0 + k * 90 / 8)
+            teile.append((cx + r * math.cos(a), cy + r * math.sin(a)))
+    punkte, rest = [teile[0]], 0.0
+    ring = teile + [teile[0]]
+    for a, b2 in zip(ring, ring[1:]):
+        l = math.dist(a, b2)
+        t = schritt - rest
+        while t <= l:
+            punkte.append((a[0] + (b2[0] - a[0]) * t / l, a[1] + (b2[1] - a[1]) * t / l))
+            t += schritt
+        rest = l - (t - schritt)
+    return punkte[:-1] if math.dist(punkte[0], punkte[-1]) < schritt / 2 else punkte
 
 
 def inselzellen(karte):
@@ -101,8 +148,10 @@ def plane(mission, ort, ziel, C=96):
     BB, HH = round((W + 2 * MX) * C), round((H + 2 * MY) * C)
     kos = math.cos(math.radians(kamera["hoehe"]))
     pfad = [tuple(p) for p in karte["path"]]
-    fest = (W + 0.9, pfad[-1][1] - 0.4, 1.7)  # Festungsplatz wie kampfplatz.py
-    weglinie = gerundet([(HOEHLE_X - 0.35, pfad[0][1])] + pfad[1:-1] + [(fest[0], pfad[-1][1])])
+    lage = festungslage(karte)
+    fest = (lage["fuss"][0], lage["fuss"][1], 1.7)  # Festungsplatz
+    # Der Weg endet im Tor (D-194), nicht hinter der Burg.
+    weglinie = gerundet([(HOEHLE_X - 0.35, pfad[0][1])] + pfad[1:-1] + [lage["tor"]])
     inseln = inselzellen(karte)
     rnd = random.Random(o.get("seed", 7))
 
@@ -112,6 +161,13 @@ def plane(mission, ort, ziel, C=96):
     def frei(d):
         if verdeckt(bildflaeche(d, kos), weglinie, inseln, fest):
             return False
+        # Nichts steht auf der Mauer oder verdeckt sie mit der Krone.
+        x0, y0, x1, y1 = bildflaeche(d, kos)
+        for m in lage["mauern"]:
+            if wegabstand(m, d["x"], d["y"]) < d["r"] + MAUER_FREI:
+                return False
+            if any(x0 - 0.2 < mx < x1 + 0.2 and y0 - 0.2 < my < y1 + 0.2 for mx, my in gerundet(m, 0.3)):
+                return False
         # Dinge stehen nicht ineinander (Fußkreise), Baumkronen dürfen sich berühren
         return all(math.hypot(d["x"] - e["x"], d["y"] - e["y"]) > (d["r"] + e["r"]) * 0.75 for e in dinge)
 
@@ -144,27 +200,47 @@ def plane(mission, ort, ziel, C=96):
                  "r": round(h * rf, 3), "h": round(h, 3), "farbe": rnd.randrange(3)}
             if frei(d):
                 dinge.append(d)
-    # Steinkante um jede Insel: eine Reihe Feldsteine auf der Kante, damit man den
-    # Bauplatz als gebauten Ort liest. Sie liegen auf dem Rand, ihre Höhe ist klein,
-    # deshalb gilt die Prüfung oben nicht für sie.
+    # Trockenmauer um jede Insel (Grafik 11, D-192): zwei Lagen Feldsteine auf der
+    # gerundeten Kante, damit man den Bauplatz als gebauten Hügel liest. Sie liegen auf
+    # dem Rand, ihre Höhe ist klein, deshalb gilt die Prüfung oben nicht für sie.
     for z in karte.get("zones", []):
         for rx, ry, rb, rh in z["rects"]:
-            kante = []
-            for seite, laenge in (("o", rb), ("u", rb), ("l", rh), ("r", rh)):
-                n = max(2, round(laenge / 0.32))
-                for k in range(n):
-                    t = (k + 0.5) / n * laenge
-                    kante.append({"o": (rx + t, ry), "u": (rx + t, ry + rh), "l": (rx, ry + t), "r": (rx + rb, ry + t)}[seite])
-            for (sx, sy) in kante:
-                dinge.append({"art": "kantenstein", "x": round(sx + rnd.uniform(-0.04, 0.04), 3),
-                              "y": round(sy + rnd.uniform(-0.04, 0.04), 3), "r": round(rnd.uniform(0.11, 0.15), 3),
-                              "h": round(rnd.uniform(0.08, 0.12), 3), "farbe": rnd.randrange(3), "insel": True})
+            kante = rundrechteck(rx + 0.04, ry + 0.04, rb - 0.08, rh - 0.08, INSEL_ECKE, 0.22)
+            for schicht, versatz in ((0, 0.0), (1, 0.5)):
+                for k in range(len(kante)):
+                    a, b = kante[k], kante[(k + 1) % len(kante)]
+                    sx, sy = a[0] + (b[0] - a[0]) * versatz, a[1] + (b[1] - a[1]) * versatz
+                    if schicht and rnd.random() < 0.35:
+                        continue  # obere Lage mit Lücken: gesetzt, nicht gemauert
+                    dinge.append({"art": "kantenstein", "x": round(sx + rnd.uniform(-0.03, 0.03), 3),
+                                  "y": round(sy + rnd.uniform(-0.03, 0.03), 3), "r": round(rnd.uniform(0.1, 0.14), 3),
+                                  "h": round(rnd.uniform(0.09, 0.13), 3), "farbe": rnd.randrange(3), "insel": True,
+                                  "lage": schicht})
+
+    for (ax, ay), (bx, by) in zip(weglinie, weglinie[1:]):
+        lang = math.dist((ax, ay), (bx, by))
+        if lang < 1e-6:
+            continue
+        nx, ny = -(by - ay) / lang, (bx - ax) / lang
+        for k in range(max(1, round(lang / 0.55))):
+            if rnd.random() < 0.45:
+                continue
+            t = rnd.random()
+            seite = rnd.choice((-1, 1))
+            dw = WEGBREITE / 2 + rnd.uniform(-0.04, 0.06)
+            x, y = ax + (bx - ax) * t + nx * dw * seite, ay + (by - ay) * t + ny * dw * seite
+            if any(cx - 0.05 < x < cx + 1.05 and cy - 0.05 < y < cy + 1.05 for cx, cy in inseln):
+                continue
+            dinge.append({"art": "halme", "x": round(x, 3), "y": round(y, 3), "r": 0.08,
+                          "h": round(rnd.uniform(0.08, 0.14), 3), "farbe": rnd.randrange(3)})
 
     plan = {
         "kamera": kamera, "sonne": sonne, "licht": o["licht"], "himmel": o["himmel"],
         "breite": W, "hoehe": H, "rand": [MX, MY], "px": C, "bild": [BB, HH],
         "inselhoehe": o["inselhoehe"], "weglinie": [[round(a, 4), round(b, 4)] for a, b in weglinie],
-        "inseln": karte.get("zones", []), "festung": list(fest), "dinge": dinge, "farben": o["farben"],
+        "inseln": karte.get("zones", []), "festung": list(fest), "dinge": dinge,
+        "tor": list(lage["tor"]), "blick": list(lage["blick"]), "inselecke": INSEL_ECKE,
+        "mauern": [[[round(a, 3), round(b, 3)] for a, b in gerundet(m, 0.3)] for m in lage["mauern"]], "farben": o["farben"],
         "waldfarben": o["wald"]["farben"],
     }
     os.makedirs(ziel, exist_ok=True)
@@ -233,24 +309,42 @@ def boden(plan, o, ziel, rnd):
     bild.paste(erde, (0, 0), wm)
     spur = wegmaske(C * 0.35).filter(ImageFilter.GaussianBlur(C * 0.12))
     bild.paste(ImageChops.multiply(bild, Image.new("RGB", (BB, HH), (205, 185, 165))), (0, 0), spur.point(lambda v: int(v * 0.6)))
+    # Vorplatz vor dem Tor (D-191): gepflastert, Steine nach Plan, damit das Übermalen
+    # sie als Pflaster liest und nicht als hellen Fleck (W6, Lichthof).
+    tx, ty = plan["tor"]
+    bx, by = plan["blick"]
+    mx, my = tx + bx * 0.55, ty + by * 0.55
     platz = Image.new("L", (BB, HH), 0)
-    ImageDraw.Draw(platz).ellipse((*at(fx - fr * 0.75, fy - fr * 0.6), *at(fx + fr * 0.75, fy + fr * 0.9)), fill=255)
-    bild.paste(erde, (0, 0), ImageChops.subtract(platz.filter(ImageFilter.GaussianBlur(C * 0.25)),
-                                                 rauschen.point(lambda v: max(0, v - 150))).point(lambda v: int(v * 0.8)))
+    ImageDraw.Draw(platz).ellipse((*at(mx - 0.95, my - 0.75), *at(mx + 0.95, my + 0.75)), fill=255)
+    platz = platz.filter(ImageFilter.GaussianBlur(C * 0.12))
+    pflaster = Image.new("RGB", (BB, HH), (78, 72, 64))
+    zeichnen = ImageDraw.Draw(pflaster)
+    for gy in range(int((my - 1) * 8), int((my + 1) * 8) + 1):
+        for gx in range(int((mx - 1.2) * 8), int((mx + 1.2) * 8) + 1):
+            px, py = gx / 8 + (0.0625 if gy % 2 else 0) + rnd.uniform(-0.01, 0.01), gy / 8 + rnd.uniform(-0.01, 0.01)
+            g = rnd.randint(120, 168)
+            x0, y0 = at(px - 0.055, py - 0.05)
+            x1, y1 = at(px + 0.055, py + 0.05)
+            zeichnen.rounded_rectangle((x0, y0, x1, y1), radius=C * 0.02, fill=(g, g - 6, g - 14))
+    bild.paste(pflaster, (0, 0), platz)
     wegmaske(C * WEGBREITE).save(os.path.join(ziel, "maske-weg.png"))
 
     # Inseln: festgetretene Erde, etwas heller und wärmer als der Weg, damit man sie als
     # Bauplatz liest und nicht als Wegstück. Die Oberseite deckt genau die Zellen.
     # Inseln: festgetretene, etwas dunklere Erde mit Moos am Rand, damit sie sich vom
     # sandigen Weg abheben und als Bauplatz, nicht als Wegstück gelesen werden.
-    insel = ImageEnhance.Brightness(ImageEnhance.Color(erde).enhance(0.7)).enhance(0.82)
-    insel = Image.composite(ImageEnhance.Brightness(gras).enhance(0.8), insel,
-                            rauschen.point(lambda v: 255 if v > 175 else 0).filter(ImageFilter.GaussianBlur(C * 0.05)))
+    # Seit Grafik 11 (D-192): Grashügel statt Erdfläche. Etwas heller und wärmer als die
+    # Wiese, damit die Kuppe Licht fängt, mit ausgetretenen Flecken; Erde nur noch an der
+    # Stirnseite (diorama.py dunkelt sie ab).
+    insel = ImageEnhance.Color(ImageEnhance.Brightness(gras).enhance(1.12)).enhance(1.05)
+    insel = Image.composite(ImageEnhance.Brightness(ImageEnhance.Color(erde).enhance(0.8)).enhance(0.95), insel,
+                            rauschen.point(lambda v: 255 if v > 196 else 0).filter(ImageFilter.GaussianBlur(C * 0.08))
+                            .point(lambda v: int(v * 0.7)))
     im = Image.new("L", (BB, HH), 0)
     for z in plan["inseln"]:
         for rx, ry, rb, rh in z["rects"]:
             ImageDraw.Draw(im).rounded_rectangle((*at(rx + 0.03, ry + 0.03), *at(rx + rb - 0.03, ry + rh - 0.03)),
-                                                 radius=C * 0.18, fill=255)
+                                                 radius=C * INSEL_ECKE, fill=255)
     im.save(os.path.join(ziel, "maske-inseln.png"))
     bild.save(os.path.join(ziel, "boden.png"))
     insel.save(os.path.join(ziel, "insel.png"))

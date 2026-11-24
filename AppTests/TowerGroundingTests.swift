@@ -107,7 +107,9 @@ final class TowerGroundingTests: XCTestCase {
         let node = try XCTUnwrap(scene.towerNodes.values.first)
         XCTAssertNotNil(node.shade.parent, "Schattenebene")
         XCTAssertEqual(node.shade.position, node.position)
-        XCTAssertEqual(node.footing?.name, "footing_mission01")
+        // Seit Grafik 11 (D-190) trägt der Steinsockel den Turm statt des Fundaments.
+        XCTAssertEqual(node.plinth?.name, BattleSprites.plinthName)
+        XCTAssertNil(node.footing)
         XCTAssertEqual(node.light, BattlefieldLight.color(missionID: "mission-01"))
         scene.restart()
         XCTAssertNil(node.shade.parent)

@@ -68,15 +68,14 @@ enum BattleStyle {
     /// Gemalte Bilder sind Quadrate mit dem Fuß auf Höhe des Ankers
     /// (art/asset-vertrag.json; die CI prüft die Bilder dagegen).
     static let towerSpriteSide: CGFloat = 1.9
-    static let fortressSpriteSide: CGFloat = 2.4
+    static let fortressSpriteSide: CGFloat = 4.0
     /// Schatten und Fundament (D-120), Quadrate mit dem Fuß in der Mitte;
     /// dieselben Seiten wie in art/asset-vertrag.json.
     static let towerShadowSide: CGFloat = 2.4
     static let footingSide: CGFloat = 1.2
-    static let fortressAnchorY: CGFloat = 0.15
-    /// Die Festung steht im Rand hinter dem Wegende, nicht im Feld: Dort ist jede
-    /// Zelle neben dem Weg bebaubar. Zellen nach rechts und unten vom Wegende.
-    static let fortressOffset = CGPoint(x: 0.85, y: 0.9)
+    /// Die Torburg (Grafik 11, D-191) steht im Rand hinter dem Wegende, nicht im
+    /// Feld; wo genau, rechnet `FortressPlacement`.
+    static let fortressAnchorY: CGFloat = 0.34
     /// Reihenfolge innerhalb der Bodenebene. `ignoresSiblingOrder` zeichnet
     /// Geschwister mit gleicher zPosition beliebig; bis 0.10.3 lag so die
     /// Festung unter dem Boden.

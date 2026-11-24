@@ -7,6 +7,9 @@ atlas.py <boden.png> <name> <breite>x<hoehe> voll [zellenpunkte] [ordner]
   waere als PNG @3x ueber 5 MB und gehoert nicht in einen Sprite-Atlas.
 atlas.py <bild.png> <name> <B>x<H>px voll [_] [ordner]
   Grosses Bild (Titelbild, Regionskarte) in Geraetepixeln fuer @3x, @2x = 2/3. JPEG.
+atlas.py <bau.png> <name> <seite_in_zellen> rahmen [zellenpunkte] [ordner]
+  Bau aus bauten.py: Das Bild hat schon den Rahmen des Vertrags (Grundriss auf dem
+  Anker), wird also nicht zugeschnitten, nur skaliert. PNG mit Alpha.
 atlas.py <frei.png> <name> <punkte>pt mitte [_] [ordner]
   Symbol: Inhalt mittig auf ein Quadrat mit 6 % Rand, Seite in Punkten. PNG mit Alpha.
 
@@ -38,6 +41,9 @@ elif anker == "mitte":
     quadrat.alpha_composite(inhalt, ((seite - inhalt.width) // 2, (seite - inhalt.height) // 2))
     bild = quadrat
     ziel = lambda f: (round(float(groesse[:-2]) * f),) * 2
+elif anker == "rahmen":
+    assert bild.width == bild.height, "Bau aus bauten.py ist ein Quadrat"
+    ziel = lambda f: (round(float(groesse) * pt * f),) * 2
 elif anker == "voll":
     bz, hz = map(float, groesse.split("x"))
     bild = bild.convert("RGB")  # Boden ohne Alphakanal: keine Loecher, kleinere Datei

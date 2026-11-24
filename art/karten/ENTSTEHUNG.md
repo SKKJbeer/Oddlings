@@ -2,7 +2,21 @@
 
 ## `map_mission01_ground` (Mission 1, Lichtung im Flüsterwald)
 
-### Ab 0.32.0: Diorama mit Bauinseln (A-4, D-140, D-165)
+### Ab 0.47.0: Grashügel, Torburg, Weg ins Tor (Grafik 11, D-191, D-192, D-194)
+
+[Konzept Grafik 11](../../docs/konzepte/grafik-11-kampfplatz-in-der-welt.md). Ablauf wie
+darunter (A-4), mit neuem Plan: Inseln sind Grashügel (Höhe 0,16, gerundete Ecken,
+Trockenmauer in zwei Lagen), der Weg endet im Tor der Torburg (`festungslage`, Werte
+`festung` im Vertrag), davor Pflaster, zwei kurze Mauerstücke mit Ecktürmen (Zinnen nur
+außen) in den Wald, Grasbüschel am Wegrand, kein heller Festungsplatz mehr. Die Torburg
+selbst ist ein eigenes Bild (`fortress`, siehe `art/spielfeld/ENTSTEHUNG.md`).
+Übermalt mit **Seed 5**, Stärke 0,4, Verschiebung 0,5, Prompt:
+`hand-painted mobile strategy game battlefield seen from above at a 40 degree angle, stylized 3D, warm afternoon light, lush deep green meadow with small flowers, a winding packed-dirt road with grass tufts along its edges, low grassy hills as building plots framed by dry stone walls of grey field stones, a cobbled forecourt at the end of the road, short grey castle walls with round towers with blue slate roofs leading into the forest at the right, round leafy forest trees around the edge with soft shadows, small bushes, mossy rocks scattered in the grass, a cave entrance of mossy boulders at the left, rich painterly textures, high detail, even lighting, no glow, no light rays, no text, no characters`.
+Beobachtet: FLUX hat das nördliche Mauerstück als Felsrippe gemalt und das südliche als
+niedrige Hofmauer um das Pflaster; beides liest sich als Teil des Geländes, also behalten.
+Vergleich: `art/review/welt/c-vorher-nachher.jpg`.
+
+### 0.32.0 bis 0.45.0: Diorama mit Bauinseln (A-4, D-140, D-165)
 
 Konzept: [A-4](../../docs/konzepte/a-4-diorama-mission-1.md). Gleiche Fläche wie zuvor
 (24 × 13 Zellen, Rand 4 × 2), aber aus einer 3D-Szene in der gemeinsamen Kamera.

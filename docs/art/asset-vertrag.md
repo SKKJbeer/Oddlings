@@ -27,11 +27,14 @@ Sie folgen den IDs der Simulation.
 | `tower_<id>_top` | drehbares Oberteil, nur wo es eines gibt |
 | `enemy_raider`, `enemy_runner`, `enemy_brute`, `enemy_moorKing` | Gegner, Blick nach rechts |
 | `enemy_<art>_<folge>_NN` | Bildfolgen aus 3D ([FX 02](../konzepte/fx-02-figuren-in-3d.md)): `walk`, `hit`, `die`; der Moorkönig dazu `shield` und `summon` ([FX 03](../konzepte/fx-03-moorkoenig.md)). Anzahl je Folge im Feld `folge`. Blickrichtungen (A-3): `walkFront` (auf den Betrachter zu), `walkBack` (weg), gleiche Bildzahl, Größe und Anker wie `walk`, Fuß je Richtung auf dem Anker. Dazu oben im Vertrag `kamera`, `sonne` (D-140) und `konturPunkte` (Breite der Außenlinie jeder Bildfolge) Rückfall (A-1, D-150): fehlt `walkFront` oder `walkBack`, läuft die Seitenfolge `walk` |
-| `fortress` | Festung am Wegende |
+| `fortress` | Torhaus der Torburg am Wegende, Quadrat 4,0 Zellen, Anker 0,34 = Mitte des Grundrisses (`grundriss`, nicht die unterste Zeile), in Vertragskamera gedreht (Gier aus `festung`); Mauern und Vorplatz liegen im Bodenbild (Grafik 11, D-191) |
 | `map_mission01_ground` … `map_mission04_ground`, `map_mission05a_ground`, `map_mission05b_ground`, `map_mission06a_ground`, `map_mission06b_ground`, `map_mission07_ground` | Boden der ganzen Karte je Mission (Name aus der Missionskennung), Weg eingemalt; Geometrie je Bild in `art/asset-vertrag.json` unter `mission` ([Grafik 06](../konzepte/grafik-06-kampfplaetze-m2-m4.md), [Grafik 07](../konzepte/grafik-07-kampfplaetze-m5.md), [Grafik 08](../konzepte/grafik-08-kampfplaetze-m6.md), [Grafik 09](../konzepte/grafik-09-bosslichtung-m7.md)) |
 | `buildzone_tile` | Markierung einer bebaubaren Zelle, Overlay (heute von der Szene gezeichnet, nur beim Bauen sichtbar, D-121) |
 | `tower_<name>_shadow` | Schatten je Turmbild, Quadrat 2,4 Zellen, Fuß in der Mitte, gerechnet von `turmboden.py` (D-120) |
-| `footing_<mission>` | Fundament unter jedem Turm, Quadrat 1,2 Zellen, Fuß in der Mitte, Erde aus dem Weg der Karte (D-120) |
+| `footing_<mission>` | Fundament unter jedem Turm, Quadrat 1,2 Zellen, Fuß in der Mitte, Erde aus dem Weg der Karte (D-120); nur noch Rückfall, wenn `tower_plinth` fehlt |
+| `tower_plinth` | Steinsockel unter jedem Turm, Quadrat 1,5 Zellen, Mitte der Platte in der Bildmitte; aus `tools/kampfplatz-3d/bauten.py sockel`, übermalt (Grafik 11, D-190) |
+| `fortress_shadow` | Schlagschatten der Torburg, gleiches Quadrat und gleicher Anker wie `fortress`, liegt unter ihm; aus dem Schattenfänger von `bauten.py` (`bau_freistellen.py`, D-191) |
+| `tower_contact` | Kontaktdunkel unter dem Fuß, Quadrat 1,4 Zellen, nur Alpha (Mitte 72 %), gerechnet von `turmboden.py` (D-193) |
 | `fx_glow`, `fx_spark`, `fx_ring`, `fx_puff`, `fx_coin`, `fx_arrow`, `fx_bolt`, `fx_confetti`, `fx_star`, `fx_stone`, `fx_wall`, `fx_hand` | Effekte, siehe „Effekte“ unten |
 | `icon_slowed` | Zustandssymbol über dem Gegner (E3) |
 | `mark_ring` | gemalter Streifen 1536 × 96 px (@3x), oben Außenkante, waagerecht kachelbar; die Szene wickelt ihn um Auswahl und Reichweite (`GroundMarks`, D-171) |
@@ -48,6 +51,9 @@ Sie folgen den IDs der Simulation.
 - **Zielmaßstab (D-166):** `massstab` nennt die sichtbare Höhe in Feldern (Flitzer 0,7 ·
   Plünderer 0,8 · Panzerbestie 1,15 · Turm 1,4 · Boss 2,0 · Festung 2,6). Bilder werden
   von den Paketen umgestellt, die sie malen; `art-check` hält die Reihenfolge.
+- **Lage der Festung (D-191):** `festung` nennt `tor` (Zellen hinter dem Kartenrand auf dem
+  Weg), `torAbstand` (Fuß hinter dem Tor) und `gier` (Drehung, 0 = Tor zum Betrachter).
+  `plan.py` und `FortressPlacement` rechnen damit; `art-check` hält App und Vertrag gleich.
 - Maßeinheit ist die Zelle (≈ 43 pt im Querformat, D-004).
 - **Figuren sind Quadrate.** Die Szene setzt jedes Bild als Quadrat mit festem
   `anchorPoint`; die Figur steht mittig, ihr Fuß (unterste deckende Zeile) liegt

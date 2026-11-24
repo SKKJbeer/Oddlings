@@ -120,6 +120,18 @@ enum BattleSprites {
         return sprite
     }
 
+    /// Schlagschatten der Torburg, gleiches Quadrat und gleicher Anker wie ihr Bild
+    /// (Grafik 11, D-191); nil ohne Bild im Katalog.
+    static func fortressShadow(field: CGFloat) -> SKSpriteNode? {
+        guard let texture = texture(named: fortressShadowName) else { return nil }
+        let side = BattleStyle.fortressSpriteSide * field
+        let sprite = SKSpriteNode(texture: texture)
+        sprite.name = fortressShadowName
+        sprite.anchorPoint = CGPoint(x: 0.5, y: BattleStyle.fortressAnchorY)
+        sprite.size = CGSize(width: side, height: side)
+        return sprite
+    }
+
     /// Gemalter Boden über die ganze Karte und `groundMargin` Zellen Wald
     /// ringsum, Weg eingemalt. Liegt er im Katalog, entfällt die gezeichnete
     /// Weglinie; die Bauzonen bleiben als Overlay.
@@ -535,19 +547,37 @@ final class TowerNode: SKNode {
     let shade = SKNode()
     let footing: SKSpriteNode?
     let shadow: SKSpriteNode?
+    /// Steinsockel (Grafik 11, D-190); ersetzt das Fundament, wenn das Bild im
+    /// Katalog liegt. Der Turm steht dann um `raise` höher, auf der Platte.
+    let plinth: SKSpriteNode?
+    /// Kontaktdunkel genau unter dem Fuß (D-193), auf dem Sockel oder dem Boden.
+    let contact: SKSpriteNode?
+    /// Trägt Turm und alles an ihm um die Sockelhöhe nach oben; `lift` darunter
+    /// bleibt frei für Auftritte (A-2).
+    let stand = SKNode()
+    let raise: CGFloat
     /// Licht des Kampfplatzes; nil = ungetönt (Tests, Kampfplatz ohne Eintrag).
     let light: SKColor?
     private let bankFill = SKSpriteNode()
     private let bankWidth: CGFloat
     private(set) var bankEmpty = false
 
-    init(tower: Tower, field: CGFloat, light: SKColor? = nil, footing footingName: String? = nil) {
+    init(tower: Tower, field: CGFloat, light: SKColor? = nil, footing footingName: String? = nil,
+         plinth plinthName: String? = nil) {
         towerID = tower.id
         kind = tower.kind
         self.light = light
         art = BattleSprites.tower(tower.kind, field: field)
         pictureName = BattleSprites.towerName(tower.kind)
-        footing = footingName.flatMap { BattleSprites.groundDecal(named: $0, side: BattleStyle.footingSide * field) }
+        let plinthSprite = plinthName.flatMap { BattleSprites.groundDecal(named: $0, side: BattleStyle.plinthSide * field) }
+        plinth = plinthSprite
+        raise = plinthSprite == nil ? 0 : BattleStyle.plinthLift * field
+        // Mit Sockel trägt die Platte den Turm; das Fundament aus Wegerde läge
+        // unsichtbar darunter und zeigte nur seine Kratzer (W4).
+        footing = plinthSprite == nil
+            ? footingName.flatMap { BattleSprites.groundDecal(named: $0, side: BattleStyle.footingSide * field) }
+            : nil
+        contact = BattleSprites.groundDecal(named: BattleSprites.contactName, side: BattleStyle.contactSide * field)
         shadow = BattleSprites.groundDecal(named: BattleSprites.shadowNameAvailable(tower.kind, level: tower.level,
                                                                                        specialization: tower.specialization),
                                            side: BattleStyle.towerShadowSide * field)
@@ -575,12 +605,26 @@ final class TowerNode: SKNode {
         super.init()
         name = art.name
         if let footing { shade.addChild(footing) }
+        if let plinth {
+            if let light {
+                plinth.color = light
+                plinth.colorBlendFactor = 1
+            }
+            shade.addChild(plinth)
+        }
         if let shadow {
             shadow.zPosition = 1
             shade.addChild(shadow)
         }
+        if let contact {
+            contact.zPosition = 2
+            contact.position = CGPoint(x: 0, y: raise)
+            shade.addChild(contact)
+        }
         tint(empty: false)
-        addChild(lift)
+        stand.position = CGPoint(x: 0, y: raise)
+        addChild(stand)
+        stand.addChild(lift)
         lift.addChild(pulse)
         pulse.addChild(art)
         if let glow { pulse.addChild(glow) }
