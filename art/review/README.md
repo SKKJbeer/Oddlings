@@ -12,6 +12,7 @@ Keine Spielgrafik, nicht im Atlas.
 | `welt/a-mission-1-markiert.jpg` | Review Grafik 11 ([Konzept](../../docs/konzepte/grafik-11-kampfplatz-in-der-welt.md)): CI-Artefakt `simulator-probe` 14815769940 (23.11.2026, main, 0.45.0), `mission-1.png`, markiert mit Nunito ExtraBold |
 | `welt/b-erdung-nah.jpg` | dasselbe Bild, Ausschnitte Turmfuß und Festung, vergrößert |
 | `welt/c-vorher-nachher.jpg` | aus den Atlasbildern zusammengesetzt (Boden, Türme, Sockel, Torburg wie in der Szene), links Stand 0.45.0 aus git, rechts 0.47.0 |
+| `f-stand-region-1.jpg` | Kontaktabzug der CI vom 24.11.2026 (Lauf auf dem Zweig von PR #117, Stand 0.48.0): Mission 1 Bild 3 als Soll, M3 Bild 3, M5a Bild 1, M7 Bild 4; Nummern = Befunde in [Review 2](../../docs/konzepte/aaa-review-2-gesamtstand.md) |
 | `e-blickwinkel.jpg` | Vorschau Bosslichtung aus Grafik 09 (Projektordner `grafik/kampfplatz-bosslichtung-m7.jpg`), Ausschnitt |
 
 Markierungen mit Python und Pillow (Schrift DejaVu Sans Bold), Ablauf im Skill
