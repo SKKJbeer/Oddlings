@@ -71,8 +71,9 @@ beiden Leuchtfarben tragen. Der Sporenfunke (E2) mischt beide.
 
 Jeder Gegnertyp ist am Umriss erkennbar, auch einfarbig: Plünderer klein mit
 Sack, Flitzer schmal und vorgebeugt, Panzerbestie breit mit Hörnern. Jeder
-Turm hat eine eigene Spitze: Armbrust und Fahne, schwebender Kristall,
-Pilzhut.
+Turm hat eine eigene Spitze: Schütze mit Armbrust und Fahne, schwebender Kristall,
+Pilzhut. Seit A-5 Teil 3 (D-185) ist die Armbrust nicht mehr gemalt, sondern ein
+Zwergenschütze, der sich zum Ziel dreht.
 
 ## Bewegung
 

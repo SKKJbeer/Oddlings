@@ -32,8 +32,12 @@ final class ContactSheetProbe {
         ProcessInfo.processInfo.arguments.contains(argument) ? ContactSheetProbe(mission: mission) : nil
     }
 
+    /// Längste Zeit, die ein Schütze mit Ziel woanders hinsah (D-189).
+    private(set) var longestOffTarget: Double = 0
+
     func add(_ frameTime: Double, enemies: Int, deviation: Double, stacked: Int, stats: FxDirector.Stats,
-             occluded: Int = 0) {
+             occluded: Int = 0, offTarget: Double = 0) {
+        longestOffTarget = max(longestOffTarget, offTarget)
         guard frameTime > 0 else { return }
         elapsed += frameTime
         frames += 1
@@ -60,6 +64,8 @@ final class ContactSheetProbe {
             "maxOccluded": maxOccluded,
             "dampedClouds": stats.damped,
             "mergedGold": stats.merged,
+            "shots": stats.shots,
+            "longestOffTargetSeconds": longestOffTarget,
         ]
         guard let data = try? JSONSerialization.data(withJSONObject: result, options: [.sortedKeys]),
               let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }

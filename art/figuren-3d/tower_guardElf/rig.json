@@ -1,0 +1,195 @@
+{
+  "_zweck": "Skelett des Elfenschützen auf dem Wachturm (A-5 Teil 3, D-185; TRELLIS-Modell aus vorlage.png, Seed 31). Punkte als Anteile der Modellbox, Blick nach -y. Der Pfeil liegt in der Vorlage schon gespannt quer vor dem Körper und zeigt nach +x: Der Elf steht wie ein Bogenschütze seitlich zum Ziel, darum braucht er keine Ruhedrehung. Richtung r (0 = rechts, gegen den Uhrzeigersinn je 45°) heißt blick = 45·r + 0",
+  "blick": 0,
+  "bildHoehe": 1.4,
+  "licht": {
+    "haupt": 5.0,
+    "fuell": 3.0,
+    "welt": 1.0,
+    "rand": 3.0
+  },
+  "knochen": {
+    "becken": {
+      "von": [
+        0,
+        0,
+        0.3
+      ],
+      "bis": [
+        0,
+        0,
+        0.42
+      ]
+    },
+    "rumpf": {
+      "von": [
+        0,
+        0,
+        0.42
+      ],
+      "bis": [
+        0,
+        0,
+        0.72
+      ],
+      "eltern": "becken"
+    },
+    "kopf": {
+      "von": [
+        0,
+        0,
+        0.72
+      ],
+      "bis": [
+        0,
+        0,
+        1.0
+      ],
+      "eltern": "rumpf"
+    },
+    "bein_l": {
+      "von": [
+        -0.12,
+        0,
+        0.32
+      ],
+      "bis": [
+        -0.12,
+        0,
+        0.02
+      ],
+      "eltern": "becken"
+    },
+    "bein_r": {
+      "von": [
+        0.12,
+        0,
+        0.32
+      ],
+      "bis": [
+        0.12,
+        0,
+        0.02
+      ],
+      "eltern": "becken"
+    },
+    "arm_l": {
+      "von": [
+        0.2,
+        0,
+        0.72
+      ],
+      "bis": [
+        0.4,
+        -0.3,
+        0.62
+      ],
+      "eltern": "rumpf"
+    },
+    "arm_r": {
+      "von": [
+        -0.22,
+        0,
+        0.72
+      ],
+      "bis": [
+        -0.08,
+        -0.25,
+        0.62
+      ],
+      "eltern": "rumpf"
+    },
+    "bogen": {
+      "von": [
+        0.4,
+        -0.35,
+        0.62
+      ],
+      "bis": [
+        0.4,
+        -0.35,
+        0.98
+      ],
+      "eltern": "arm_l"
+    },
+    "bogen_u": {
+      "von": [
+        0.4,
+        -0.35,
+        0.62
+      ],
+      "bis": [
+        0.35,
+        -0.3,
+        0.28
+      ],
+      "eltern": "arm_l"
+    },
+    "pfeil": {
+      "von": [
+        -0.08,
+        -0.28,
+        0.62
+      ],
+      "bis": [
+        0.6,
+        -0.32,
+        0.62
+      ],
+      "eltern": "arm_l"
+    }
+  },
+  "folgen": {
+    "shoot0": {
+      "bilder": 5,
+      "bogen": {
+        "arm_r": [
+          "x",
+          25
+        ],
+        "rumpf": [
+          "x",
+          -8
+        ]
+      }
+    }
+  },
+  "requisiten": [],
+  "kameraHoehe": 40,
+  "stil": {
+    "saettigung": 1.5,
+    "helligkeit": 1.4,
+    "eigenlicht": 0.35,
+    "kontur": 0.008
+  },
+  "ansichten": {
+    "shoot1": {
+      "folge": "shoot0",
+      "blick": 45
+    },
+    "shoot2": {
+      "folge": "shoot0",
+      "blick": 90
+    },
+    "shoot3": {
+      "folge": "shoot0",
+      "blick": 135
+    },
+    "shoot4": {
+      "folge": "shoot0",
+      "blick": 180
+    },
+    "shoot5": {
+      "folge": "shoot0",
+      "blick": 225
+    },
+    "shoot6": {
+      "folge": "shoot0",
+      "blick": 270
+    },
+    "shoot7": {
+      "folge": "shoot0",
+      "blick": 315
+    }
+  }
+}

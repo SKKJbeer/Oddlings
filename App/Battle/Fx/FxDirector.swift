@@ -40,6 +40,9 @@ final class FxDirector {
         /// Effektbudget (A-5 Teil 2): gedämpft gespielte Wolken (D-181) und
         /// Goldzahlen, die in eine laufende eingingen (D-183).
         var damped = 0, merged = 0
+        /// Türme zielen (A-5 Teil 3): Schussfolgen der Schützen, einziehende
+        /// Funken am Blitzkristall.
+        var shots = 0, motes = 0
 
         var summary: String {
             "arrows=\(arrows) bolts=\(bolts) combos=\(combos) spores=\(spores) hits=\(hits) deaths=\(deaths) "
@@ -50,6 +53,7 @@ final class FxDirector {
                 + " callouts=\(callouts) sentences=\(sentences) guides=\(guides) summons=\(summons)"
                 + " guards=\(guards) unguards=\(unguards) heals=\(heals) splits=\(splits) healHints=\(healHints)"
                 + " footfalls=\(footfalls) bends=\(bends) stacked=\(stacked) damped=\(damped) merged=\(merged)"
+                + " shots=\(shots) motes=\(motes)"
         }
     }
 
@@ -687,9 +691,19 @@ final class FxDirector {
 
     /// Wachturm: Rückstoß, Pfeil im Bogen, folgt dem Ziel, Funken beim Einschlag.
     func arrow(from tower: TowerNode, at targets: [EnemyNode]) {
-        recoil(tower, amount: 0.08)
-        let origin = CGPoint(x: tower.position.x, y: tower.position.y + FxStyle.muzzleHeight * field)
-        for target in targets {
+        // Mit Schützen (A-5 Teil 3) drückt er ab, und der Pfeil verlässt seine
+        // Armbrust; der Stein selbst staucht nicht mehr (G9). Ohne Schützenbilder
+        // bleibt der alte Rückstoß.
+        if tower.shooters.isEmpty { recoil(tower, amount: 0.08) }
+        tower.shooters.forEach(shoot)
+        for (index, target) in targets.enumerated() {
+            let origin: CGPoint
+            if tower.shooters.isEmpty {
+                origin = CGPoint(x: tower.position.x, y: tower.position.y + FxStyle.muzzleHeight * field)
+            } else {
+                let muzzle = tower.shooters[min(index, tower.shooters.count - 1)].muzzle
+                origin = CGPoint(x: tower.position.x + muzzle.x, y: tower.position.y + tower.stand.position.y + muzzle.y)
+            }
             guard let sprite = sprite(.arrow, essential: true) else { continue }
             stats.arrows += 1
             let length = FxStyle.arrowLength * field
@@ -722,7 +736,6 @@ final class FxDirector {
         guard !targets.isEmpty else { return }
         stats.bolts += 1
         flare(tower)
-        recoil(tower, amount: 0.04)
         var points = [vec(CGPoint(x: tower.position.x, y: tower.position.y + FxStyle.crystalHeight * field))]
         points += targets.map { vec(CGPoint(x: $0.position.x, y: $0.position.y + $0.height * 0.45)) }
         for index in 0..<(points.count - 1) {
@@ -892,16 +905,7 @@ final class FxDirector {
     /// Sporenturm: Hut staucht und federt, Ring bis zur Reichweite, Wölkchen.
     func spores(from tower: TowerNode, range: Double) {
         stats.spores += 1
-        animate(tower.pulse, key: "pulse", duration: FxStyle.sporeLife) { node, t in
-            let squash: Double
-            if t < 0.15 {
-                squash = Ease.quadOut(t / 0.15)
-            } else {
-                squash = 1 - Ease.elasticOut((t - 0.15) / 0.85)
-            }
-            node.xScale = CGFloat(1 + 0.12 * squash)
-            node.yScale = CGFloat(1 - 0.16 * squash)
-        }
+        liftCap(tower)
         let center = CGPoint(x: tower.position.x, y: tower.position.y + field * 0.15)
         ring(at: center, radius: range, color: FxStyle.sporeColor, duration: FxStyle.sporeLife, flatten: 1)
         let top = CGPoint(x: tower.position.x, y: tower.position.y + field * 0.75)
@@ -1128,6 +1132,53 @@ final class FxDirector {
             let s = sin(Double.pi * min(1, t * 1.6)) * (1 - t)
             node.yScale = CGFloat(1 - amount * s)
             node.xScale = CGFloat(1 + amount * 0.6 * s)
+        }
+    }
+
+    /// Schütze drückt ab (D-185): die Schussfolge in seiner Richtung, dann
+    /// zurück in den Anschlag. Bei „weniger Bewegung“ bleibt er im Anschlag.
+    private func shoot(_ shooter: ShooterNode) {
+        guard !reduceMotion else { return }
+        let frames = shooter.shotLength
+        guard frames > 0 else { return }
+        stats.shots += 1
+        animate(shooter, key: "shot", duration: FxStyle.guardShotFrame * Double(frames)) { node, t in
+            // Bild 01 bis zum Ende, danach wieder der Anschlag (00).
+            (node as? ShooterNode)?.shotFrame = t >= 1 ? nil : 1 + min(frames - 1, Int(t * Double(frames)))
+        }
+    }
+
+    /// Hut des Sporenturms hebt sich beim Ausstoß und setzt federnd auf (D-188).
+    /// Wie der Schütze: bei „weniger Bewegung“ nicht.
+    private func liftCap(_ tower: TowerNode) {
+        guard !reduceMotion else { return }
+        animate(tower, key: "cap", duration: FxStyle.capLife) { [field] node, t in
+            let rise = t < 0.2 ? Ease.quadOut(t / 0.2) : 1 - Ease.elasticOut((t - 0.2) / 0.8)
+            (node as? TowerNode)?.capLift = t >= 1 ? 0 : CGFloat(rise) * FxStyle.capLift * field
+        }
+    }
+
+    /// Ein Funke zieht in den Kristall, solange er lädt (D-187). Zier, nicht
+    /// wesentlich: Unter Last fällt er zuerst weg. Höchstens einer je
+    /// `chargeMoteInterval` und Turm.
+    func chargeMote(_ tower: TowerNode) {
+        guard !reduceMotion, time - tower.lastMote >= FxStyle.chargeMoteInterval else { return }
+        tower.lastMote = time
+        guard let mote = sprite(.spark, essential: false) else { return }
+        stats.motes += 1
+        tinted(mote, FxStyle.crystalGlow, additive: true)
+        let length = 0.22 * field
+        mote.size = CGSize(width: length, height: length / FxTextures.aspect(.spark))
+        mote.zPosition = 2
+        let core = CGPoint(x: tower.position.x, y: tower.position.y + FxStyle.crystalHeight * field)
+        let angle = spread(0...(2 * Double.pi))
+        let reach = Double(FxStyle.chargeMoteReach * field)
+        let start = CGPoint(x: core.x + CGFloat(cos(angle) * reach), y: core.y + CGFloat(sin(angle) * reach))
+        mote.zRotation = CGFloat(angle)
+        animate(mote, duration: FxStyle.chargeMoteLife, end: .recycle) { node, t in
+            let e = CGFloat(Ease.quadOut(t))
+            node.position = CGPoint(x: start.x + (core.x - start.x) * e, y: start.y + (core.y - start.y) * e)
+            node.alpha = CGFloat(sin(Double.pi * t))
         }
     }
 

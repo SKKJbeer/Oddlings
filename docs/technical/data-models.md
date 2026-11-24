@@ -193,6 +193,13 @@ und `paid` lesen sich mit 0. Bau über der Höchstzahl lehnt die Simulation mit
 eingesparte Sekunden mal `earlyCallBonus`, abgerundet;
 `Simulation.earlyCallBonus(in:)` liefert dieselbe Zahl für den Knopf.
 
+**Abfragen für die Darstellung (A-5 Teil 3, D-186, D-187):** `Simulation.aim(of:in:)` gibt die
+IDs der Gegner, die ein Turm jetzt treffen würde, in Schussreihenfolge (Wachturm nach
+Zielwahl und `targets`, Blitz das erste Glied, Spore alle in Reichweite, Bank keine).
+`Simulation.charge(of:)` gibt die Ladung 0 (eben geschossen) bis 1 (bereit) aus
+`cooldownTicks` und dem Takt der Stufe. Beide sind rein: Sie ändern den Zustand nicht
+und gehen nicht in die Prüfsumme.
+
 Aufwerten (P2-6): `upgrade` lehnt mit `notUpgradable` ab, wenn die Mission
 keine Stufe 2 für den Turm kennt oder er schon oben ist, sonst mit
 `notEnoughGold`; der Takt läuft weiter, `spent` wächst um den Preis.

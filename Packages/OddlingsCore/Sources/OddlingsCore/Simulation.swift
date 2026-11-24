@@ -473,6 +473,37 @@ public struct Simulation: Sendable {
         }
     }
 
+    /// Gegner, die der Turm **jetzt** treffen würde, in der Reihenfolge des
+    /// Schusses (A-5 Teil 3, D-186). Nur zum Anzeigen: Der Schütze dreht sich zu
+    /// ihnen. Dieselbe Zielwahl wie `fireTowers`, damit Bild und Regel nie
+    /// auseinanderlaufen; ändert nichts am Zustand.
+    public func aim(of tower: Tower, in state: GameState) -> [Int] {
+        guard let stats = config.stats(of: tower) else { return [] }
+        let indices: [Int]
+        switch tower.kind {
+        case .bank:
+            return []
+        case .watch:
+            indices = targets(in: state.enemies, around: tower.cell.center, range: stats.range,
+                              mode: tower.targetMode, count: stats.targets ?? 1)
+        case .lightning:
+            indices = target(in: state.enemies, around: tower.cell.center, range: stats.range,
+                             mode: tower.targetMode).map { [$0] } ?? []
+        case .spore:
+            indices = enemiesInRange(state.enemies, around: tower.cell.center, range: stats.range)
+        }
+        return indices.map { state.enemies[$0].id }
+    }
+
+    /// Ladung des Turms von 0 (eben geschossen) bis 1 (bereit), aus der
+    /// Abklingzeit und dem Takt seiner Stufe (D-187). Nur zum Anzeigen.
+    public func charge(of tower: Tower) -> Double {
+        guard let stats = config.stats(of: tower) else { return 1 }
+        let interval = ticks(stats.attackInterval)
+        guard interval > 0 else { return 1 }
+        return min(1, max(0, 1 - Double(tower.cooldownTicks) / Double(interval)))
+    }
+
     /// Stehende Banken; eine verkaufte zählt nicht mehr.
     public func banks(in state: GameState) -> Int { state.towers.filter { $0.kind == .bank }.count }
 
